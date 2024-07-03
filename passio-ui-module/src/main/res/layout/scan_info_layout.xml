@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rc_40_white"
+    android:padding="16dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/scan_info_title"
+        android:textColor="@color/gray900"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="@string/scan_info_message"
+        android:textColor="@color/gray900"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/foodsLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/icon_foods"
+        android:gravity="center"
+        android:paddingHorizontal="6dp"
+        android:text="@string/foods"
+        android:textColor="@color/gray900"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/barcodeLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/barcodeLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/icon_barcode"
+        android:gravity="center"
+        android:paddingHorizontal="6dp"
+        android:text="@string/barcode_mode"
+        android:textColor="@color/gray900"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/nutritionFactsLabel"
+        app:layout_constraintStart_toEndOf="@id/foodsLabel"
+        app:layout_constraintTop_toBottomOf="@id/message" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nutritionFactsLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/icon_nutrition_facts"
+        android:gravity="center"
+        android:paddingHorizontal="6dp"
+        android:text="@string/nutrition_facts_mode"
+        android:textColor="@color/gray900"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/barcodeLabel"
+        app:layout_constraintTop_toBottomOf="@id/message" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/ok"
+        style="@style/btn_positive_action"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/ok"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/foodsLabel"
+        app:layout_constraintWidth_percent="0.7" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="1dp"
+    android:background="@drawable/rc_8_border_gray300"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <TextView
+        android:id="@+id/breakfast"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/breakfast"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:background="@drawable/rc_8_primary_left"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray300" />
+
+    <TextView
+        android:id="@+id/lunch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/lunch"
+        android:textColor="@color/gray500"
+        android:textSize="14sp"
+        android:paddingTop="16dp"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray300" />
+
+    <TextView
+        android:id="@+id/dinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/dinner"
+        android:textColor="@color/gray500"
+        android:textSize="14sp"
+        android:paddingTop="16dp"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray300" />
+
+    <TextView
+        android:id="@+id/snack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/snack"
+        android:textColor="@color/gray500"
+        android:textSize="14sp"
+        android:paddingTop="16dp"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:background="@drawable/rc_8_white_right"
+        android:layout_weight="1" />
+
+</merge>

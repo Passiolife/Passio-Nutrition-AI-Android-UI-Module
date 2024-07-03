@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboard">
+
+    <fragment
+        android:id="@+id/dashboard"
+        android:name="ai.passio.nutrition.uimodule.ui.dashboard.DashboardFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_dashboard">
+
+        <action
+            android:id="@+id/dashboard_to_search"
+            app:destination="@id/search" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/diary"
+        android:name="ai.passio.nutrition.uimodule.ui.diary.DiaryFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_diary">
+
+        <action
+            android:id="@+id/diary_to_edit"
+            app:destination="@id/edit">
+            <argument
+                android:name="isEdit"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
+        <action
+            android:id="@+id/diary_to_progress"
+            app:destination="@id/progress" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/mealplan"
+        android:name="ai.passio.nutrition.uimodule.ui.mealplan.MealPlanFragment"
+        android:label="Meal Plan"
+        tools:layout="@layout/fragment_meal_plan">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/progress"
+        android:name="ai.passio.nutrition.uimodule.ui.progress.ProgressFragment"
+        android:label="Progress"
+        tools:layout="@layout/fragment_progress">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit"
+        android:name="ai.passio.nutrition.uimodule.ui.edit.EditFoodFragment"
+        android:label="Edit"
+        tools:layout="@layout/fragment_edit_food">
+
+        <action
+            android:id="@+id/edit_to_edit"
+            app:destination="@id/edit" />
+
+        <action
+            android:id="@+id/edit_to_search"
+            app:destination="@id/search"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/search"
+            app:popUpToInclusive="true">
+
+            <argument
+                android:name="isIngredient"
+                android:defaultValue="true"
+                app:argType="boolean" />
+
+        </action>
+
+        <action
+            android:id="@+id/edit_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="false"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/search"
+        android:name="ai.passio.nutrition.uimodule.ui.search.FoodSearchFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_search">
+
+        <action
+            android:id="@+id/search_to_edit"
+            app:destination="@id/edit"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit"
+            app:popUpToInclusive="true">
+
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/camera"
+        android:name="ai.passio.nutrition.uimodule.ui.camera.CameraRecognitionFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_camera_recognition">
+
+        <action
+            android:id="@+id/camera_to_edit"
+            app:destination="@id/edit"
+            app:launchSingleTop="true">
+
+        </action>
+        <action
+            android:id="@+id/camera_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true">
+
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/macros"
+        android:name="ai.passio.nutrition.uimodule.ui.progress.MacrosFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_macros">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/micros"
+        android:name="ai.passio.nutrition.uimodule.ui.progress.MicrosFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_micros">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_food"
+        android:name="ai.passio.nutrition.uimodule.ui.menu.AddFoodFragment"
+        android:label="Add Food"
+        tools:layout="@layout/fragment_add_food">
+
+        <action
+            android:id="@+id/add_food_to_camera"
+            app:destination="@id/camera" />
+
+        <action
+            android:id="@+id/add_food_to_search"
+            app:destination="@id/search" />
+
+    </fragment>
+
+</navigation>

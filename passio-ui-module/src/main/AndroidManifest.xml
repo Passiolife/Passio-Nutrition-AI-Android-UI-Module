@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ai.passio.nutrition.uimodule">
+
+    <application>
+        <activity
+            android:name=".ui.activity.PassioUiModuleActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".TestActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:exported="true" />
+    </application>
+
+</manifest>

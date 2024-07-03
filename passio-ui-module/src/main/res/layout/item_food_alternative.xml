@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewFoodAlternative"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/bg_rounded_corner_indio50"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/foodImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        tools:src="@drawable/icon_apple" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/foodName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Green AppleGreen" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/addFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_add_food" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

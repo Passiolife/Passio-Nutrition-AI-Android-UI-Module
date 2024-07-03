@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+    </style>
+
+    <style name="btn_negative_action" parent="AppTheme">
+        <item name="android:background">@drawable/rc_8_border_purple</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/passio_primary</item>
+    </style>
+
+    <style name="btn_positive_action" parent="AppTheme">
+        <item name="android:background">@drawable/rc_8_purple</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

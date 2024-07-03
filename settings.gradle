@@ -1,0 +1,4 @@
+rootProject.name = "Passio-Nutrition-AI-Android-UI-Module"
+include ':app'
+include ':passio-ui-module'
+include(":passio-sdk")
