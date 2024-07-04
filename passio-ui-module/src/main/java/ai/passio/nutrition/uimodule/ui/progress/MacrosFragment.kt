@@ -20,7 +20,6 @@ import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getWeekDuration
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -131,14 +130,14 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
             granularity = 1f
             labelCount = when (timePeriod) {
                 TimePeriod.WEEK -> 7
-                TimePeriod.MONTH -> 6
+                TimePeriod.MONTH -> 4
             }
             valueFormatter = when (timePeriod) {
                 TimePeriod.WEEK -> WeekAxisValueFormatter(getStartOfWeek(DateTime(viewModel.getCurrentDate().time)))
                 TimePeriod.MONTH -> MonthAxisValueFormatter(getStartOfMonth(DateTime(viewModel.getCurrentDate().time)))
             }
             axisMaximum = when (timePeriod) {
-                TimePeriod.WEEK -> 6.5f
+                TimePeriod.WEEK -> 7f
                 TimePeriod.MONTH -> DateTime().dayOfMonth().maximumValue.toFloat() + 1
             }
         }
@@ -147,7 +146,6 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
             labelCount = 3
             setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
             spaceTop = 15f
-            axisMinimum = 0f
         }
 
         binding.progressNutrientsBarChart.axisRight.isEnabled = false
@@ -289,7 +287,7 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
             granularity = 1f
             labelCount = when (timePeriod) {
                 TimePeriod.WEEK -> 7
-                TimePeriod.MONTH -> 6
+                TimePeriod.MONTH -> 4
             }
             valueFormatter = when (timePeriod) {
                 TimePeriod.WEEK -> WeekAxisValueFormatter(getStartOfWeek(DateTime(viewModel.getCurrentDate().time)))
@@ -322,6 +320,7 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         val dataSets = listOf<IBarDataSet>(barSet)
         val data = BarData(dataSets).apply {
             setValueTextSize(0f)
+
             barWidth = when (timePeriod) {
                 TimePeriod.WEEK -> 0.5f
                 TimePeriod.MONTH -> 0.9f
