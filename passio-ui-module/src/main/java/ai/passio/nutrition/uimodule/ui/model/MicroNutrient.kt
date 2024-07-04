@@ -11,9 +11,6 @@ data class MicroNutrient(
     val unitSymbol: String
 ) {
     companion object {
-        fun nutrientsFromFoodRecord(foodRecord: FoodRecord?): List<MicroNutrient> {
-            return nutrientsFromFoodRecords(listOf(foodRecord))
-        }
 
         fun nutrientsFromFoodRecords(foodRecords: List<FoodRecord?>?): ArrayList<MicroNutrient> {
             if (foodRecords == null) return arrayListOf()

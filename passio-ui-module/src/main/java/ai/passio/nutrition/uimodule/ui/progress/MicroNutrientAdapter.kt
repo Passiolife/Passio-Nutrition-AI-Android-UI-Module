@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.databinding.ItemShowMoreBinding
 import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ class MicroNutrientAdapter(
 ) :
     RecyclerView.Adapter<ViewHolder>() {
 
+        @SuppressLint("NotifyDataSetChanged")
         fun updateData(microNutrients: ArrayList<MicroNutrient>)
         {
             this.microNutrients.clear()
@@ -41,6 +43,7 @@ class MicroNutrientAdapter(
 
     inner class MicroNutrientsViewHolder(val binding: ItemMicrosProgressBinding) :
         ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(microNutrient: MicroNutrient) {
             with(binding) {
                 val dp8 = DesignUtils.dp2px(8f)
