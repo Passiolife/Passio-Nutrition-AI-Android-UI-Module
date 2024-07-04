@@ -1,8 +1,10 @@
 package ai.passio.nutrition.uimodule.ui.activity
 
+import ai.passio.nutrition.uimodule.NutritionUIModule
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.SharedPrefUtils
+import ai.passio.nutrition.uimodule.data.SharedPrefsPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import android.os.Bundle
 import android.view.View
@@ -10,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 
-class PassioUiModuleActivity : AppCompatActivity() {
+internal class PassioUiModuleActivity : AppCompatActivity() {
 
     private var _binding: ActivityPassioUiModuleBinding? = null
     private val binding: ActivityPassioUiModuleBinding get() = _binding!!
@@ -24,8 +26,12 @@ class PassioUiModuleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Init services
         SharedPrefUtils.init(applicationContext)
-        Repository.create(this.applicationContext)
+        val connector = NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
+        Repository.create(connector)
+
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
