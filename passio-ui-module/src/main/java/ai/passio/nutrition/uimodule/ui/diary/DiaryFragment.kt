@@ -138,7 +138,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     }
 
     override fun onBack() {
-        // viewModel.navigateBack()
+        viewModel.navigateBack()
     }
 
     override fun onRightIconClicked() {

@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.util
 
+import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import java.text.SimpleDateFormat

@@ -20,6 +20,7 @@ import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getWeekDuration
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -69,6 +70,8 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
 
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.timePeriod.observe(viewLifecycleOwner, ::updateTimePeriod)
+
+        viewModel.fetchLogsForCurrentWeek()
     }
 
     private val timePeriodListener = object : WeekMonthPicker.TimePeriodListener {
@@ -112,6 +115,7 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         with(barChart) {
             setDrawValueAboveBar(false)
             setDrawValueAboveBar(false)
+            setFitBars(false)
             description.isEnabled = false
             setPinchZoom(false)
             legend.isEnabled = false
@@ -164,12 +168,16 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         val dataSets = listOf<IBarDataSet>(barSet)
         val data = BarData(dataSets).apply {
             setValueTextSize(0f)
-            barWidth = 0.9f
+            barWidth = when (timePeriod) {
+                TimePeriod.WEEK -> 0.5f
+                TimePeriod.MONTH -> 0.9f
+            }
+
         }
 
         binding.progressNutrientsBarChart.data = data
         binding.progressNutrientsBarChart.invalidate()
-        binding.progressNutrientsBarChart.animateY(1000, Easing.EaseInQuad)
+        binding.progressNutrientsBarChart.animateY(600, Easing.EaseInQuad)
     }
 
     private fun calculateNutrientEntriesForWeek(
@@ -314,12 +322,15 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         val dataSets = listOf<IBarDataSet>(barSet)
         val data = BarData(dataSets).apply {
             setValueTextSize(0f)
-            barWidth = 0.9f
+            barWidth = when (timePeriod) {
+                TimePeriod.WEEK -> 0.5f
+                TimePeriod.MONTH -> 0.9f
+            }
         }
 
         binding.progressCaloriesBarChart.data = data
         binding.progressCaloriesBarChart.invalidate()
-        binding.progressCaloriesBarChart.animateY(1000, Easing.EaseInQuad)
+        binding.progressCaloriesBarChart.animateY(600, Easing.EaseInQuad)
     }
 
 

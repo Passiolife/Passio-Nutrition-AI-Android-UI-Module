@@ -40,11 +40,11 @@
                 android:drawablePadding="4dp"
                 android:gravity="center"
                 android:padding="8dp"
-                tools:text="@string/today"
                 android:textColor="@color/gray900"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:drawableStartCompat="@drawable/icon_calendar" />
+                app:drawableStartCompat="@drawable/icon_calendar"
+                tools:text="@string/today" />
         </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -57,6 +57,30 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/microsNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/rounded_corners_16dp_white"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/micros_note"
+        android:textColor="@color/gray900"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewTime" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@id/microsNote"
+        app:layout_constraintTop_toTopOf="@id/microsNote"
+        app:srcCompat="@drawable/ic_close" />
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/labelConsumed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,7 +90,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewTime" />
+        app:layout_constraintTop_toBottomOf="@id/microsNote" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConsumed"
