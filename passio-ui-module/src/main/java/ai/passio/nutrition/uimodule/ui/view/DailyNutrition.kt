@@ -40,15 +40,18 @@ class DailyNutrition @JvmOverloads constructor(
         _binding = DailyNutritionLayoutBinding.inflate(LayoutInflater.from(context), this)
         background = ContextCompat.getDrawable(context, R.drawable.rc_8_white)
         elevation = DesignUtils.dp2pxFloat(4f)
-        setPadding(DesignUtils.dp2px(16f))
+        setPadding(
+            DesignUtils.dp2px(8f),
+            DesignUtils.dp2px(16f),
+            DesignUtils.dp2px(8f),
+            DesignUtils.dp2px(16f)
+        )
 
         with(binding) {
             setupChart(caloriesChart)
             setupChart(carbsChart)
             setupChart(proteinChart)
             setupChart(fatChart)
-
-
         }
     }
 
