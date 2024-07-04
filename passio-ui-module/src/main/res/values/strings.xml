@@ -86,4 +86,6 @@
     <string name="favorites">Favorites</string>
     <string name="my_foods">My Foods</string>
     <string name="micros_note">Please note that not all foods in our database have available micronutrient information, so the summary provided may be incomplete.</string>
+    <string name="show_more">Show More</string>
+    <string name="show_less">Show Less</string>
 </resources>

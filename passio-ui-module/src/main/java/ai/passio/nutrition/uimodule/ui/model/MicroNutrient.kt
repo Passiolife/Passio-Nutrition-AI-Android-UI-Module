@@ -15,10 +15,10 @@ data class MicroNutrient(
             return nutrientsFromFoodRecords(listOf(foodRecord))
         }
 
-        fun nutrientsFromFoodRecords(foodRecords: List<FoodRecord?>?): List<MicroNutrient> {
-            if (foodRecords == null) return emptyList()
+        fun nutrientsFromFoodRecords(foodRecords: List<FoodRecord?>?): ArrayList<MicroNutrient> {
+            if (foodRecords == null) return arrayListOf()
 
-            return listOf(
+            return arrayListOf(
                 MicroNutrient(
                     name = "Saturated Fat",
                     value = foodRecords.sumOf { it?.nutrients()?.satFat()?.value ?: 0.0 },

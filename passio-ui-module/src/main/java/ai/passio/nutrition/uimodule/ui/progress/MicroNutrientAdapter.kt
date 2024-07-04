@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.progress
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.ItemMicrosProgressBinding
+import ai.passio.nutrition.uimodule.databinding.ItemShowMoreBinding
 import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
@@ -14,9 +15,29 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlin.math.roundToInt
 
 class MicroNutrientAdapter(
-    private val microNutrients: List<MicroNutrient>,
+    private val microNutrients: ArrayList<MicroNutrient>,
+    private val onShowMoreClicked: (microNutrient: MicroNutrient) -> Unit,
 ) :
-    RecyclerView.Adapter<MicroNutrientAdapter.MicroNutrientsViewHolder>() {
+    RecyclerView.Adapter<ViewHolder>() {
+
+        fun updateData(microNutrients: ArrayList<MicroNutrient>)
+        {
+            this.microNutrients.clear()
+            this.microNutrients.addAll(microNutrients)
+            notifyDataSetChanged()
+        }
+
+    inner class ShowMoreViewHolder(val binding: ItemShowMoreBinding) :
+        ViewHolder(binding.root) {
+        fun bind(microNutrient: MicroNutrient) {
+            with(binding) {
+                showMore.text = microNutrient.name
+                showMore.setOnClickListener {
+                    onShowMoreClicked.invoke(microNutrient)
+                }
+            }
+        }
+    }
 
     inner class MicroNutrientsViewHolder(val binding: ItemMicrosProgressBinding) :
         ViewHolder(binding.root) {
@@ -57,21 +78,45 @@ class MicroNutrientAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MicroNutrientsViewHolder {
-        return MicroNutrientsViewHolder(
-            ItemMicrosProgressBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+    override fun getItemViewType(position: Int): Int {
+        return if (microNutrients[position].unitSymbol == "showmore") {
+            0
+        } else {
+            1
+        }
+//        return super.getItemViewType(position)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+        if (viewType == 0) {
+            return ShowMoreViewHolder(
+                ItemShowMoreBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
-        )
+        } else {
+            return MicroNutrientsViewHolder(
+                ItemMicrosProgressBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        }
     }
 
     override fun getItemCount(): Int {
         return microNutrients.size
     }
 
-    override fun onBindViewHolder(holder: MicroNutrientsViewHolder, position: Int) {
-        holder.bind(microNutrients[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (holder is MicroNutrientsViewHolder) {
+            holder.bind(microNutrients[position])
+        } else if (holder is ShowMoreViewHolder) {
+            holder.bind(microNutrients[position])
+        }
     }
 }

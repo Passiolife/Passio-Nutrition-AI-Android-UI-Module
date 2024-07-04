@@ -61,9 +61,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rounded_corners_16dp_white"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="20dp"
         android:text="@string/micros_note"
         android:textColor="@color/gray900"
         android:textSize="14sp"
@@ -73,9 +74,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="@id/microsNote"
         app:layout_constraintTop_toTopOf="@id/microsNote"
         app:srcCompat="@drawable/ic_close" />
@@ -105,5 +107,7 @@
         app:layout_constraintTop_toBottomOf="@id/labelConsumed"
         tools:itemCount="20"
         tools:listitem="@layout/item_micros_progress" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

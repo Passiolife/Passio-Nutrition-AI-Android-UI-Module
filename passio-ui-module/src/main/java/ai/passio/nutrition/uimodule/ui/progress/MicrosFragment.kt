@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
 import android.app.DatePickerDialog
 import androidx.core.view.isVisible
@@ -69,8 +68,18 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
     }
 
-    private fun updateLogs(records: List<MicroNutrient>) {
-        binding.rvConsumed.adapter = MicroNutrientAdapter(records)
+
+    private fun updateLogs(records: ArrayList<MicroNutrient>) {
+        with(binding) {
+            if (rvConsumed.adapter is MicroNutrientAdapter) {
+                (rvConsumed.adapter as MicroNutrientAdapter).updateData(records)
+            } else {
+                rvConsumed.adapter = MicroNutrientAdapter(records) {
+                    viewModel.setShowMore()
+                }
+            }
+
+        }
     }
 
     private fun updateDate(currentDate: Date) {
