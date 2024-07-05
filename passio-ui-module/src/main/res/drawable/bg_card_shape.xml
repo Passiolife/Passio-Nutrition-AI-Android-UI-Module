@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="@color/white" />
+    <solid android:color="@color/passio_white" />
     <stroke
         android:width="1dp"
-        android:color="@color/gray400" />
+        android:color="@color/passio_gray400" />
 
 </shape>

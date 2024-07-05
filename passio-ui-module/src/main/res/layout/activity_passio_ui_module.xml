@@ -28,7 +28,7 @@
             android:id="@+id/bottomNavigation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/passio_bottom_navigation_background"
             android:clipChildren="false"
             app:labelVisibilityMode="labeled"
             app:itemIconTint="@color/bottom_navigation_selector"
@@ -52,7 +52,7 @@
         android:focusedByDefault="true"
         android:src="@drawable/icon_plus"
         app:backgroundTint="@color/passio_primary"
-        app:tint="@color/white"
+        app:tint="@color/passio_white"
         tools:ignore="ContentDescription" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

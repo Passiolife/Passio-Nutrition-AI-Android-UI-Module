@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_weight="1"
-        android:textColor="@color/black"
+        android:textColor="@color/passio_black"
         android:textSize="14sp"
         android:textStyle="bold"
         tools:text="Green AppleGreen" />

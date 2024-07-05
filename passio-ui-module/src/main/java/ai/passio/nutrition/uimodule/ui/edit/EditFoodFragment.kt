@@ -79,9 +79,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             }
         }
 
-        carbColor = ContextCompat.getColor(requireContext(), R.color.carbs)
-        proteinColor = ContextCompat.getColor(requireContext(), R.color.protein)
-        fatColor = ContextCompat.getColor(requireContext(), R.color.fat)
+        carbColor = ContextCompat.getColor(requireContext(), R.color.passio_carbs)
+        proteinColor = ContextCompat.getColor(requireContext(), R.color.passio_protein)
+        fatColor = ContextCompat.getColor(requireContext(), R.color.passio_fat)
         setupToolbar()
         setupChart()
 
@@ -120,7 +120,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 val deleteItem = SwipeMenuItem(requireContext()).apply {
                     text = getString(R.string.delete)
                     setTextColor(Color.WHITE)
-                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red500))
+                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.passio_red500))
                     width = DesignUtils.dp2px(80f)
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                 }

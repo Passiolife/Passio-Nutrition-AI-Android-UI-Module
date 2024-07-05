@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray500"
+    android:background="@color/passio_gray500"
     android:gravity="bottom|center_horizontal"
     android:orientation="vertical"
     tools:context=".ui.menu.AddFoodFragment">
@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:rotation="45"
             android:src="@drawable/icon_plus"
-            app:tint="@color/white"
+            app:tint="@color/passio_white"
             tools:ignore="ContentDescription" />
 
     </FrameLayout>

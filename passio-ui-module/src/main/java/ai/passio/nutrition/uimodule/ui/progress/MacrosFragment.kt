@@ -158,9 +158,9 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         val barSet = BarDataSet(entries, "Nutrients")
         barSet.setDrawIcons(false)
         barSet.colors = listOf(
-            ContextCompat.getColor(requireContext(), R.color.carbs),
-            ContextCompat.getColor(requireContext(), R.color.protein),
-            ContextCompat.getColor(requireContext(), R.color.fat)
+            ContextCompat.getColor(requireContext(), R.color.passio_carbs),
+            ContextCompat.getColor(requireContext(), R.color.passio_protein),
+            ContextCompat.getColor(requireContext(), R.color.passio_fat)
         )
 
         val dataSets = listOf<IBarDataSet>(barSet)
@@ -315,7 +315,7 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
 
         val barSet = BarDataSet(entries, "Calories")
         barSet.setDrawIcons(false)
-        barSet.setColors(ContextCompat.getColor(requireContext(), R.color.calories))
+        barSet.setColors(ContextCompat.getColor(requireContext(), R.color.passio_calories))
 
         val dataSets = listOf<IBarDataSet>(barSet)
         val data = BarData(dataSets).apply {

@@ -70,7 +70,7 @@ class MicroNutrientAdapter(
                         ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 root.context,
-                                R.color.red500
+                                R.color.passio_red500
                             )
                         )
                     }

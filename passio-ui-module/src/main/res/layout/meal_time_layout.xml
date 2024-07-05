@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/breakfast"
-        android:textColor="@color/white"
+        android:textColor="@color/passio_white"
         android:gravity="center"
         android:textSize="14sp"
         android:paddingTop="16dp"
@@ -24,14 +24,14 @@
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/gray300" />
+        android:background="@color/passio_gray300" />
 
     <TextView
         android:id="@+id/lunch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/lunch"
-        android:textColor="@color/gray500"
+        android:textColor="@color/passio_gray500"
         android:textSize="14sp"
         android:paddingTop="16dp"
         android:gravity="center"
@@ -41,14 +41,14 @@
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/gray300" />
+        android:background="@color/passio_gray300" />
 
     <TextView
         android:id="@+id/dinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/dinner"
-        android:textColor="@color/gray500"
+        android:textColor="@color/passio_gray500"
         android:textSize="14sp"
         android:paddingTop="16dp"
         android:gravity="center"
@@ -58,14 +58,14 @@
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/gray300" />
+        android:background="@color/passio_gray300" />
 
     <TextView
         android:id="@+id/snack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/snack"
-        android:textColor="@color/gray500"
+        android:textColor="@color/passio_gray500"
         android:textSize="14sp"
         android:paddingTop="16dp"
         android:gravity="center"

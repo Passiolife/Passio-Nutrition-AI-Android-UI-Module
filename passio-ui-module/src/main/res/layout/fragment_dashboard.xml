@@ -5,15 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashboardFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/dashButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/passio_primary"
         android:padding="8dp"
-        android:text="Dashboard fragment ->"
-        android:textColor="@color/white" />
+        android:text="Dashboard fragment" />
 
 </FrameLayout>

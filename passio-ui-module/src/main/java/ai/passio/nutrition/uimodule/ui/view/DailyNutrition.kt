@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -25,16 +24,16 @@ class DailyNutrition @JvmOverloads constructor(
     private var _binding: DailyNutritionLayoutBinding? = null
     private val binding: DailyNutritionLayoutBinding get() = _binding!!
 
-    private var caloriesColor: Int = ContextCompat.getColor(context, R.color.calories)
-    private var carbsColor: Int = ContextCompat.getColor(context, R.color.carbs)
-    private var proteinColor: Int = ContextCompat.getColor(context, R.color.protein)
-    private var fatColor: Int = ContextCompat.getColor(context, R.color.fat)
-    private var caloriesOverColor: Int = ContextCompat.getColor(context, R.color.calories_over)
-    private var carbsOverColor: Int = ContextCompat.getColor(context, R.color.carbs_over)
-    private var proteinOverColor: Int = ContextCompat.getColor(context, R.color.protein_over)
-    private var fatOverColor: Int = ContextCompat.getColor(context, R.color.fat_over)
-    private var noColor: Int = ContextCompat.getColor(context, R.color.gray200)
-    private var valueOverColor: Int = ContextCompat.getColor(context, R.color.red600)
+    private var caloriesColor: Int = ContextCompat.getColor(context, R.color.passio_calories)
+    private var carbsColor: Int = ContextCompat.getColor(context, R.color.passio_carbs)
+    private var proteinColor: Int = ContextCompat.getColor(context, R.color.passio_protein)
+    private var fatColor: Int = ContextCompat.getColor(context, R.color.passio_fat)
+    private var caloriesOverColor: Int = ContextCompat.getColor(context, R.color.passio_calories_over)
+    private var carbsOverColor: Int = ContextCompat.getColor(context, R.color.passio_carbs_over)
+    private var proteinOverColor: Int = ContextCompat.getColor(context, R.color.passio_protein_over)
+    private var fatOverColor: Int = ContextCompat.getColor(context, R.color.passio_fat_over)
+    private var noColor: Int = ContextCompat.getColor(context, R.color.passio_gray200)
+    private var valueOverColor: Int = ContextCompat.getColor(context, R.color.passio_red600)
 
     init {
         _binding = DailyNutritionLayoutBinding.inflate(LayoutInflater.from(context), this)

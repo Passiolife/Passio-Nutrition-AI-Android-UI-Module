@@ -5,7 +5,7 @@
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
             <corners android:radius="10dp" />
-            <solid android:color="@color/indigo50" />
+            <solid android:color="@color/passio_indigo50" />
         </shape>
     </item>
 

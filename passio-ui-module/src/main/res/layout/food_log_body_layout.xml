@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/passio_white"
     android:padding="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -23,7 +23,7 @@
         android:autoSizeTextType="uniform"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/black"
+        android:textColor="@color/passio_black"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/servingSize"
@@ -41,7 +41,7 @@
         android:autoSizeTextType="uniform"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/gray500"
+        android:textColor="@color/passio_gray500"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/calories"
@@ -53,7 +53,7 @@
         android:id="@+id/calories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="@color/passio_black"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
