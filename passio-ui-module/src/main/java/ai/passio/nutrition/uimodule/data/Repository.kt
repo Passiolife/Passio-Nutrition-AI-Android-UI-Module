@@ -28,11 +28,10 @@ class Repository private constructor() {
                 instance ?: Repository().also { instance = it }
             }
 
-        fun create(context: Context) {
+        fun create(context: Context, connector: PassioConnector) {
             SharedPrefUtils.init(context)
-            getInstance().connector = SharedPrefsPassioConnector(context).apply {
-                initialize()
-            }
+            getInstance().connector = connector
+            connector.initialize()
         }
     }
 

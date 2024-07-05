@@ -1,9 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.base
 
-import ai.passio.nutrition.uimodule.TestActivity
 import ai.passio.nutrition.uimodule.ui.activity.SharedViewModel
 import ai.passio.nutrition.uimodule.ui.navigation.NavigationCommand
-import ai.passio.nutrition.uimodule.ui.navigation.Router
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
