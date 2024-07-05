@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.util
 
-import android.util.Log
+import android.app.DatePickerDialog
+import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import java.text.SimpleDateFormat
@@ -51,4 +52,22 @@ fun getWeekDuration(date: DateTime): String {
 fun getMonthName(date: DateTime): String {
     val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
     return dateFormat.format(date.toDate())
+}
+
+fun showDatePickerDialog(context: Context, onDateSelected: (selectedDateTime: DateTime) -> Unit) {
+    val now = DateTime.now()
+    val year = now.year
+    val month = now.monthOfYear - 1 // DatePickerDialog uses 0-based month
+    val day = now.dayOfMonth
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, selectedYear, selectedMonth, selectedDay ->
+            // Format the selected date
+            val selectedDate = DateTime(selectedYear, selectedMonth + 1, selectedDay, 0, 0)
+            onDateSelected.invoke(selectedDate)
+        },
+        year, month, day
+    )
+    datePickerDialog.show()
 }

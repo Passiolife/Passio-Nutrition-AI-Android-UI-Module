@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
-import android.app.DatePickerDialog
+import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import androidx.core.view.isVisible
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -36,7 +36,9 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         initObserver()
 
         binding.timeTitle.setOnClickListener {
-            showDatePickerDialog()
+            showDatePickerDialog(requireContext()) { selectedDate ->
+                viewModel.setCurrentDate(selectedDate.toDate())
+            }
         }
         binding.moveNext.setOnClickListener {
             viewModel.setNextDay()
@@ -96,24 +98,6 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         binding.timeTitle.text = formattedDate
 
         viewModel.fetchLogsForCurrentDay()
-    }
-
-    private fun showDatePickerDialog() {
-        val now = DateTime.now()
-        val year = now.year
-        val month = now.monthOfYear - 1 // DatePickerDialog uses 0-based month
-        val day = now.dayOfMonth
-
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, selectedYear, selectedMonth, selectedDay ->
-                // Format the selected date
-                val selectedDate = DateTime(selectedYear, selectedMonth + 1, selectedDay, 0, 0)
-                viewModel.setCurrentDate(selectedDate.toDate())
-            },
-            year, month, day
-        )
-        datePickerDialog.show()
     }
 
 
