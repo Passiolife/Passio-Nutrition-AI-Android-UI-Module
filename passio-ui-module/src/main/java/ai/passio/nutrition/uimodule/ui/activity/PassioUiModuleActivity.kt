@@ -28,7 +28,7 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val connector = NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
-        Repository.create(connector)
+        Repository.create(applicationContext, connector)
 
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
