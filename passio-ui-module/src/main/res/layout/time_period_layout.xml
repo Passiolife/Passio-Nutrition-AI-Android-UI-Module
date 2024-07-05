@@ -17,13 +17,13 @@
         android:gravity="center"
         android:paddingVertical="8dp"
         android:text="@string/week"
-        android:textColor="@color/white"
+        android:textColor="@color/passio_white"
         android:textSize="14sp" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/gray300" />
+        android:background="@color/passio_gray300" />
 
 
     <TextView
@@ -35,7 +35,7 @@
         android:gravity="center"
         android:paddingVertical="8dp"
         android:text="@string/month"
-        android:textColor="@color/gray500"
+        android:textColor="@color/passio_gray500"
         android:textSize="14sp" />
 
 </merge>

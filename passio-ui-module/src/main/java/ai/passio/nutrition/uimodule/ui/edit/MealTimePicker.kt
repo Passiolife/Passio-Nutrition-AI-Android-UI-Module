@@ -26,9 +26,9 @@ class MealTimePicker @JvmOverloads constructor(
     private var listener: MealTimeListener? = null
 
     private val backgroundSelected = ContextCompat.getColor(context, R.color.passio_primary)
-    private val backgroundDeselected = ContextCompat.getColor(context, R.color.white)
-    private val textColorSelected = ContextCompat.getColor(context, R.color.white)
-    private val textColorDeselected = ContextCompat.getColor(context, R.color.gray500)
+    private val backgroundDeselected = ContextCompat.getColor(context, R.color.passio_white)
+    private val textColorSelected = ContextCompat.getColor(context, R.color.passio_white)
+    private val textColorDeselected = ContextCompat.getColor(context, R.color.passio_gray500)
     private val leftBackgroundSelected = ContextCompat.getDrawable(context, R.drawable.rc_8_primary_left)
     private val leftBackgroundDeselected = ContextCompat.getDrawable(context, R.drawable.rc_8_white_left)
     private val rightBackgroundSelected = ContextCompat.getDrawable(context, R.drawable.rc_8_primary_right)

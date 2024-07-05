@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/passio_toolbar_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/gray50">
+        android:background="@color/passio_gray50">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="2"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/infoName"
@@ -72,7 +72,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
                     android:maxLines="1"
-                    android:textColor="@color/gray500"
+                    android:textColor="@color/passio_gray500"
                     android:textSize="14sp"
                     app:autoSizeTextType="uniform"
                     app:layout_constraintEnd_toStartOf="@id/favorite"
@@ -114,7 +114,7 @@
                     android:id="@+id/caloriesValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/calories"
+                    android:textColor="@color/passio_calories"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@id/caloriesLabel"
@@ -129,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/calories"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/macrosChart"
                     app:layout_constraintEnd_toEndOf="@id/macrosChart"
@@ -142,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/edit_carbs"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     app:layout_constraintBottom_toTopOf="@id/proteinLabel"
                     app:layout_constraintEnd_toEndOf="@id/proteinLabel"
                     app:layout_constraintTop_toTopOf="@id/macrosChart"
@@ -155,7 +155,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/edit_protein"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     app:layout_constraintBottom_toTopOf="@id/fatLabel"
                     app:layout_constraintStart_toEndOf="@id/halfGuideline"
                     app:layout_constraintTop_toBottomOf="@id/carbsLabel" />
@@ -166,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/edit_fat"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     app:layout_constraintBottom_toBottomOf="@id/macrosChart"
                     app:layout_constraintEnd_toEndOf="@id/proteinLabel"
                     app:layout_constraintTop_toBottomOf="@id/proteinLabel" />
@@ -175,7 +175,7 @@
                     android:id="@+id/carbsValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray500"
+                    android:textColor="@color/passio_gray500"
                     app:layout_constraintBaseline_toBaselineOf="@id/carbsLabel"
                     app:layout_constraintStart_toEndOf="@id/carbsLabel"
                     tools:text="19g (50%)" />
@@ -184,7 +184,7 @@
                     android:id="@+id/proteinValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray500"
+                    android:textColor="@color/passio_gray500"
                     app:layout_constraintBaseline_toBaselineOf="@id/proteinLabel"
                     app:layout_constraintStart_toEndOf="@id/proteinLabel"
                     tools:text="19g (50%)" />
@@ -193,7 +193,7 @@
                     android:id="@+id/fatValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray500"
+                    android:textColor="@color/passio_gray500"
                     app:layout_constraintBaseline_toBaselineOf="@id/fatLabel"
                     app:layout_constraintStart_toEndOf="@id/fatLabel"
                     tools:text="19g (50%)" />
@@ -213,7 +213,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/serving_size"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -222,7 +222,7 @@
                     android:id="@+id/servingSizeValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text=" (123 g)" />
@@ -238,7 +238,7 @@
                     android:inputType="numberDecimal"
                     android:paddingTop="9dp"
                     android:paddingBottom="9dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
@@ -270,7 +270,7 @@
                     app:tsb_progress_value_float="true"
                     app:tsb_thumb_color="@color/passio_primary"
                     app:tsb_thumb_size="24dp"
-                    app:tsb_track_background_color="@color/indigo50"
+                    app:tsb_track_background_color="@color/passio_indigo50"
                     app:tsb_track_background_size="8dp"
                     app:tsb_track_progress_color="@color/passio_primary"
                     app:tsb_track_progress_size="8dp" />
@@ -291,7 +291,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/meal_time"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textStyle="bold" />
 
                 <ai.passio.nutrition.uimodule.ui.edit.MealTimePicker
@@ -316,7 +316,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/date"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textStyle="bold" />
 
                 <TextView
@@ -329,7 +329,7 @@
                     android:paddingTop="9dp"
                     android:paddingEnd="13dp"
                     android:paddingBottom="9dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textSize="16sp"
                     tools:text="Tuesday, February 14, 2024" />
 
@@ -350,7 +350,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/add_ingredient"
-                    android:textColor="@color/black"
+                    android:textColor="@color/passio_black"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@id/addIngredientIcon"

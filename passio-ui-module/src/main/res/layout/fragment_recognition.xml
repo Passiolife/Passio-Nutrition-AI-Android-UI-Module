@@ -17,7 +17,7 @@
         android:id="@+id/visualLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/passio_white"
         android:orientation="vertical"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:text="Avocado (0.7746)" />
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:text="Avocado (0.7746)" />
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:text="Avocado (0.7746)" />
@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:background="@color/white"
+        android:background="@color/passio_white"
         android:padding="16dp">
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/serving"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/caloriesLabel"
             app:layout_constraintStart_toStartOf="parent" />
@@ -89,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/calories"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/servingLabel"
             app:layout_constraintEnd_toStartOf="@id/carbsLabel"/>
@@ -110,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/carbs"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/caloriesLabel"
             app:layout_constraintEnd_toStartOf="@id/proteinLabel"/>
@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/protein"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/carbsLabel"
             app:layout_constraintEnd_toStartOf="@id/fatLabel"/>
@@ -152,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fat"
-            android:textColor="@color/black"
+            android:textColor="@color/passio_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/proteinLabel"
             app:layout_constraintEnd_toEndOf="parent"/>

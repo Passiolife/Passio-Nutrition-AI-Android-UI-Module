@@ -6,7 +6,7 @@
     android:viewportHeight="40">
 
     <path
-        android:fillColor="@color/white40p"
+        android:fillColor="@color/passio_white40p"
         android:pathData="M20,0L20,0A20,20 0,0 1,40 20L40,20A20,20 0,0 1,20 40L20,40A20,20 0,0 1,0 20L0,20A20,20 0,0 1,20 0z" />
 
     <path

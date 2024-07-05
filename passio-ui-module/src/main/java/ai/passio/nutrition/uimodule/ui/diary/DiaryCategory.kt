@@ -60,7 +60,7 @@ class DiaryCategory @JvmOverloads constructor(
                 val deleteItem = SwipeMenuItem(context).apply {
                     text = context.getString(R.string.delete)
                     setTextColor(Color.WHITE)
-                    setBackgroundColor(ContextCompat.getColor(context, R.color.red500))
+                    setBackgroundColor(ContextCompat.getColor(context, R.color.passio_red500))
                     width = DesignUtils.dp2px(80f)
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                 }

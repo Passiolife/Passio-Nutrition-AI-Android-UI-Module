@@ -14,6 +14,6 @@
         android:background="@color/passio_primary"
         android:padding="8dp"
         android:text="Dashboard fragment ->"
-        android:textColor="@color/white" />
+        android:textColor="@color/passio_white" />
 
 </FrameLayout>

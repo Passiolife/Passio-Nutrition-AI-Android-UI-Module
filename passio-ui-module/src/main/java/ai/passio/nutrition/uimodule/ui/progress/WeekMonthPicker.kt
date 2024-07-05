@@ -24,8 +24,8 @@ class WeekMonthPicker @JvmOverloads constructor(
         TimePeriodLayoutBinding.inflate(LayoutInflater.from(context), this)
     private var listener: TimePeriodListener? = null
 
-    private val textColorSelected = ContextCompat.getColor(context, R.color.white)
-    private val textColorDeselected = ContextCompat.getColor(context, R.color.gray500)
+    private val textColorSelected = ContextCompat.getColor(context, R.color.passio_white)
+    private val textColorDeselected = ContextCompat.getColor(context, R.color.passio_gray500)
     private val leftBackgroundSelected =
         ContextCompat.getDrawable(context, R.drawable.rc_8_primary_left)
     private val rightBackgroundSelected =

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/passio_white">
 
     <TextView
         android:id="@+id/recognizedSpeech"
@@ -13,7 +13,7 @@
         android:layout_margin="16dp"
         android:background="@drawable/rc_8_border_purple"
         android:padding="8dp"
-        android:textColor="@color/black"
+        android:textColor="@color/passio_black"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:text="Start listening"
-        android:textColor="@color/white"
+        android:textColor="@color/passio_white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
