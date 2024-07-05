@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
         val passioConfiguration = PassioConfiguration(
             this.applicationContext,
-            "Q5mb9Y078mXNsXrtZHD9IvSr4vC6SsjnbvvHUYWG2VEx"
+            BuildConfig.SDK_KEY
         ).apply {
             sdkDownloadsModels = true
             debugMode = -333
