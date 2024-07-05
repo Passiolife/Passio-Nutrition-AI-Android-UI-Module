@@ -10,18 +10,9 @@ import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import java.util.Locale
 import java.util.UUID
 
- const val TIMESTAMP_1970 = 978300000
+private const val TIMESTAMP_1970 = 978300000
 
 class FoodRecord() {
-
-    override fun equals(other: Any?): Boolean {
-        return other is FoodRecord && other.uuid == uuid
-    }
-
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
-
     var id: String = ""
     var name: String = ""
     var additionalData: String = ""
@@ -35,7 +26,7 @@ class FoodRecord() {
     val servingUnits = mutableListOf<PassioServingUnit>()
 
     var mealLabel: MealLabel? = null
-    val uuid: String? = UUID.randomUUID().toString().toUpperCase(Locale.ROOT)//null
+    val uuid: String = UUID.randomUUID().toString().toUpperCase(Locale.ROOT)//null
     var createdAt: Long? = null
 
     var openFoodLicense: String? = null

@@ -7,7 +7,6 @@ import ai.passio.passiosdk.passiofood.FoodRecognitionListener
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
-import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.content.Context
 import android.graphics.Bitmap
 import kotlinx.coroutines.channels.awaitClose
@@ -30,6 +29,7 @@ class Repository private constructor() {
             }
 
         fun create(context: Context) {
+            SharedPrefUtils.init(context)
             getInstance().connector = SharedPrefsPassioConnector(context).apply {
                 initialize()
             }
@@ -103,6 +103,7 @@ class Repository private constructor() {
     suspend fun getLogsForWeek(day: Date): List<FoodRecord> {
         return connector.fetchWeekRecords(day)
     }
+
     suspend fun getLogsForMonth(day: Date): List<FoodRecord> {
         return connector.fetchMonthRecords(day)
     }

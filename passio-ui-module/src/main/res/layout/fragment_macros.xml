@@ -62,10 +62,12 @@
         <FrameLayout
             android:id="@+id/viewCalories"
             android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:layout_margin="8dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
             android:background="@drawable/rounded_corners_16dp_white"
             android:elevation="4dp"
+            android:padding="8dp"
+            app:layout_constraintDimensionRatio="1.8:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewTime">
@@ -93,10 +95,12 @@
         <FrameLayout
             android:id="@+id/viewBottomChart"
             android:layout_width="0dp"
-            android:layout_height="300dp"
+            android:layout_height="0dp"
             android:layout_margin="16dp"
             android:background="@drawable/rounded_corners_16dp_white"
             android:elevation="4dp"
+            android:padding="8dp"
+            app:layout_constraintDimensionRatio="1.8:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewCalories">
@@ -135,7 +139,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/labelCalories"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ellipse"
                 android:drawablePadding="4dp"
@@ -145,13 +149,14 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/labelProtein"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="1dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/labelProtein"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ellipse"
                 android:drawablePadding="4dp"
@@ -161,14 +166,14 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/labelFat"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toEndOf="@id/labelCalories"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/labelFat"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:drawableStart="@drawable/ellipse"
                 android:drawablePadding="4dp"
                 android:drawableTint="@color/fat"
@@ -177,12 +182,13 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/labelCarbs"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toEndOf="@id/labelProtein"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/labelCarbs"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ellipse"
                 android:drawablePadding="4dp"
@@ -192,6 +198,7 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toEndOf="@id/labelFat"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -209,6 +216,7 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:text="@string/generate_report"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labels" />

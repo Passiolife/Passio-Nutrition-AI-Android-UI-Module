@@ -69,6 +69,8 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
 
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.timePeriod.observe(viewLifecycleOwner, ::updateTimePeriod)
+
+        viewModel.fetchLogsForCurrentWeek()
     }
 
     private val timePeriodListener = object : WeekMonthPicker.TimePeriodListener {
@@ -112,6 +114,7 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         with(barChart) {
             setDrawValueAboveBar(false)
             setDrawValueAboveBar(false)
+            setFitBars(false)
             description.isEnabled = false
             setPinchZoom(false)
             legend.isEnabled = false
@@ -127,14 +130,14 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
             granularity = 1f
             labelCount = when (timePeriod) {
                 TimePeriod.WEEK -> 7
-                TimePeriod.MONTH -> 6
+                TimePeriod.MONTH -> 4
             }
             valueFormatter = when (timePeriod) {
                 TimePeriod.WEEK -> WeekAxisValueFormatter(getStartOfWeek(DateTime(viewModel.getCurrentDate().time)))
                 TimePeriod.MONTH -> MonthAxisValueFormatter(getStartOfMonth(DateTime(viewModel.getCurrentDate().time)))
             }
             axisMaximum = when (timePeriod) {
-                TimePeriod.WEEK -> 6.5f
+                TimePeriod.WEEK -> 7f
                 TimePeriod.MONTH -> DateTime().dayOfMonth().maximumValue.toFloat() + 1
             }
         }
@@ -143,7 +146,6 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
             labelCount = 3
             setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
             spaceTop = 15f
-            axisMinimum = 0f
         }
 
         binding.progressNutrientsBarChart.axisRight.isEnabled = false
@@ -164,12 +166,16 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         val dataSets = listOf<IBarDataSet>(barSet)
         val data = BarData(dataSets).apply {
             setValueTextSize(0f)
-            barWidth = 0.9f
+            barWidth = when (timePeriod) {
+                TimePeriod.WEEK -> 0.5f
+                TimePeriod.MONTH -> 0.9f
+            }
+
         }
 
         binding.progressNutrientsBarChart.data = data
         binding.progressNutrientsBarChart.invalidate()
-        binding.progressNutrientsBarChart.animateY(1000, Easing.EaseInQuad)
+        binding.progressNutrientsBarChart.animateY(600, Easing.EaseInQuad)
     }
 
     private fun calculateNutrientEntriesForWeek(
@@ -281,7 +287,7 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
             granularity = 1f
             labelCount = when (timePeriod) {
                 TimePeriod.WEEK -> 7
-                TimePeriod.MONTH -> 6
+                TimePeriod.MONTH -> 4
             }
             valueFormatter = when (timePeriod) {
                 TimePeriod.WEEK -> WeekAxisValueFormatter(getStartOfWeek(DateTime(viewModel.getCurrentDate().time)))
@@ -314,12 +320,16 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         val dataSets = listOf<IBarDataSet>(barSet)
         val data = BarData(dataSets).apply {
             setValueTextSize(0f)
-            barWidth = 0.9f
+
+            barWidth = when (timePeriod) {
+                TimePeriod.WEEK -> 0.5f
+                TimePeriod.MONTH -> 0.9f
+            }
         }
 
         binding.progressCaloriesBarChart.data = data
         binding.progressCaloriesBarChart.invalidate()
-        binding.progressCaloriesBarChart.animateY(1000, Easing.EaseInQuad)
+        binding.progressCaloriesBarChart.animateY(600, Easing.EaseInQuad)
     }
 
 

@@ -2,7 +2,6 @@ package ai.passio.nutrition.uimodule.ui.activity
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.Repository
-import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import android.os.Bundle
 import android.view.View
@@ -24,7 +23,6 @@ class PassioUiModuleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        SharedPrefUtils.init(applicationContext)
         Repository.create(this.applicationContext)
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)

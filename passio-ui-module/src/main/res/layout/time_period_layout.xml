@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rc_8_border_gray300"
+    android:background="@drawable/rc_6_border_gray300"
     android:orientation="horizontal"
     android:padding="1dp"
     tools:parentTag="android.widget.LinearLayout">
@@ -15,8 +15,7 @@
         android:layout_weight="1"
         android:background="@drawable/rc_8_primary_left"
         android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingVertical="8dp"
         android:text="@string/week"
         android:textColor="@color/white"
         android:textSize="14sp" />
@@ -34,8 +33,7 @@
         android:layout_weight="1"
         android:background="@drawable/rc_8_white_right"
         android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingVertical="8dp"
         android:text="@string/month"
         android:textColor="@color/gray500"
         android:textSize="14sp" />

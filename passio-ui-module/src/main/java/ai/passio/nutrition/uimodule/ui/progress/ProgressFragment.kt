@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.databinding.FragmentProgressBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import com.google.android.material.tabs.TabLayoutMediator
 
 class ProgressFragment : BaseFragment<ProgressViewModel>() {
@@ -28,6 +29,7 @@ class ProgressFragment : BaseFragment<ProgressViewModel>() {
 
         with(binding)
         {
+            toolbar.setup(getString(R.string.my_progress), baseToolbarListener)
             viewPager.adapter = MacrosViewPagerAdapter(this@ProgressFragment)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 when (position) {
@@ -35,6 +37,17 @@ class ProgressFragment : BaseFragment<ProgressViewModel>() {
                     1 -> tab.text = requireContext().getString(R.string.micros)
                 }
             }.attach()
+        }
+
+    }
+
+    private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
+        override fun onBack() {
+            viewModel.navigateBack()
+        }
+
+        override fun onRightIconClicked() {
+
         }
 
     }

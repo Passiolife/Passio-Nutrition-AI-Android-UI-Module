@@ -30,14 +30,20 @@
         tools:text="90 g" />
 
     <ProgressBar
+        android:id="@+id/progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:progress="60"
-        android:progressBackgroundTint="@color/passio_primary"
+        android:layout_height="14dp"
+        android:layout_marginTop="8dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0"
+        android:progressBackgroundTint="@color/indigo50"
+        android:progressDrawable="@drawable/rounded_progress_bar"
         android:progressTint="@color/passio_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label" />
+        app:layout_constraintTop_toBottomOf="@id/label"
+        tools:progress="50" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

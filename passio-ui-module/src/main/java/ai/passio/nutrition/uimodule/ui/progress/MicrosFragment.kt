@@ -1,14 +1,16 @@
 package ai.passio.nutrition.uimodule.ui.progress
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.FragmentMicrosBinding
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import android.app.DatePickerDialog
+import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
+import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
+import androidx.core.view.isVisible
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.Date
@@ -34,7 +36,9 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         initObserver()
 
         binding.timeTitle.setOnClickListener {
-            showDatePickerDialog()
+            showDatePickerDialog(requireContext()) { selectedDate ->
+                viewModel.setCurrentDate(selectedDate.toDate())
+            }
         }
         binding.moveNext.setOnClickListener {
             viewModel.setNextDay()
@@ -42,7 +46,23 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         binding.movePrevious.setOnClickListener {
             viewModel.setPreviousDay()
         }
+        showMicrosNote()
 
+    }
+
+    private fun showMicrosNote() {
+        if (SharedPrefUtils.get("microsNoteShown", Boolean::class.java)) {
+            binding.close.isVisible = false
+            binding.microsNote.isVisible = false
+        } else {
+            binding.close.isVisible = true
+            binding.microsNote.isVisible = true
+        }
+        binding.close.setOnClickListener {
+            SharedPrefUtils.put("microsNoteShown", true)
+            binding.close.isVisible = false
+            binding.microsNote.isVisible = false
+        }
     }
 
     private fun initObserver() {
@@ -50,8 +70,18 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
     }
 
-    private fun updateLogs(records: List<FoodRecord>) {
 
+    private fun updateLogs(records: ArrayList<MicroNutrient>) {
+        with(binding) {
+            if (rvConsumed.adapter is MicroNutrientAdapter) {
+                (rvConsumed.adapter as MicroNutrientAdapter).updateData(records)
+            } else {
+                rvConsumed.adapter = MicroNutrientAdapter(records) {
+                    viewModel.setShowMore()
+                }
+            }
+
+        }
     }
 
     private fun updateDate(currentDate: Date) {
@@ -66,24 +96,8 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         }
 
         binding.timeTitle.text = formattedDate
-    }
 
-    private fun showDatePickerDialog() {
-        val now = DateTime.now()
-        val year = now.year
-        val month = now.monthOfYear - 1 // DatePickerDialog uses 0-based month
-        val day = now.dayOfMonth
-
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, selectedYear, selectedMonth, selectedDay ->
-                // Format the selected date
-                val selectedDate = DateTime(selectedYear, selectedMonth + 1, selectedDay, 0, 0)
-                viewModel.setCurrentDate(selectedDate.toDate())
-            },
-            year, month, day
-        )
-        datePickerDialog.show()
+        viewModel.fetchLogsForCurrentDay()
     }
 
 

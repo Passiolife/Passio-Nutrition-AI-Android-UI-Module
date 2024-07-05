@@ -87,10 +87,10 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun fetchMonthRecords(day: Date): List<FoodRecord> {
         val today = DateTime(day.time)
-        val startOfWeek = getStartOfMonth(today).millis
-        val endOfWeek = getEndOfMonth(today).millis
+        val startOfMonth = getStartOfMonth(today).millis
+        val endOfMonth = getEndOfMonth(today).millis
 
-        return records.filter { it.createdAtTime() in startOfWeek..endOfWeek }
+        return records.filter { it.createdAtTime() in startOfMonth..endOfMonth }
     }
 
     override suspend fun fetchWeekRecords(day: Date): List<FoodRecord> {

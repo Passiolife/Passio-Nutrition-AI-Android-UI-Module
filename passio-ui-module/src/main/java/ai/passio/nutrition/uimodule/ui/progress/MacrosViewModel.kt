@@ -22,10 +22,6 @@ class MacrosViewModel : BaseViewModel() {
     private val _timePeriod = SingleLiveEvent<MacrosFragment.TimePeriod>()
     val timePeriod: LiveData<MacrosFragment.TimePeriod> get() = _timePeriod
 
-    init {
-        fetchLogsForCurrentWeek()
-    }
-
     fun fetchLogsForCurrentWeek() {
         viewModelScope.launch {
             _timePeriod.postValue(MacrosFragment.TimePeriod.WEEK)

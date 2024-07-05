@@ -19,7 +19,7 @@ class FoodAlternativeAdapter(
     inner class FoodAlternativeViewHolder(val binding: ItemFoodAlternativeBinding) :
         ViewHolder(binding.root) {
         fun bind(detectedCandidate: DetectedCandidate) {
-            binding.foodName.text = "$itemCount/${(adapterPosition+1)} " +detectedCandidate.foodName.capitalized()
+            binding.foodName.text = detectedCandidate.foodName.capitalized()
             binding.foodImage.loadPassioIcon(detectedCandidate.passioID)
             binding.addFood.setOnClickListener {
                 onAlternativeLogged.invoke(detectedCandidate)
