@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topView"
         android:layout_width="0dp"
+        android:elevation="4dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
