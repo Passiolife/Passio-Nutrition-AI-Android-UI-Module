@@ -14,6 +14,9 @@
         <action
             android:id="@+id/dashboard_to_search"
             app:destination="@id/search" />
+        <action
+            android:id="@+id/dashboard_to_progress"
+            app:destination="@id/progress" />
 
     </fragment>
 

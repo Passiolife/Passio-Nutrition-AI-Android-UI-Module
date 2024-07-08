@@ -1,19 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/passio_background"
+    android:orientation="vertical"
     tools:context=".ui.dashboard.DashboardFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/dashButton"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/passio_primary"
-        android:padding="8dp"
-        android:text="Dashboard fragment ->"
-        android:textColor="@color/white" />
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/viewTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/movePrevious"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                app:srcCompat="@drawable/ic_move_previous" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/timeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="@color/gray900"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/icon_calendar"
+                    tools:text="@string/today" />
+            </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/moveNext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                app:srcCompat="@drawable/ic_move_next" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ai.passio.nutrition.uimodule.ui.view.DailyNutrition
+                android:id="@+id/dailyNutrition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rc_8_white"
+                android:elevation="4dp"
+                android:padding="16dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/toggleWeekMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rotation="0"
+                    app:layout_constraintBottom_toBottomOf="@id/labelAdherence"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/labelAdherence"
+                    app:srcCompat="@drawable/ic_arrow_down" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelAdherence"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:text="@string/weekly_adherence"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_adherence"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelAdherence"
+                    app:mcv_leftArrow="@drawable/ic_move_previous"
+                    app:mcv_rightArrow="@drawable/ic_move_next"
+                    app:mcv_showOtherDates="all"
+                    app:mcv_showWeekDays="true"
+                    app:mcv_titleAnimationOrientation="horizontal"
+                    app:mcv_weekDayTextAppearance="@style/CustomWeekDayTextAppearance"
+                    tools:layout_height="200dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.appcompat.widget.LinearLayoutCompat>

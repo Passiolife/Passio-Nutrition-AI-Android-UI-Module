@@ -12,6 +12,7 @@
     <color name="gray200">#E5E7EB</color>
     <color name="gray50">#F9FAFB</color>
     <color name="gray300">#D1D5DB</color>
+    <color name="gray700">#374151</color>
     <color name="gray900">#111827</color>
     <color name="indigo50">#EEF2FF</color>
     <color name="scan_background">#6B7280BF</color>
