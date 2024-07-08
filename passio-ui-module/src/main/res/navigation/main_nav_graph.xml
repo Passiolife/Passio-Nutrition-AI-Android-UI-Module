@@ -17,6 +17,9 @@
         <action
             android:id="@+id/dashboard_to_progress"
             app:destination="@id/progress" />
+        <action
+            android:id="@+id/dashboard_to_my_profile"
+            app:destination="@id/my_profile" />
 
     </fragment>
 
@@ -155,6 +158,15 @@
         <action
             android:id="@+id/add_food_to_search"
             app:destination="@id/search" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/my_profile"
+        android:name="ai.passio.nutrition.uimodule.ui.profile.MyProfileFragment"
+        android:label="My Profile"
+        tools:layout="@layout/fragment_my_profile">
+
 
     </fragment>
 

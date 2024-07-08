@@ -12,12 +12,15 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.lang.reflect.Field
 import java.util.Date
 import java.util.Locale
 
@@ -56,6 +59,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
                 viewModel.toggleCalendarMode()
             }
 
+
             setupCalendarView()
 
             dailyNutrition.invokeProgressReport(::navigateToProgressReport)
@@ -67,7 +71,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             // Change the month name text color
             val titleTextView =
                 calendarView.findViewById<TextView>(R.id.month_name)//getChildAt(0) as TextView
-            titleTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray900))
+            titleTextView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.passio_gray900
+                )
+            )
 //            calendarView.currentDate = CalendarDay.today()
             val aa = DateTime.now()//.plusDays(2)
             calendarView.selectedDate = CalendarDay.from(aa.year, aa.monthOfYear, aa.dayOfMonth)
@@ -82,7 +91,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         }
 
         override fun onRightIconClicked() {
-
+            showPopupMenu(binding.toolbar.findViewById(R.id.toolbarMenu))
         }
 
     }
@@ -142,7 +151,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         }
     }
 
-    private var myDayViewDecorator: MyDayViewDecorator? = null
     private fun updateAdherence(records: List<Long>) {
 
         with(binding)
@@ -150,31 +158,20 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             val days = records.map { millisToDay(it) }
             calendarView.removeDecorators()
             calendarView.addDecorators(
-                TodayDecorator(),
-                PastDaysWithEventsDecorator(days),
-                PastDaysWithoutEventsDecorator(days),
-                FutureDaysDecorator(),
-                SelectedDayDecorator(calendarView),
+                TodayDecorator(requireContext()),
+                PastDaysWithEventsDecorator(requireContext(), days),
+                PastDaysWithoutEventsDecorator(requireContext(), days),
+                FutureDaysDecorator(requireContext()),
+                SelectedDayDecorator(requireContext(), calendarView),
                 DisableDateSelectionDecorator()
             )
         }
 
-
     }
 
     private fun updateLogs(records: List<FoodRecord>) {
-//        val breakfastLogs = records.filter { it.mealLabel == MealLabel.Breakfast }
-//        val lunchLogs = records.filter { it.mealLabel == MealLabel.Lunch }
-//        val dinnerLogs = records.filter { it.mealLabel == MealLabel.Dinner }
-//        val snackLogs = records.filter { it.mealLabel == MealLabel.Snack }
 
         with(binding) {
-//            toolbarCalendar.text = dateFormat.format(viewModel.getCurrentDate())
-
-//            breakfastCategory.update(breakfastLogs)
-//            lunchCategory.update(lunchLogs)
-//            dinnerCategory.update(dinnerLogs)
-//            snackCategory.update(snackLogs)
 
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()
@@ -195,6 +192,56 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
                 currentFat.toInt(),
                 40
             )
+        }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(requireContext(), view)
+        popupMenu.menuInflater.inflate(R.menu.dashboard_menu, popupMenu.menu)
+        showMenuIcons(popupMenu)
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.my_profile -> {
+                    viewModel.navigateToMyProfile()
+                    true
+                }
+                /*R.id.tutorials -> {
+                    Toast.makeText(requireContext(), "Tutorials clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.settings -> {
+                    Toast.makeText(requireContext(), "Settings clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }
+
+                R.id.log_out -> {
+                    Toast.makeText(requireContext(), "Log Out clicked", Toast.LENGTH_SHORT).show()
+                    true
+                }*/
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+    }
+
+    private fun showMenuIcons(popupMenu: PopupMenu) {
+        try {
+            val fields: Array<Field> = popupMenu.javaClass.declaredFields
+            for (field in fields) {
+                if ("mPopup" == field.name) {
+                    field.isAccessible = true
+                    val menuPopupHelper = field.get(popupMenu)
+                    val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
+                    val setForceIcons =
+                        classPopupHelper.getMethod("setForceShowIcon", Boolean::class.java)
+                    setForceIcons.invoke(menuPopupHelper, true)
+                    break
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

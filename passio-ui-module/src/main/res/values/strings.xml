@@ -91,4 +91,8 @@
     <string name="show_less">Show Less</string>
     <string name="monthly_adherence">Monthly Adherence</string>
     <string name="weekly_adherence">Weekly Adherence</string>
+    <string name="my_profile">My Profile</string>
+    <string name="tutorials">Tutorials</string>
+    <string name="settings">Settings</string>
+    <string name="log_out">Log Out</string>
 </resources>

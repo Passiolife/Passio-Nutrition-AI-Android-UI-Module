@@ -27,7 +27,7 @@ class DashboardViewModel : BaseViewModel() {
     val adherents: LiveData<List<Long>> get() = _adherents
 
     private var calendarModeCurrent = CalendarMode.WEEKS
-    private val _calendarMode = SingleLiveEvent<CalendarMode>()
+    private val _calendarMode = MutableLiveData<CalendarMode>()
     val calendarMode: LiveData<CalendarMode> get() = _calendarMode
 
 
@@ -75,9 +75,9 @@ class DashboardViewModel : BaseViewModel() {
         }
     }
 
-    fun navigateToDiary() {
+    fun navigateToMyProfile() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(DashboardFragmentDirections.dashboardToSearch())
+            navigate(DashboardFragmentDirections.dashboardToMyProfile())
         }
     }
 
