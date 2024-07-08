@@ -68,6 +68,7 @@
     <string name="meal_plan">Meal Plan</string>
     <string name="progress">Progress</string>
     <string name="my_progress">My Progress</string>
+    <string name="welcome">Welcome!</string>
     <string name="not_what_you_re_looking_for_search_manually">Not what you\'re looking for? Search manually</string>
     <string name="macros">Macros</string>
     <string name="micros">Micros</string>
@@ -88,4 +89,6 @@
     <string name="micros_note">Please note that not all foods in our database have available micronutrient information, so the summary provided may be incomplete.</string>
     <string name="show_more">Show More</string>
     <string name="show_less">Show Less</string>
+    <string name="monthly_adherence">Monthly Adherence</string>
+    <string name="weekly_adherence">Weekly Adherence</string>
 </resources>

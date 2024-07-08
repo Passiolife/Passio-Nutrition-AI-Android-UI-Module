@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
+import ai.passio.nutrition.uimodule.ui.util.timestampToDate
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
@@ -118,4 +119,16 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchFavorites(): List<FoodRecord> = favorites
+
+    override suspend fun fetchAdherence(): List<Long> {
+        val uniqueDates = HashSet<Long>() // HashSet to store unique dates
+        // Iterate through each record and add the date component to the HashSet
+        records.forEach { record ->
+            record.createdAtTime()?.let { timestamp ->
+                val date = timestampToDate(timestamp)
+                uniqueDates.add(date)
+            }
+        }
+        return uniqueDates.toList()
+    }
 }

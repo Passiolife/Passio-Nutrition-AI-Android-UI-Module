@@ -107,4 +107,8 @@ class Repository private constructor() {
         return connector.fetchMonthRecords(day)
     }
 
+    suspend fun fetchAdherence(): List<Long> {
+        return connector.fetchAdherence()
+    }
+
 }
