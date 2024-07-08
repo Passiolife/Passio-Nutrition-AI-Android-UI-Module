@@ -14,6 +14,7 @@ import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -205,20 +206,19 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
                     viewModel.navigateToMyProfile()
                     true
                 }
-                /*R.id.tutorials -> {
-                    Toast.makeText(requireContext(), "Tutorials clicked", Toast.LENGTH_SHORT).show()
-                    true
-                }
 
                 R.id.settings -> {
-                    Toast.makeText(requireContext(), "Settings clicked", Toast.LENGTH_SHORT).show()
+                    viewModel.navigateToSettings()
                     true
                 }
 
                 R.id.log_out -> {
-                    Toast.makeText(requireContext(), "Log Out clicked", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Logout successfully!", Toast.LENGTH_LONG)
+                        .show()
+                    requireActivity().finish()
                     true
-                }*/
+                }
+
                 else -> false
             }
         }

@@ -20,6 +20,9 @@
         <action
             android:id="@+id/dashboard_to_my_profile"
             app:destination="@id/my_profile" />
+        <action
+            android:id="@+id/dashboard_to_settings"
+            app:destination="@id/settings" />
 
     </fragment>
 
@@ -166,6 +169,15 @@
         android:name="ai.passio.nutrition.uimodule.ui.profile.MyProfileFragment"
         android:label="My Profile"
         tools:layout="@layout/fragment_my_profile">
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/settings"
+        android:name="ai.passio.nutrition.uimodule.ui.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings">
 
 
     </fragment>

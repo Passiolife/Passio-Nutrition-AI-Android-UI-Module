@@ -81,6 +81,12 @@ class DashboardViewModel : BaseViewModel() {
         }
     }
 
+    fun navigateToSettings() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(DashboardFragmentDirections.dashboardToSettings())
+        }
+    }
+
     fun navigateToProgress() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(DashboardFragmentDirections.dashboardToProgress())

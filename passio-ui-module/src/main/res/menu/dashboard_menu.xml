@@ -8,7 +8,7 @@
     <!--<item
         android:id="@+id/tutorials"
         android:icon="@drawable/ic_tutorials"
-        android:title="@string/tutorials" />
+        android:title="@string/tutorials" />-->
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"
@@ -16,5 +16,5 @@
     <item
         android:id="@+id/log_out"
         android:icon="@drawable/ic_logout"
-        android:title="@string/log_out" />-->
+        android:title="@string/log_out" />
 </menu>
