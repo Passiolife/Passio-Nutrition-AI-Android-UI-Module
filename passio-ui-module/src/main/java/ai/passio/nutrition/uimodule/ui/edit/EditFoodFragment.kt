@@ -289,9 +289,21 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             val fat = nutrients.fat()?.value ?: 0.0
 
             val sum = 4 * carbs + 4 * protein + 9 * fat
-            var carbPercent = (((4 * carbs) / sum) * 100).roundToInt()
-            val proteinPercent = (((4 * protein) / sum) * 100).roundToInt()
-            val fatPercent = (((9 * fat) / sum) * 100).roundToInt()
+            var carbPercent = if (sum != 0.0) {
+                (((4 * carbs) / sum) * 100).roundToInt()
+            } else {
+                0
+            }
+            val proteinPercent = if (sum != 0.0) {
+                (((4 * protein) / sum) * 100).roundToInt()
+            } else {
+                0
+            }
+            val fatPercent = if (sum != 0.0) {
+                (((9 * fat) / sum) * 100).roundToInt()
+            } else {
+                0
+            }
             if (carbPercent + proteinPercent + fatPercent == 99) {
                 carbPercent += 1
             } else if (carbPercent + proteinPercent + fatPercent == 101) {
