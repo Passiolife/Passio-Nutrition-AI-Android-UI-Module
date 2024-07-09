@@ -89,8 +89,12 @@
         <action
             android:id="@+id/edit_to_diary"
             app:destination="@id/diary"
-            app:launchSingleTop="false"
-            app:popUpToInclusive="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard">
+            <argument
+                android:name="currentDate"
+                app:argType="long"/>
+        </action>
 
     </fragment>
 

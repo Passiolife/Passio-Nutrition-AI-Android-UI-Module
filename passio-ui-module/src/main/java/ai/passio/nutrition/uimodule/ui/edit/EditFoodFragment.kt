@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.edit
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentEditFoodBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
@@ -120,7 +121,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 val deleteItem = SwipeMenuItem(requireContext()).apply {
                     text = getString(R.string.delete)
                     setTextColor(Color.WHITE)
-                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.passio_red500))
+                    setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.passio_red500
+                        )
+                    )
                     width = DesignUtils.dp2px(80f)
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                 }
@@ -180,6 +186,17 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         viewModel.internalUpdate.observe(viewLifecycleOwner) { pair ->
             updateFoodRecord(pair.first, pair.second)
         }
+
+        viewModel.resultLogFood.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ResultWrapper.Error -> {
+                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
+                }
+                is ResultWrapper.Success -> {
+                    viewModel.navigateToDiary(result.value.createdAtTime())
+                }
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -189,7 +206,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
     }
 
-    private val toolbarListener = object : BaseToolbar.ToolbarListener{
+    private val toolbarListener = object : BaseToolbar.ToolbarListener {
         override fun onBack() {
             viewModel.navigateBack()
         }

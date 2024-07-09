@@ -8,16 +8,16 @@
         android:pathData="M0,0h24v24h-24z"/>
     <path
         android:pathData="M18.654,5.084L18.132,3.475H18.099L17.576,5.084H18.654Z"
-        android:fillColor="#4F46E5"/>
+        android:fillColor="@color/passio_primary"/>
     <path
         android:pathData="M24,4.8C24,7.451 21.851,9.6 19.2,9.6C16.549,9.6 14.4,7.451 14.4,4.8C14.4,2.149 16.549,0 19.2,0C21.851,0 24,2.149 24,4.8ZM21.57,2.504V6.754H20.671V2.504H21.57ZM16.07,6.754H17.032L17.348,5.785H18.882L19.197,6.754H20.16L18.695,2.504H17.537L16.07,6.754Z"
-        android:fillColor="#4F46E5"
+        android:fillColor="@color/passio_primary"
         android:fillType="evenOdd"/>
     <path
         android:pathData="M15.6,9.6C14.143,8.506 13.2,6.763 13.2,4.8C13.2,4.39 13.241,3.99 13.319,3.603C13.28,3.601 13.24,3.6 13.2,3.6H4.8C3.475,3.6 2.4,4.674 2.4,6V10.8C2.4,12.125 3.475,13.2 4.8,13.2H7.2V16.8L10.8,13.2H13.2C14.526,13.2 15.6,12.125 15.6,10.8V9.6Z"
-        android:fillColor="#4F46E5"/>
+        android:fillColor="@color/passio_primary"/>
     <path
         android:pathData="M18,10.68V10.8C18,13.451 15.851,15.6 13.2,15.6H11.794L9.674,17.72C10.01,17.899 10.393,18 10.8,18H13.2L16.8,21.6V18H19.2C20.525,18 21.6,16.925 21.6,15.6V10.8C21.6,10.636 21.584,10.476 21.552,10.321C20.83,10.629 20.035,10.8 19.2,10.8C18.789,10.8 18.388,10.759 18,10.68Z"
-        android:fillColor="#4F46E5"/>
+        android:fillColor="@color/passio_primary"/>
   </group>
 </vector>
