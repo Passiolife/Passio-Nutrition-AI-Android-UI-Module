@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rc_40_white"
+    android:padding="16dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daily_nutrition_target"
+        android:textColor="@color/passio_gray900"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/move_the_sliders_to_adjust_your_targets"
+        android:textColor="@color/passio_gray900"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblTitle" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblCalorieGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:text="@string/calorie_goal"
+        android:textColor="@color/passio_gray900"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblSubTitle" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/calorieGoal"
+        style="@style/EditTextProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="@string/calorie_goal"
+        android:inputType="number"
+        android:maxLength="4"
+        android:minWidth="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblCalorieGoal"
+        tools:text="1200" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/proteinContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calorieGoal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/protein_per"
+            android:lines="1"
+            android:minWidth="80dp"
+            android:padding="4dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calorieGoal" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/proteinPer"
+            style="@style/EditTextProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/protein_per"
+            android:inputType="number"
+            android:maxLength="3"
+            android:lines="1"
+            android:minWidth="80dp"
+            tools:text="30%" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/proteinGram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lines="1"
+            android:minWidth="80dp"
+            android:padding="4dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calorieGoal"
+            tools:text="90 g" />
+
+        <ai.passio.nutrition.uimodule.ui.view.VerticalSeekBar
+            android:id="@+id/proteinSeek"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            app:tsb_max="100"
+            app:tsb_min="0"
+            app:tsb_progress_value_float="false"
+            app:tsb_thumb_color="@color/passio_primary"
+            app:tsb_thumb_size="24dp"
+            app:tsb_track_background_color="@color/passio_indigo50"
+            app:tsb_track_background_size="8dp"
+            app:tsb_track_progress_color="@color/passio_primary"
+            app:tsb_track_progress_size="8dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/fatContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/proteinContainer"
+        app:layout_constraintTop_toBottomOf="@id/calorieGoal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/fat_per"
+            android:lines="1"
+            android:minWidth="80dp"
+            android:padding="4dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calorieGoal" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/fatPer"
+            style="@style/EditTextProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/fat_per"
+            android:inputType="number"
+            android:maxLength="3"
+            android:lines="1"
+            android:minWidth="80dp"
+            tools:text="20%" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fatGram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lines="1"
+            android:minWidth="80dp"
+            android:padding="4dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calorieGoal"
+            tools:text="70 g" />
+
+        <ai.passio.nutrition.uimodule.ui.view.VerticalSeekBar
+            android:id="@+id/fatSeek"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            app:tsb_max="100"
+            app:tsb_min="0"
+            app:tsb_progress_value_float="false"
+            app:tsb_thumb_color="@color/passio_primary"
+            app:tsb_thumb_size="24dp"
+            app:tsb_track_background_color="@color/passio_indigo50"
+            app:tsb_track_background_size="8dp"
+            app:tsb_track_progress_color="@color/passio_primary"
+            app:tsb_track_progress_size="8dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/carbsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/proteinContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calorieGoal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/carbs_per"
+            android:lines="1"
+            android:minWidth="80dp"
+            android:padding="4dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calorieGoal" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/carbsPer"
+            style="@style/EditTextProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/carbs_per"
+            android:inputType="number"
+            android:maxLength="3"
+            android:lines="1"
+            android:minWidth="80dp"
+            tools:text="50%" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/carbsGram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lines="1"
+            android:minWidth="80dp"
+            android:padding="4dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calorieGoal"
+            tools:text="150 g" />
+
+        <ai.passio.nutrition.uimodule.ui.view.VerticalSeekBar
+            android:id="@+id/carbsSeek"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            app:tsb_max="100"
+            app:tsb_min="0"
+            app:tsb_progress_value_float="false"
+            app:tsb_thumb_color="@color/passio_primary"
+            app:tsb_thumb_size="24dp"
+            app:tsb_track_background_color="@color/passio_indigo50"
+            app:tsb_track_background_size="8dp"
+            app:tsb_track_progress_color="@color/passio_primary"
+            app:tsb_track_progress_size="8dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/rc_4_passio_primary"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/cancel"
+        android:textColor="@color/passio_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/proteinContainer" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/rc_8_purple"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/save"
+        android:textColor="@color/passio_white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cancel"
+        app:layout_constraintTop_toTopOf="@id/cancel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

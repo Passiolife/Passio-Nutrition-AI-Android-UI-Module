@@ -134,9 +134,16 @@ class RecognitionResultView @JvmOverloads constructor(
             fun editVisualCandidate(detectedCandidate: DetectedCandidate) {
                 recognitionResultListener?.onEditVisual(detectedCandidate)
             }
+
+            fun removeDuplicates(candidates: List<DetectedCandidate>): List<DetectedCandidate> {
+                val seen = mutableSetOf<String>()
+                return candidates.filter { candidate -> seen.add(candidate.foodName) }
+            }
+
+            val alternatives = removeDuplicates(result.visualCandidate.alternatives)
             it.rvAlternatives.adapter =
                 FoodAlternativeAdapter(
-                    result.visualCandidate.alternatives,
+                    alternatives,
                     ::logVisualCandidate,
                     ::editVisualCandidate
                 )

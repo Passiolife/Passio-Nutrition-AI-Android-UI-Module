@@ -5,6 +5,7 @@ import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -70,4 +71,15 @@ fun showDatePickerDialog(context: Context, onDateSelected: (selectedDateTime: Da
         year, month, day
     )
     datePickerDialog.show()
+}
+
+fun timestampToDate(timestamp: Long): Long {
+    // Convert millis to a date with only date part (ignoring time)
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = timestamp
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    return calendar.timeInMillis
 }

@@ -34,6 +34,7 @@ class DailyNutrition @JvmOverloads constructor(
     private var fatOverColor: Int = ContextCompat.getColor(context, R.color.passio_fat_over)
     private var noColor: Int = ContextCompat.getColor(context, R.color.passio_gray200)
     private var valueOverColor: Int = ContextCompat.getColor(context, R.color.passio_red600)
+    private var blackColor: Int = ContextCompat.getColor(context, R.color.passio_black)
 
     init {
         _binding = DailyNutritionLayoutBinding.inflate(LayoutInflater.from(context), this)
@@ -155,6 +156,8 @@ class DailyNutrition @JvmOverloads constructor(
             val data = PieData(dataSet)
             chart.data = data
             chart.invalidate()
+
+            currentTextView.setTextColor(blackColor)
         } else {
             var ratio = (currentValue - targetValue).toFloat() / targetValue
             if (ratio > 1f) {

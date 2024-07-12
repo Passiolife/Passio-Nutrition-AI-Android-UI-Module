@@ -25,7 +25,7 @@ data class MicroNutrient(
                 MicroNutrient(
                     name = "Trans Fat",
                     value = foodRecords.sumOf { it?.nutrients()?.transFat()?.value ?: 0.0 },
-                    recommendedValue = 15.0,
+                    recommendedValue = 2.2,
                     unitSymbol = foodRecords.firstOrNull()?.nutrientsSelectedSize()?.transFat()?.unit?.symbol ?: Grams.symbol
                 ),
                 MicroNutrient(

@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.edit
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentEditFoodBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
@@ -120,7 +121,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 val deleteItem = SwipeMenuItem(requireContext()).apply {
                     text = getString(R.string.delete)
                     setTextColor(Color.WHITE)
-                    setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.passio_red500))
+                    setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.passio_red500
+                        )
+                    )
                     width = DesignUtils.dp2px(80f)
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                 }
@@ -180,6 +186,17 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         viewModel.internalUpdate.observe(viewLifecycleOwner) { pair ->
             updateFoodRecord(pair.first, pair.second)
         }
+
+        viewModel.resultLogFood.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is ResultWrapper.Error -> {
+                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
+                }
+                is ResultWrapper.Success -> {
+                    viewModel.navigateToDiary(result.value.createdAtTime())
+                }
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -189,7 +206,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
     }
 
-    private val toolbarListener = object : BaseToolbar.ToolbarListener{
+    private val toolbarListener = object : BaseToolbar.ToolbarListener {
         override fun onBack() {
             viewModel.navigateBack()
         }
@@ -289,9 +306,21 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             val fat = nutrients.fat()?.value ?: 0.0
 
             val sum = 4 * carbs + 4 * protein + 9 * fat
-            var carbPercent = (((4 * carbs) / sum) * 100).roundToInt()
-            val proteinPercent = (((4 * protein) / sum) * 100).roundToInt()
-            val fatPercent = (((9 * fat) / sum) * 100).roundToInt()
+            var carbPercent = if (sum != 0.0) {
+                (((4 * carbs) / sum) * 100).roundToInt()
+            } else {
+                0
+            }
+            val proteinPercent = if (sum != 0.0) {
+                (((4 * protein) / sum) * 100).roundToInt()
+            } else {
+                0
+            }
+            val fatPercent = if (sum != 0.0) {
+                (((9 * fat) / sum) * 100).roundToInt()
+            } else {
+                0
+            }
             if (carbPercent + proteinPercent + fatPercent == 99) {
                 carbPercent += 1
             } else if (carbPercent + proteinPercent + fatPercent == 101) {

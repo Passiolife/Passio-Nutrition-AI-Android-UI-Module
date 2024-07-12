@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import java.util.*
 
 interface PassioConnector {
@@ -23,8 +24,10 @@ interface PassioConnector {
 
     suspend fun fetchFavorites(): List<FoodRecord>
 
-    // TODO user profile
-//    fun fetchUserProfile(onResult: (userProfile: UserProfile?) -> Unit)
-//
-//    fun updateUserProfile(userProfile: UserProfile, onComplete: () -> Unit)
+    suspend fun fetchAdherence(): List<Long>
+
+    suspend fun fetchUserProfile(): UserProfile
+
+    suspend fun updateUserProfile(userProfile: UserProfile): Boolean
+
 }
