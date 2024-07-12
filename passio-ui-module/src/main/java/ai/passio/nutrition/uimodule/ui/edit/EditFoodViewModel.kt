@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.edit
 
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
@@ -13,7 +14,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class EditFoodViewModel : BaseViewModel() {
 
@@ -25,11 +25,14 @@ class EditFoodViewModel : BaseViewModel() {
     val internalUpdate: LiveData<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>> get() = _internalUpdate
     private var isEditMode = false
 
+
+    private val _resultLogFood = MutableLiveData<ResultWrapper<FoodRecord>>()
+    val resultLogFood: LiveData<ResultWrapper<FoodRecord>> get() = _resultLogFood
+
     private lateinit var foodRecord: FoodRecord
     private var ingredientIndex = -1
 
-    fun setEditMode(isEditMode: Boolean)
-    {
+    fun setEditMode(isEditMode: Boolean) {
         this.isEditMode = isEditMode
     }
 
@@ -88,15 +91,18 @@ class EditFoodViewModel : BaseViewModel() {
     fun logCurrentRecord() {
         viewModelScope.launch {
             if (useCase.logFoodRecord(foodRecord, isEditMode)) {
-                navigateToDiary()
+                _resultLogFood.postValue(ResultWrapper.Success(foodRecord))
+            } else {
+                _resultLogFood.postValue(ResultWrapper.Error("Failed to log food. Please try again"))
             }
         }
     }
 
-    fun navigateToDiary() {
+    fun navigateToDiary(createdAtTime: Long?) {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(EditFoodFragmentDirections.editToDiary())
+            navigate(EditFoodFragmentDirections.editToDiary(currentDate = createdAtTime ?: 0))
         }
+
     }
 
     fun navigateToAddIngredient(): FoodRecord {

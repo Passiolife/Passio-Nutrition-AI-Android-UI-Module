@@ -18,6 +18,7 @@ import android.text.format.DateFormat
 import android.widget.DatePicker
 import com.google.gson.GsonBuilder
 import java.util.Calendar
+import java.util.Date
 
 /**
  * A simple [Fragment] subclass.
@@ -47,7 +48,16 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         dateFormat = DateFormat.getLongDateFormat(requireContext())
 
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
-        viewModel.fetchLogsForCurrentDay()
+
+        var currentDate = Date()
+        if (arguments?.containsKey("currentDate") == true) {
+            arguments?.getLong("currentDate")?.let {
+                currentDate = Date(it)
+            }
+        }
+        viewModel.setDate(currentDate)
+
+//        viewModel.fetchLogsForCurrentDay()
 
         with(binding) {
             toolbar.setup(getString(R.string.my_diary), this@DiaryFragment)

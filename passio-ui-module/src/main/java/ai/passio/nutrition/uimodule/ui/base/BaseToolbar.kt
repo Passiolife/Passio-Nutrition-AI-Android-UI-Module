@@ -4,7 +4,6 @@ import ai.passio.nutrition.uimodule.databinding.ToolbarLayoutBinding
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 
 class BaseToolbar @JvmOverloads constructor(
@@ -18,11 +17,11 @@ class BaseToolbar @JvmOverloads constructor(
         fun onRightIconClicked()
     }
 
-    private val binding: ToolbarLayoutBinding
+    private val binding: ToolbarLayoutBinding =
+        ToolbarLayoutBinding.inflate(LayoutInflater.from(context), this)
     private var listener: ToolbarListener? = null
 
     init {
-        binding = ToolbarLayoutBinding.inflate(LayoutInflater.from(context), this)
 
         binding.toolbarMenu.setOnClickListener {
             this.listener?.onRightIconClicked()

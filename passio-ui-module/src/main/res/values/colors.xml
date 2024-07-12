@@ -17,10 +17,14 @@
     <color name="passio_gray200">#E5E7EB</color>
     <color name="passio_gray50">#F9FAFB</color>
     <color name="passio_gray300">#D1D5DB</color>
+    <color name="passio_gray700">#374151</color>
     <color name="passio_gray900">#111827</color>
     <color name="passio_indigo50">#EEF2FF</color>
     <color name="passio_scan_background">#6B7280BF</color>
     <color name="passio_white20p">#32FFFFFF</color>
+
+    <color name="passio_green_800">#065F46</color>
+    <color name="passio_green_100">#D1FAE5</color>
 
     <color name="passio_calories">#F59E0B</color>
     <color name="passio_calories_over">#78350F</color>
@@ -31,6 +35,8 @@
     <color name="passio_fat">#8B5CF6</color>
     <color name="passio_fat_over">#4C1D95</color>
 
+    <color name="passio_red100">#FEE2E2</color>
     <color name="passio_red500">#EF4444</color>
     <color name="passio_red600">#DC2626</color>
+    <color name="passio_red800">#991B1B</color>
 </resources>

@@ -23,6 +23,8 @@ interface PassioConnector {
 
     suspend fun fetchFavorites(): List<FoodRecord>
 
+    suspend fun fetchAdherence(): List<Long>
+
     // TODO user profile
 //    fun fetchUserProfile(onResult: (userProfile: UserProfile?) -> Unit)
 //
