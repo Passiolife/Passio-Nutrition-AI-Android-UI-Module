@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
@@ -10,10 +11,8 @@ import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
 import android.text.format.DateFormat
-import android.util.Log
 import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
-import org.joda.time.DateTimeConstants
 import java.util.Date
 
 class SharedPrefsPassioConnector(context: Context) : PassioConnector {
@@ -28,6 +27,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     private val dateFormat = "yyyyMMdd"
     private lateinit var records: MutableList<FoodRecord>
     private lateinit var favorites: MutableList<FoodRecord>
+    private var userProfile: UserProfile = UserProfile()
 
     override fun initialize() {
         records = sharedPreferences.getRecords().map {
@@ -37,6 +37,11 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         favorites = sharedPreferences.getFavorites().map {
             gson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
+
+        gson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)?.let {
+            userProfile = it
+        }
+
     }
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
@@ -131,4 +136,15 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         }
         return uniqueDates.toList()
     }
+
+    override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {
+        this.userProfile = userProfile
+        sharedPreferences.saveUserProfile(gson.toJson(userProfile))
+        return true
+    }
+
+    override suspend fun fetchUserProfile(): UserProfile {
+        return userProfile
+    }
+
 }

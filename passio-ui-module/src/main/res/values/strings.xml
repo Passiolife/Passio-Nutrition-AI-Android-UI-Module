@@ -35,6 +35,9 @@
     <string name="carbs">Carbs</string>
     <string name="protein">Protein</string>
     <string name="fat">Fat</string>
+    <string name="carbs_per">Carbs(%)</string>
+    <string name="protein_per">Protein(%)</string>
+    <string name="fat_per">Fat(%)</string>
     <string name="my_diary">My Diary</string>
     <string name="cancel">Cancel</string>
     <string name="engineering_ux_views"><![CDATA[Engineering & UX Views]]></string>
@@ -95,4 +98,41 @@
     <string name="tutorials">Tutorials</string>
     <string name="settings">Settings</string>
     <string name="log_out">Log Out</string>
+    <string name="calculated_bmi">Calculated BMI</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="name">Name</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="target_weight">Target Weight</string>
+    <string name="activity_level">Activity Level</string>
+    <string name="calorie_deficit">Calorie Deficit</string>
+    <string name="diet">Diet</string>
+    <string name="water_target">Water Target</string>
+    <string name="enter_a_value">Enter a Value</string>
+    <string name="enter_age">Enter Age</string>
+    <string name="enter_target_weight">Enter Target Weight</string>
+    <string name="enter_weight">Enter Weight</string>
+    <string name="units_for_my_profile">Units for My Profile</string>
+    <string name="length">Length</string>
+    <string name="reminders">Reminders</string>
+    <string name="_8_am_breakfast">8 AM Breakfast</string>
+    <string name="_12_pm_lunch">12 PM Lunch</string>
+    <string name="_5_pm_dinner">5 PM Dinner</string>
+    <string name="daily_nutrition_target">Daily Nutrition Target</string>
+    <string name="move_the_sliders_to_adjust_your_targets">Move the sliders to adjust your targets.</string>
+    <string name="calorie_goal">Calorie Goal</string>
+    <string name="underweight">Underweight</string>
+    <string name="normal">Normal</string>
+    <string name="overweight">Overweight</string>
+    <string name="obese">Obese</string>
+    <string name="save_changes">Save Changes</string>
+    <string-array name="activity_level_list">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Item 5</item>
+    </string-array>
 </resources>

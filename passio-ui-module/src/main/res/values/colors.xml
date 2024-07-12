@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="passio_primary">#4F46E5</color>
+    <color name="passio_primary40p">#664F46E5</color>
     <color name="passio_background">#F9FAFB</color>
     <color name="passio_bottom_navigation_background">#FFFFFF</color>
     <color name="passio_bottom_navigation_selected">@color/passio_primary</color>
@@ -39,4 +40,23 @@
     <color name="passio_red500">#EF4444</color>
     <color name="passio_red600">#DC2626</color>
     <color name="passio_red800">#991B1B</color>
+
+    <color name="passio_under_weight">#27B1FF</color>
+    <color name="passio_normal_weight">#ACD90B</color>
+    <color name="passio_over_weight">#F18300</color>
+    <color name="passio_obese_weight">#E7221A</color>
+
+
+  <!--  #27B1FF
+    100%
+    #A2E40C
+    100%
+    #ACD90B
+    100%
+    #F18300
+    100%
+    #F18300
+    100%
+    #E7221A
+    100%-->
 </resources>

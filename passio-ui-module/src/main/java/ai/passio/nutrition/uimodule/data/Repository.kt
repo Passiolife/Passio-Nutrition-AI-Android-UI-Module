@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.passiosdk.passiofood.FoodCandidates
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.FoodRecognitionListener
@@ -109,6 +110,14 @@ class Repository private constructor() {
 
     suspend fun fetchAdherence(): List<Long> {
         return connector.fetchAdherence()
+    }
+
+    suspend fun updateUser(userProfile: UserProfile): Boolean {
+        return connector.updateUserProfile(userProfile)
+    }
+
+    suspend fun getUser(): UserProfile {
+        return connector.fetchUserProfile()
     }
 
 }
