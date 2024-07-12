@@ -6,7 +6,7 @@ Welcome to the Nutrition UI Module repository! This Android library provides a c
 
 ## Import Nutrition UI Module into your app
 
-1. Download the .aar from the [latest releases](https://github.com/Passiolife/Passio-Nutrition-AI-Android-UI-Module/releases/tag/0.0.1)
+1. Download the .aar from the [latest release](https://github.com/Passiolife/Passio-Nutrition-AI-Android-UI-Module/releases)
 2. Import the .aar into your project
 3. Add the dependencies located in the [build.gradle](https://github.com/Passiolife/Passio-Nutrition-AI-Android-UI-Module/blob/main/passio-ui-module/build.gradle) file of library module. Be sure to check the [repositories](https://github.com/Passiolife/Passio-Nutrition-AI-Android-UI-Module/blob/main/build.gradle) needed to pull the dependencies
 4. Sync files with gradle and make sure you can access the Passio classes
