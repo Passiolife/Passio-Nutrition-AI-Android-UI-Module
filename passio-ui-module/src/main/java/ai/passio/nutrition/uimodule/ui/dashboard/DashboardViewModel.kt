@@ -89,7 +89,7 @@ class DashboardViewModel : BaseViewModel() {
 
     fun navigateToProgress() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(DashboardFragmentDirections.dashboardToProgress())
+            navigate(DashboardFragmentDirections.dashboardToProgress(currentDate = currentDate.time))
         }
     }
 

@@ -22,6 +22,7 @@ class DiaryViewModel : BaseViewModel() {
 
     private var currentDate = Date()
 
+
     fun fetchLogsForCurrentDay() {
         viewModelScope.launch {
             val records = useCase.getLogsForDay(currentDate)
@@ -67,7 +68,7 @@ class DiaryViewModel : BaseViewModel() {
 
     fun navigateToProgress() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(DiaryFragmentDirections.diaryToProgress())
+            navigate(DiaryFragmentDirections.diaryToProgress(currentDate = currentDate.time))
         }
     }
 }

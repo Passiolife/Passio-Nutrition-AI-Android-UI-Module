@@ -16,7 +16,13 @@
             app:destination="@id/search" />
         <action
             android:id="@+id/dashboard_to_progress"
-            app:destination="@id/progress" />
+            app:destination="@id/progress">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+
+        </action>
         <action
             android:id="@+id/dashboard_to_my_profile"
             app:destination="@id/my_profile" />
@@ -42,7 +48,12 @@
         </action>
         <action
             android:id="@+id/diary_to_progress"
-            app:destination="@id/progress" />
+            app:destination="@id/progress">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+        </action>
 
     </fragment>
 
@@ -93,7 +104,7 @@
             app:popUpTo="@id/dashboard">
             <argument
                 android:name="currentDate"
-                app:argType="long"/>
+                app:argType="long" />
         </action>
 
     </fragment>

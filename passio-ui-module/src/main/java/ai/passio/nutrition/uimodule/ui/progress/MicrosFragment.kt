@@ -35,6 +35,18 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
 
         initObserver()
 
+        parentFragment?.arguments?.let {
+            if (it.containsKey("currentDate"))
+            {
+                val currentDate = it.getLong("currentDate", 0)
+                if (currentDate > 0)
+                {
+                    viewModel.setCurrentDate(Date(currentDate))
+                }
+            }
+        }
+
+
         binding.timeTitle.setOnClickListener {
             showDatePickerDialog(requireContext()) { selectedDate ->
                 viewModel.setCurrentDate(selectedDate.toDate())
