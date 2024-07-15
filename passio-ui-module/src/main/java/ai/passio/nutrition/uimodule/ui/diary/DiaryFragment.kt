@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.databinding.FragmentDiaryBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.app.DatePickerDialog
@@ -94,7 +95,9 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         viewModel.navigateToProgress()
     }
 
-    private fun updateLogs(records: List<FoodRecord>) {
+    private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
+        val userProfile = data.first
+        val records = data.second
         val breakfastLogs = records.filter { it.mealLabel == MealLabel.Breakfast }
         val lunchLogs = records.filter { it.mealLabel == MealLabel.Lunch }
         val dinnerLogs = records.filter { it.mealLabel == MealLabel.Dinner }
@@ -119,13 +122,13 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
             dailyNutrition.setup(
                 currentCalories.toInt(),
-                2000,
+                userProfile.caloriesTarget,
                 currentCarbs.toInt(),
-                125,
+                userProfile.getCarbsGrams().toInt(),
                 currentProtein.toInt(),
-                100,
+                userProfile.getProteinGrams().toInt(),
                 currentFat.toInt(),
-                40
+                userProfile.getFatGrams().toInt()
             )
         }
     }

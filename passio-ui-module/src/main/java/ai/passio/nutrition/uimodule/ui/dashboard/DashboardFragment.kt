@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.databinding.FragmentDashboardBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
@@ -170,10 +171,11 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     }
 
-    private fun updateLogs(records: List<FoodRecord>) {
+    private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
 
         with(binding) {
-
+            val userProfile =  data.first
+            val records =  data.second
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()
             val currentCarbs = records.map { it.nutrients().carbs() }
@@ -185,13 +187,13 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
             dailyNutrition.setup(
                 currentCalories.toInt(),
-                2000,
+                userProfile.caloriesTarget,
                 currentCarbs.toInt(),
-                125,
+                userProfile.getCarbsGrams().toInt(),
                 currentProtein.toInt(),
-                100,
+                userProfile.getProteinGrams().toInt(),
                 currentFat.toInt(),
-                40
+                userProfile.getFatGrams().toInt()
             )
         }
     }
