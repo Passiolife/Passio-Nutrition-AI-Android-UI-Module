@@ -91,6 +91,9 @@ class Repository private constructor() {
     suspend fun logFoodRecord(record: FoodRecord): Boolean {
         return connector.updateRecord(record)
     }
+    suspend fun logFoodRecords(records: List<FoodRecord>): Boolean {
+        return connector.updateRecords(records)
+    }
 
     suspend fun deleteFoodRecord(record: FoodRecord): Boolean {
         return connector.deleteRecord(record)

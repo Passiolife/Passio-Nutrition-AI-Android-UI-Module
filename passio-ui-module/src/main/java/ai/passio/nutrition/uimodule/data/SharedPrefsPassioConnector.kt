@@ -70,6 +70,21 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return true
     }
 
+    override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
+        foodRecords.forEach { foodRecord ->
+            val indexToRemove = records.indexOfFirst { it.uuid == foodRecord.uuid }
+            if (indexToRemove != -1) {
+                records.removeAt(indexToRemove)
+                records.add(indexToRemove, foodRecord)
+            } else {
+                records.add(foodRecord)
+            }
+        }
+        val json = records.map { gson.toJson(it) }
+        sharedPreferences.saveRecords(json)
+        return true
+    }
+
     override suspend fun deleteRecord(foodRecord: FoodRecord): Boolean {
         val recordToDelete = records.find { it.uuid == foodRecord.uuid } ?: return false
         records.remove(recordToDelete)

@@ -63,6 +63,10 @@
         android:label="Meal Plan"
         tools:layout="@layout/fragment_meal_plan">
 
+        <action
+            android:id="@+id/mealplan_to_edit"
+            app:destination="@id/edit" />
+
     </fragment>
 
     <fragment

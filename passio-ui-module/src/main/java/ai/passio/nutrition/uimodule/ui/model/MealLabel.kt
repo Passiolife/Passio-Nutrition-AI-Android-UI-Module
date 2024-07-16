@@ -11,12 +11,12 @@ enum class MealLabel(val value: String) {
 
     companion object {
         fun stringToMealLabel(text: String): MealLabel {
-            return when (text) {
-                "Breakfast" -> Breakfast
-                "Lunch" -> Lunch
-                "Dinner" -> Dinner
-                "Snack" -> Snack
-                else -> throw IllegalStateException("No known MealLabel: $this")
+            return when (text.lowercase()) {
+                "breakfast" -> Breakfast
+                "lunch" -> Lunch
+                "dinner" -> Dinner
+                "snack" -> Snack
+                else -> Snack //throw IllegalStateException("No known MealLabel: $this")
             }
         }
 

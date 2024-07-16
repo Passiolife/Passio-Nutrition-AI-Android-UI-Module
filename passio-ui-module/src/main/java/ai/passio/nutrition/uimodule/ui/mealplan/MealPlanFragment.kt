@@ -1,19 +1,195 @@
 package ai.passio.nutrition.uimodule.ui.mealplan
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.databinding.FragmentMealPlanBinding
+import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.view.HorizontalSpaceItemDecoration
+import ai.passio.passiosdk.passiofood.PassioMealTime
+import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 
-class MealPlanFragment : Fragment() {
+class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
+
+    private var _binding: FragmentMealPlanBinding? = null
+    private val binding: FragmentMealPlanBinding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meal_plan, container, false)
+        _binding = FragmentMealPlanBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        with(binding)
+        {
+            toolbar.setup(getString(R.string.meal_plan), baseToolbarListener)
+
+            breakfastCategory.setup(MealLabel.Breakfast, mealPlanCategoryListener)
+            lunchCategory.setup(MealLabel.Lunch, mealPlanCategoryListener)
+            dinnerCategory.setup(MealLabel.Dinner, mealPlanCategoryListener)
+            snackCategory.setup(MealLabel.Snack, mealPlanCategoryListener)
+        }
+
+        initObserver()
+        viewModel.getMealPlans()
+
+    }
+
+    private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
+        override fun onBack() {
+            viewModel.navigateBack()
+        }
+
+        override fun onRightIconClicked() {
+
+        }
+
+    }
+
+    private val mealPlanCategoryListener = object : MealPlanCategory.MealPlanCategoryListener {
+        override fun onLogAdd(foodRecord: PassioMealPlanItem) {
+            viewModel.logFood(foodRecord)
+        }
+
+        override fun onLogAdd(foodRecords: List<PassioMealPlanItem>) {
+            viewModel.logFood(foodRecords)
+        }
+
+        override fun onLogEdit(foodRecord: PassioMealPlanItem) {
+            viewModel.editFood(foodRecord)
+        }
+
+    }
+
+    private fun initObserver() {
+        viewModel.passioMealPlanItems.observe(viewLifecycleOwner, ::showMealPlans)
+        viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.editFoodEvent.observe(viewLifecycleOwner, ::editFoodRecord)
+        viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.viewLoader.isVisible = isLoading
+        }
+    }
+
+    private fun editFoodRecord(foodRecord: FoodRecord) {
+        sharedViewModel.editFoodRecord(foodRecord)
+        viewModel.navigateToEdit()
+    }
+
+    private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Food item(s) logged.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Could not log food item(s).",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                Toast.makeText(
+                    requireContext(),
+                    resultWrapper.error,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(requireContext(), view)
+        val menuItems = viewModel.passioMealPlans
+
+        // Dynamically add menu items
+        menuItems.forEachIndexed { index, item ->
+            popupMenu.menu.add(0, index, index, item.mealPlanTitle)
+        }
+
+        // Set a click listener for menu item clicks
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            viewModel.passioMealPlans.find {
+                it.mealPlanTitle.equals(
+                    menuItem.title.toString(),
+                    true
+                )
+            }?.let { mealPlan ->
+                viewModel.updateMealPlan(mealPlan)
+                binding.tvCurrentMealPlan.text = mealPlan.mealPlanTitle
+            }
+            true
+        }
+
+        // Show the popup menu
+        popupMenu.show()
+    }
+
+
+    private fun showMealPlans(mealPlanItems: List<PassioMealPlanItem>) {
+
+        Log.d("showMealPlans", "showMealPlans")
+        val breakfast = mealPlanItems.filter { it.mealTime == PassioMealTime.BREAKFAST }
+        val lunch = mealPlanItems.filter { it.mealTime == PassioMealTime.LUNCH }
+        val dinner = mealPlanItems.filter { it.mealTime == PassioMealTime.DINNER }
+        val snack = mealPlanItems.filter { it.mealTime == PassioMealTime.SNACK }
+
+        with(binding)
+        {
+            menu.setOnClickListener {
+                showPopupMenu(menu)
+            }
+            viewModel.selectedMealPlan?.let { mealPlan ->
+                tvCurrentMealPlan.text = mealPlan.mealPlanTitle
+            }
+
+            if (rvDays.adapter == null || rvDays.adapter?.itemCount == 0) {
+                rvDays.addItemDecoration(
+                    HorizontalSpaceItemDecoration(
+                        DesignUtils.dp2px(16f),
+                        DesignUtils.dp2px(8f)
+                    )
+                )
+                rvDays.adapter =
+                    DaysAdapter(viewModel.currentDayNumber, (1..14).toList()) { selectedDay ->
+                        viewModel.setCurrentDay(selectedDay)
+                    }
+            }
+
+            breakfastCategory.update(breakfast)
+            lunchCategory.update(lunch)
+            dinnerCategory.update(dinner)
+            snackCategory.update(snack)
+
+        }
     }
 }

@@ -9,6 +9,7 @@ interface PassioConnector {
     fun initialize()
 
     suspend fun updateRecord(foodRecord: FoodRecord): Boolean
+    suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean
 
     suspend fun deleteRecord(foodRecord: FoodRecord): Boolean
 
