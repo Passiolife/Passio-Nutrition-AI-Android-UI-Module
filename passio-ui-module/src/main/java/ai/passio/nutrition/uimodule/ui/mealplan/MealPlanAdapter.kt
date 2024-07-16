@@ -34,7 +34,7 @@ class MealPlanAdapter(
     override fun getItemCount(): Int = records.size
 
     override fun onBindViewHolder(holder: MealPlanViewHolder, position: Int) {
-        holder.bindTo(records[position], position)
+        holder.bindTo(records[position])
     }
 
     inner class MealPlanViewHolder(
@@ -42,7 +42,7 @@ class MealPlanAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bindTo(foodRecordData: PassioMealPlanItem, position: Int) {
+        fun bindTo(foodRecordData: PassioMealPlanItem) {
             val foodRecord = foodRecordData.meal
             with(binding) {
                 image.loadPassioIcon(foodRecord.iconID)

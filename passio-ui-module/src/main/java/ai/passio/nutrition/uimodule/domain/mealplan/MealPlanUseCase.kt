@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.domain.mealplan
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
-import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import java.util.Date
 

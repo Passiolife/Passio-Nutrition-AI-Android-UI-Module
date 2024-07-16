@@ -1,6 +1,5 @@
 package ai.passio.nutrition.uimodule.ui.model
 
-import java.lang.IllegalStateException
 import java.util.*
 
 enum class MealLabel(val value: String) {
