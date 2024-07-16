@@ -51,6 +51,10 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
             lunchCategory.setup(MealLabel.Lunch, mealPlanCategoryListener)
             dinnerCategory.setup(MealLabel.Dinner, mealPlanCategoryListener)
             snackCategory.setup(MealLabel.Snack, mealPlanCategoryListener)
+
+            retry.setOnClickListener {
+                viewModel.getMealPlans()
+            }
         }
 
         initObserver()
@@ -165,6 +169,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
 
         with(binding)
         {
+
             menu.setOnClickListener {
                 showPopupMenu(menu)
             }
@@ -185,6 +190,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
                     }
             }
 
+            retry.isVisible = mealPlanItems.isEmpty()
             breakfastCategory.update(breakfast)
             lunchCategory.update(lunch)
             dinnerCategory.update(dinner)

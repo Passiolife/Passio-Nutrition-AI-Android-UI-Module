@@ -26,7 +26,7 @@ class FoodRecord() {
     val servingUnits = mutableListOf<PassioServingUnit>()
 
     var mealLabel: MealLabel? = null
-    val uuid: String = UUID.randomUUID().toString().toUpperCase(Locale.ROOT)//null
+    val uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)//null
     var createdAt: Long? = null
 
     var openFoodLicense: String? = null
@@ -153,7 +153,7 @@ class FoodRecord() {
     fun setSelectedUnit(unit: String): Boolean {
         if (selectedUnit == unit) return true
 
-        if (servingUnits.firstOrNull { it.unitName == unit } == null) return false
+        if (servingUnits.firstOrNull { it.unitName.equals(unit, true) } == null) return false
 
         selectedUnit = unit
         calculateQuantityForIngredients()

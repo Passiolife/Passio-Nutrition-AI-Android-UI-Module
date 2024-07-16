@@ -129,6 +129,7 @@
     <string name="obese">Obese</string>
     <string name="save_changes">Save Changes</string>
     <string name="log_entire_meal">Log Entire Meal</string>
+    <string name="failed_to_fetch_meal_plan">Failed to fetch meal plan.\nTap here to try again!</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>
