@@ -9,7 +9,6 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
-import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.app.DatePickerDialog
@@ -28,7 +27,6 @@ import java.util.Date
 
 /**
  * A simple [Fragment] subclass.
- * Use the [DiaryFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,

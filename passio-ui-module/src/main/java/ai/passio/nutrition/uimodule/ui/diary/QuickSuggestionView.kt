@@ -1,6 +1,5 @@
 package ai.passio.nutrition.uimodule.ui.diary
 
-import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.QuickSuggestionViewBinding
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
@@ -10,7 +9,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 

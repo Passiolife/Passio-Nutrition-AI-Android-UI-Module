@@ -34,7 +34,7 @@
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:padding="8dp"
-            android:text="February 5, 2024"
+            tools:text="February 5, 2024"
             android:textColor="@color/passio_black"
             app:drawableStartCompat="@drawable/icon_calendar"
             app:layout_constraintBottom_toBottomOf="parent"

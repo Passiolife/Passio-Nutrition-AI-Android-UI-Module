@@ -19,7 +19,6 @@ import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
