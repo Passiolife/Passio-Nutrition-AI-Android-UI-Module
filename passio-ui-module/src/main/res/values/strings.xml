@@ -130,6 +130,8 @@
     <string name="save_changes">Save Changes</string>
     <string name="log_entire_meal">Log Entire Meal</string>
     <string name="failed_to_fetch_meal_plan">Failed to fetch meal plan.\nTap here to try again!</string>
+    <string name="quick_suggestions">Quick Suggestions</string>
+    <string name="drag_tray_up_to_view_suggestions_to_log">Drag tray up to view suggestions to log</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

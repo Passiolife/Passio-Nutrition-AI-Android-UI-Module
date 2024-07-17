@@ -111,6 +111,11 @@ class Repository private constructor() {
         return connector.fetchMonthRecords(day)
     }
 
+
+    suspend fun getLogsForLast30Days(): List<FoodRecord> {
+        return connector.getLogsForLast30Days()
+    }
+
     suspend fun fetchAdherence(): List<Long> {
         return connector.fetchAdherence()
     }

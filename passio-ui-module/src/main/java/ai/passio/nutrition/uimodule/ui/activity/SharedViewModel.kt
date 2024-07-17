@@ -4,7 +4,6 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 
@@ -31,7 +30,6 @@ class SharedViewModel : ViewModel() {
     }
 
     fun editFoodRecord(foodRecord: FoodRecord) {
-        Log.d("logFoodRecord", "aaaa=== uuid ${foodRecord.uuid}")
         _editFoodRecordLD.postValue(foodRecord)
     }
 

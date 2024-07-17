@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
@@ -103,6 +104,15 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
             }
         }
         return dayRecords
+    }
+
+
+    override suspend fun getLogsForLast30Days(): List<FoodRecord> {
+        val today = DateTime()
+        val todayDay = today.millis
+        val before30Days = getBefore30Days(today).millis
+
+        return records.filter { it.createdAtTime() in before30Days..todayDay }
     }
 
 

@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.util
 
+
 object StringKT {
 
     fun String.capitalized(): String {
@@ -9,5 +10,7 @@ object StringKT {
             else it.toString()
         }
     }
+
+
 
 }

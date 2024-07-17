@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
+import org.joda.time.DateTimeZone
+import org.joda.time.LocalDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -24,6 +26,9 @@ fun getStartOfMonth(date: DateTime): DateTime {
 
 fun getEndOfMonth(date: DateTime): DateTime {
     return date.plusMonths(1).withDayOfMonth(1).minusDays(1).withTime(23, 59, 59, 999)
+}
+fun getBefore30Days(date: DateTime): DateTime {
+    return date.minusDays(30).withTimeAtStartOfDay()
 }
 
 fun isPartOfCurrentWeek(date: DateTime): Boolean {
@@ -82,4 +87,11 @@ fun timestampToDate(timestamp: Long): Long {
     calendar.set(Calendar.SECOND, 0)
     calendar.set(Calendar.MILLISECOND, 0)
     return calendar.timeInMillis
+}
+
+fun isToday(milliseconds: Long): Boolean {
+    val dateTime = DateTime(milliseconds, DateTimeZone.getDefault())
+    val today = LocalDate.now()
+    val givenDate = dateTime.toLocalDate()
+    return givenDate == today
 }
