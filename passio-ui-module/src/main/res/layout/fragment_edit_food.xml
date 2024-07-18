@@ -205,10 +205,10 @@
                     android:text="@string/open_food_facts"
                     android:textColor="@color/passio_primary"
                     android:textSize="14sp"
-                    tools:visibility="visible"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/macrosChart" />
+                    app:layout_constraintTop_toBottomOf="@id/macrosChart"
+                    tools:visibility="visible" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/moreDetails"
@@ -372,24 +372,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/add_ingredient"
                     android:textColor="@color/passio_black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@id/addIngredientIcon"
+                    app:drawableEndCompat="@drawable/icon_plus"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/addIngredientIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/icon_plus"
-                    app:layout_constraintBottom_toBottomOf="@id/addIngredientLabel"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/addIngredientLabel"
-                    tools:ignore="ContentDescription" />
 
                 <com.yanzhenjie.recyclerview.SwipeRecyclerView
                     android:id="@+id/ingredientList"
@@ -400,7 +391,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/addIngredientLabel"
-                    tools:visibility="invisible" />
+                    tools:itemCount="3"
+                    tools:listitem="@layout/ingredient_layout"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

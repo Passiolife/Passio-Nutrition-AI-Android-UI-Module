@@ -8,6 +8,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
+        tools:src="@drawable/icon_apple"
         android:layout_width="40dp"
         android:layout_height="40dp" />
 
