@@ -5,6 +5,7 @@
         <item name="android:colorPrimary">@color/passio_primary</item>
         <item name="android:statusBarColor">@color/passio_white</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:fontFamily">@font/regular</item>
     </style>
 
     <style name="btn_negative_action" parent="AppTheme">
