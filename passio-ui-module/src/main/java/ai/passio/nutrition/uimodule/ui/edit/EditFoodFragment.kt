@@ -9,13 +9,13 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +24,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -65,7 +66,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEditFoodBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -160,6 +161,16 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 val fr = viewModel.navigateToAddIngredient()
                 sharedViewModel.addIngredient(fr)
             }
+
+            openFoodFacts.setOnClickListener {
+                OpenFoodFactsDialog(openFoodFactsListener).show(childFragmentManager, "EditFood")
+            }
+
+            moreDetails.setOnClickListener {
+                val foodRecord = viewModel.navigateToNutritionInfo()
+                sharedViewModel.passToNutritionInfo(foodRecord)
+
+            }
         }
 
         sharedViewModel.editFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
@@ -178,7 +189,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             if (editFoodModel.foodRecord == null) {
                 renderError()
             } else {
-                Log.d("HHHH", "Edit food: ${editFoodModel.foodRecord?.name} at $this")
+                binding.openFoodFacts.isVisible = !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
                 renderFoodRecord(editFoodModel)
             }
         }
@@ -197,6 +208,17 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 }
             }
         }
+    }
+
+    private val openFoodFactsListener = object : OpenFoodFactsDialog.OpenFoodFactsListener{
+        override fun onOpenFoodFactsClicked() {
+
+        }
+
+        override fun onOpenDatabaseLicenseClicked() {
+
+        }
+
     }
 
     private fun setupToolbar() {
@@ -248,7 +270,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     private fun setupImmutableProperties(foodRecord: FoodRecord) {
         if (_binding == null) return
 
-        val units = foodRecord.servingUnits.map { it.unitName.capitalize() }
+        val units = foodRecord.servingUnits.map { it.unitName.capitalized() }
         val indexOfSelected = units.indexOfFirst { it.lowercase() == foodRecord.getSelectedUnit() }
         servingUnitAdapter =
             ArrayAdapter<String>(requireContext(), R.layout.serving_unit_item, units)
@@ -256,8 +278,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         with(binding) {
             foodImage.loadPassioIcon(foodRecord.iconId)
-            foodName.text = foodRecord.name.capitalize()
-            infoName.text = foodRecord.additionalData.capitalize()
+            foodName.text = foodRecord.name.capitalized()
+            infoName.text = foodRecord.additionalData.capitalized()
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener

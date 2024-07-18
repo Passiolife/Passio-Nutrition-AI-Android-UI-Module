@@ -21,6 +21,15 @@ class SharedViewModel : ViewModel() {
     private val _editSearchResultLD = SingleLiveEvent<PassioFoodDataInfo>()
     val editSearchResultLD: LiveData<PassioFoodDataInfo> get() = _editSearchResultLD
 
+
+    private val _nutritionInfoFoodRecordLD= SingleLiveEvent<FoodRecord>()
+    val nutritionInfoFoodRecordLD: LiveData<FoodRecord> get() = _nutritionInfoFoodRecordLD
+
+
+    fun passToNutritionInfo(foodRecord: FoodRecord) {
+        _nutritionInfoFoodRecordLD.postValue(foodRecord)
+    }
+
     fun passToEdit(searchResult: PassioFoodDataInfo) {
         _editSearchResultLD.postValue(searchResult)
     }

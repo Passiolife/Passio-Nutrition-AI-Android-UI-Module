@@ -3,6 +3,8 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:colorPrimary">@color/passio_primary</item>
+        <item name="android:statusBarColor">@color/passio_white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="btn_negative_action" parent="AppTheme">
@@ -14,7 +16,7 @@
     <style name="btn_positive_action" parent="AppTheme">
         <item name="android:background">@drawable/rc_8_purple</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/passio_white</item>
         <item name="android:textStyle">bold</item>
     </style>
 
