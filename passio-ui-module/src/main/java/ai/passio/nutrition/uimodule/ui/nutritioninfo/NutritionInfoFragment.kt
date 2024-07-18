@@ -38,6 +38,7 @@ class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
 
         with(binding) {
             toolbar.setup(getString(R.string.nutrition_information), baseToolbarListener)
+            toolbar.hideRightIcon()
             showInfo.setOnClickListener {
                 SharedPrefUtils.put("nutritionInfoNoteShown", false)
                 showMicrosNote()
