@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
@@ -28,11 +29,16 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     private val dateFormat = "yyyyMMdd"
     private lateinit var records: MutableList<FoodRecord>
     private lateinit var favorites: MutableList<FoodRecord>
+    private lateinit var weightRecords: MutableList<WeightRecord>
     private var userProfile: UserProfile = UserProfile()
 
     override fun initialize() {
         records = sharedPreferences.getRecords().map {
             gson.fromJson(it, FoodRecord::class.java) as FoodRecord
+        }.toMutableList()
+
+        weightRecords = sharedPreferences.getWeightRecords().map {
+            gson.fromJson(it, WeightRecord::class.java) as WeightRecord
         }.toMutableList()
 
         favorites = sharedPreferences.getFavorites().map {
@@ -170,6 +176,36 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun fetchUserProfile(): UserProfile {
         return userProfile
+    }
+
+    override suspend fun updateWeightRecord(weightRecord: WeightRecord): Boolean {
+        val indexToRemove = weightRecords.indexOfFirst { it.uuid == weightRecord.uuid }
+        if (indexToRemove != -1) {
+            weightRecords.removeAt(indexToRemove)
+            weightRecords.add(indexToRemove, weightRecord)
+        } else {
+            weightRecords.add(weightRecord)
+        }
+        val json = weightRecords.map { gson.toJson(it) }
+        sharedPreferences.saveWeightRecords(json)
+        return true
+    }
+
+    override suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
+        val indexToRemove = weightRecords.indexOfFirst { it.uuid == weightRecord.uuid }
+        if (indexToRemove != -1) {
+            weightRecords.removeAt(indexToRemove)
+        }
+        val json = weightRecords.map { gson.toJson(it) }
+        sharedPreferences.saveWeightRecords(json)
+        return true
+    }
+
+    override suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord> {
+        val startOfWeek = timestampToDate(startDate.time)
+        val endOfWeek = timestampToDate(endDate.time)
+
+        return weightRecords.filter { it.dateTime in startOfWeek..endOfWeek }
     }
 
 }

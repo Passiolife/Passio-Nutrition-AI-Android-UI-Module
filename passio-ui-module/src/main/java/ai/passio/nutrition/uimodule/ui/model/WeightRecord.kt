@@ -1,0 +1,53 @@
+package ai.passio.nutrition.uimodule.ui.model
+
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
+import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
+import ai.passio.nutrition.uimodule.ui.profile.kgToLbs
+import com.google.gson.GsonBuilder
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import java.util.Locale
+import java.util.UUID
+
+class WeightRecord {
+    val uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+    var weight: Double = 0.0 ////kg
+    var dateTime: Long = 0
+
+    companion object {
+        fun create(): WeightRecord {
+            val weightRecord = WeightRecord()
+            weightRecord.dateTime = DateTime.now().millis
+            return weightRecord
+        }
+    }
+
+    fun getDisplayWeight(): String {
+        if (weight <= 0)
+            return ""
+        val displayText: String =
+            if (UserCache.getProfile().measurementUnit.weightUnit == WeightUnit.Metric) {
+                "$weight"
+            } else {
+                "${kgToLbs(weight)}"
+            }
+        return displayText
+    }
+
+    fun getDisplayDay(): String {
+        val dateTime = DateTime(dateTime)
+        val dateFormatter = DateTimeFormat.forPattern("MMMM dd, yyyy")
+        return dateTime.toString(dateFormatter)
+    }
+
+    fun getDisplayTime(): String {
+        val dateTime = DateTime(dateTime)
+        val timeFormatter = DateTimeFormat.forPattern("hh:mm a")
+        return dateTime.toString(timeFormatter).uppercase()
+    }
+
+    fun copy(): WeightRecord {
+        val gson = GsonBuilder().create()
+        return gson.fromJson(gson.toJson(this), WeightRecord::class.java)
+    }
+}

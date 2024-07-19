@@ -45,6 +45,24 @@
         <item name="android:lines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
+    <style name="TextWeight" parent="Widget.AppCompat.TextView">
+        <item name="android:minHeight">24dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/passio_gray500</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="layout_constraintWidth_percent">0.4</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
     <style name="TextProfileUnit" parent="Widget.AppCompat.TextView">
         <item name="android:textSize">14sp</item>
@@ -67,6 +85,38 @@
         <item name="android:paddingBottom">12dp</item>
         <item name="android:layout_width">0dp</item>
         <item name="layout_constraintWidth_percent">0.56</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="TextWeightEditClone" parent="Widget.AppCompat.TextView">
+        <item name="android:minHeight">24dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/passio_gray900</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:background">@drawable/rc_4_border_gray300</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="EditTextWeight" parent="Widget.AppCompat.EditText">
+        <item name="android:minHeight">24dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/passio_gray900</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:background">@drawable/rc_4_border_gray300</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:lines">1</item>
     </style>

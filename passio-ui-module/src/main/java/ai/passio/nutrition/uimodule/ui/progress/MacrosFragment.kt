@@ -34,11 +34,6 @@ import java.util.Date
 
 class MacrosFragment : BaseFragment<MacrosViewModel>() {
 
-    enum class TimePeriod(val text: String) {
-        WEEK("Week"),
-        MONTH("Month");
-    }
-
     private var _binding: FragmentMacrosBinding? = null
     private val binding: FragmentMacrosBinding get() = _binding!!
 

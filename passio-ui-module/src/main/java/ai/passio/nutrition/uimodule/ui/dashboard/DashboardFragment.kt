@@ -60,6 +60,9 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             toggleWeekMonth.setOnClickListener {
                 viewModel.toggleCalendarMode()
             }
+            weightContainer.setOnClickListener {
+                viewModel.navigateToWeightTracking()
+            }
 
 
             setupCalendarView()

@@ -1,11 +1,13 @@
 package ai.passio.nutrition.uimodule.ui.util
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -27,6 +29,7 @@ fun getStartOfMonth(date: DateTime): DateTime {
 fun getEndOfMonth(date: DateTime): DateTime {
     return date.plusMonths(1).withDayOfMonth(1).minusDays(1).withTime(23, 59, 59, 999)
 }
+
 fun getBefore30Days(date: DateTime): DateTime {
     return date.minusDays(30).withTimeAtStartOfDay()
 }
@@ -76,6 +79,24 @@ fun showDatePickerDialog(context: Context, onDateSelected: (selectedDateTime: Da
         year, month, day
     )
     datePickerDialog.show()
+}
+
+fun showTimePickerDialog(context: Context, onTimeSelected: (selectedDateTime: DateTime) -> Unit) {
+    val calendar = Calendar.getInstance()
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = TimePickerDialog(context, { _, selectedHour, selectedMinute ->
+        val selectedDateTime = DateTime.now()
+            .withHourOfDay(selectedHour)
+            .withMinuteOfHour(selectedMinute)
+
+//        val timeFormatter = DateTimeFormat.forPattern("hh:mm a")
+//        val formattedTime = selectedDateTime.toString(timeFormatter)
+        onTimeSelected.invoke(selectedDateTime)
+    }, hour, minute, false)
+
+    timePickerDialog.show()
 }
 
 fun timestampToDate(timestamp: Long): Long {

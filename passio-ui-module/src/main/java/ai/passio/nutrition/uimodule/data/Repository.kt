@@ -1,7 +1,14 @@
 package ai.passio.nutrition.uimodule.data
 
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
+import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
+import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
+import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
+import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.passiosdk.passiofood.FoodCandidates
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.FoodRecognitionListener
@@ -14,6 +21,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import org.joda.time.DateTime
 import java.util.Date
 import kotlin.coroutines.suspendCoroutine
 
@@ -91,6 +99,7 @@ class Repository private constructor() {
     suspend fun logFoodRecord(record: FoodRecord): Boolean {
         return connector.updateRecord(record)
     }
+
     suspend fun logFoodRecords(records: List<FoodRecord>): Boolean {
         return connector.updateRecords(records)
     }
@@ -121,11 +130,37 @@ class Repository private constructor() {
     }
 
     suspend fun updateUser(userProfile: UserProfile): Boolean {
+        UserCache.setProfile(userProfile)
         return connector.updateUserProfile(userProfile)
     }
 
     suspend fun getUser(): UserProfile {
-        return connector.fetchUserProfile()
+        val userProfile = connector.fetchUserProfile()
+        UserCache.setProfile(userProfile)
+        return userProfile
+    }
+
+
+    suspend fun updateWeight(weightRecord: WeightRecord): Boolean {
+        return connector.updateWeightRecord(weightRecord)
+    }
+
+    suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
+        return connector.removeWeightRecord(weightRecord)
+    }
+
+    suspend fun fetchWeightRecords(currentDate: Date, timePeriod: TimePeriod): List<WeightRecord> {
+        val today = DateTime(currentDate.time)
+        val startDate: DateTime
+        val endDate: DateTime
+        if (timePeriod == TimePeriod.MONTH) {
+            startDate = getStartOfMonth(today)
+            endDate = getEndOfMonth(today)
+        } else {
+            startDate = getStartOfWeek(today)
+            endDate = getEndOfWeek(today)
+        }
+        return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
     }
 
 }

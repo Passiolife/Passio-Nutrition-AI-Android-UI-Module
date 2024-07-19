@@ -24,13 +24,40 @@
 
         </action>
         <action
+            android:id="@+id/dashboard_to_weight_tracking"
+            app:destination="@id/weight_tracking">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+
+        </action>
+
+        <action
             android:id="@+id/dashboard_to_my_profile"
             app:destination="@id/my_profile" />
+
         <action
             android:id="@+id/dashboard_to_settings"
             app:destination="@id/settings" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/weight_tracking"
+        android:name="ai.passio.nutrition.uimodule.ui.weight.WeightTrackingFragment"
+        android:label="WeightTrackingFragment"
+        tools:layout="@layout/fragment_weight_tracking">
+        <action
+            android:id="@+id/weight_tracking_to_save_weight"
+            app:destination="@id/save_weight" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/save_weight"
+        android:name="ai.passio.nutrition.uimodule.ui.weight.SaveWeightFragment"
+        android:label="SaveWeightFragment"
+        tools:layout="@layout/fragment_save_weight" />
 
     <fragment
         android:id="@+id/diary"

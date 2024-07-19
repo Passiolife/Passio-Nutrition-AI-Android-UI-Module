@@ -97,4 +97,10 @@ class DashboardViewModel : BaseViewModel() {
         }
     }
 
+    fun navigateToWeightTracking() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(DashboardFragmentDirections.dashboardToWeightTracking(currentDate = currentDate.time))
+        }
+    }
+
 }
