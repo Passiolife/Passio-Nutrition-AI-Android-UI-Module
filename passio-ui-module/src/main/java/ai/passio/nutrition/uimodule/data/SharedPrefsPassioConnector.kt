@@ -2,19 +2,20 @@ package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
-import ai.passio.nutrition.uimodule.ui.util.timestampToDate
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
 import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
+import java.util.Calendar
 import java.util.Date
 
 class SharedPrefsPassioConnector(context: Context) : PassioConnector {
@@ -30,6 +31,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     private lateinit var records: MutableList<FoodRecord>
     private lateinit var favorites: MutableList<FoodRecord>
     private lateinit var weightRecords: MutableList<WeightRecord>
+    private lateinit var waterRecords: MutableList<WaterRecord>
     private var userProfile: UserProfile = UserProfile()
 
     override fun initialize() {
@@ -39,6 +41,10 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
         weightRecords = sharedPreferences.getWeightRecords().map {
             gson.fromJson(it, WeightRecord::class.java) as WeightRecord
+        }.toMutableList()
+
+        waterRecords = sharedPreferences.getWaterRecords().map {
+            gson.fromJson(it, WaterRecord::class.java) as WaterRecord
         }.toMutableList()
 
         favorites = sharedPreferences.getFavorites().map {
@@ -159,9 +165,21 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     override suspend fun fetchAdherence(): List<Long> {
         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
         // Iterate through each record and add the date component to the HashSet
+
+        fun timestampOnlyDate(timestamp: Long): Long {
+            // Convert millis to a date with only date part (ignoring time)
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = timestamp
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            return calendar.timeInMillis
+        }
+
         records.forEach { record ->
             record.createdAtTime()?.let { timestamp ->
-                val date = timestampToDate(timestamp)
+                val date = timestampOnlyDate(timestamp)
                 uniqueDates.add(date)
             }
         }
@@ -202,10 +220,41 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord> {
-        val startOfWeek = timestampToDate(startDate.time)
-        val endOfWeek = timestampToDate(endDate.time)
+        val startOfWeek = startDate.time
+        val endOfWeek = endDate.time
 
         return weightRecords.filter { it.dateTime in startOfWeek..endOfWeek }
+            .sortedBy { it.dateTime }
     }
 
+    override suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean {
+        val indexToRemove = waterRecords.indexOfFirst { it.uuid == waterRecord.uuid }
+        if (indexToRemove != -1) {
+            waterRecords.removeAt(indexToRemove)
+            waterRecords.add(indexToRemove, waterRecord)
+        } else {
+            waterRecords.add(waterRecord)
+        }
+        val json = waterRecords.map { gson.toJson(it) }
+        sharedPreferences.saveWaterRecords(json)
+        return true
+    }
+
+    override suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
+        val indexToRemove = waterRecords.indexOfFirst { it.uuid == waterRecord.uuid }
+        if (indexToRemove != -1) {
+            waterRecords.removeAt(indexToRemove)
+        }
+        val json = waterRecords.map { gson.toJson(it) }
+        sharedPreferences.saveWaterRecords(json)
+        return true
+    }
+
+    override suspend fun fetchWaterRecords(startDate: Date, endDate: Date): List<WaterRecord> {
+        val startOfWeek = startDate.time
+        val endOfWeek = endDate.time
+
+        return waterRecords.filter { it.dateTime in startOfWeek..endOfWeek }
+            .sortedBy { it.dateTime }
+    }
 }

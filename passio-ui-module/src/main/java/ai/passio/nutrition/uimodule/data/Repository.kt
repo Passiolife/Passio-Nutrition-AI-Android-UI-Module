@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.data
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
@@ -17,6 +18,7 @@ import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -161,6 +163,29 @@ class Repository private constructor() {
             endDate = getEndOfWeek(today)
         }
         return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
+    }
+
+    suspend fun updateWater(waterRecord: WaterRecord): Boolean {
+        return connector.updateWaterRecord(waterRecord)
+    }
+
+    suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
+        return connector.removeWaterRecord(waterRecord)
+    }
+
+    suspend fun fetchWaterRecords(currentDate: Date, timePeriod: TimePeriod): List<WaterRecord> {
+        val today = DateTime(currentDate.time)
+        val startDate: DateTime
+        val endDate: DateTime
+        if (timePeriod == TimePeriod.MONTH) {
+            startDate = getStartOfMonth(today)
+            endDate = getEndOfMonth(today)
+        } else {
+            startDate = getStartOfWeek(today)
+            endDate = getEndOfWeek(today)
+        }
+        Log.d("===startDate","fetchWaterRecords startDate== $startDate == endDate $endDate")
+        return connector.fetchWaterRecords(startDate.toDate(), endDate.toDate())
     }
 
 }

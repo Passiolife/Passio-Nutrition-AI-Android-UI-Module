@@ -1,4 +1,4 @@
-package ai.passio.nutrition.uimodule.ui.weight
+package ai.passio.nutrition.uimodule.ui.water
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
-import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.showTimePickerDialog
@@ -18,7 +18,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 
-class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
+class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
 
     private var _binding: FragmentSaveWeightBinding? = null
     private val binding: FragmentSaveWeightBinding get() = _binding!!
@@ -37,9 +37,10 @@ class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
 
         with(binding)
         {
-            toolbar.setup(getString(R.string.weight_tracking), baseToolbarListener)
+            toolbar.setup(getString(R.string.water_tracking), baseToolbarListener)
             toolbar.hideRightIcon()
-
+            lblWeight.text = getString(R.string.water_consumed)
+            weight.hint = getString(R.string.water_consumed)
             weight.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
@@ -82,7 +83,7 @@ class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
         viewModel.weightRecordCurrentEvent.observe(viewLifecycleOwner, ::updateRecord)
         viewModel.saveRecord.observe(viewLifecycleOwner, ::recordSaved)
         viewModel.removeRecord.observe(viewLifecycleOwner, ::recordRemoved)
-        sharedViewModel.addWeightLD.observe(viewLifecycleOwner){
+        sharedViewModel.addWaterLD.observe(viewLifecycleOwner){
             viewModel.initRecord(it)
         }
     }
@@ -145,11 +146,11 @@ class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
         }
     }
 
-    private fun updateRecord(weightRecord: WeightRecord) {
+    private fun updateRecord(weightRecord: WaterRecord) {
         with(binding)
         {
-            weight.setText(weightRecord.getWightInCurrentUnit().singleDecimal())
-            weightUnit.text = UserCache.getProfile().measurementUnit.weightUnit.value
+            weight.setText(weightRecord.getWaterInCurrentUnit().singleDecimal())
+            weightUnit.text = UserCache.getProfile().measurementUnit.waterUnit.value
             dayValue.text = weightRecord.getDisplayDay()
             timeValue.text = weightRecord.getDisplayTime()
         }

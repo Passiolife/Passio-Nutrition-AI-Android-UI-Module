@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
@@ -44,6 +45,9 @@ class SharedViewModel : ViewModel() {
 
     private val _addWeightLD = SingleLiveEvent<WeightRecord>()
     val addWeightLD: LiveData<WeightRecord> get() = _addWeightLD
+
+    private val _addWaterLD = SingleLiveEvent<WaterRecord>()
+    val addWaterLD: LiveData<WaterRecord> get() = _addWaterLD
 
 
     private val userProfileCase = UserProfileUseCase
@@ -86,6 +90,9 @@ class SharedViewModel : ViewModel() {
     }
     fun addEditWeight(weightRecord: WeightRecord) {
         _addWeightLD.postValue(weightRecord)
+    }
+    fun addEditWater(waterRecord: WaterRecord) {
+        _addWaterLD.postValue(waterRecord)
     }
 
 }

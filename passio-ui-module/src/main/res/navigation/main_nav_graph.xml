@@ -32,6 +32,15 @@
                 app:argType="long" />
 
         </action>
+        <action
+            android:id="@+id/dashboard_to_water_tracking"
+            app:destination="@id/water_tracking">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+
+        </action>
 
         <action
             android:id="@+id/dashboard_to_my_profile"
@@ -56,6 +65,22 @@
     <fragment
         android:id="@+id/save_weight"
         android:name="ai.passio.nutrition.uimodule.ui.weight.SaveWeightFragment"
+        android:label="SaveWeightFragment"
+        tools:layout="@layout/fragment_save_weight" />
+
+    <fragment
+        android:id="@+id/water_tracking"
+        android:name="ai.passio.nutrition.uimodule.ui.water.WaterTrackingFragment"
+        android:label="WaterTrackingFragment"
+        tools:layout="@layout/fragment_water_tracking">
+        <action
+            android:id="@+id/water_tracking_to_save_water"
+            app:destination="@id/save_water" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/save_water"
+        android:name="ai.passio.nutrition.uimodule.ui.water.SaveWaterFragment"
         android:label="SaveWeightFragment"
         tools:layout="@layout/fragment_save_weight" />
 

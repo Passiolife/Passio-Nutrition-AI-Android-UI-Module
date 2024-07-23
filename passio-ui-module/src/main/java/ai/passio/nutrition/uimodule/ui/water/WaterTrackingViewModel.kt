@@ -1,13 +1,16 @@
-package ai.passio.nutrition.uimodule.ui.weight
+package ai.passio.nutrition.uimodule.ui.water
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
-import ai.passio.nutrition.uimodule.domain.weight.WeightUseCase
+import ai.passio.nutrition.uimodule.domain.water.WaterUseCase
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
-import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
+import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
 import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
 import ai.passio.nutrition.uimodule.ui.profile.lbsToKg
+import ai.passio.nutrition.uimodule.ui.profile.mlToOz
+import ai.passio.nutrition.uimodule.ui.profile.ozToMl
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
@@ -17,12 +20,12 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import java.util.Date
 
-class WeightTrackingViewModel : BaseViewModel() {
-    private val useCase = WeightUseCase
-    private var weightRecordCurrent: WeightRecord? = null
+class WaterTrackingViewModel : BaseViewModel() {
+    private val useCase = WaterUseCase
+    private var weightRecordCurrent: WaterRecord? = null
 
-    private val _weightRecordCurrentEvent = SingleLiveEvent<WeightRecord>()
-    val weightRecordCurrentEvent: LiveData<WeightRecord> = _weightRecordCurrentEvent
+    private val _weightRecordCurrentEvent = SingleLiveEvent<WaterRecord>()
+    val weightRecordCurrentEvent: LiveData<WaterRecord> = _weightRecordCurrentEvent
     private val measurementUnit: MeasurementUnit get() = UserCache.getProfile().measurementUnit
 
     private val _saveRecord = SingleLiveEvent<ResultWrapper<Boolean>>()
@@ -30,17 +33,17 @@ class WeightTrackingViewModel : BaseViewModel() {
     private val _removeRecord = SingleLiveEvent<ResultWrapper<Boolean>>()
     val removeRecord: LiveData<ResultWrapper<Boolean>> = _removeRecord
 
-    private val _weightRecords = SingleLiveEvent<Pair<List<WeightRecord>, TimePeriod>>()
-    val weightRecords: LiveData<Pair<List<WeightRecord>, TimePeriod>> = _weightRecords
+    private val _weightRecords = SingleLiveEvent<Pair<List<WaterRecord>, TimePeriod>>()
+    val weightRecords: LiveData<Pair<List<WaterRecord>, TimePeriod>> = _weightRecords
 
     private var currentTimePeriod = TimePeriod.WEEK
     private val _timePeriod = SingleLiveEvent<TimePeriod>()
     val timePeriod: LiveData<TimePeriod> get() = _timePeriod
     private var currentDate = Date()
 
-    fun initRecord(weightRecordEdit: WeightRecord?) {
+    fun initRecord(weightRecordEdit: WaterRecord?) {
         viewModelScope.launch {
-            weightRecordCurrent = weightRecordEdit ?: WeightRecord.create()
+            weightRecordCurrent = weightRecordEdit ?: WaterRecord.create()
             _weightRecordCurrentEvent.postValue(weightRecordCurrent!!)
         }
     }
@@ -68,8 +71,8 @@ class WeightTrackingViewModel : BaseViewModel() {
 
     fun updateWeight(weight: String) {
         weightRecordCurrent?.apply {
-            if (measurementUnit.weightUnit == WeightUnit.Imperial) {
-                weightRecordCurrent?.weight = lbsToKg(weight.toDoubleOrNull() ?: 0.0)
+            if (measurementUnit.waterUnit == WaterUnit.Imperial) {
+                weightRecordCurrent?.weight = ozToMl(weight.toDoubleOrNull() ?: 0.0)
             } else {
                 weightRecordCurrent?.weight = weight.toDoubleOrNull() ?: 0.0
             }
@@ -83,17 +86,18 @@ class WeightTrackingViewModel : BaseViewModel() {
                 if (it.dateTime <= 0) {
                     _saveRecord.postValue(ResultWrapper.Error("Please select valid date and time."))
                 } else if (it.weight <= 0) {
-                    _saveRecord.postValue(ResultWrapper.Error("Please enter valid weight."))
+                    _saveRecord.postValue(ResultWrapper.Error("Please enter valid water consumed value."))
                 } else {
-                    _saveRecord.postValue(ResultWrapper.Success(useCase.updateWeightRecord(it)))
+                    _saveRecord.postValue(ResultWrapper.Success(useCase.updateRecord(it)))
                 }
             }
         }
     }
-    fun removeWeightRecord(weightRecordRemove: WeightRecord) {
+
+    fun removeWeightRecord(weightRecordRemove: WaterRecord) {
         viewModelScope.launch {
             weightRecordRemove.let {
-                _removeRecord.postValue(ResultWrapper.Success(useCase.removeWeightRecord(it)))
+                _removeRecord.postValue(ResultWrapper.Success(useCase.removeRecord(it)))
             }
             fetchRecords()
         }
@@ -107,7 +111,7 @@ class WeightTrackingViewModel : BaseViewModel() {
     fun fetchRecords() {
         viewModelScope.launch {
             _timePeriod.postValue(currentTimePeriod)
-            val records = useCase.getWeightRecords(currentDate, currentTimePeriod)
+            val records = useCase.getRecords(currentDate, currentTimePeriod)
             _weightRecords.postValue(Pair(records, currentTimePeriod))
         }
     }
@@ -144,9 +148,9 @@ class WeightTrackingViewModel : BaseViewModel() {
         }
     }
 
-    fun navigateToWeightSave() {
+    fun navigateToSave() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(WeightTrackingFragmentDirections.weightTrackingToSaveWeight())
+            navigate(WaterTrackingFragmentDirections.waterTrackingToSaveWater())
         }
     }
 

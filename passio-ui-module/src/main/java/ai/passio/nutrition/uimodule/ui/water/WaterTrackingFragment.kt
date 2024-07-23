@@ -1,15 +1,15 @@
-package ai.passio.nutrition.uimodule.ui.weight
+package ai.passio.nutrition.uimodule.ui.water
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.databinding.FragmentWaterTrackingBinding
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ai.passio.nutrition.uimodule.databinding.FragmentWeightTrackingBinding
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
-import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
 import ai.passio.nutrition.uimodule.ui.progress.WeekMonthPicker
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
@@ -23,13 +23,15 @@ import ai.passio.nutrition.uimodule.ui.util.getWeekDuration
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
 import android.graphics.Color
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import org.joda.time.DateTime
@@ -39,16 +41,16 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
+class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
 
-    private var _binding: FragmentWeightTrackingBinding? = null
-    private val binding: FragmentWeightTrackingBinding get() = _binding!!
+    private var _binding: FragmentWaterTrackingBinding? = null
+    private val binding: FragmentWaterTrackingBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWeightTrackingBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentWaterTrackingBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -58,10 +60,10 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
         initObserver()
         with(binding)
         {
-            toolbar.setup(getString(R.string.weight_tracking), baseToolbarListener)
+            toolbar.setup(getString(R.string.water_tracking), baseToolbarListener)
             toolbar.setRightIcon(R.drawable.ic_add_food)
-
-//            weekMonthPicker.setup(TimePeriod.WEEK, timePeriodListener)
+            lblChart.text = getString(R.string.water_trend)
+            weekMonthPicker.setup(TimePeriod.WEEK, timePeriodListener)
             movePrevious.setOnClickListener {
                 viewModel.setPrevious()
             }
@@ -95,17 +97,17 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
         viewModel.timePeriod.observe(viewLifecycleOwner, ::updateTimePeriod)
     }
 
-    private fun updateRecords(result: Pair<List<WeightRecord>, TimePeriod>) {
+    private fun updateRecords(result: Pair<List<WaterRecord>, TimePeriod>) {
         with(binding)
         {
             val timePeriod = result.second
             updateTimePeriod(timePeriod)
             val weightRecords = result.first
-            val list = arrayListOf<WeightRecord>()
+            val list = arrayListOf<WaterRecord>()
             list.addAll(weightRecords)
-            val adapter = WeightAdapter(list) { weightRecord ->
-                sharedViewModel.addEditWeight(weightRecord.copy())
-                viewModel.navigateToWeightSave()
+            val adapter = WaterAdapter(list) { weightRecord ->
+                sharedViewModel.addEditWater(weightRecord.copy())
+                viewModel.navigateToSave()
             }
             wightList.adapter = null
             viewWeightContainer.isVisible = list.isNotEmpty()
@@ -139,15 +141,15 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             }
             wightList.setOnItemMenuClickListener { menuBridge, adapterPosition ->
                 menuBridge.closeMenu()
-                val weightRecord = adapter.getItem(adapterPosition).copy()
+                val waterRecord = adapter.getItem(adapterPosition).copy()
                 when (menuBridge.position) {
                     0 -> {
-                        sharedViewModel.addEditWeight(weightRecord)
-                        viewModel.navigateToWeightSave()
+                        sharedViewModel.addEditWater(waterRecord)
+                        viewModel.navigateToSave()
                     }
 
                     1 -> {
-                        viewModel.removeWeightRecord(weightRecord)
+                        viewModel.removeWeightRecord(waterRecord)
                     }
                 }
             }
@@ -156,7 +158,7 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
 
             setUpChart(
                 list,
-                UserCache.getProfile().getTargetWightInCurrentUnit(),
+                UserCache.getProfile().getTargetWaterInCurrentUnit(),
                 timePeriod
             )
         }
@@ -165,7 +167,7 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
     private fun setChartSettings() {
         with(binding)
         {
-            lineChart.apply {
+            barChart.apply {
                 setPinchZoom(false)
                 legend.isEnabled = false
                 setTouchEnabled(false)
@@ -173,16 +175,16 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
         }
     }
 
-    private fun createDefaultWeightRecords(
+    private fun createDefaultWaterRecords(
         startDate: DateTime,
         endDate: DateTime
-    ): MutableList<WeightRecord> {
-        val weightRecords = mutableListOf<WeightRecord>()
+    ): MutableList<WaterRecord> {
+        val weightRecords = mutableListOf<WaterRecord>()
         val daysBetween = Days.daysBetween(startDate, endDate).days
 
         for (i in 0..daysBetween) {
             val dateTime = startDate.plusDays(i)
-            val temp = WeightRecord()
+            val temp = WaterRecord()
             temp.weight = 0.0
             temp.dateTime = dateTime.millis
             weightRecords.add(temp)
@@ -192,14 +194,13 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
     }
 
     private fun setUpChart(
-        weightRecordsNew: List<WeightRecord>,
-        targetWeight: Double,
+        weightRecordsNew: List<WaterRecord>,
+        targetWater: Double,
         timePeriod: TimePeriod
     ) {
-        val weightRecords = arrayListOf<WeightRecord>()
-        weightRecords.addAll(weightRecordsNew)
         with(binding) {
-
+            val waterRecords = arrayListOf<WaterRecord>()
+            waterRecords.addAll(weightRecordsNew)
             val startDate: DateTime
             val endDate: DateTime
             if (timePeriod == TimePeriod.WEEK) {
@@ -209,82 +210,40 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
                 startDate = getStartOfMonth(DateTime(viewModel.getCurrentDate().time))
                 endDate = getEndOfMonth(DateTime(viewModel.getCurrentDate().time))
             }
-            weightRecords.addAll(createDefaultWeightRecords(startDate, endDate))
+            Log.d("===startDate", "startDate== $startDate == endDate $endDate")
+            waterRecords.addAll(createDefaultWaterRecords(startDate, endDate))
 
-            val groupedRecords = weightRecords.groupBy {
+            val groupedRecords = waterRecords.groupBy {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.dateTime
-                calendar.get(Calendar.DAY_OF_YEAR)
+                calendar.get(Calendar.DAY_OF_MONTH)
             }
 
-            val weightEntries = ArrayList<Entry>()
-            val weightEntriesWithDots = ArrayList<Entry>()
-            val targetEntries = ArrayList<Entry>()
+            val barEntries = ArrayList<BarEntry>()
             val calendar = Calendar.getInstance()
-            val dateFormat =
-                if (timePeriod == TimePeriod.MONTH) {
-                    SimpleDateFormat("MMM d", Locale.getDefault())
-                } else {
-                    SimpleDateFormat("MMM d", Locale.getDefault())
-                }
+            val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
 
             groupedRecords.toSortedMap().forEach { (dayOfYear, records) ->
-                val avgWeight = records.sumOf { it.getWightInCurrentUnit() }.toFloat()
-                weightEntries.add(Entry(dayOfYear.toFloat(), avgWeight))
-                if (avgWeight != 0f) {
-                    weightEntriesWithDots.add(Entry(dayOfYear.toFloat(), avgWeight))
-                }
-                targetEntries.add(Entry(dayOfYear.toFloat(), targetWeight.toFloat()))
+                val totalWeight = records.sumOf { it.getWaterInCurrentUnit() }.toFloat()
+                barEntries.add(BarEntry(dayOfYear.toFloat(), totalWeight))
             }
 
-
-            val weightDataSet = LineDataSet(weightEntries, getString(R.string.weight)).apply {
+            val barDataSet = BarDataSet(barEntries, "").apply {
                 color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
-                setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
-                lineWidth = 2f
-                circleRadius = 0f
-                setDrawCircles(false)
-                setDrawCircleHole(false)
                 setDrawValues(false)
-                mode = LineDataSet.Mode.CUBIC_BEZIER // Set mode to cubic bezier for smooth curves
             }
 
-            val weightDataSetWithDots =
-                LineDataSet(weightEntriesWithDots, getString(R.string.weight)).apply {
-                    color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
-                    setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
-                    lineWidth = 0f
-                    circleRadius = 4f
-                    setDrawCircleHole(false)
-                    setDrawValues(false)
-                    mode =
-                        LineDataSet.Mode.CUBIC_BEZIER // Set mode to cubic bezier for smooth curves
-                }
-
-            val targetDataSet =
-                LineDataSet(targetEntries, getString(R.string.target_weight)).apply {
-                    color = ContextCompat.getColor(requireContext(), R.color.passio_green_800)
-                    setDrawCircles(false)
-                    lineWidth = 2f
-                    enableDashedLine(20f, 14f, 0f)
-                    setDrawValues(false)
-                    mode = LineDataSet.Mode.CUBIC_BEZIER
-                }
-
-            val lineData = if (targetWeight <= 0) {
-                LineData(weightDataSet, weightDataSetWithDots)
-            } else {
-                LineData(weightDataSet, weightDataSetWithDots, targetDataSet)
+            val barData = BarData(barDataSet)
+            if (timePeriod == TimePeriod.WEEK) {
+                barData.barWidth /= 2f
             }
-            lineChart.data = lineData
 
-            val xAxis = lineChart.xAxis
+            barChart.data = barData
+
+            val xAxis = barChart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.granularity = 1f
-            xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
-            xAxis.setDrawGridLinesBehindData(false)
-            xAxis.setDrawLimitLinesBehindData(false)
+
             if (timePeriod == TimePeriod.MONTH) {
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
@@ -302,20 +261,32 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
                 }
 
             }
+            xAxis.setDrawGridLines(false)  // Hide vertical grid lines
 
-
-            val yAxisRight = lineChart.axisRight
+            val yAxisRight = barChart.axisRight
             yAxisRight.isEnabled = false
 
-            val yAxisLeft = lineChart.axisLeft
-            yAxisLeft.granularity = 1f
-//            yAxisLeft.axisMinimum = 5f
+            val yAxisLeft = barChart.axisLeft
+            yAxisLeft.granularity = 0.5f
 
-            lineChart.description.isEnabled = false
-            lineChart.legend.form = Legend.LegendForm.SQUARE
-            lineChart.invalidate() // Refresh the chart
+            // Add dashed annotation line for target water intake
+            val targetLine = LimitLine(targetWater.toFloat(), "").apply {
+                lineWidth = 2f
+                lineColor = ContextCompat.getColor(requireContext(), R.color.passio_green_800)
+                enableDashedLine(20f, 14f, 0f)
+                labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+                textSize = 10f
+            }
+            yAxisLeft.addLimitLine(targetLine)
+
+            barChart.description.isEnabled = false
+            barChart.legend.form = Legend.LegendForm.LINE
+            barChart.invalidate() // Refresh the chart
         }
+
+
     }
+
 
     private val timePeriodListener = object : WeekMonthPicker.TimePeriodListener {
         override fun onValueChanged(timePeriod: TimePeriod) {
@@ -324,7 +295,6 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
     }
 
     private fun updateTimePeriod(timePeriod: TimePeriod) {
-
         binding.weekMonthPicker.setup(timePeriod, timePeriodListener)
         val currentTime = DateTime(viewModel.getCurrentDate().time)
         if (timePeriod == TimePeriod.WEEK) {
@@ -350,7 +320,7 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
         }
 
         override fun onRightIconClicked() {
-            viewModel.navigateToWeightSave()
+            viewModel.navigateToSave()
         }
 
     }

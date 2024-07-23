@@ -72,6 +72,7 @@
     <string name="progress">Progress</string>
     <string name="my_progress">My Progress</string>
     <string name="weight_tracking">Weight Tracking</string>
+    <string name="water_tracking">Water Tracking</string>
     <string name="nutrition_information">Nutrition Information</string>
     <string name="welcome">Welcome!</string>
     <string name="not_what_you_re_looking_for_search_manually">Not what you\'re looking for? Search manually</string>
@@ -112,6 +113,7 @@
     <string name="calorie_deficit">Calorie Deficit</string>
     <string name="diet">Diet</string>
     <string name="water_target">Water Target</string>
+    <string name="water_consumed">Water Consumed</string>
     <string name="enter_a_value">Enter a Value</string>
     <string name="enter_age">Enter Age</string>
     <string name="enter_target_weight">Enter Target Weight</string>
@@ -141,6 +143,8 @@
     <string name="time">Time</string>
     <string name="water">Water</string>
     <string name="remain_to_daily_goal"><b>20 oz</b> remain to daily goal</string>
+    <string name="weight_trend">Weight Trend</string>
+    <string name="water_trend">Water Trend</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

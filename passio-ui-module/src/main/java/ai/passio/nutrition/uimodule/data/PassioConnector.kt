@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import java.util.*
 
@@ -39,5 +40,11 @@ interface PassioConnector {
     suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean
 
     suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord>
+
+    suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean
+
+    suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean
+
+    suspend fun fetchWaterRecords(startDate: Date, endDate: Date): List<WaterRecord>
 
 }

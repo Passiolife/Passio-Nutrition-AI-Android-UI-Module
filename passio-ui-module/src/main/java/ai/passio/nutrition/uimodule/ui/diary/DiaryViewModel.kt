@@ -147,15 +147,17 @@ class DiaryViewModel : BaseViewModel() {
             } else {
                 currentMealTime = passioMealTimeNow()
                 PassioSDK.instance.fetchSuggestions(currentMealTime) { foodDataInfo ->
-                    quickSuggestionsPassio.clear()
-                    quickSuggestionsPassio.addAll(foodDataInfo)
-                    improveQuickSuggestions()
+                    viewModelScope.launch {
+                        quickSuggestionsPassio.clear()
+                        quickSuggestionsPassio.addAll(foodDataInfo)
+                        improveQuickSuggestions()
+                    }
                 }
             }
         }
     }
 
-    private fun improveQuickSuggestions() {
+    private suspend fun improveQuickSuggestions() {
         viewModelScope.launch {
             getQuickAdds {
                 _quickSuggestions.postValue(it)
@@ -178,7 +180,7 @@ class DiaryViewModel : BaseViewModel() {
     }
 
 
-    private fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
+    private suspend fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
 
         viewModelScope.launch {
 
@@ -221,18 +223,19 @@ class DiaryViewModel : BaseViewModel() {
         }
     }
 
-    private fun fetchSDKSuggestions(
+    private suspend fun fetchSDKSuggestions(
         todayRecords: List<String>,
         userSuggestedFoods: List<SuggestedFoods>,
         completion: (List<SuggestedFoods>) -> Unit
     ) {
-
-        val sdkSuggestedFoods = quickSuggestionsPassio.map { SuggestedFoods(it) }
-        val finalSdkSuggestedFoods = (userSuggestedFoods + sdkSuggestedFoods)
-            .distinctBy { it.name.lowercase() }
-            .take(30)
-        val finalFoodRecords =
-            finalSdkSuggestedFoods.filter { !todayRecords.contains(it.name.lowercase()) }
-        completion.invoke(finalFoodRecords)
+        viewModelScope.launch {
+            val sdkSuggestedFoods = quickSuggestionsPassio.map { SuggestedFoods(it) }
+            val finalSdkSuggestedFoods = (userSuggestedFoods + sdkSuggestedFoods)
+                .distinctBy { it.name.lowercase() }
+                .take(30)
+            val finalFoodRecords =
+                finalSdkSuggestedFoods.filter { !todayRecords.contains(it.name.lowercase()) }
+            completion.invoke(finalFoodRecords)
+        }
     }
 }

@@ -1,34 +1,38 @@
 package ai.passio.nutrition.uimodule.ui.model
 
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
-import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
-import ai.passio.nutrition.uimodule.ui.profile.kgToLbs
+import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
+import ai.passio.nutrition.uimodule.ui.profile.mlToOz
+import android.util.Log
 import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.Locale
 import java.util.UUID
 
-class WeightRecord {
+class WaterRecord {
     val uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
-    var weight: Double = 0.0 ////kg
+    var weight: Double = 0.0 ////kg, ml
     var dateTime: Long = 0
 
     companion object {
-        fun create(): WeightRecord {
-            val weightRecord = WeightRecord()
+        fun create(): WaterRecord {
+            val weightRecord = WaterRecord()
             weightRecord.dateTime = DateTime.now().millis
             return weightRecord
         }
     }
 
-    fun getWightInCurrentUnit(): Double {
+    fun getWaterInCurrentUnit(): Double {
+
         if (weight <= 0)
             return 0.0
-        return if (UserCache.getProfile().measurementUnit.weightUnit == WeightUnit.Metric) {
+        return if (UserCache.getProfile().measurementUnit.waterUnit == WaterUnit.Metric) {
+            Log.d("measurementUnit::", "unit:aa ${UserCache.getProfile().measurementUnit.waterUnit} === vvv: $weight")
             weight
         } else {
-            kgToLbs(weight)
+            Log.d("measurementUnit::", "unit:bb ${UserCache.getProfile().measurementUnit.waterUnit} === vvv: ${mlToOz(weight)}")
+            mlToOz(weight)
         }
     }
 
@@ -44,8 +48,8 @@ class WeightRecord {
         return dateTime.toString(timeFormatter).uppercase()
     }
 
-    fun copy(): WeightRecord {
+    fun copy(): WaterRecord {
         val gson = GsonBuilder().create()
-        return gson.fromJson(gson.toJson(this), WeightRecord::class.java)
+        return gson.fromJson(gson.toJson(this), WaterRecord::class.java)
     }
 }

@@ -63,6 +63,9 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             weightContainer.setOnClickListener {
                 viewModel.navigateToWeightTracking()
             }
+            waterContainer.setOnClickListener {
+                viewModel.navigateToWaterTracking()
+            }
 
 
             setupCalendarView()

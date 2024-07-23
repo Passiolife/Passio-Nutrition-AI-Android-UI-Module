@@ -36,7 +36,7 @@
         android:gravity="end"
         android:lines="2"
         android:textColor="@color/passio_gray900"
-        android:textSize="14sp"
+        android:textSize="12sp"
         tools:text="Sat, Mar 9\n9:16 AM" />
 
 </LinearLayout>

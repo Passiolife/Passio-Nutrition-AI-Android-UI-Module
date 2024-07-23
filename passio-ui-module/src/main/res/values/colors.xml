@@ -26,13 +26,14 @@
     <color name="passio_white20p">#32FFFFFF</color>
 
     <color name="passio_green_800">#065F46</color>
+    <color name="passio_green_500">#10B981</color>
     <color name="passio_green_100">#D1FAE5</color>
 
     <color name="passio_calories">#F59E0B</color>
     <color name="passio_calories_over">#78350F</color>
     <color name="passio_carbs">#0EA5E9</color>
     <color name="passio_carbs_over">#0C4A6E</color>
-    <color name="passio_protein">#10B981</color>
+    <color name="passio_protein">@color/passio_green_500</color>
     <color name="passio_protein_over">#064E3B</color>
     <color name="passio_fat">#8B5CF6</color>
     <color name="passio_fat_over">#4C1D95</color>

@@ -26,7 +26,7 @@ class DashboardViewModel : BaseViewModel() {
     val currentDateEvent: LiveData<Date> get() = _currentDateEvent
 
     private val _logsLD = SingleLiveEvent<Pair<UserProfile, List<FoodRecord>>>()
-    val logsLD: LiveData<Pair<UserProfile, List<FoodRecord>>>get() = _logsLD
+    val logsLD: LiveData<Pair<UserProfile, List<FoodRecord>>> get() = _logsLD
     private val _adherents = SingleLiveEvent<List<Long>>()
     val adherents: LiveData<List<Long>> get() = _adherents
 
@@ -100,6 +100,12 @@ class DashboardViewModel : BaseViewModel() {
     fun navigateToWeightTracking() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(DashboardFragmentDirections.dashboardToWeightTracking(currentDate = currentDate.time))
+        }
+    }
+
+    fun navigateToWaterTracking() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(DashboardFragmentDirections.dashboardToWaterTracking(currentDate = currentDate.time))
         }
     }
 
