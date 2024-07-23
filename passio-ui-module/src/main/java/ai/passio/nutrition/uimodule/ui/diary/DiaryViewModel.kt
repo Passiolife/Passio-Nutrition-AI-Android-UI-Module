@@ -184,6 +184,22 @@ class DiaryViewModel : BaseViewModel() {
 
         viewModelScope.launch {
 
+            fun fetchSDKSuggestions(
+                todayRecords: List<String>,
+                userSuggestedFoods: List<SuggestedFoods>,
+                completion: (List<SuggestedFoods>) -> Unit
+            ) {
+                viewModelScope.launch {
+                    val sdkSuggestedFoods = quickSuggestionsPassio.map { SuggestedFoods(it) }
+                    val finalSdkSuggestedFoods = (userSuggestedFoods + sdkSuggestedFoods)
+                        .distinctBy { it.name.lowercase() }
+                        .take(30)
+                    val finalFoodRecords =
+                        finalSdkSuggestedFoods.filter { !todayRecords.contains(it.name.lowercase()) }
+                    completion.invoke(finalFoodRecords)
+                }
+            }
+
             val maxSuggestedCount = 30
 
             useCase.getLogsForLast30Days().let { dayLogs ->
@@ -223,19 +239,5 @@ class DiaryViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun fetchSDKSuggestions(
-        todayRecords: List<String>,
-        userSuggestedFoods: List<SuggestedFoods>,
-        completion: (List<SuggestedFoods>) -> Unit
-    ) {
-        viewModelScope.launch {
-            val sdkSuggestedFoods = quickSuggestionsPassio.map { SuggestedFoods(it) }
-            val finalSdkSuggestedFoods = (userSuggestedFoods + sdkSuggestedFoods)
-                .distinctBy { it.name.lowercase() }
-                .take(30)
-            val finalFoodRecords =
-                finalSdkSuggestedFoods.filter { !todayRecords.contains(it.name.lowercase()) }
-            completion.invoke(finalFoodRecords)
-        }
-    }
+
 }

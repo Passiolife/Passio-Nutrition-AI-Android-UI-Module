@@ -1,6 +1,5 @@
 package ai.passio.nutrition.uimodule.data
 
-import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import android.content.SharedPreferences
 
 class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferences) {

@@ -7,9 +7,6 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
-import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
-import ai.passio.nutrition.uimodule.ui.profile.lbsToKg
-import ai.passio.nutrition.uimodule.ui.profile.mlToOz
 import ai.passio.nutrition.uimodule.ui.profile.ozToMl
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
