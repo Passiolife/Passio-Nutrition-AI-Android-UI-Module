@@ -14,6 +14,7 @@ import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.showTimePickerDialog
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
@@ -82,8 +83,7 @@ class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
     private fun initObserver() {
         viewModel.weightRecordCurrentEvent.observe(viewLifecycleOwner, ::updateRecord)
         viewModel.saveRecord.observe(viewLifecycleOwner, ::recordSaved)
-        viewModel.removeRecord.observe(viewLifecycleOwner, ::recordRemoved)
-        sharedViewModel.addWaterLD.observe(viewLifecycleOwner){
+        sharedViewModel.addWaterLD.observe(viewLifecycleOwner) {
             viewModel.initRecord(it)
         }
     }
@@ -92,16 +92,12 @@ class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Weight record saved!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Water record saved!")
                     viewModel.navigateBack()
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "Could not record weight. Please try again.",
+                        "Could not record water. Please try again.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -117,39 +113,16 @@ class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
         }
     }
 
-    private fun recordRemoved(resultWrapper: ResultWrapper<Boolean>) {
-        when (resultWrapper) {
-            is ResultWrapper.Success -> {
-                if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Weight record removed!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.navigateBack()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not remove weight. Please try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 
     private fun updateRecord(weightRecord: WaterRecord) {
         with(binding)
         {
-            weight.setText(weightRecord.getWaterInCurrentUnit().singleDecimal())
+            val currentValue = weightRecord.getWaterInCurrentUnit()
+            if (currentValue <= 0.0) {
+                weight.text?.clear()
+            } else {
+                weight.setText(currentValue.singleDecimal())
+            }
             weightUnit.text = UserCache.getProfile().measurementUnit.waterUnit.value
             dayValue.text = weightRecord.getDisplayDay()
             timeValue.text = weightRecord.getDisplayTime()

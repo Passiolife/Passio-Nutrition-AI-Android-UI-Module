@@ -142,9 +142,13 @@
     <string name="day">Day</string>
     <string name="time">Time</string>
     <string name="water">Water</string>
-    <string name="remain_to_daily_goal"><b>20 oz</b> remain to daily goal</string>
+    <string name="remain_to_daily_goal">remain to daily goal</string>
     <string name="weight_trend">Weight Trend</string>
     <string name="water_trend">Water Trend</string>
+    <string name="glass">Glass</string>
+    <string name="sm_bottle">Sm Bottle</string>
+    <string name="lg_bottle">Lg Bottle</string>
+    <string name="quick_add">Quick Add</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

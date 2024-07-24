@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.weight
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getWeekDuration
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -93,6 +95,23 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
     private fun initObserver() {
         viewModel.weightRecords.observe(viewLifecycleOwner, ::updateRecords)
         viewModel.timePeriod.observe(viewLifecycleOwner, ::updateTimePeriod)
+        viewModel.removeRecord.observe(viewLifecycleOwner, ::recordRemoved)
+    }
+
+    private fun recordRemoved(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    requireContext().toast("Weight record removed!")
+                } else {
+                    requireContext().toast("Could not remove weight. Please try again.")
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
+            }
+        }
     }
 
     private fun updateRecords(result: Pair<List<WeightRecord>, TimePeriod>) {

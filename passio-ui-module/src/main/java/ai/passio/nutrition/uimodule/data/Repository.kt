@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
+import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
@@ -115,16 +116,26 @@ class Repository private constructor() {
     }
 
     suspend fun getLogsForWeek(day: Date): List<FoodRecord> {
-        return connector.fetchWeekRecords(day)
+        val today = DateTime(day.time)
+        val startOfWeek = getStartOfWeek(today)//.millis
+        val endOfWeek = getEndOfWeek(today)//.millis
+        return connector.fetchLogsRecords(startOfWeek.toDate(), endOfWeek.toDate())
     }
 
     suspend fun getLogsForMonth(day: Date): List<FoodRecord> {
-        return connector.fetchMonthRecords(day)
+
+        val today = DateTime(day.time)
+        val startOfMonth = getStartOfMonth(today)//.millis
+        val endOfMonth = getEndOfMonth(today)//.millis
+
+        return connector.fetchLogsRecords(startOfMonth.toDate(), endOfMonth.toDate())
     }
 
 
     suspend fun getLogsForLast30Days(): List<FoodRecord> {
-        return connector.getLogsForLast30Days()
+        val today = DateTime()
+        val before30Days = getBefore30Days(today)
+        return connector.fetchLogsRecords(before30Days.toDate(), today.toDate())
     }
 
     suspend fun fetchAdherence(): List<Long> {
@@ -151,6 +162,13 @@ class Repository private constructor() {
         return connector.removeWeightRecord(weightRecord)
     }
 
+    suspend fun fetchWeightRecords(currentDate: Date): List<WeightRecord> {
+        val forDate = DateTime(currentDate.time)
+        val startDate: DateTime = forDate.withTimeAtStartOfDay()
+        val endDate: DateTime = forDate.withTime(23, 59, 59, 999)
+        return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
+    }
+
     suspend fun fetchWeightRecords(currentDate: Date, timePeriod: TimePeriod): List<WeightRecord> {
         val today = DateTime(currentDate.time)
         val startDate: DateTime
@@ -173,6 +191,13 @@ class Repository private constructor() {
         return connector.removeWaterRecord(waterRecord)
     }
 
+    suspend fun fetchWaterRecords(currentDate: Date): List<WaterRecord> {
+        val forDate = DateTime(currentDate.time)
+        val startDate: DateTime = forDate.withTimeAtStartOfDay()
+        val endDate: DateTime = forDate.withTime(23, 59, 59, 999)
+        return connector.fetchWaterRecords(startDate.toDate(), endDate.toDate())
+    }
+
     suspend fun fetchWaterRecords(currentDate: Date, timePeriod: TimePeriod): List<WaterRecord> {
         val today = DateTime(currentDate.time)
         val startDate: DateTime
@@ -184,7 +209,6 @@ class Repository private constructor() {
             startDate = getStartOfWeek(today)
             endDate = getEndOfWeek(today)
         }
-        Log.d("===startDate","fetchWaterRecords startDate== $startDate == endDate $endDate")
         return connector.fetchWaterRecords(startDate.toDate(), endDate.toDate())
     }
 

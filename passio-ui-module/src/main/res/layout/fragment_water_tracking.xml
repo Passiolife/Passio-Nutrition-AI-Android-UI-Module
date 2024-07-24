@@ -92,7 +92,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/lblChart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,6 +113,94 @@
             </FrameLayout>
 
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/quickAddContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/rc_8_white"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewCalories">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblQuickAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:padding="4dp"
+                    android:text="@string/quick_add"
+                    android:textColor="@color/passio_black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblQuickAdd">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/glassWater"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="12sp"
+                        app:drawableTopCompat="@drawable/ic_glass"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblQuickAdd"
+                        tools:text="Glass (8 oz)" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/glassBottleSmall"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="Glass (8 oz)"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="12sp"
+                        app:drawableTopCompat="@drawable/ic_bottle_small"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblQuickAdd" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/glassBottleLarge"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="Glass (8 oz)"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="12sp"
+                        app:drawableTopCompat="@drawable/ic_bottle_large"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblQuickAdd" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/viewWeightContainer"
                 android:layout_width="0dp"
@@ -123,7 +211,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/viewCalories">
+                app:layout_constraintTop_toBottomOf="@id/quickAddContainer">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTimeDuration"
@@ -131,12 +219,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="0dp"
-                    app:drawableEndCompat="@drawable/ic_arrow_up"
                     android:padding="8dp"
                     android:text="@string/date"
                     android:textColor="@color/passio_black"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableEndCompat="@drawable/ic_arrow_up" />
 
                 <View
                     android:layout_width="match_parent"

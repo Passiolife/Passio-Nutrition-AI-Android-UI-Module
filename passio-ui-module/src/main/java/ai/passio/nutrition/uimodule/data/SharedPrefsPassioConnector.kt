@@ -119,31 +119,37 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
 
-    override suspend fun getLogsForLast30Days(): List<FoodRecord> {
+   /* override suspend fun getLogsForLast30Days(): List<FoodRecord> {
         val today = DateTime()
         val todayDay = today.millis
         val before30Days = getBefore30Days(today).millis
 
         return records.filter { it.createdAtTime() in before30Days..todayDay }
+    }*/
+
+    override suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord> {
+        val fromDate = DateTime(startDate.time).millis
+        val toDate = DateTime(endDate.time).millis
+        return records.filter { it.createdAtTime() in fromDate..toDate }
     }
 
 
-    override suspend fun fetchMonthRecords(day: Date): List<FoodRecord> {
+    /*override suspend fun fetchMonthRecords(day: Date): List<FoodRecord> {
         val today = DateTime(day.time)
         val startOfMonth = getStartOfMonth(today).millis
         val endOfMonth = getEndOfMonth(today).millis
 
         return records.filter { it.createdAtTime() in startOfMonth..endOfMonth }
-    }
+    }*/
 
-    override suspend fun fetchWeekRecords(day: Date): List<FoodRecord> {
+   /* override suspend fun fetchWeekRecords(day: Date): List<FoodRecord> {
 
         val today = DateTime(day.time)
         val startOfWeek = getStartOfWeek(today).millis
         val endOfWeek = getEndOfWeek(today).millis
 
         return records.filter { it.createdAtTime() in startOfWeek..endOfWeek }
-    }
+    }*/
 
     override suspend fun updateFavorite(foodRecord: FoodRecord) {
         val currentFavorite = favorites.find { it.uuid == foodRecord.uuid }
@@ -224,7 +230,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         val endOfWeek = endDate.time
 
         return weightRecords.filter { it.dateTime in startOfWeek..endOfWeek }
-            .sortedBy { it.dateTime }
+            .sortedByDescending { it.dateTime }
     }
 
     override suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean {
@@ -255,6 +261,6 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         val endOfWeek = endDate.time
 
         return waterRecords.filter { it.dateTime in startOfWeek..endOfWeek }
-            .sortedBy { it.dateTime }
+            .sortedByDescending { it.dateTime }
     }
 }

@@ -16,6 +16,11 @@ class WaterRecord {
     var dateTime: Long = 0
 
     companion object {
+
+        const val QUICK_ADD_GLASS = 8.0 //oz
+        const val QUICK_ADD_BOTTLE_SMALL = 16.0 //oz
+        const val QUICK_ADD_BOTTLE_LARGE = 24.0 //oz
+
         fun create(): WaterRecord {
             val weightRecord = WaterRecord()
             weightRecord.dateTime = DateTime.now().millis

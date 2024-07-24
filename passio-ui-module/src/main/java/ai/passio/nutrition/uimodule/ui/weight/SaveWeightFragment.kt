@@ -14,9 +14,9 @@ import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.showTimePickerDialog
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
 
 class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
 
@@ -81,8 +81,7 @@ class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
     private fun initObserver() {
         viewModel.weightRecordCurrentEvent.observe(viewLifecycleOwner, ::updateRecord)
         viewModel.saveRecord.observe(viewLifecycleOwner, ::recordSaved)
-        viewModel.removeRecord.observe(viewLifecycleOwner, ::recordRemoved)
-        sharedViewModel.addWeightLD.observe(viewLifecycleOwner){
+        sharedViewModel.addWeightLD.observe(viewLifecycleOwner) {
             viewModel.initRecord(it)
         }
     }
@@ -91,64 +90,29 @@ class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Weight record saved!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Weight record saved!")
                     viewModel.navigateBack()
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not record weight. Please try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Could not record weight. Please try again.")
                 }
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
     }
 
-    private fun recordRemoved(resultWrapper: ResultWrapper<Boolean>) {
-        when (resultWrapper) {
-            is ResultWrapper.Success -> {
-                if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Weight record removed!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.navigateBack()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not remove weight. Please try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 
     private fun updateRecord(weightRecord: WeightRecord) {
         with(binding)
         {
-            weight.setText(weightRecord.getWightInCurrentUnit().singleDecimal())
+            val currentValue = weightRecord.getWightInCurrentUnit()
+            if (currentValue <= 0.0) {
+                weight.text?.clear()
+            } else {
+                weight.setText(currentValue.singleDecimal())
+            }
             weightUnit.text = UserCache.getProfile().measurementUnit.weightUnit.value
             dayValue.text = weightRecord.getDisplayDay()
             timeValue.text = weightRecord.getDisplayTime()

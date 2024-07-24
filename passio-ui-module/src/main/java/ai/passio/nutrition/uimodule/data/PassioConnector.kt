@@ -17,11 +17,7 @@ interface PassioConnector {
 
     suspend fun fetchDayRecords(day: Date): List<FoodRecord>
 
-    suspend fun fetchWeekRecords(day: Date): List<FoodRecord>
-
-    suspend fun fetchMonthRecords(day: Date): List<FoodRecord>
-
-    suspend fun getLogsForLast30Days(): List<FoodRecord>
+    suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord>
 
     suspend fun updateFavorite(foodRecord: FoodRecord)
 

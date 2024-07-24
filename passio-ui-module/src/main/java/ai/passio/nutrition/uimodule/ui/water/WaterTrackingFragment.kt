@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.water
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentWaterTrackingBinding
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +11,14 @@ import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
+import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
+import ai.passio.nutrition.uimodule.ui.profile.ozToMl
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
 import ai.passio.nutrition.uimodule.ui.progress.WeekMonthPicker
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.setDrawableEnd
+import ai.passio.nutrition.uimodule.ui.util.StringKT.setSpannableBold
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getMonthName
@@ -22,8 +27,8 @@ import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getWeekDuration
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.graphics.Color
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
@@ -78,6 +83,7 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
                     tvTimeDuration.setDrawableEnd(R.drawable.ic_arrow_down)
                 }
             }
+            setupQuickAdd()
             setChartSettings()
         }
         arguments?.let {
@@ -92,9 +98,84 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
 
     }
 
+    private fun setupQuickAdd() {
+        val waterUnit = UserCache.getProfile().measurementUnit.waterUnit
+        with(binding)
+        {
+            val glass: Double
+            val bottleSmall: Double
+            val bottleLarge: Double
+
+            if (waterUnit == WaterUnit.Imperial) {
+                glass = WaterRecord.QUICK_ADD_GLASS
+                bottleSmall = WaterRecord.QUICK_ADD_BOTTLE_SMALL
+                bottleLarge = WaterRecord.QUICK_ADD_BOTTLE_LARGE
+            } else {
+                glass = ozToMl(WaterRecord.QUICK_ADD_GLASS)
+                bottleSmall = ozToMl(WaterRecord.QUICK_ADD_BOTTLE_SMALL)
+                bottleLarge = ozToMl(WaterRecord.QUICK_ADD_BOTTLE_LARGE)
+            }
+
+            val glassStr =
+                getString(R.string.glass) + " (${glass.singleDecimal()} ${waterUnit.value})"
+            val bottleSmallStr =
+                getString(R.string.sm_bottle) + " (${bottleSmall.singleDecimal()} ${waterUnit.value})"
+            val bottleLargeStr =
+                getString(R.string.lg_bottle) + " (${bottleLarge.singleDecimal()} ${waterUnit.value})"
+            glassWater.text = glassStr.setSpannableBold(getString(R.string.glass))
+            glassBottleSmall.text = bottleSmallStr.setSpannableBold(getString(R.string.sm_bottle))
+            glassBottleLarge.text = bottleLargeStr.setSpannableBold(getString(R.string.lg_bottle))
+
+            glassWater.setOnClickListener {
+                viewModel.quickAdd(glass)
+            }
+            glassBottleSmall.setOnClickListener {
+                viewModel.quickAdd(bottleSmall)
+            }
+            glassBottleLarge.setOnClickListener {
+                viewModel.quickAdd(bottleLarge)
+            }
+        }
+    }
+
+
     private fun initObserver() {
         viewModel.weightRecords.observe(viewLifecycleOwner, ::updateRecords)
         viewModel.timePeriod.observe(viewLifecycleOwner, ::updateTimePeriod)
+        viewModel.saveRecord.observe(viewLifecycleOwner, ::recordSaved)
+        viewModel.removeRecord.observe(viewLifecycleOwner, ::recordRemoved)
+    }
+
+    private fun recordRemoved(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    requireContext().toast("Weight record removed!")
+                } else {
+                    requireContext().toast("Could not remove weight. Please try again.")
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
+            }
+        }
+    }
+
+    private fun recordSaved(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    requireContext().toast("Water record saved!")
+                } else {
+                    requireContext().toast("Could not record weight. Please try again.")
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
+            }
+        }
     }
 
     private fun updateRecords(result: Pair<List<WaterRecord>, TimePeriod>) {
@@ -210,7 +291,6 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
                 startDate = getStartOfMonth(DateTime(viewModel.getCurrentDate().time))
                 endDate = getEndOfMonth(DateTime(viewModel.getCurrentDate().time))
             }
-            Log.d("===startDate", "startDate== $startDate == endDate $endDate")
             waterRecords.addAll(createDefaultWaterRecords(startDate, endDate))
 
             val groupedRecords = waterRecords.groupBy {

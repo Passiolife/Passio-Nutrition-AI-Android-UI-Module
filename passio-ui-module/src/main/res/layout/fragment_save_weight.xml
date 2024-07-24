@@ -29,7 +29,7 @@
         style="@style/EditTextWeight"
         android:hint="@string/enter_weight"
         android:inputType="number"
-        android:maxLength="4"
+        android:maxLength="10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lblWeight" />

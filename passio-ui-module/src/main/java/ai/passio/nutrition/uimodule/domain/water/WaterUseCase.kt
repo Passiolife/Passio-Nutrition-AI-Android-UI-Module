@@ -20,4 +20,8 @@ object WaterUseCase {
     suspend fun getRecords(currentDate: Date, timePeriod: TimePeriod): List<WaterRecord> {
         return repository.fetchWaterRecords(currentDate, timePeriod)
     }
+
+    suspend fun getRecords(currentDate: Date): List<WaterRecord> {
+        return repository.fetchWaterRecords(currentDate)
+    }
 }

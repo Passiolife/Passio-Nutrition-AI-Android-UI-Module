@@ -91,6 +91,21 @@ class WaterTrackingViewModel : BaseViewModel() {
         }
     }
 
+    fun quickAdd(quickWeight: Double) {
+        viewModelScope.launch {
+            val quickRecord = WaterRecord.create()
+            quickRecord.apply {
+                if (measurementUnit.waterUnit == WaterUnit.Imperial) {
+                    quickRecord.weight = ozToMl(quickWeight)
+                } else {
+                    quickRecord.weight = quickWeight
+                }
+            }
+            _saveRecord.postValue(ResultWrapper.Success(useCase.updateRecord(quickRecord)))
+            fetchRecords()
+        }
+    }
+
     fun removeWeightRecord(weightRecordRemove: WaterRecord) {
         viewModelScope.launch {
             weightRecordRemove.let {
