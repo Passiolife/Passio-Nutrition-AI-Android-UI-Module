@@ -161,6 +161,10 @@ class Repository private constructor() {
         return connector.removeWeightRecord(weightRecord)
     }
 
+    suspend fun fetchLatestWeightRecord(): WeightRecord?
+    {
+        return connector.fetchLatestWeightRecord()
+    }
     suspend fun fetchWeightRecords(currentDate: Date): List<WeightRecord> {
         val forDate = DateTime(currentDate.time)
         val startDate: DateTime = forDate.withTimeAtStartOfDay()

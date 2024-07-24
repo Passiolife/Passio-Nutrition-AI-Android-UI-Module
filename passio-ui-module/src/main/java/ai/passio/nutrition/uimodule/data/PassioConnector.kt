@@ -36,6 +36,7 @@ interface PassioConnector {
     suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean
 
     suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord>
+    suspend fun fetchLatestWeightRecord(): WeightRecord?
 
     suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean
 

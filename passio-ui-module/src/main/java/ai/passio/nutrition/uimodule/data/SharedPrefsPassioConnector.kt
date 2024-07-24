@@ -114,13 +114,13 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
 
-   /* override suspend fun getLogsForLast30Days(): List<FoodRecord> {
-        val today = DateTime()
-        val todayDay = today.millis
-        val before30Days = getBefore30Days(today).millis
+    /* override suspend fun getLogsForLast30Days(): List<FoodRecord> {
+         val today = DateTime()
+         val todayDay = today.millis
+         val before30Days = getBefore30Days(today).millis
 
-        return records.filter { it.createdAtTime() in before30Days..todayDay }
-    }*/
+         return records.filter { it.createdAtTime() in before30Days..todayDay }
+     }*/
 
     override suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord> {
         val fromDate = DateTime(startDate.time).millis
@@ -137,14 +137,14 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return records.filter { it.createdAtTime() in startOfMonth..endOfMonth }
     }*/
 
-   /* override suspend fun fetchWeekRecords(day: Date): List<FoodRecord> {
+    /* override suspend fun fetchWeekRecords(day: Date): List<FoodRecord> {
 
-        val today = DateTime(day.time)
-        val startOfWeek = getStartOfWeek(today).millis
-        val endOfWeek = getEndOfWeek(today).millis
+         val today = DateTime(day.time)
+         val startOfWeek = getStartOfWeek(today).millis
+         val endOfWeek = getEndOfWeek(today).millis
 
-        return records.filter { it.createdAtTime() in startOfWeek..endOfWeek }
-    }*/
+         return records.filter { it.createdAtTime() in startOfWeek..endOfWeek }
+     }*/
 
     override suspend fun updateFavorite(foodRecord: FoodRecord) {
         val currentFavorite = favorites.find { it.uuid == foodRecord.uuid }
@@ -226,6 +226,10 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
         return weightRecords.filter { it.dateTime in startOfWeek..endOfWeek }
             .sortedByDescending { it.dateTime }
+    }
+
+    override suspend fun fetchLatestWeightRecord(): WeightRecord? {
+        return weightRecords.maxByOrNull { it.dateTime }
     }
 
     override suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean {

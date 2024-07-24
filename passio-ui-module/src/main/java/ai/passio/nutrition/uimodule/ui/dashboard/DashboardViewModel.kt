@@ -103,10 +103,11 @@ class DashboardViewModel : BaseViewModel() {
             _waterSummary.postValue(Pair(totalWater, remainingTarget))
         }
     }
+
     private fun fetchWeightSummary() {
         viewModelScope.launch {
             val totalWater =
-                weightUseCase.getLatest(currentDate)?.getWightInCurrentUnit() ?: 0.0
+                weightUseCase.getLatest()?.getWightInCurrentUnit() ?: 0.0
             val targetWater = UserCache.getProfile().getTargetWightInCurrentUnit()
             var remainingTarget = targetWater - totalWater
             if (remainingTarget <= 0.0) {

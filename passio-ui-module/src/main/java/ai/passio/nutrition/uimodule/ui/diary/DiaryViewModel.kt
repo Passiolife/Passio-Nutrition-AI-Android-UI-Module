@@ -42,11 +42,6 @@ class DiaryViewModel : BaseViewModel() {
     val logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
     val showLoading = SingleLiveEvent<Boolean>()
 
-    init {
-
-    }
-
-
     private fun fetchLogsForCurrentDay() {
         viewModelScope.launch {
             val userProfile = useCaseUserProfile.getUserProfile()
@@ -90,20 +85,12 @@ class DiaryViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
 
             showLoading.postValue(true)
-            val foodRecord: FoodRecord?
-            if (suggestedFoods.foodRecord != null) {
-                foodRecord = suggestedFoods.foodRecord
+            val foodRecord: FoodRecord? = if (suggestedFoods.foodRecord != null) {
+                suggestedFoods.foodRecord
             } else if (suggestedFoods.searchResult != null) {
-                val passioMealPlanItem =
-                    PassioMealPlanItem(
-                        1,
-                        "Day 1",
-                        passioMealTimeNow(),
-                        suggestedFoods.searchResult!!
-                    )
-                foodRecord = mealPlanUseCase.getFoodRecord(passioMealPlanItem)
+                mealPlanUseCase.getFoodRecord(suggestedFoods.searchResult!!, passioMealTimeNow())
             } else {
-                foodRecord = null
+                null
             }
             if (foodRecord != null) {
                 logFoodEvent.postValue(
@@ -114,7 +101,6 @@ class DiaryViewModel : BaseViewModel() {
                     )
                 )
                 fetchLogsForCurrentDay()
-                getQuickSuggestions()
             } else {
                 logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: ${suggestedFoods.name.capitalized()}"))
             }

@@ -20,10 +20,8 @@ object WeightUseCase {
     suspend fun getWeightRecords(currentDate: Date, timePeriod: TimePeriod): List<WeightRecord> {
         return repository.fetchWeightRecords(currentDate, timePeriod)
     }
-    suspend fun getRecords(currentDate: Date): List<WeightRecord> {
-        return repository.fetchWeightRecords(currentDate)
-    }
-    suspend fun getLatest(currentDate: Date): WeightRecord? {
-        return repository.fetchWeightRecords(currentDate).firstOrNull()
+
+    suspend fun getLatest(): WeightRecord? {
+        return repository.fetchLatestWeightRecord()
     }
 }
