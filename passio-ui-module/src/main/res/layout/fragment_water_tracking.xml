@@ -163,7 +163,7 @@
                         app:drawableTopCompat="@drawable/ic_glass"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lblQuickAdd"
-                        tools:text="Glass (8 oz)" />
+                        tools:text="@string/glass" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/glassBottleSmall"
@@ -174,7 +174,7 @@
                         android:drawablePadding="8dp"
                         android:gravity="center"
                         android:padding="4dp"
-                        android:text="Glass (8 oz)"
+                        android:text="@string/sm_bottle"
                         android:textColor="@color/passio_gray900"
                         android:textSize="12sp"
                         app:drawableTopCompat="@drawable/ic_bottle_small"
@@ -190,7 +190,7 @@
                         android:drawablePadding="8dp"
                         android:gravity="center"
                         android:padding="4dp"
-                        android:text="Glass (8 oz)"
+                        android:text="@string/lg_bottle"
                         android:textColor="@color/passio_gray900"
                         android:textSize="12sp"
                         app:drawableTopCompat="@drawable/ic_bottle_large"

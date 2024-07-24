@@ -4,11 +4,6 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
-import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
-import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
-import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
-import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
-import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
