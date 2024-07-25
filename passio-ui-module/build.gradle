@@ -87,4 +87,6 @@ dependencies {
     implementation 'net.danlew:android.joda:2.12.5'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
+    implementation 'androidx.browser:browser:1.5.0'
+
 }

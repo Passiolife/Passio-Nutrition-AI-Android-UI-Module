@@ -7,6 +7,7 @@ import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
+import com.google.gson.GsonBuilder
 import java.util.Locale
 import java.util.UUID
 
@@ -26,7 +27,7 @@ class FoodRecord() {
     val servingUnits = mutableListOf<PassioServingUnit>()
 
     var mealLabel: MealLabel? = null
-    val uuid: String = UUID.randomUUID().toString().toUpperCase(Locale.ROOT)//null
+    var uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)//null
     var createdAt: Long? = null
 
     var openFoodLicense: String? = null
@@ -153,7 +154,7 @@ class FoodRecord() {
     fun setSelectedUnit(unit: String): Boolean {
         if (selectedUnit == unit) return true
 
-        if (servingUnits.firstOrNull { it.unitName == unit } == null) return false
+        if (servingUnits.firstOrNull { it.unitName.equals(unit, true) } == null) return false
 
         selectedUnit = unit
         calculateQuantityForIngredients()
@@ -241,4 +242,10 @@ fun List<FoodRecord>.proteinSum(): Double {
 
 fun List<FoodRecord>.fatSum(): Double {
     return map { it.nutrientsSelectedSize().fat()?.value ?: 0.0 }.reduce { acc, d -> acc + d }
+}
+
+fun FoodRecord.copy(): FoodRecord {
+    val gson = GsonBuilder().create()
+    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+        .apply { uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT) }
 }

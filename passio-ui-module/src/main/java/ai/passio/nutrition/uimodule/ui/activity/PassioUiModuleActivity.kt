@@ -8,7 +8,10 @@ import ai.passio.nutrition.uimodule.data.SharedPrefsPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 
@@ -17,6 +20,7 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
     private var _binding: ActivityPassioUiModuleBinding? = null
     private val binding: ActivityPassioUiModuleBinding get() = _binding!!
 
+    private val sharedViewModel: SharedViewModel by viewModels()
     private val navigationIds = listOf(
         R.id.dashboard,
         R.id.diary,
@@ -27,7 +31,8 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val connector = NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
+        val connector =
+            NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
         Repository.create(applicationContext, connector)
 
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
@@ -49,8 +54,11 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
             }
         }
 
-        binding.buttonAdd.setOnClickListener {
-            navController.navigate(R.id.add_food)
+        sharedViewModel.userProfileCacheEvent.observe(this){
+            binding.viewLoading.isVisible = false
+            binding.buttonAdd.setOnClickListener {
+                navController.navigate(R.id.add_food)
+            }
         }
     }
 

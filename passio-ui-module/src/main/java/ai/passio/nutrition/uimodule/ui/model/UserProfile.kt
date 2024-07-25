@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.profile.ActivityLevel
 import ai.passio.nutrition.uimodule.ui.profile.CalorieDeficit
 import ai.passio.nutrition.uimodule.ui.profile.Gender
@@ -71,26 +72,33 @@ data class UserProfile(
         return displayText
     }
 
-    fun getDisplayTargetWeight(): String {
+    fun getTargetWightInCurrentUnit(): Double {
         if (targetWeight <= 0)
-            return ""
-        val displayText: String = if (measurementUnit.weightUnit == WeightUnit.Metric) {
-            "$targetWeight"
+            return 0.0
+        return if (UserCache.getProfile().measurementUnit.weightUnit == WeightUnit.Metric) {
+            targetWeight
         } else {
-            "${kgToLbs(targetWeight)}"
+            kgToLbs(targetWeight)
         }
-        return displayText
+    }
+
+    fun getDisplayTargetWeight(): String {
+        return "${getTargetWightInCurrentUnit()}"
+    }
+
+
+    fun getTargetWaterInCurrentUnit(): Double {
+        if (waterTarget <= 0)
+            return 0.0
+        return if (UserCache.getProfile().measurementUnit.waterUnit == WaterUnit.Metric) {
+            waterTarget
+        } else {
+            mlToOz(waterTarget)
+        }
     }
 
     fun getDisplayTargetWater(): String {
-        if (waterTarget <= 0)
-            return ""
-        val displayText: String = if (measurementUnit.waterUnit == WaterUnit.Metric) {
-            "$waterTarget"
-        } else {
-            "${mlToOz(waterTarget)}"
-        }
-        return displayText
+        return "${getTargetWaterInCurrentUnit()}"
     }
 
     fun getCarbsGrams(): Float = (carbsPer * caloriesTarget) / 400f

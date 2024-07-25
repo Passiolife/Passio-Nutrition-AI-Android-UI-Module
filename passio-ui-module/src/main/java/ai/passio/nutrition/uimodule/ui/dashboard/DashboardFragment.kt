@@ -7,11 +7,16 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.databinding.FragmentDashboardBinding
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.util.StringKT.setSpannableBold
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import android.annotation.SuppressLint
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
@@ -59,6 +64,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             toggleWeekMonth.setOnClickListener {
                 viewModel.toggleCalendarMode()
             }
+            weightContainer.setOnClickListener {
+                viewModel.navigateToWeightTracking()
+            }
+            waterContainer.setOnClickListener {
+                viewModel.navigateToWaterTracking()
+            }
 
 
             setupCalendarView()
@@ -102,10 +113,37 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.calendarMode.observe(viewLifecycleOwner, ::updateCalenderMode)
         viewModel.adherents.observe(viewLifecycleOwner, ::updateAdherence)
+        viewModel.waterSummary.observe(viewLifecycleOwner, ::showWaterSummary)
+        viewModel.weightSummary.observe(viewLifecycleOwner, ::showWeightSummary)
     }
 
     private fun navigateToProgressReport() {
         viewModel.navigateToProgress()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showWaterSummary(summary: Pair<Double, Double>) {
+        with(binding)
+        {
+            val unitVal = UserCache.getProfile().measurementUnit.waterUnit.value.lowercase()
+            val totalVal = summary.first.singleDecimal()
+            val remainingVal = summary.second.singleDecimal() + " $unitVal"
+            waterValue.text = totalVal
+            waterUnit.text = unitVal
+            waterTarget.text = (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(remainingVal)
+        }
+    }
+    @SuppressLint("SetTextI18n")
+    private fun showWeightSummary(summary: Pair<Double, Double>) {
+        with(binding)
+        {
+            val unitVal = UserCache.getProfile().measurementUnit.weightUnit.value.lowercase()
+            val totalVal = summary.first.singleDecimal()
+            val remainingVal = summary.second.singleDecimal() + " $unitVal"
+            weightValue.text = totalVal
+            weightUnit.text = unitVal
+            weightTarget.text = (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(remainingVal)
+        }
     }
 
     private fun updateCalenderMode(calendarMode: CalendarMode) {
@@ -170,10 +208,11 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     }
 
-    private fun updateLogs(records: List<FoodRecord>) {
+    private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
 
         with(binding) {
-
+            val userProfile = data.first
+            val records = data.second
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()
             val currentCarbs = records.map { it.nutrients().carbs() }
@@ -185,13 +224,13 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
             dailyNutrition.setup(
                 currentCalories.toInt(),
-                2000,
+                userProfile.caloriesTarget,
                 currentCarbs.toInt(),
-                125,
+                userProfile.getCarbsGrams().toInt(),
                 currentProtein.toInt(),
-                100,
+                userProfile.getProteinGrams().toInt(),
                 currentFat.toInt(),
-                40
+                userProfile.getFatGrams().toInt()
             )
         }
     }

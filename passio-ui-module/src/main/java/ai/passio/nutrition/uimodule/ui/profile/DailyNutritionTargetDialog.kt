@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
 import com.warkiz.tickseekbar.OnSeekChangeListener
@@ -134,18 +135,18 @@ class DailyNutritionTargetDialog(
             renderData()
         }
 
-        /*setupEditable(binding.carbsPer) { newPer ->
+        setupEditDone(binding.carbsPer) { newPer ->
             dailyNutritionTarget.setNewCarbsPercentage(newPer.toIntOrNull() ?: 0)
             renderData()
         }
-        setupEditable(binding.proteinPer) { newPer ->
+        setupEditDone(binding.proteinPer) { newPer ->
             dailyNutritionTarget.setNewProteinPercentage(newPer.toIntOrNull() ?: 0)
             renderData()
         }
-        setupEditable(binding.fatPer) { newPer ->
+        setupEditDone(binding.fatPer) { newPer ->
             dailyNutritionTarget.setNewFatPercentage(newPer.toIntOrNull() ?: 0)
             renderData()
-        }*/
+        }
         setupEditable(binding.calorieGoal) { newPer ->
             newPer.toIntOrNull()?.let { newCal ->
                 dailyNutritionTarget.caloriesGoal = newCal
@@ -153,6 +154,20 @@ class DailyNutritionTargetDialog(
             }
         }
 
+    }
+
+    private fun setupEditDone(
+        editView: AppCompatEditText,
+        onValueChanged: (value: String) -> Unit
+    ) {
+        editView.setOnEditorActionListener { p0, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Handle the "Done" action here
+                p0.clearFocus()
+                onValueChanged.invoke(editView.text.toString())
+            }
+            false
+        }
     }
 
     private fun setupEditable(

@@ -1,28 +1,32 @@
 package ai.passio.nutrition.uimodule.ui.diary
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
-import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentDiaryBinding
+import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.app.DatePickerDialog
+import android.os.Bundle
 import android.text.format.DateFormat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
 import java.util.Calendar
 import java.util.Date
 
 /**
  * A simple [Fragment] subclass.
- * Use the [DiaryFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
@@ -47,7 +51,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         super.onViewCreated(view, savedInstanceState)
         dateFormat = DateFormat.getLongDateFormat(requireContext())
 
-        viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
+        initObserver()
 
         var currentDate = Date()
         if (arguments?.containsKey("currentDate") == true) {
@@ -56,8 +60,6 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
             }
         }
         viewModel.setDate(currentDate)
-
-//        viewModel.fetchLogsForCurrentDay()
 
         with(binding) {
             toolbar.setup(getString(R.string.my_diary), this@DiaryFragment)
@@ -87,14 +89,75 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
                 ).show()
             }
             dailyNutrition.invokeProgressReport(::navigateToProgressReport)
+            quickSuggestions.setup(quickSuggestionListener)
         }
+    }
+
+    private val quickSuggestionListener = object : QuickSuggestionView.QuickSuggestionListener {
+        override fun onLogFood(suggestedFoods: SuggestedFoods) {
+            viewModel.logFood(suggestedFoods)
+        }
+
+        override fun onEditFood(suggestedFoods: SuggestedFoods) {
+            if (suggestedFoods.foodRecord != null) {
+                sharedViewModel.editFoodRecord(suggestedFoods.foodRecord!!)
+                viewModel.navigateToDetails()
+            } else if (suggestedFoods.searchResult != null) {
+                sharedViewModel.passToEdit(suggestedFoods.searchResult!!)
+                viewModel.navigateToDetails()
+            }
+        }
+
+    }
+
+    private fun initObserver() {
+        viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
+        viewModel.quickSuggestions.observe(viewLifecycleOwner, ::setupQuickSuggestions)
+        viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.viewLoader.isVisible = isLoading
+        }
+    }
+
+    private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Food item logged.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Could not log food item.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                Toast.makeText(
+                    requireContext(),
+                    resultWrapper.error,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun setupQuickSuggestions(foodData: List<SuggestedFoods>) {
+        binding.quickSuggestions.updateData(foodData)
     }
 
     private fun navigateToProgressReport() {
         viewModel.navigateToProgress()
     }
 
-    private fun updateLogs(records: List<FoodRecord>) {
+    private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
+        val userProfile = data.first
+        val records = data.second
         val breakfastLogs = records.filter { it.mealLabel == MealLabel.Breakfast }
         val lunchLogs = records.filter { it.mealLabel == MealLabel.Lunch }
         val dinnerLogs = records.filter { it.mealLabel == MealLabel.Dinner }
@@ -119,13 +182,13 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
             dailyNutrition.setup(
                 currentCalories.toInt(),
-                2000,
+                userProfile.caloriesTarget,
                 currentCarbs.toInt(),
-                125,
+                userProfile.getCarbsGrams().toInt(),
                 currentProtein.toInt(),
-                100,
+                userProfile.getProteinGrams().toInt(),
                 currentFat.toInt(),
-                40
+                userProfile.getFatGrams().toInt()
             )
         }
     }

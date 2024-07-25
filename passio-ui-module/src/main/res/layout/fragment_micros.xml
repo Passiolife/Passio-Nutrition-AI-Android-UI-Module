@@ -82,6 +82,23 @@
         app:layout_constraintTop_toTopOf="@id/microsNote"
         app:srcCompat="@drawable/ic_close" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/showInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/viewTime"
+        app:srcCompat="@drawable/ic_info2" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="microsNote,close,showInfo" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/labelConsumed"
         android:layout_width="wrap_content"
@@ -92,7 +109,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/microsNote" />
+        app:layout_constraintTop_toBottomOf="@id/barrier" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConsumed"

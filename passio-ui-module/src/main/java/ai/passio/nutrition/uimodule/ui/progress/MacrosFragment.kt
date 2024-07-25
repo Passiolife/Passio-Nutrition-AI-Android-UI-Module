@@ -30,13 +30,9 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import org.joda.time.DateTime
+import java.util.Date
 
 class MacrosFragment : BaseFragment<MacrosViewModel>() {
-
-    enum class TimePeriod(val text: String) {
-        WEEK("Week"),
-        MONTH("Month");
-    }
 
     private var _binding: FragmentMacrosBinding? = null
     private val binding: FragmentMacrosBinding get() = _binding!!
@@ -53,6 +49,16 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        parentFragment?.arguments?.let {
+            if (it.containsKey("currentDate"))
+            {
+                val currentDate = it.getLong("currentDate", 0)
+                if (currentDate > 0)
+                {
+                    viewModel.setDate(Date(currentDate))
+                }
+            }
+        }
 
         with(binding)
         {

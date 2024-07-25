@@ -71,6 +71,9 @@
     <string name="meal_plan">Meal Plan</string>
     <string name="progress">Progress</string>
     <string name="my_progress">My Progress</string>
+    <string name="weight_tracking">Weight Tracking</string>
+    <string name="water_tracking">Water Tracking</string>
+    <string name="nutrition_information">Nutrition Information</string>
     <string name="welcome">Welcome!</string>
     <string name="not_what_you_re_looking_for_search_manually">Not what you\'re looking for? Search manually</string>
     <string name="macros">Macros</string>
@@ -110,6 +113,7 @@
     <string name="calorie_deficit">Calorie Deficit</string>
     <string name="diet">Diet</string>
     <string name="water_target">Water Target</string>
+    <string name="water_consumed">Water Consumed</string>
     <string name="enter_a_value">Enter a Value</string>
     <string name="enter_age">Enter Age</string>
     <string name="enter_target_weight">Enter Target Weight</string>
@@ -128,6 +132,23 @@
     <string name="overweight">Overweight</string>
     <string name="obese">Obese</string>
     <string name="save_changes">Save Changes</string>
+    <string name="log_entire_meal">Log Entire Meal</string>
+    <string name="failed_to_fetch_meal_plan">Failed to fetch meal plan.\nTap here to try again!</string>
+    <string name="quick_suggestions">Quick Suggestions</string>
+    <string name="drag_tray_up_to_view_suggestions_to_log">Drag tray up to view suggestions to log</string>
+    <string name="open_food_facts"><u>Open Food Facts</u></string>
+    <string name="more_details"><u>More Details</u></string>
+    <string name="open_food_facts_info">The nutrition information provided can be found from Open Food Facts, Which is made available under the Open Database License.</string>
+    <string name="day">Day</string>
+    <string name="time">Time</string>
+    <string name="water">Water</string>
+    <string name="remain_to_daily_goal">remain to daily goal</string>
+    <string name="weight_trend">Weight Trend</string>
+    <string name="water_trend">Water Trend</string>
+    <string name="glass">Glass</string>
+    <string name="sm_bottle">Sm Bottle</string>
+    <string name="lg_bottle">Lg Bottle</string>
+    <string name="quick_add">Quick Add</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

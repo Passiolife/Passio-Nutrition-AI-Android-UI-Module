@@ -16,15 +16,73 @@
             app:destination="@id/search" />
         <action
             android:id="@+id/dashboard_to_progress"
-            app:destination="@id/progress" />
+            app:destination="@id/progress">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+
+        </action>
+        <action
+            android:id="@+id/dashboard_to_weight_tracking"
+            app:destination="@id/weight_tracking">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+
+        </action>
+        <action
+            android:id="@+id/dashboard_to_water_tracking"
+            app:destination="@id/water_tracking">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+
+        </action>
+
         <action
             android:id="@+id/dashboard_to_my_profile"
             app:destination="@id/my_profile" />
+
         <action
             android:id="@+id/dashboard_to_settings"
             app:destination="@id/settings" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/weight_tracking"
+        android:name="ai.passio.nutrition.uimodule.ui.weight.WeightTrackingFragment"
+        android:label="WeightTrackingFragment"
+        tools:layout="@layout/fragment_weight_tracking">
+        <action
+            android:id="@+id/weight_tracking_to_save_weight"
+            app:destination="@id/save_weight" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/save_weight"
+        android:name="ai.passio.nutrition.uimodule.ui.weight.SaveWeightFragment"
+        android:label="SaveWeightFragment"
+        tools:layout="@layout/fragment_save_weight" />
+
+    <fragment
+        android:id="@+id/water_tracking"
+        android:name="ai.passio.nutrition.uimodule.ui.water.WaterTrackingFragment"
+        android:label="WaterTrackingFragment"
+        tools:layout="@layout/fragment_water_tracking">
+        <action
+            android:id="@+id/water_tracking_to_save_water"
+            app:destination="@id/save_water" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/save_water"
+        android:name="ai.passio.nutrition.uimodule.ui.water.SaveWaterFragment"
+        android:label="SaveWeightFragment"
+        tools:layout="@layout/fragment_save_weight" />
 
     <fragment
         android:id="@+id/diary"
@@ -42,7 +100,12 @@
         </action>
         <action
             android:id="@+id/diary_to_progress"
-            app:destination="@id/progress" />
+            app:destination="@id/progress">
+
+            <argument
+                android:name="currentDate"
+                app:argType="long" />
+        </action>
 
     </fragment>
 
@@ -51,6 +114,10 @@
         android:name="ai.passio.nutrition.uimodule.ui.mealplan.MealPlanFragment"
         android:label="Meal Plan"
         tools:layout="@layout/fragment_meal_plan">
+
+        <action
+            android:id="@+id/mealplan_to_edit"
+            app:destination="@id/edit" />
 
     </fragment>
 
@@ -73,6 +140,10 @@
             app:destination="@id/edit" />
 
         <action
+            android:id="@+id/edit_to_nutrition_info"
+            app:destination="@id/nutrition_info" />
+
+        <action
             android:id="@+id/edit_to_search"
             app:destination="@id/search"
             app:launchSingleTop="true"
@@ -93,7 +164,7 @@
             app:popUpTo="@id/dashboard">
             <argument
                 android:name="currentDate"
-                app:argType="long"/>
+                app:argType="long" />
         </action>
 
     </fragment>
@@ -182,6 +253,15 @@
         android:name="ai.passio.nutrition.uimodule.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings">
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nutrition_info"
+        android:name="ai.passio.nutrition.uimodule.ui.nutritioninfo.NutritionInfoFragment"
+        android:label="NutritionInfo"
+        tools:layout="@layout/fragment_nutrition_info">
 
 
     </fragment>

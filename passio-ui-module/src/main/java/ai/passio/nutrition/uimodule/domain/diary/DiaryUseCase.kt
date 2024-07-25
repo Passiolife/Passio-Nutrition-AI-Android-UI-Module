@@ -19,6 +19,9 @@ object DiaryUseCase {
     suspend fun getLogsForMonth(day: Date): List<FoodRecord> {
         return repository.getLogsForMonth(day)
     }
+    suspend fun getLogsForLast30Days(): List<FoodRecord> {
+        return repository.getLogsForLast30Days()
+    }
 
     suspend fun deleteRecord(foodRecord: FoodRecord): Boolean {
         return repository.deleteFoodRecord(record = foodRecord)

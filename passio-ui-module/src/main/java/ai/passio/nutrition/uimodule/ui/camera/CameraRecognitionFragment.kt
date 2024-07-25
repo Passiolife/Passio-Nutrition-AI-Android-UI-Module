@@ -375,7 +375,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     }
 
     override fun onBack() {
-
+        viewModel.navigateBack()
     }
 
     override fun onRightIconClicked() {
