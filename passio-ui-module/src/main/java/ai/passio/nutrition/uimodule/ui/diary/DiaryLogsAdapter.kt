@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.ui.diary
 import ai.passio.nutrition.uimodule.databinding.FoodLogBodyLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -45,7 +46,7 @@ class DiaryLogsAdapter(
                 val cal = foodRecord.nutrientsSelectedSize().calories()?.value?.roundToInt() ?: 0
                 calories.text = "$cal cal"
 
-                val quantity = foodRecord.getSelectedQuantity()
+                val quantity = foodRecord.getSelectedQuantity().singleDecimal()
                 val selectedUnit = foodRecord.getSelectedUnit()
                 val weight = foodRecord.servingWeight().gramsValue()
                 servingSize.text = "$quantity $selectedUnit (${weight.roundToInt()}g)"

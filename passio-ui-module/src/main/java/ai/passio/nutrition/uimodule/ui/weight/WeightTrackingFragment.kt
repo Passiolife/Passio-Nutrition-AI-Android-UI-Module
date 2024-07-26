@@ -257,7 +257,7 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             }
 
 
-            val weightDataSet = LineDataSet(weightEntries, getString(R.string.weight)).apply {
+            val weightDataSet = LineDataSet(weightEntries, getString(R.string.weight_txt)).apply {
                 color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
                 setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
                 lineWidth = 2f
@@ -269,7 +269,7 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             }
 
             val weightDataSetWithDots =
-                LineDataSet(weightEntriesWithDots, getString(R.string.weight)).apply {
+                LineDataSet(weightEntriesWithDots, getString(R.string.weight_txt)).apply {
                     color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
                     setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
                     lineWidth = 0f
