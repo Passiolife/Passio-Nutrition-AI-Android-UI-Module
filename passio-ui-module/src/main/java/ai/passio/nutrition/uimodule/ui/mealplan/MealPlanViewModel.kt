@@ -2,7 +2,7 @@ package ai.passio.nutrition.uimodule.ui.mealplan
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
-import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
@@ -10,16 +10,17 @@ import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MealPlanViewModel : BaseViewModel() {
 
-    private val userProfileUseCase = UserProfileUseCase
     private val mealPlanUseCase = MealPlanUseCase
 
-    val logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
+    private val _logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
+    val logFoodEvent: LiveData<ResultWrapper<Boolean>> = _logFoodEvent
     val showLoading = SingleLiveEvent<Boolean>()
     val editFoodEvent = SingleLiveEvent<FoodRecord>()
 
@@ -27,10 +28,14 @@ class MealPlanViewModel : BaseViewModel() {
     private val _passioMealPlans = arrayListOf<PassioMealPlan>()
     val passioMealPlans: List<PassioMealPlan> get() = _passioMealPlans
 
-    private val _passioMealPlanItems = SingleLiveEvent<List<PassioMealPlanItem>>()
+    private val _passioMealPlanItems = MutableLiveData<List<PassioMealPlanItem>>()
     val passioMealPlanItems: LiveData<List<PassioMealPlanItem>> get() = _passioMealPlanItems
 
     var currentDayNumber = 1
+
+    init {
+        getMealPlans()
+    }
 
     fun setCurrentDay(day: Int) {
         viewModelScope.launch {
@@ -63,7 +68,7 @@ class MealPlanViewModel : BaseViewModel() {
     private fun getMealPlanItems() {
         viewModelScope.launch {
             if (selectedMealPlan == null) {
-                selectedMealPlan = (userProfileUseCase.getUserProfile().passioMealPlan
+                selectedMealPlan = (UserCache.getProfile().passioMealPlan
                     ?: _passioMealPlans.find { mealPlan -> mealPlan.mealPlanLabel == "balanced" }
                     ?: _passioMealPlans.firstOrNull()
                         )
@@ -88,9 +93,9 @@ class MealPlanViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             showLoading.postValue(true)
             mealPlanUseCase.getFoodRecord(passioMealPlanItem)?.let {
-                logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecord(it)))
+                _logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecord(it)))
             }
-                ?: logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: ${passioMealPlanItem.meal.foodName}"))
+                ?: _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: ${passioMealPlanItem.meal.foodName}"))
 
             showLoading.postValue(false)
         }
@@ -101,9 +106,9 @@ class MealPlanViewModel : BaseViewModel() {
             showLoading.postValue(true)
             mealPlanUseCase.getFoodRecords(passioMealPlanItems).let {
                 if (it.isEmpty()) {
-                    logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items"))
+                    _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items"))
                 } else {
-                    logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecords(it)))
+                    _logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecords(it)))
                 }
             }
             showLoading.postValue(false)
@@ -116,7 +121,7 @@ class MealPlanViewModel : BaseViewModel() {
             mealPlanUseCase.getFoodRecord(passioMealPlanItem)?.let {
                 editFoodEvent.postValue(it)
             }
-                ?: logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: ${passioMealPlanItem.meal.foodName}, Can't edit try again."))
+                ?: _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: ${passioMealPlanItem.meal.foodName}, Can't edit try again."))
 
             showLoading.postValue(false)
         }

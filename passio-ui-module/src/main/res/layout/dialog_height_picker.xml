@@ -10,7 +10,7 @@
         android:id="@+id/lblTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/height"
+        android:text="@string/height_txt"
         android:textColor="@color/passio_gray900"
         android:textSize="18sp"
         android:textStyle="bold"

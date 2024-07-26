@@ -10,3 +10,5 @@
 .cxx
 local.properties
 /passio-sdk/build
+/app/keystore.properties
+/app/passio_ui_module_keystore

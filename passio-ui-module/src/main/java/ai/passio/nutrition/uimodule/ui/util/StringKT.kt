@@ -13,6 +13,10 @@ import java.text.DecimalFormat
 object StringKT {
 
     fun String.capitalized(): String {
+        return this.split(" ").joinToString(" ") { it.capitalizeWord() }
+    }
+
+    private fun String.capitalizeWord(): String {
         return this.replaceFirstChar {
             if (it.isLowerCase())
                 it.titlecase()
@@ -25,6 +29,7 @@ object StringKT {
     fun Double.singleDecimal(): String {
         return oneDecimalFormat.format(this)
     }
+
     private val twoDecimalFormat = DecimalFormat("0.##")
     fun Double.twoDecimal(): String {
         return twoDecimalFormat.format(this)

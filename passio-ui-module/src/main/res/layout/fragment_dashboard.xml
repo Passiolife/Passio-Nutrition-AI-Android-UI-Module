@@ -256,7 +256,7 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="4dp"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/weight"
+                        android:text="@string/weight_txt"
                         android:textColor="@color/passio_gray900"
                         android:textSize="18sp"
                         android:textStyle="bold"

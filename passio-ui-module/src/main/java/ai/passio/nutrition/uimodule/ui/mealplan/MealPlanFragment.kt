@@ -12,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.view.HorizontalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
@@ -58,7 +59,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
         }
 
         initObserver()
-        viewModel.getMealPlans()
+//        viewModel.getMealPlans()
 
     }
 
@@ -68,7 +69,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
         }
 
         override fun onRightIconClicked() {
-
+            showPopupMenu(binding.toolbar.findViewById(R.id.toolbarMenu))
         }
 
     }
@@ -131,20 +132,20 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
     }
 
 
-    private fun showPopupMenu(view: View) {
+    private fun showMealMenu(view: View) {
         val popupMenu = PopupMenu(requireContext(), view)
         val menuItems = viewModel.passioMealPlans
 
         // Dynamically add menu items
         menuItems.forEachIndexed { index, item ->
-            popupMenu.menu.add(0, index, index, item.mealPlanTitle)
+            popupMenu.menu.add(0, index, index, item.mealPlanTitle.capitalized())
         }
 
         // Set a click listener for menu item clicks
         popupMenu.setOnMenuItemClickListener { menuItem ->
             viewModel.passioMealPlans.find {
-                it.mealPlanTitle.equals(
-                    menuItem.title.toString(),
+                it.mealPlanTitle.lowercase().equals(
+                    menuItem.title.toString().lowercase(),
                     true
                 )
             }?.let { mealPlan ->
@@ -171,10 +172,10 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
         {
 
             menu.setOnClickListener {
-                showPopupMenu(menu)
+                showMealMenu(menu)
             }
             viewModel.selectedMealPlan?.let { mealPlan ->
-                tvCurrentMealPlan.text = mealPlan.mealPlanTitle
+                tvCurrentMealPlan.text = mealPlan.mealPlanTitle.capitalized()
             }
 
             if (rvDays.adapter == null || rvDays.adapter?.itemCount == 0) {

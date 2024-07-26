@@ -215,7 +215,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     }
 
     override fun onRightIconClicked() {
-
+        showPopupMenu(binding.toolbar.findViewById(R.id.toolbarMenu))
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {

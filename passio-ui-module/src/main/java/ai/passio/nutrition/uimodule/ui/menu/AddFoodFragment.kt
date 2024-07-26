@@ -18,7 +18,7 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
         listOf(
             AddFoodOption(0, R.string.food_scanner, R.drawable.ic_food_scanner),
             AddFoodOption(1, R.string.text_search, R.drawable.icon_search),
-//            AddFoodOption(2, R.string.use_image, R.drawable.ic_image),
+            AddFoodOption(2, R.string.use_image, R.drawable.ic_image),
 //            AddFoodOption(3, R.string.ai_advisor, R.drawable.ic_advisor),
 //            AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice),
 //            AddFoodOption(5, R.string.favorites, R.drawable.ic_favorites),
@@ -51,9 +51,10 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
     }
 
     private fun onOptionSelected(id: Int) {
-        when(id) {
+        when (id) {
             0 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToCamera())
             1 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToSearch())
+            2 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToPhoto())
         }
     }
 }

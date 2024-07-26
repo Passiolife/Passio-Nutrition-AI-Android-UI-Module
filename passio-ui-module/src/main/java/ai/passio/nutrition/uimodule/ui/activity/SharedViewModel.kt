@@ -9,6 +9,8 @@ import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -49,6 +51,8 @@ class SharedViewModel : ViewModel() {
     private val _addWaterLD = SingleLiveEvent<WaterRecord>()
     val addWaterLD: LiveData<WaterRecord> get() = _addWaterLD
 
+    private val _photoFoodResultLD = SingleLiveEvent<List<Bitmap>>()
+    val photoFoodResultLD: LiveData<List<Bitmap>> get() = _photoFoodResultLD
 
     private val userProfileCase = UserProfileUseCase
 
@@ -93,6 +97,9 @@ class SharedViewModel : ViewModel() {
     }
     fun addEditWater(waterRecord: WaterRecord) {
         _addWaterLD.postValue(waterRecord)
+    }
+    fun addPhotoFoodResult(uris: List<Bitmap>) {
+        _photoFoodResultLD.postValue(uris)
     }
 
 }

@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.search
 
 import ai.passio.nutrition.uimodule.databinding.SearchItemLayoutBinding
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FoodItemSearchAdapter(
     private val onClick: (searchResult: PassioFoodDataInfo) -> Unit,
+    private val onAdd: (searchResult: PassioFoodDataInfo) -> Unit,
 ) : RecyclerView.Adapter<FoodItemSearchAdapter.FoodItemSearchViewHolder>() {
 
     private val searchResults = mutableListOf<PassioFoodDataInfo>()
@@ -42,7 +44,7 @@ class FoodItemSearchAdapter(
         fun bindTo(searchResult: PassioFoodDataInfo) {
             with(searchResultBinding) {
                 name.visibility = View.VISIBLE
-                name.text = searchResult.foodName.capitalize()
+                name.text = searchResult.foodName.capitalized()
 
                 image.loadPassioIcon(searchResult.iconID)
 
@@ -53,8 +55,11 @@ class FoodItemSearchAdapter(
                     servingSize.visibility = View.GONE
                 }
 
-                this.root.setOnClickListener {
-                    onClick(searchResult)
+                plusIcon.setOnClickListener {
+                    onAdd.invoke(searchResult)
+                }
+                root.setOnClickListener {
+                    onClick.invoke(searchResult)
                 }
             }
         }

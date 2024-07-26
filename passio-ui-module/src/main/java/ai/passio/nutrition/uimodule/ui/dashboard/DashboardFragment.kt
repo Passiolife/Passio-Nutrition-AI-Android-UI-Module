@@ -17,16 +17,12 @@ import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.annotation.SuppressLint
-import android.view.MenuItem
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.lang.reflect.Field
 import java.util.Date
 import java.util.Locale
 
@@ -235,54 +231,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         }
     }
 
-    private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(requireContext(), view)
-        popupMenu.menuInflater.inflate(R.menu.dashboard_menu, popupMenu.menu)
-        showMenuIcons(popupMenu)
-        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.my_profile -> {
-                    viewModel.navigateToMyProfile()
-                    true
-                }
 
-                R.id.settings -> {
-                    viewModel.navigateToSettings()
-                    true
-                }
-
-                R.id.log_out -> {
-                    Toast.makeText(requireContext(), "Logout successfully!", Toast.LENGTH_LONG)
-                        .show()
-                    requireActivity().finish()
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        popupMenu.show()
-    }
-
-    private fun showMenuIcons(popupMenu: PopupMenu) {
-        try {
-            val fields: Array<Field> = popupMenu.javaClass.declaredFields
-            for (field in fields) {
-                if ("mPopup" == field.name) {
-                    field.isAccessible = true
-                    val menuPopupHelper = field.get(popupMenu)
-                    val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
-                    val setForceIcons =
-                        classPopupHelper.getMethod("setForceShowIcon", Boolean::class.java)
-                    setForceIcons.invoke(menuPopupHelper, true)
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

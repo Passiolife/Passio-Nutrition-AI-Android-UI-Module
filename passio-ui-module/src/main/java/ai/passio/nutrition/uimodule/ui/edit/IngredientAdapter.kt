@@ -1,7 +1,9 @@
 package ai.passio.nutrition.uimodule.ui.edit
 
-import ai.passio.nutrition.uimodule.databinding.IngredientLayoutBinding
+import ai.passio.nutrition.uimodule.databinding.FoodLogBodyLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,29 +24,35 @@ class IngredientAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
-        val binding = IngredientLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = FoodLogBodyLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return IngredientViewHolder(binding)
     }
 
     override fun getItemCount(): Int = ingredients.size
 
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
-        holder.bindTo(ingredients[position], position)
+        holder.bindTo(ingredients[position])
     }
 
     inner class IngredientViewHolder(
-        private val binding: IngredientLayoutBinding
+        private val binding: FoodLogBodyLayoutBinding
     ) : ViewHolder(binding.root) {
 
-        fun bindTo(ingredient: FoodRecordIngredient, position: Int) {
+        fun bindTo(ingredient: FoodRecordIngredient) {
             with(binding) {
                 image.loadPassioIcon(ingredient.iconId)
-                name.text = ingredient.name.capitalize()
+                name.text = ingredient.name.capitalized()
                 val cal = ingredient.nutrientsSelectedSize().calories()?.value?.roundToInt() ?: 0
                 calories.text = "$cal cal"
 
+                val quantity = ingredient.selectedQuantity.singleDecimal()
+                val selectedUnit = ingredient.selectedUnit
+                val weight = ingredient.servingWeight().gramsValue()
+                servingSize.text = "$quantity $selectedUnit (${weight.roundToInt()}g)"
+
+
                 root.setOnClickListener {
-                    onIngredientSelected(position)
+                    onIngredientSelected(adapterPosition)
                 }
             }
         }

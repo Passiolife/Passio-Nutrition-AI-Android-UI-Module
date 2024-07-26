@@ -36,7 +36,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         with(binding)
         {
             toolbar.setup(getString(R.string.settings), baseToolbarListener)
-
+            toolbar.hideRightIcon()
             lunch.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     markSwitchOn(lunch)

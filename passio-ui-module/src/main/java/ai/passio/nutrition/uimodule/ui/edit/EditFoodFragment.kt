@@ -225,6 +225,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         binding.toolbar.apply {
             setup(getString(R.string.edit), toolbarListener)
             setRightIcon(R.drawable.icon_switch)
+            hideRightIcon()
         }
     }
 
@@ -382,7 +383,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
             renderChart(carbPercent, proteinPercent, fatPercent)
 
-            caloriesValue.text = calories.toInt().toString()
+            caloriesValue.text = calories.roundToInt().toString()
         }
     }
 

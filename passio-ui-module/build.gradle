@@ -48,8 +48,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    api(project(":passio-sdk"))
-//    embed project(path: ':passio-sdk', configuration: 'default')
+//    api(project(":passio-sdk"))
+    embed project(path: ':passio-sdk', configuration: 'default')
 
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
@@ -88,5 +88,9 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
     implementation 'androidx.browser:browser:1.5.0'
+
+    implementation("io.coil-kt:coil:2.2.2")
+    // If you want to use Coil with Kotlin 1.8.0
+    implementation("io.coil-kt:coil-base:2.2.2")
 
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        tools:background="@color/passio_gray300"
+        tools:src="@drawable/icon_apple" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/remove"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:layout_marginStart="-20dp"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_remove" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

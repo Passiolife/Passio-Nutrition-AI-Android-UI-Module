@@ -2,6 +2,8 @@ package ai.passio.nutrition.uimodule.ui.search
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FoodSearchLayoutBinding
+import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.view.VerticalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.content.Context
 import android.text.Editable
@@ -25,13 +27,14 @@ class FoodSearchView @JvmOverloads constructor(
     interface PassioSearchListener {
         fun onQueryChange(query: String)
         fun onFoodItemSelected(searchItem: PassioFoodDataInfo)
+        fun onFoodItemLog(searchItem: PassioFoodDataInfo)
         fun onTextCleared()
         fun onViewDismissed()
     }
 
     private var binding: FoodSearchLayoutBinding? = null
     private var listener: PassioSearchListener? = null
-    private val searchAdapter = FoodItemSearchAdapter(::onSearchItemClicked)
+    private val searchAdapter = FoodItemSearchAdapter(::onSearchItemClicked, ::onSearchItemAdded)
     private val suggestionAdapter = FoodSuggestionsAdapter(::onSuggestion)
 
     private var searchTerm = ""
@@ -50,6 +53,7 @@ class FoodSearchView @JvmOverloads constructor(
         setupSearchBar()
         with(binding!!) {
             searchRecyclerView.layoutManager = LinearLayoutManager(context)
+            searchRecyclerView.addItemDecoration(VerticalSpaceItemDecoration(DesignUtils.dp2px(8f)))
             searchRecyclerView.adapter = searchAdapter
             searchSuggestionRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             searchSuggestionRecycler.adapter = suggestionAdapter
@@ -127,6 +131,10 @@ class FoodSearchView @JvmOverloads constructor(
 
     private fun onSearchItemClicked(searchResult: PassioFoodDataInfo) {
         listener?.onFoodItemSelected(searchResult)
+    }
+
+    private fun onSearchItemAdded(searchResult: PassioFoodDataInfo) {
+        listener?.onFoodItemLog(searchResult)
     }
 
     private fun onSuggestion(suggestion: String) {

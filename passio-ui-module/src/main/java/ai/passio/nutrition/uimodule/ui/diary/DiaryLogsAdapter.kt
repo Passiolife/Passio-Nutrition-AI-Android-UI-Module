@@ -1,9 +1,9 @@
 package ai.passio.nutrition.uimodule.ui.diary
 
 import ai.passio.nutrition.uimodule.databinding.FoodLogBodyLayoutBinding
-import ai.passio.nutrition.uimodule.databinding.IngredientLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -42,18 +42,17 @@ class DiaryLogsAdapter(
         fun bindTo(foodRecord: FoodRecord, position: Int) {
             with(binding) {
                 image.loadPassioIcon(foodRecord.iconId)
-                name.text = foodRecord.name.capitalize()
+                name.text = foodRecord.name.capitalized()
                 val cal = foodRecord.nutrientsSelectedSize().calories()?.value?.roundToInt() ?: 0
                 calories.text = "$cal cal"
 
-                val quantity = foodRecord.getSelectedQuantity()
+                val quantity = foodRecord.getSelectedQuantity().singleDecimal()
                 val selectedUnit = foodRecord.getSelectedUnit()
                 val weight = foodRecord.servingWeight().gramsValue()
                 servingSize.text = "$quantity $selectedUnit (${weight.roundToInt()}g)"
 
                 root.setOnClickListener {
                     recordSelected.invoke(foodRecord)
-//                    recordSelected(foodRecord)
                 }
             }
         }

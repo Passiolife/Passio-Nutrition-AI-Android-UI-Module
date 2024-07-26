@@ -47,7 +47,7 @@ class DiaryViewModel : BaseViewModel() {
             val userProfile = useCaseUserProfile.getUserProfile()
             val records = useCase.getLogsForDay(currentDate)
             _logsLD.postValue(Pair(userProfile, records))
-            getQuickSuggestions()
+//            getQuickSuggestions()
         }
     }
 
@@ -150,21 +150,6 @@ class DiaryViewModel : BaseViewModel() {
             }
         }
     }
-
-    private fun passioMealTimeNow(): PassioMealTime {
-        val calendar = Calendar.getInstance()
-        val hours = calendar.get(Calendar.HOUR_OF_DAY)
-        val minutes = calendar.get(Calendar.MINUTE)
-        val timeOfDay = hours * 100 + minutes
-
-        return when (timeOfDay) {
-            in 530..1030 -> PassioMealTime.BREAKFAST
-            in 1130..1400 -> PassioMealTime.LUNCH
-            in 1700..2100 -> PassioMealTime.DINNER
-            else -> PassioMealTime.SNACK
-        }
-    }
-
 
     private suspend fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
 
