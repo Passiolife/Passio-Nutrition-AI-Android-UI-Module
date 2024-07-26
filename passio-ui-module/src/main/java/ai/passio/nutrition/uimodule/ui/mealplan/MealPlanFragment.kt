@@ -58,7 +58,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
         }
 
         initObserver()
-        viewModel.getMealPlans()
+//        viewModel.getMealPlans()
 
     }
 

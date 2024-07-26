@@ -382,7 +382,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
             renderChart(carbPercent, proteinPercent, fatPercent)
 
-            caloriesValue.text = calories.toInt().toString()
+            caloriesValue.text = calories.roundToInt().toString()
         }
     }
 

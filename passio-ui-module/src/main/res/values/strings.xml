@@ -85,6 +85,8 @@
     <string name="today">Today</string>
     <string name="generate_report">Generate Report</string>
     <string name="consumed">Consumed</string>
+    <string name="take_photos">Take Photos</string>
+    <string name="select_photos">Select Photos</string>
     <string name="food_scanner">Food Scanner</string>
     <string name="text_search">Text Search</string>
     <string name="use_image">Use Image</string>
@@ -149,6 +151,12 @@
     <string name="sm_bottle">Sm Bottle</string>
     <string name="lg_bottle">Lg Bottle</string>
     <string name="quick_add">Quick Add</string>
+    <string name="your_result">Your Result</string>
+    <string name="select_the_foods_you_would_like_to_log">Select the foods you would like to log</string>
+    <string name="reselect">Reselect</string>
+    <string name="log_selected">Log Selected</string>
+    <string name="no_matched_result_found">No matched result found.</string>
+    <string name="next_only">Next</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

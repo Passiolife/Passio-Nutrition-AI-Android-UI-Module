@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.edit
 
 import ai.passio.nutrition.uimodule.databinding.IngredientLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -39,7 +40,7 @@ class IngredientAdapter(
         fun bindTo(ingredient: FoodRecordIngredient, position: Int) {
             with(binding) {
                 image.loadPassioIcon(ingredient.iconId)
-                name.text = ingredient.name.capitalize()
+                name.text = ingredient.name.capitalized()
                 val cal = ingredient.nutrientsSelectedSize().calories()?.value?.roundToInt() ?: 0
                 calories.text = "$cal cal"
 

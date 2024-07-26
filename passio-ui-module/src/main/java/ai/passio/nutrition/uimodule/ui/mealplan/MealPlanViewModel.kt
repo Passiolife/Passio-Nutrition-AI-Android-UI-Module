@@ -2,7 +2,7 @@ package ai.passio.nutrition.uimodule.ui.mealplan
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
-import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
@@ -10,13 +10,13 @@ import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MealPlanViewModel : BaseViewModel() {
 
-    private val userProfileUseCase = UserProfileUseCase
     private val mealPlanUseCase = MealPlanUseCase
 
     val logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
@@ -27,10 +27,14 @@ class MealPlanViewModel : BaseViewModel() {
     private val _passioMealPlans = arrayListOf<PassioMealPlan>()
     val passioMealPlans: List<PassioMealPlan> get() = _passioMealPlans
 
-    private val _passioMealPlanItems = SingleLiveEvent<List<PassioMealPlanItem>>()
+    private val _passioMealPlanItems = MutableLiveData<List<PassioMealPlanItem>>()
     val passioMealPlanItems: LiveData<List<PassioMealPlanItem>> get() = _passioMealPlanItems
 
     var currentDayNumber = 1
+
+    init {
+        getMealPlans()
+    }
 
     fun setCurrentDay(day: Int) {
         viewModelScope.launch {
@@ -63,7 +67,7 @@ class MealPlanViewModel : BaseViewModel() {
     private fun getMealPlanItems() {
         viewModelScope.launch {
             if (selectedMealPlan == null) {
-                selectedMealPlan = (userProfileUseCase.getUserProfile().passioMealPlan
+                selectedMealPlan = (UserCache.getProfile().passioMealPlan
                     ?: _passioMealPlans.find { mealPlan -> mealPlan.mealPlanLabel == "balanced" }
                     ?: _passioMealPlans.firstOrNull()
                         )

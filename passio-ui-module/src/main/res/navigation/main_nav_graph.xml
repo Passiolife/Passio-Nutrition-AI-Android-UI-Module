@@ -236,6 +236,52 @@
         <action
             android:id="@+id/add_food_to_search"
             app:destination="@id/search" />
+        <action
+            android:id="@+id/add_food_to_photo"
+            app:destination="@id/take_select_photo" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/take_select_photo"
+        android:name="ai.passio.nutrition.uimodule.ui.image.TakeOrSelectPhotoFragment"
+        android:label="Choose Photo"
+        tools:layout="@layout/fragment_add_food">
+
+        <action
+            android:id="@+id/take_select_photo_to_image_food_result"
+            app:destination="@id/image_food_result" />
+        <action
+            android:id="@+id/take_select_photo_to_take_photo"
+            app:destination="@id/take_photo" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/take_photo"
+        android:name="ai.passio.nutrition.uimodule.ui.image.TakePhotoFragment"
+        android:label="Take Photo"
+        tools:layout="@layout/fragment_take_photo">
+
+        <action
+            android:id="@+id/take_photo_to_image_food_result"
+            app:destination="@id/image_food_result" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/image_food_result"
+        android:name="ai.passio.nutrition.uimodule.ui.image.ImageFoodResultFragment"
+        android:label="Food Result"
+        tools:layout="@layout/fragment_image_food_result">
+
+        <action
+            android:id="@+id/image_food_result_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard">
+        </action>
 
     </fragment>
 
