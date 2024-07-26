@@ -43,7 +43,7 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    private fun fetchResult() {
+    private fun fetchResult11() {
         _isProcessing.postValue(true)
         resultFoodInfoList.clear()
         val startTime = System.currentTimeMillis()
@@ -77,7 +77,7 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    private fun fetchResult1() {
+    private fun fetchResult() {
         viewModelScope.launch {
             _isProcessing.postValue(true)
             resultFoodInfoList.clear()

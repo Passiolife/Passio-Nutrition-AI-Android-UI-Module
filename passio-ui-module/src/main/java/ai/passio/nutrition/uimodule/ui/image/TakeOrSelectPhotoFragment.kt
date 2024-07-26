@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.menu.AddFoodAdapter
 import ai.passio.nutrition.uimodule.ui.menu.AddFoodFragmentDirections
 import ai.passio.nutrition.uimodule.ui.menu.AddFoodOption
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
 import android.content.Intent
 import android.graphics.Bitmap
@@ -61,6 +62,10 @@ class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == AppCompatActivity.RESULT_OK) {
                     result.data?.clipData?.let { clipData ->
+                        if (clipData.itemCount > TakePhotoFragment.MAX_IMAGES) {
+                            requireContext().toast("You can only select up to ${TakePhotoFragment.MAX_IMAGES} images.")
+                            return@registerForActivityResult
+                        }
                         val uris = mutableListOf<Uri>()
                         for (i in 0 until clipData.itemCount) {
                             uris.add(clipData.getItemAt(i).uri)
@@ -82,7 +87,7 @@ class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
     }
 
     private fun navigateToFindResult(imageUris: List<Uri>) {
-        lifecycleScope.launch()
+        lifecycleScope.launch(Dispatchers.IO)
         {
             val bitmaps = mutableListOf<Bitmap>()
             imageUris.forEach { uri ->
@@ -91,8 +96,10 @@ class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
                     bitmaps.add(bitmap)
                 }
             }
-            sharedViewModel.addPhotoFoodResult(bitmaps)
-            viewModel.navigate(TakeOrSelectPhotoFragmentDirections.takeSelectPhotoToImageFoodResult())
+            lifecycleScope.launch(Dispatchers.Default) {
+                sharedViewModel.addPhotoFoodResult(bitmaps)
+                viewModel.navigate(TakeOrSelectPhotoFragmentDirections.takeSelectPhotoToImageFoodResult())
+            }
         }
     }
 

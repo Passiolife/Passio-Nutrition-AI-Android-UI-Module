@@ -31,6 +31,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
         private const val TAG = "CameraXApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
+        const val MAX_IMAGES = 7
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
@@ -56,6 +57,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
             imageAdapter = ImageAdapter(imageList) {
                 imageList.removeAt(it)
                 imageAdapter.notifyItemRemoved(it)
+                validateImageCount()
             }
             recyclerView.adapter = imageAdapter
             captureButton.setOnClickListener {
@@ -69,7 +71,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
             }
         }
 
-
+        validateImageCount()
         if (allPermissionsGranted()) {
             startCamera()
         } else {
@@ -80,6 +82,16 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
     }
 
+    private fun validateImageCount() {
+        if (imageList.size >= MAX_IMAGES) {
+            binding.captureButton.isEnabled = false
+            binding.captureButton.alpha = 0.6f
+        } else {
+            binding.captureButton.isEnabled = true
+            binding.captureButton.alpha = 1.0f
+        }
+    }
+
     private val bitmapAnalyzer = BitmapAnalyzer { bitmap ->
         // Use the bitmap here, e.g., display it or process it
         lifecycleScope.launch(Dispatchers.Main) {
@@ -88,6 +100,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
                 imageList.add(bitmap)
                 imageAdapter.notifyItemInserted(imageList.size - 1)
                 binding.recyclerView.smoothScrollToPosition(imageList.size - 1)
+                validateImageCount()
 //            imageList.add(bitmap.copy(bitmap.config, true))
             }
         }
