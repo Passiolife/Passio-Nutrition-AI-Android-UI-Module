@@ -110,20 +110,6 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    private fun passioMealTimeNow(): PassioMealTime {
-        val calendar = Calendar.getInstance()
-        val hours = calendar.get(Calendar.HOUR_OF_DAY)
-        val minutes = calendar.get(Calendar.MINUTE)
-        val timeOfDay = hours * 100 + minutes
-
-        return when (timeOfDay) {
-            in 530..1030 -> PassioMealTime.BREAKFAST
-            in 1130..1400 -> PassioMealTime.LUNCH
-            in 1700..2100 -> PassioMealTime.DINNER
-            else -> PassioMealTime.SNACK
-        }
-    }
-
     fun logRecords(list: List<PassioAdvisorFoodInfo>) {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)

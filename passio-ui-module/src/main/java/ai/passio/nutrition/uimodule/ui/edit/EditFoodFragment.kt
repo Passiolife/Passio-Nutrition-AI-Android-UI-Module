@@ -225,6 +225,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         binding.toolbar.apply {
             setup(getString(R.string.edit), toolbarListener)
             setRightIcon(R.drawable.icon_switch)
+            hideRightIcon()
         }
     }
 

@@ -47,7 +47,7 @@ class ProgressFragment : BaseFragment<ProgressViewModel>() {
         }
 
         override fun onRightIconClicked() {
-
+            showPopupMenu(binding.toolbar.findViewById(R.id.toolbarMenu))
         }
 
     }

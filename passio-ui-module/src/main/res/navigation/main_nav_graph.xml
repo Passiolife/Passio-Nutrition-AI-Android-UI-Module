@@ -183,6 +183,14 @@
             app:popUpToInclusive="true">
 
         </action>
+        <action
+            android:id="@+id/search_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/add_food"
+            app:popUpToInclusive="true">
+
+        </action>
 
     </fragment>
 

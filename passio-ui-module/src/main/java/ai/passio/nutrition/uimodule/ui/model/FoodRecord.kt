@@ -157,6 +157,12 @@ class FoodRecord() {
         if (servingUnits.firstOrNull { it.unitName.equals(unit, true) } == null) return false
 
         selectedUnit = unit
+
+        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true)) {
+            100.0
+        } else {
+            1.0
+        }
         calculateQuantityForIngredients()
         return true
     }

@@ -51,6 +51,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
         with(binding)
         {
             toolbar.setup(getString(R.string.my_profile), baseToolbarListener)
+            toolbar.hideRightIcon()
 
             height.setOnClickListener {
                 showHeightPicker()
