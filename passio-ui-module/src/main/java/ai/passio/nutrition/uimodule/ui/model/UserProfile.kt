@@ -29,7 +29,8 @@ data class UserProfile(
     var proteinPer: Int = 25, //percentage
     var fatPer: Int = 25, //percentage
     var caloriesTarget: Int = 2100,
-    val measurementUnit: MeasurementUnit = MeasurementUnit()
+    val measurementUnit: MeasurementUnit = MeasurementUnit(),
+    val userReminder: UserReminder = UserReminder()
 ) {
 
     // Calculate BMI value

@@ -1,16 +1,21 @@
 package ai.passio.nutrition.uimodule.ui.settings
 
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.databinding.FragmentSettingsBinding
+import ai.passio.nutrition.uimodule.notification.NotificationUtil.cancelNotification
+import ai.passio.nutrition.uimodule.notification.NotificationUtil.scheduleNotification
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.profile.LengthUnit
 import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.widget.AdapterView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
@@ -37,25 +42,40 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         {
             toolbar.setup(getString(R.string.settings), baseToolbarListener)
             toolbar.hideRightIcon()
-            lunch.setOnCheckedChangeListener { _, isChecked ->
+            lunch.setOnCheckedChangeListener { checkbox, isChecked ->
                 if (isChecked) {
                     markSwitchOn(lunch)
+//                    scheduleNotification(requireContext(), 12, 0, "Take your lunch.", 1002)
                 } else {
                     markSwitchOff(lunch)
+//                    cancelNotification(requireContext(), 1002)
+                }
+                if (checkbox.isPressed) {
+                    viewModel.updateLunchReminder(isChecked)
                 }
             }
-            dinner.setOnCheckedChangeListener { _, isChecked ->
+            dinner.setOnCheckedChangeListener { checkbox, isChecked ->
                 if (isChecked) {
                     markSwitchOn(dinner)
+//                    scheduleNotification(requireContext(), 17, 0, "Take your dinner.", 1003)
                 } else {
                     markSwitchOff(dinner)
+//                    cancelNotification(requireContext(), 1003)
+                }
+                if (checkbox.isPressed) {
+                    viewModel.updateDinnerReminder(isChecked)
                 }
             }
-            breakfast.setOnCheckedChangeListener { _, isChecked ->
+            breakfast.setOnCheckedChangeListener { checkbox, isChecked ->
                 if (isChecked) {
                     markSwitchOn(breakfast)
+//                    scheduleNotification(requireContext(), 8, 0, "Take your breakfast.", 1001)
                 } else {
                     markSwitchOff(breakfast)
+//                    cancelNotification(requireContext(), 1001)
+                }
+                if (checkbox.isPressed) {
+                    viewModel.updateBreakfastReminder(isChecked)
                 }
             }
         }
@@ -63,10 +83,36 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
     }
 
     private fun initObserver() {
-        viewModel.measurementUnitEvent.observe(viewLifecycleOwner) { measurementUnit ->
-            run {
-                setupLengthView(measurementUnit.lengthUnit)
-                setupWeightView(measurementUnit.weightUnit)
+        viewModel.userProfileEvent.observe(viewLifecycleOwner, ::setSettingInfo)
+        viewModel.updateProfileResult.observe(viewLifecycleOwner, ::settingSaved)
+    }
+
+    private fun setSettingInfo(userProfile: UserProfile) {
+        with(binding) {
+            val measurementUnit = userProfile.measurementUnit
+
+            setupLengthView(measurementUnit.lengthUnit)
+            setupWeightView(measurementUnit.weightUnit)
+
+            breakfast.isChecked = userProfile.userReminder.isBreakfastOn
+            lunch.isChecked = userProfile.userReminder.isLunchOn
+            dinner.isChecked = userProfile.userReminder.isDinnerOn
+        }
+    }
+
+    private fun settingSaved(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    requireContext().toast("User settings saved!")
+//                    viewModel.navigateBack()
+                } else {
+                    requireContext().toast("Could not saved settings. Please try again.")
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
             }
         }
     }

@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.settings
 
 import ai.passio.nutrition.uimodule.databinding.DialogHeightPickerBinding
 import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.LengthUnit
 import ai.passio.nutrition.uimodule.ui.profile.feetInchesToMeters
 import ai.passio.nutrition.uimodule.ui.profile.metersCentimetersToMeters
@@ -55,7 +56,7 @@ class HeightPickerDialog(private val listener: HeightPickerListener) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.measurementUnitEvent.observe(viewLifecycleOwner, ::setupPickers)
+        viewModel.userProfileEvent.observe(viewLifecycleOwner, ::setupPickers)
         viewModel.getMeasurementUnit()
 
         binding.cancel.setOnClickListener {
@@ -73,8 +74,8 @@ class HeightPickerDialog(private val listener: HeightPickerListener) :
         }
     }
 
-    private fun setupPickers(measurementUnit: MeasurementUnit) {
-        this.measurementUnit = measurementUnit
+    private fun setupPickers(userProfile: UserProfile) {
+        this.measurementUnit = userProfile.measurementUnit
         with(binding) {
             if (measurementUnit.lengthUnit == LengthUnit.Imperial) {
                 valuePicker.minValue = 0

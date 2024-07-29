@@ -531,7 +531,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun onIngredientSelected(index: Int) {
-        val ingredient = viewModel.getIngredient(index)
-        sharedViewModel.editIngredient(ingredient, index)
+//        val ingredient = viewModel.getIngredient(index)
+//        sharedViewModel.editIngredient(ingredient, index)
     }
 }

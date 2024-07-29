@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.settings
 
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
@@ -16,8 +17,13 @@ class SettingsViewModel : BaseViewModel() {
 
     private val useCase = UserProfileUseCase
     private lateinit var userProfile: UserProfile
-    private val _measurementUnitEvent = SingleLiveEvent<MeasurementUnit>()
-    val measurementUnitEvent: LiveData<MeasurementUnit> get() = _measurementUnitEvent
+    private val _userProfileEvent = SingleLiveEvent<UserProfile>()
+    val userProfileEvent: LiveData<UserProfile> get() = _userProfileEvent
+
+
+    private val _updateProfileResult = SingleLiveEvent<ResultWrapper<Boolean>>()
+    val updateProfileResult: LiveData<ResultWrapper<Boolean>> get() = _updateProfileResult
+
 
     init {
         getMeasurementUnit()
@@ -26,7 +32,7 @@ class SettingsViewModel : BaseViewModel() {
     fun getMeasurementUnit() {
         viewModelScope.launch {
             userProfile = useCase.getUserProfile()
-            _measurementUnitEvent.postValue(userProfile.measurementUnit)
+            _userProfileEvent.postValue(userProfile)
         }
     }
 
@@ -35,7 +41,14 @@ class SettingsViewModel : BaseViewModel() {
             with(userProfile) {
                 if (measurementUnit.lengthUnit.value != lengthUnit.value) {
                     measurementUnit.lengthUnit = lengthUnit
-                    useCase.updateUserProfile(this)
+                    _updateProfileResult.postValue(
+                        ResultWrapper.Success(
+                            useCase.updateUserProfile(
+                                this
+                            )
+                        )
+                    )
+
                 }
             }
         }
@@ -51,11 +64,42 @@ class SettingsViewModel : BaseViewModel() {
                     } else {
                         measurementUnit.waterUnit = WaterUnit.Imperial
                     }
-                    useCase.updateUserProfile(this)
+                    _updateProfileResult.postValue(
+                        ResultWrapper.Success(
+                            useCase.updateUserProfile(
+                                this
+                            )
+                        )
+                    )
                 }
             }
         }
     }
 
+    fun updateBreakfastReminder(isReminderOn: Boolean) {
+        viewModelScope.launch {
+            with(userProfile) {
+                userReminder.isBreakfastOn = isReminderOn
+                _updateProfileResult.postValue(ResultWrapper.Success(useCase.updateUserProfile(this)))
+            }
+        }
+    }
 
+    fun updateLunchReminder(isReminderOn: Boolean) {
+        viewModelScope.launch {
+            with(userProfile) {
+                userReminder.isLunchOn = isReminderOn
+                _updateProfileResult.postValue(ResultWrapper.Success(useCase.updateUserProfile(this)))
+            }
+        }
+    }
+
+    fun updateDinnerReminder(isReminderOn: Boolean) {
+        viewModelScope.launch {
+            with(userProfile) {
+                userReminder.isDinnerOn = isReminderOn
+                _updateProfileResult.postValue(ResultWrapper.Success(useCase.updateUserProfile(this)))
+            }
+        }
+    }
 }

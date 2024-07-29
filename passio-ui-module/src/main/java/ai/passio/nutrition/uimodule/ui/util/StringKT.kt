@@ -17,7 +17,7 @@ object StringKT {
     }
 
     private fun String.capitalizeWord(): String {
-        return this.replaceFirstChar {
+        return this.lowercase().replaceFirstChar {
             if (it.isLowerCase())
                 it.titlecase()
             else it.toString()
