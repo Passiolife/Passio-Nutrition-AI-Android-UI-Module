@@ -25,7 +25,6 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -66,7 +65,6 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
 
 
             prepareRecognizer()
-//            startListening.disable()
 
             startListening.setOnClickListener {
                 checkPermissions()
@@ -89,6 +87,9 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
             }
             clearSelected.setOnClickListener {
                 (rvResult.adapter as SpeechRecognitionAdapter).clearSelection()
+            }
+            searchManually.setOnClickListener {
+                viewModel.navigateToSearch()
             }
             formatSearchManuallyText()
         }

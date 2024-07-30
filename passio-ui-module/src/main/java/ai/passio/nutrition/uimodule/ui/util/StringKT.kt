@@ -33,11 +33,6 @@ object StringKT {
         return oneDecimalFormat.format(this)
     }
 
-    private val twoDecimalFormat = DecimalFormat("0.##")
-    fun Double.twoDecimal(): String {
-        return twoDecimalFormat.format(this)
-    }
-
     fun AppCompatTextView.setDrawableEnd(drawableResId: Int) {
         val drawable: Drawable? = ContextCompat.getDrawable(this.context, drawableResId)
         this.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)

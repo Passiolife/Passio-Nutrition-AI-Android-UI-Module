@@ -1,7 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.menu
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentAddFoodBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 
 class AddFoodFragment : BaseFragment<BaseViewModel>() {

@@ -275,8 +275,7 @@
                     android:text="@string/try_again"
                     android:textColor="@color/passio_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_voice" />
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/log"

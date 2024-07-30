@@ -22,7 +22,7 @@ class VoiceLoggingViewModel : BaseViewModel() {
     private val _voiceQueryEvent = MutableLiveData<String>()
     val voiceQueryEvent: LiveData<String> = _voiceQueryEvent
 
-    private val _resultFoodInfo = SingleLiveEvent<List<PassioSpeechRecognitionModel>>()
+    private val _resultFoodInfo = MutableLiveData<List<PassioSpeechRecognitionModel>>()
     val resultFoodInfo: LiveData<List<PassioSpeechRecognitionModel>> get() = _resultFoodInfo
 
 
@@ -80,6 +80,12 @@ class VoiceLoggingViewModel : BaseViewModel() {
     fun navigateToDiary() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(VoiceLoggingFragmentDirections.voiceLoggingToDiary())
+        }
+    }
+
+    fun navigateToSearch() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(VoiceLoggingFragmentDirections.voiceLoggingToSearch())
         }
     }
 
