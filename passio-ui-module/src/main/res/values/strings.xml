@@ -157,6 +157,12 @@
     <string name="log_selected">Log Selected</string>
     <string name="no_matched_result_found">No matched result found.</string>
     <string name="next_only">Next</string>
+    <string name="tap_start_listening_then_say_something_like">Tap <b>Start Listening</b>, then say something like:\n\n<i>“I had one blueberry muffin and a cup of green tea for my breakfast”</i></string>
+    <string name="start_listening">Start Listening</string>
+    <string name="stop_listening">Stop Listening</string>
+    <string name="clear_selected"><u>Clear Selected</u></string>
+    <string name="try_again">Try Again</string>
+    <string name="generating_results">Generating results...</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

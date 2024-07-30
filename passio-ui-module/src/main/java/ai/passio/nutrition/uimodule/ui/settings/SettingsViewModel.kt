@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.settings
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.LengthUnit
 import ai.passio.nutrition.uimodule.ui.profile.WaterUnit

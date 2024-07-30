@@ -29,6 +29,9 @@ object StringKT {
     fun Double.singleDecimal(): String {
         return oneDecimalFormat.format(this)
     }
+    fun Float.singleDecimal(): String {
+        return oneDecimalFormat.format(this)
+    }
 
     private val twoDecimalFormat = DecimalFormat("0.##")
     fun Double.twoDecimal(): String {

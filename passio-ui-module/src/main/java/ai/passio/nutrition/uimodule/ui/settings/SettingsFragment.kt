@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.databinding.FragmentSettingsBinding
-import ai.passio.nutrition.uimodule.notification.NotificationUtil.cancelNotification
-import ai.passio.nutrition.uimodule.notification.NotificationUtil.scheduleNotification
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.UserProfile

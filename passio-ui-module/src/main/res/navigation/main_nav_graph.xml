@@ -247,7 +247,23 @@
         <action
             android:id="@+id/add_food_to_photo"
             app:destination="@id/take_select_photo" />
+        <action
+            android:id="@+id/add_food_to_voice_logging"
+            app:destination="@id/voice_logging" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/voice_logging"
+        android:name="ai.passio.nutrition.uimodule.ui.voice.VoiceLoggingFragment"
+        android:label="VoiceLoggingFragment"
+        tools:layout="@layout/fragment_voice_logging">
+
+        <action
+            android:id="@+id/voice_logging_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
     </fragment>
 
     <fragment
@@ -288,8 +304,7 @@
             android:id="@+id/image_food_result_to_diary"
             app:destination="@id/diary"
             app:launchSingleTop="true"
-            app:popUpTo="@id/dashboard">
-        </action>
+            app:popUpTo="@id/dashboard"></action>
 
     </fragment>
 

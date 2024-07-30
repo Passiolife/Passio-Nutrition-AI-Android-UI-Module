@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.profile
 
 import ai.passio.nutrition.uimodule.databinding.DialogDailyNutritionTargetBinding
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -19,7 +20,6 @@ import androidx.fragment.app.DialogFragment
 import com.warkiz.tickseekbar.OnSeekChangeListener
 import com.warkiz.tickseekbar.SeekParams
 import com.warkiz.tickseekbar.TickSeekBar
-import java.text.DecimalFormat
 
 class DailyNutritionTargetDialog(
     private val dailyNutritionTarget: DailyNutritionTarget,
@@ -32,7 +32,6 @@ class DailyNutritionTargetDialog(
         var proteinPer: Int, //percentage
         var fatPer: Int //percentage
     ) {
-        private val decimalFormat = DecimalFormat("0.#")
 
         private fun setInternalPercentage(
             primaryChange: Int,
@@ -68,12 +67,12 @@ class DailyNutritionTargetDialog(
         }
 
         fun getCarbsGrams(): String =
-            "${decimalFormat.format(((carbsPer * caloriesGoal) / 400f))} g"
+            "${((carbsPer * caloriesGoal) / 400f).singleDecimal()} g"
 
         fun getProteinGrams(): String =
-            "${decimalFormat.format(((proteinPer * caloriesGoal) / 400f))} g"
+            "${((proteinPer * caloriesGoal) / 400f).singleDecimal()} g"
 
-        fun getFatGrams(): String = "${decimalFormat.format(((fatPer * caloriesGoal) / 900f))} g"
+        fun getFatGrams(): String = "${((fatPer * caloriesGoal) / 900f).singleDecimal()} g"
     }
 
     interface DailyNutritionTargetCustomizeListener {

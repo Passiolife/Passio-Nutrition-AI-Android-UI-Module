@@ -21,6 +21,7 @@
     <color name="passio_gray300">#D1D5DB</color>
     <color name="passio_gray700">#374151</color>
     <color name="passio_gray900">#111827</color>
+    <color name="gray">#484848</color>
     <color name="passio_indigo50">#EEF2FF</color>
     <color name="passio_scan_background">#6B7280BF</color>
     <color name="passio_white20p">#32FFFFFF</color>

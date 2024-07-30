@@ -7,6 +7,7 @@ import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
+import android.util.Log
 import com.google.gson.GsonBuilder
 import java.util.Locale
 import java.util.UUID
@@ -58,6 +59,8 @@ class FoodRecord() {
         servingUnits.addAll(foodItem.amount.servingUnits)
         selectedUnit = foodItem.amount.selectedUnit
         selectedQuantity = foodItem.amount.selectedQuantity
+        openFoodLicense = foodItem.isOpenFood()
+        Log.d("foodItem.isOpenFood()", "===foodItem.isOpenFood(): ${foodItem.isOpenFood()}")
         ingredients = foodItem.ingredients.map { FoodRecordIngredient(it) }.toMutableList()
         calculateQuantityForIngredients()
     }

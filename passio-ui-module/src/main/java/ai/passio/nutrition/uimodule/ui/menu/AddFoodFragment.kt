@@ -20,7 +20,7 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
             AddFoodOption(1, R.string.text_search, R.drawable.icon_search),
             AddFoodOption(2, R.string.use_image, R.drawable.ic_image),
 //            AddFoodOption(3, R.string.ai_advisor, R.drawable.ic_advisor),
-//            AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice),
+            AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice),
 //            AddFoodOption(5, R.string.favorites, R.drawable.ic_favorites),
 //            AddFoodOption(0, R.string.my_foods, R.drawable.ic_my_foods),
         ),
@@ -55,6 +55,7 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
             0 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToCamera())
             1 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToSearch())
             2 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToPhoto())
+            4 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToVoiceLogging())
         }
     }
 }

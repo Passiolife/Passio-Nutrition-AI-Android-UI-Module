@@ -49,9 +49,10 @@ class Repository private constructor() {
     private lateinit var connector: PassioConnector
 
     suspend fun fetchPassioFoodItem(
-        searchResult: PassioFoodDataInfo
+        searchResult: PassioFoodDataInfo,
+        weighGrams: Double ?= null
     ): PassioFoodItem? = suspendCoroutine { cont ->
-        PassioSDK.instance.fetchFoodItemForDataInfo(searchResult) { foodItem ->
+        PassioSDK.instance.fetchFoodItemForDataInfo(searchResult, weighGrams) { foodItem ->
             cont.resumeWith(Result.success(foodItem))
         }
     }

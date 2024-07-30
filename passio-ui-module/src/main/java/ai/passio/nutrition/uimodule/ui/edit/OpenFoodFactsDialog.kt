@@ -22,13 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 
 
-class OpenFoodFactsDialog(private val listener: OpenFoodFactsListener) :
+class OpenFoodFactsDialog :
     DialogFragment() {
-
-    interface OpenFoodFactsListener {
-        fun onOpenFoodFactsClicked()
-        fun onOpenDatabaseLicenseClicked()
-    }
 
     private var _binding: DialogOpenFoodFactsBinding? = null
     private val binding: DialogOpenFoodFactsBinding get() = _binding!!
@@ -102,8 +97,6 @@ class OpenFoodFactsDialog(private val listener: OpenFoodFactsListener) :
         // Define the clickable span for "Open Food Facts"
         val openFoodFactsSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                listener.onOpenFoodFactsClicked()
-
                 openURL("https://en.openfoodfacts.org")
             }
         }
@@ -111,16 +104,16 @@ class OpenFoodFactsDialog(private val listener: OpenFoodFactsListener) :
         // Define the clickable span for "Open Database License"
         val openDatabaseLicenseSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                listener.onOpenDatabaseLicenseClicked()
                 openURL("https://opendatacommons.org/licenses/odbl/1-0")
             }
         }
-
+        @ColorInt val colorPrimaryLight =
+            ContextCompat.getColor(requireContext(), R.color.passio_primary)
         // Set the color and clickable span for "Open Food Facts"
         val openFoodFactsStart = text.indexOf("Open Food Facts")
         val openFoodFactsEnd = openFoodFactsStart + "Open Food Facts".length
         spannableString.setSpan(
-            ForegroundColorSpan(Color.BLUE),
+            ForegroundColorSpan(colorPrimaryLight),
             openFoodFactsStart,
             openFoodFactsEnd,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -136,7 +129,7 @@ class OpenFoodFactsDialog(private val listener: OpenFoodFactsListener) :
         val openDatabaseLicenseStart = text.indexOf("Open Database License")
         val openDatabaseLicenseEnd = openDatabaseLicenseStart + "Open Database License".length
         spannableString.setSpan(
-            ForegroundColorSpan(Color.BLUE),
+            ForegroundColorSpan(colorPrimaryLight),
             openDatabaseLicenseStart,
             openDatabaseLicenseEnd,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

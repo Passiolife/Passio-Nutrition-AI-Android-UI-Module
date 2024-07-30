@@ -7,6 +7,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -104,4 +105,16 @@ fun isToday(milliseconds: Long): Boolean {
     val today = LocalDate.now()
     val givenDate = dateTime.toLocalDate()
     return givenDate == today
+}
+
+//yyyy-MM-dd
+fun dateToTimestamp(dateString: String, dateFormat: String): Long {
+    // Define the date format
+    val formatter = DateTimeFormat.forPattern(dateFormat)
+
+    // Parse the date string to a DateTime object
+    val dateTime = DateTime.parse(dateString, formatter)
+
+    // Convert the DateTime object to a timestamp in milliseconds
+    return dateTime.millis
 }
