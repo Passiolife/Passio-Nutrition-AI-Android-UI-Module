@@ -25,6 +25,7 @@ import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.graphics.Color
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
@@ -230,6 +231,8 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             }
             weightRecords.addAll(createDefaultWeightRecords(startDate, endDate))
 
+            Log.d("ddddddd", "startDate: $startDate , endDate: $endDate")
+
             val groupedRecords = weightRecords.groupBy {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.dateTime
@@ -270,7 +273,7 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
 
             val weightDataSetWithDots =
                 LineDataSet(weightEntriesWithDots, getString(R.string.weight_txt)).apply {
-                    color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
+                    color = Color.TRANSPARENT
                     setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
                     lineWidth = 0f
                     circleRadius = 4f
@@ -305,6 +308,8 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             xAxis.setDrawGridLinesBehindData(false)
             xAxis.setDrawLimitLinesBehindData(false)
             if (timePeriod == TimePeriod.MONTH) {
+                xAxis.labelCount = 4
+//                xAxis.mAxisMaximum = DateTime().dayOfMonth().maximumValue.toFloat() + 1
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
@@ -312,6 +317,8 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
                     }
                 }
             } else {
+                xAxis.labelCount = 7
+//                xAxis.mAxisMaximum = 7f
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         return startDate.plusDays(value.toInt() - 1).dayOfWeek()

@@ -118,3 +118,13 @@ fun dateToTimestamp(dateString: String, dateFormat: String): Long {
     // Convert the DateTime object to a timestamp in milliseconds
     return dateTime.millis
 }
+
+const val DAY_FORMAT = "EE"
+fun dateToFormat(localDate: LocalDate, format: String): String {
+    // Define the formatter for the desired pattern
+    val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.ENGLISH)
+
+    // Format the date to the desired pattern
+    val formattedDate = localDate.toString(formatter)
+    return formattedDate
+}
