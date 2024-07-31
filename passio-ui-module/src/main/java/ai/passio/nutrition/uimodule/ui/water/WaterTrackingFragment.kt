@@ -330,10 +330,10 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
                     TimePeriod.WEEK -> 7
                     TimePeriod.MONTH -> 4
                 }
-//                axisMaximum = when (timePeriod) {
-//                    TimePeriod.WEEK -> 7f
-//                    TimePeriod.MONTH -> DateTime().dayOfMonth().maximumValue.toFloat() + 1
-//                }
+                axisMaximum = when (timePeriod) {
+                    TimePeriod.WEEK -> 7f
+                    TimePeriod.MONTH -> startDate.dayOfMonth().maximumValue.toFloat() + 1
+                }
                 valueFormatter = when (timePeriod) {
                     TimePeriod.WEEK -> object : ValueFormatter() {
                         override fun getFormattedValue(value: Float): String {
@@ -354,7 +354,7 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
             barChart.axisLeft.apply {
 //                labelCount = 3
                 setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-                spaceTop = 15f
+//                spaceTop = 15f
             }
 
             barChart.axisRight.isEnabled = false

@@ -66,9 +66,9 @@ data class UserProfile(
         if (weight <= 0)
             return ""
         val displayText: String = if (measurementUnit.weightUnit == WeightUnit.Metric) {
-            "$weight"
+            weight.toString()
         } else {
-            "${kgToLbs(weight)}"
+            kgToLbs(weight).toString()
         }
         return displayText
     }
@@ -84,7 +84,7 @@ data class UserProfile(
     }
 
     fun getDisplayTargetWeight(): String {
-        return "${getTargetWightInCurrentUnit()}"
+        return getTargetWightInCurrentUnit().toString()
     }
 
 
@@ -99,7 +99,7 @@ data class UserProfile(
     }
 
     fun getDisplayTargetWater(): String {
-        return "${getTargetWaterInCurrentUnit()}"
+        return getTargetWaterInCurrentUnit().toString()
     }
 
     fun getCarbsGrams(): Float = (carbsPer * caloriesTarget) / 400f
