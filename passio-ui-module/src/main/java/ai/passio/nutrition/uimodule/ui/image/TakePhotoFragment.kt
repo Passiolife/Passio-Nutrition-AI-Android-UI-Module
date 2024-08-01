@@ -12,7 +12,6 @@ import ai.passio.nutrition.uimodule.ui.view.BitmapAnalyzer
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -30,7 +29,6 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
     companion object {
         private const val TAG = "CameraXApp"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         const val MAX_IMAGES = 7
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
