@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.image
 
+import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.FragmentTakePhotoBinding
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -107,6 +108,11 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
     }
 
     private fun startCamera() {
+
+        if (!SharedPrefUtils.get("isPhotoTipShown", Boolean::class.java)) {
+            SharedPrefUtils.put("isPhotoTipShown",true)
+            PhotoTipDialog().show(childFragmentManager, "PhotoTipDialog")
+        }
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({

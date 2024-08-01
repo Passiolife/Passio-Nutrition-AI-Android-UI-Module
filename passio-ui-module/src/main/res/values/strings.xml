@@ -163,6 +163,8 @@
     <string name="clear_selected"><u>Clear Selected</u></string>
     <string name="try_again">Try Again</string>
     <string name="generating_results">Generating results...</string>
+    <string name="taking_a_good_picture">Taking a good picture</string>
+    <string name="food_photo_tip">Make sure all your food items are clearly visible in the shot</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>
