@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import io.noties.markwon.Markwon
-import io.noties.markwon.MarkwonPlugin
 
 private var chatMarginSpace: Int = 0
 

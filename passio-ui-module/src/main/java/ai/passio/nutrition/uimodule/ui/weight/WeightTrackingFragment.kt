@@ -25,7 +25,6 @@ import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.graphics.Color
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
