@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
 import ai.passio.nutrition.uimodule.ui.view.BitmapAnalyzer
 import android.Manifest
 import android.content.pm.PackageManager
@@ -34,6 +36,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
+    private var isPicker = false
     private lateinit var imageAdapter: ImageAdapter
     private val imageList: MutableList<Bitmap> = mutableListOf()
     private lateinit var imageAnalyzer: ImageAnalysis
@@ -53,6 +56,11 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+
+            arguments?.getBoolean("isPicker", false)?.let {
+                isPicker = it
+            }
+
             imageAdapter = ImageAdapter(imageList) {
                 imageList.removeAt(it)
                 imageAdapter.notifyItemRemoved(it)
@@ -82,12 +90,16 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
     }
 
     private fun validateImageCount() {
+        if (imageList.size > 0) {
+            binding.next.enable()
+        }
+        else{
+            binding.next.disable()
+        }
         if (imageList.size >= MAX_IMAGES) {
-            binding.captureButton.isEnabled = false
-            binding.captureButton.alpha = 0.6f
+            binding.captureButton.disable()
         } else {
-            binding.captureButton.isEnabled = true
-            binding.captureButton.alpha = 1.0f
+            binding.captureButton.enable()
         }
     }
 
@@ -108,7 +120,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
     private fun startCamera() {
 
         if (!SharedPrefUtils.get("isPhotoTipShown", Boolean::class.java)) {
-            SharedPrefUtils.put("isPhotoTipShown",true)
+            SharedPrefUtils.put("isPhotoTipShown", true)
             PhotoTipDialog().show(childFragmentManager, "PhotoTipDialog")
         }
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
@@ -169,7 +181,11 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
         lifecycleScope.launch(Dispatchers.Main)
         {
             sharedViewModel.addPhotoFoodResult(imageUris)
-            viewModel.navigate(TakePhotoFragmentDirections.takePhotoToImageFoodResult())
+            if (isPicker) {
+                viewModel.navigateBack()
+            } else {
+                viewModel.navigate(TakePhotoFragmentDirections.takePhotoToImageFoodResult())
+            }
         }
     }
 

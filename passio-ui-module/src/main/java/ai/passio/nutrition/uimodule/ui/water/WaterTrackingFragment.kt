@@ -330,15 +330,18 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
                     TimePeriod.WEEK -> 7
                     TimePeriod.MONTH -> 4
                 }
-                axisMaximum = when (timePeriod) {
-                    TimePeriod.WEEK -> 7f
-                    TimePeriod.MONTH -> startDate.dayOfMonth().maximumValue.toFloat() + 1
-                }
+//                axisMaximum = when (timePeriod) {
+//                    TimePeriod.WEEK -> 7f
+//                    TimePeriod.MONTH -> startDate.dayOfMonth().maximumValue.toFloat() + 1
+//                }
                 valueFormatter = when (timePeriod) {
                     TimePeriod.WEEK -> object : ValueFormatter() {
                         override fun getFormattedValue(value: Float): String {
                             calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
-                            return dateToFormat(LocalDate(calendar.timeInMillis), DAY_FORMAT).substring(0,2)
+                            return dateToFormat(
+                                LocalDate(calendar.timeInMillis),
+                                DAY_FORMAT
+                            ).substring(0, 2)
                         }
                     }
 
@@ -427,15 +430,17 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
             val yAxisLeft = barChart.axisLeft
             yAxisLeft.granularity = 0.5f*/
 
-            // Add dashed annotation line for target water intake
-            val targetLine = LimitLine(targetWater.toFloat(), "").apply {
-                lineWidth = 2f
-                lineColor = ContextCompat.getColor(requireContext(), R.color.passio_green_800)
-                enableDashedLine(20f, 14f, 0f)
-                labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
-                textSize = 10f
+            if (targetWater > 0.0) {
+                // Add dashed annotation line for target water intake
+                val targetLine = LimitLine(targetWater.toFloat(), "").apply {
+                    lineWidth = 2f
+                    lineColor = ContextCompat.getColor(requireContext(), R.color.passio_green_800)
+                    enableDashedLine(20f, 14f, 0f)
+                    labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+                    textSize = 10f
+                }
+                barChart.axisLeft.addLimitLine(targetLine)
             }
-            barChart.axisLeft.addLimitLine(targetLine)
             barChart.description.isEnabled = false
             barChart.legend.form = Legend.LegendForm.LINE
             barChart.invalidate() // Refresh the chart

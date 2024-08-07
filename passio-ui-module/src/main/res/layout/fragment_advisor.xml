@@ -1,6 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/passio_background"
+    tools:context=".ui.progress.ProgressFragment">
+
+    <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/passio_toolbar_background"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAdvisor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/rc_4_border_gray300"
+        app:layout_constraintBottom_toBottomOf="@id/message"
+        app:layout_constraintEnd_toEndOf="@id/message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/message" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/addPhoto"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="18dp"
+        android:background="@drawable/rc_4_purple"
+        android:gravity="center"
+        android:scaleType="center"
+        android:tint="@color/passio_white"
+        app:layout_constraintBottom_toBottomOf="@id/message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/message"
+        app:srcCompat="@drawable/ic_add_food" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/send"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rc_4_purple"
+        android:gravity="center"
+        android:minHeight="46dp"
+        android:paddingHorizontal="20dp"
+        android:text="@string/send"
+        android:textColor="@color/passio_white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/message" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:hint="@string/type_your_message_here"
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences"
+        android:lines="1"
+        android:minHeight="46dp"
+        android:textColor="@color/passio_gray900"
+        android:textColorHint="@color/passio_gray500"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/bottomSpace"
+        app:layout_constraintEnd_toStartOf="@id/send"
+        app:layout_constraintStart_toEndOf="@id/addPhoto" />
+
+    <androidx.legacy.widget.Space
+        android:id="@+id/bottomSpace"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/progressInit"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/passio_white40p"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/passio_primary" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/failedInit"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/passio_white40p"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/passio_red800"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:padding="30dp"
+            android:text="@string/failed_to_init_ai_advisor"
+            android:textColor="@color/passio_red800"
+            android:textSize="14sp"
+            app:drawableBottomCompat="@drawable/ic_retry" />
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

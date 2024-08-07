@@ -231,8 +231,6 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             }
             weightRecords.addAll(createDefaultWeightRecords(startDate, endDate))
 
-            Log.d("ddddddd", "startDate: $startDate , endDate: $endDate")
-
             val groupedRecords = weightRecords.groupBy {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.dateTime
@@ -261,9 +259,9 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
 
 
             val weightDataSet = LineDataSet(weightEntries, getString(R.string.weight_txt)).apply {
-                color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
+                color = Color.TRANSPARENT//ContextCompat.getColor(requireContext(), R.color.passio_primary)
                 setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
-                lineWidth = 2f
+                lineWidth = 0f
                 circleRadius = 0f
                 setDrawCircles(false)
                 setDrawCircleHole(false)
@@ -273,14 +271,14 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
 
             val weightDataSetWithDots =
                 LineDataSet(weightEntriesWithDots, getString(R.string.weight_txt)).apply {
-                    color = Color.TRANSPARENT
+                    color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
                     setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
-                    lineWidth = 0f
+                    lineWidth = 2f
                     circleRadius = 4f
                     setDrawCircleHole(false)
                     setDrawValues(false)
                     mode =
-                        LineDataSet.Mode.CUBIC_BEZIER // Set mode to cubic bezier for smooth curves
+                        LineDataSet.Mode.HORIZONTAL_BEZIER // Set mode to cubic bezier for smooth curves
                 }
 
             val targetDataSet =

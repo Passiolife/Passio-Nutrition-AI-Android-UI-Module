@@ -12,6 +12,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -92,6 +93,9 @@ class ImageFoodResultViewModel : BaseViewModel() {
                         "food result",
                         "on result == result count: ${result.size} and current count:$currentCount "
                     )
+                    result.forEach {
+                        Log.d("resultFoodInfoList", Gson().toJson(it))
+                    }
                     resultFoodInfoList.addAll(result)
                     if (resultFoodInfoList.isNotEmpty()) {
                         _resultFoodInfo.postValue(resultFoodInfoList)

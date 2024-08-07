@@ -35,9 +35,18 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         with(binding)
         {
             enableLogButton(false)
-            rvResult.adapter = FoodImageResultAdapter { selectedCount ->
-                enableLogButton(selectedCount != 0)
-            }
+            rvResult.adapter = FoodImageResultAdapter(object : OnItemSelectChange {
+                override fun onItemSelectChange(selectedCount: Int) {
+                    enableLogButton(selectedCount != 0)
+                }
+
+                override fun onIndexSelect(index: Int) {
+                }
+
+                override fun onIndexDeselect(index: Int) {
+                }
+
+            })
             cancel.setOnClickListener {
                 viewModel.navigateBack()
             }

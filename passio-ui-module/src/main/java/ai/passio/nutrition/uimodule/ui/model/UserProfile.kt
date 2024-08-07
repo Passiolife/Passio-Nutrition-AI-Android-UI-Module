@@ -84,7 +84,11 @@ data class UserProfile(
     }
 
     fun getDisplayTargetWeight(): String {
-        return getTargetWightInCurrentUnit().toString()
+        return if (targetWeight <= 0) {
+            ""
+        } else {
+            getTargetWightInCurrentUnit().toString()
+        }
     }
 
 
@@ -99,7 +103,11 @@ data class UserProfile(
     }
 
     fun getDisplayTargetWater(): String {
-        return getTargetWaterInCurrentUnit().toString()
+        return if (waterTarget <= 0) {
+            ""
+        } else {
+            getTargetWaterInCurrentUnit().toString()
+        }
     }
 
     fun getCarbsGrams(): Float = (carbsPer * caloriesTarget) / 400f

@@ -165,6 +165,10 @@
     <string name="generating_results">Generating results…</string>
     <string name="taking_a_good_picture">Taking a good picture</string>
     <string name="food_photo_tip">Make sure all your food items are clearly visible in the shot</string>
+    <string name="send">Send</string>
+    <string name="type_your_message_here">Type your message here…</string>
+    <string name="failed_to_init_ai_advisor">Failed to initialize AI Advisor session.\nTap here to retry.</string>
+    <string name="find_foods">Find Foods</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

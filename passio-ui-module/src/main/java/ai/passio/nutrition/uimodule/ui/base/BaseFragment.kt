@@ -19,10 +19,10 @@ import androidx.navigation.fragment.findNavController
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
+abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false) : Fragment() {
     private lateinit var navController: NavController
     protected val viewModel: VM by lazy {
-        ViewModelProvider(this)[getVMClass()]
+        ViewModelProvider(if (isSharedContext) requireActivity() else this)[getVMClass()]
     }
     protected val sharedViewModel: SharedViewModel by activityViewModels()
 
@@ -88,7 +88,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
         popupMenu.show()
     }
 
-    private fun showMenuIcons(popupMenu: PopupMenu) {
+    fun showMenuIcons(popupMenu: PopupMenu) {
         try {
             val fields: Array<Field> = popupMenu.javaClass.declaredFields
             for (field in fields) {
