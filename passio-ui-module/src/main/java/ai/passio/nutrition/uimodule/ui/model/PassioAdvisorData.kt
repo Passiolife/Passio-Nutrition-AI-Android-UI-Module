@@ -113,6 +113,10 @@ class PassioAdvisorData {
                     rawContent = CONTENT_TEXT_RESPONSE
                 )
             }
+            val size = passioAdvisorData.passioAdvisorResponse?.extractedIngredients?.size ?: 0
+            if (size > 0) {
+                passioAdvisorData.selectedFoodIndexes.addAll(0 until size)
+            }
             return passioAdvisorData
         }
     }
