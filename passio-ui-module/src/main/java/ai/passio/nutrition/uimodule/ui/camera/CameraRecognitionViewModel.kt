@@ -11,9 +11,11 @@ import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.PassioID
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CameraRecognitionViewModel : BaseViewModel() {
@@ -25,6 +27,12 @@ class CameraRecognitionViewModel : BaseViewModel() {
     val showLoading = SingleLiveEvent<Boolean>()
     private var scanMode: ScanMode = ScanMode.VISUAL
     val scanModeEvent = MutableLiveData<ScanMode>()
+
+    private var cameraZoomLevel: Float = 1f
+    val cameraZoomLevelRangeEvent = SingleLiveEvent<Triple<Float, Float?, Float?>>()
+    private var isCameraFlashOn = false
+    val cameraFlashToggleEvent = SingleLiveEvent<Boolean>()
+    private var isCameraTapToFocusOn = true
 
     fun setFoodScanMode(scanMode: ScanMode) {
         this.scanMode = scanMode
@@ -93,10 +101,40 @@ class CameraRecognitionViewModel : BaseViewModel() {
         }
     }
 
+    fun toggleCameraFlash() {
+        isCameraFlashOn = !isCameraFlashOn
+        PassioSDK.instance.enableFlashlight(isCameraFlashOn)
+        cameraFlashToggleEvent.postValue(isCameraFlashOn)
+    }
+
+    fun toggleCameraTapToFocus() {
+        isCameraTapToFocusOn = !isCameraTapToFocusOn
+        PassioSDK.instance.enableFlashlight(isCameraTapToFocusOn)
+    }
 
     fun startRecognitionSession(cameraViewProvider: PassioCameraViewProvider) {
-        PassioSDK.instance.startCamera(cameraViewProvider)
-        startOrUpdateDetection()
+        viewModelScope.launch {
+            PassioSDK.instance.startCamera(
+                cameraViewProvider,
+                displayRotation = 0,
+                cameraFacing = CameraSelector.LENS_FACING_BACK,
+                isCameraTapToFocusOn
+            )
+            startOrUpdateDetection()
+            cameraFlashToggleEvent.postValue(isCameraFlashOn)
+            delay(1000)
+            cameraZoomLevelRangeEvent.postValue(
+                Triple(
+                    cameraZoomLevel,
+                    PassioSDK.instance.getMinMaxCameraZoomLevel().first,
+                    PassioSDK.instance.getMinMaxCameraZoomLevel().second
+                )
+            )
+        }
+    }
+
+    fun setCameraZoomLevel(zoomLevel: Float) {
+        PassioSDK.instance.setCameraZoomLevel(zoomLevel)
     }
 
     fun stopRecognitionSession() {

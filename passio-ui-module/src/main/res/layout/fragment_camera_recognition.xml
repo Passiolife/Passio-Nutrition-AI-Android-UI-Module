@@ -65,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nutritionFactsLabel"
-        app:layout_constraintWidth_percent="0.70">
+        app:layout_constraintWidth_percent="0.75">
 
         <ImageView
             android:id="@+id/viewFinder1"
@@ -103,20 +103,44 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="16dp"
-        tools:background="@color/passio_white"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewfinder">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewfinder"
+        tools:background="@color/gray">
 
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:layout_width="match_parent"
+        <com.warkiz.tickseekbar.TickSeekBar
+            android:id="@+id/cameraZoomLevel"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:progress="80"
-            android:thumbTint="@color/passio_primary"
-            android:progressTint="@color/passio_primary"
-            android:indeterminateTint="@color/passio_primary"/>
+            android:layout_weight="1"
+            tools:tsb_progress="50"
+            app:tsb_progress_value_float="true"
+            app:tsb_thumb_color="@color/passio_white"
+            app:tsb_thumb_size="22dp"
+            app:tsb_track_background_color="@color/passio_white40p"
+            app:tsb_track_background_size="6dp"
+            app:tsb_track_progress_color="@color/passio_primary"
+            app:tsb_track_progress_size="6dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cameraFocus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_camera_focus_on" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cameraFlash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:padding="8dp"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_camera_flash_on" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -144,7 +168,8 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/scanningMessage"
@@ -211,7 +236,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/added_to_diary"
