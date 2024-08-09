@@ -19,6 +19,17 @@ object CameraUseCase {
         return repository.recognitionResultFlow(config).map { mapRecognitionResult(it) }
     }
 
+    fun nutritionFactsFlow(): Flow<RecognitionResult> {
+        return repository.nutritionFactsResultFlow()
+            .map {
+                if (it.first == null) {
+                    RecognitionResult.NoRecognition
+                } else {
+                    RecognitionResult.NutritionFactRecognition(it)
+                }
+            }
+    }
+
     suspend fun fetchFoodItemForPassioID(passioID: PassioID): PassioFoodItem? {
         return repository.fetchFoodItemForPassioID(passioID)
     }

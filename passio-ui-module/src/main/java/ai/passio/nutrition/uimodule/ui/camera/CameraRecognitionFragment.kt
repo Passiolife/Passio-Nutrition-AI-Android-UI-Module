@@ -12,6 +12,7 @@ import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
 import ai.passio.passiosdk.passiofood.DetectedCandidate
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -73,6 +74,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
             (resources.displayMetrics.heightPixels * 0.6).toInt()
         binding.recognitionResult.addBottomSheetCallback(bottomSheetCallback)
         binding.recognitionResult.setRecognitionResultListener(recognitionResultListener)
+//        PassioSDK.instance.zo
 
         // Check for camera permission
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
@@ -223,6 +225,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun scanModeUpdated(scanMode: ScanMode) {
         when (scanMode) {
             ScanMode.VISUAL -> {
@@ -369,6 +372,13 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.scanningMessage.visibility = View.GONE
 
                     it.recognitionResult.showVisualResult(result)
+                }
+                is RecognitionResult.NutritionFactRecognition -> {
+                    it.viewAddedToDiary.visibility = View.GONE
+                    it.recognitionResult.visibility = View.VISIBLE
+                    it.scanningMessage.visibility = View.GONE
+
+                    it.recognitionResult.showNutritionFactsResult(result)
                 }
             }
         }

@@ -40,38 +40,55 @@ class CameraRecognitionViewModel : BaseViewModel() {
     fun startOrUpdateDetection() {
         viewModelScope.launch {
             recognitionResults.postValue(RecognitionResult.NoRecognition)
-            val config =
-                when (scanMode) {
-                    ScanMode.BARCODE -> {
-                        FoodDetectionConfiguration(
-                            detectBarcodes = true,
-                            detectPackagedFood = false,
-                            detectVisual = false
-                        )
-                    }
-
-                    ScanMode.NUTRITION_FACTS -> {
-                        //TODO later we will do this, current set it as default
-                        FoodDetectionConfiguration()
-                    }
-
-                    else -> { // default ScanMode.VISUAL
-                        FoodDetectionConfiguration(
-                            detectBarcodes = false,
-                            detectPackagedFood = false,
-                            detectVisual = true
-                        )
-                    }
+            when (scanMode) {
+                ScanMode.BARCODE -> {
+                    val config = FoodDetectionConfiguration(
+                        detectBarcodes = true,
+                        detectPackagedFood = false,
+                        detectVisual = false
+                    )
+                    recognitionFlow(config)
                 }
-            cameraUseCase.recognitionFlow(config).collect { recognitionResult ->
-                if (recognitionResult == RecognitionResult.NoRecognition) {
-                    if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
-                        recognitionResults.postValue(RecognitionResult.NoRecognition)
-                    }
-                } else {
-                    lastNoScanDetected = System.currentTimeMillis()
-                    recognitionResults.postValue(recognitionResult)
+
+                ScanMode.NUTRITION_FACTS -> {
+                    recognitionNutritionFactsFlow()
                 }
+
+                ScanMode.VISUAL -> { // default ScanMode.VISUAL
+                    val config = FoodDetectionConfiguration(
+                        detectBarcodes = false,
+                        detectPackagedFood = true,
+                        detectVisual = true
+                    )
+                    recognitionFlow(config)
+                }
+            }
+
+        }
+    }
+
+    private suspend fun recognitionFlow(config: FoodDetectionConfiguration) {
+        cameraUseCase.recognitionFlow(config).collect { recognitionResult ->
+            if (recognitionResult == RecognitionResult.NoRecognition) {
+                if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
+                    recognitionResults.postValue(RecognitionResult.NoRecognition)
+                }
+            } else {
+                lastNoScanDetected = System.currentTimeMillis()
+                recognitionResults.postValue(recognitionResult)
+            }
+        }
+    }
+
+    private suspend fun recognitionNutritionFactsFlow() {
+        cameraUseCase.nutritionFactsFlow().collect { recognitionResult ->
+            if (recognitionResult == RecognitionResult.NoRecognition) {
+                if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
+                    recognitionResults.postValue(RecognitionResult.NoRecognition)
+                }
+            } else {
+                lastNoScanDetected = System.currentTimeMillis()
+                recognitionResults.postValue(recognitionResult)
             }
         }
     }

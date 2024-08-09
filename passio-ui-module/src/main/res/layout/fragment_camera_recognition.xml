@@ -65,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nutritionFactsLabel"
-        app:layout_constraintWidth_percent="0.80">
+        app:layout_constraintWidth_percent="0.70">
 
         <ImageView
             android:id="@+id/viewFinder1"
@@ -99,6 +99,26 @@
             tools:ignore="ContentDescription" />
 
     </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        tools:background="@color/passio_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewfinder">
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="80"
+            android:thumbTint="@color/passio_primary"
+            android:progressTint="@color/passio_primary"
+            android:indeterminateTint="@color/passio_primary"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvScanModeHighlight"
