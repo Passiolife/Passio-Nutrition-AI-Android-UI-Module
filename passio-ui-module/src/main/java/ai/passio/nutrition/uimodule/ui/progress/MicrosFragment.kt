@@ -35,6 +35,16 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
 
         initObserver()
 
+        parentFragment?.arguments?.let {
+            if (it.containsKey("currentDate")) {
+                val currentDate = it.getLong("currentDate", 0)
+                if (currentDate > 0) {
+                    viewModel.setCurrentDate(Date(currentDate))
+                }
+            }
+        }
+
+
         binding.timeTitle.setOnClickListener {
             showDatePickerDialog(requireContext()) { selectedDate ->
                 viewModel.setCurrentDate(selectedDate.toDate())
@@ -46,6 +56,10 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         binding.movePrevious.setOnClickListener {
             viewModel.setPreviousDay()
         }
+        binding.showInfo.setOnClickListener {
+            SharedPrefUtils.put("microsNoteShown", false)
+            showMicrosNote()
+        }
         showMicrosNote()
 
     }
@@ -54,16 +68,20 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
         if (SharedPrefUtils.get("microsNoteShown", Boolean::class.java)) {
             binding.close.isVisible = false
             binding.microsNote.isVisible = false
+            binding.showInfo.isVisible = true
         } else {
             binding.close.isVisible = true
             binding.microsNote.isVisible = true
+            binding.showInfo.isVisible = false
         }
         binding.close.setOnClickListener {
             SharedPrefUtils.put("microsNoteShown", true)
             binding.close.isVisible = false
             binding.microsNote.isVisible = false
+            binding.showInfo.isVisible = true
         }
     }
+
 
     private fun initObserver() {
         viewModel.currentDateEvent.observe(viewLifecycleOwner, ::updateDate)

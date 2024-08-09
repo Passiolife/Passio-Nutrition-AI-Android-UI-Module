@@ -10,14 +10,21 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 
+enum class TimePeriod(val text: String) {
+    WEEK("Week"),
+    MONTH("Month");
+}
+
 class WeekMonthPicker @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+
+
     interface TimePeriodListener {
-        fun onValueChanged(timePeriod: MacrosFragment.TimePeriod)
+        fun onValueChanged(timePeriod: TimePeriod)
     }
 
     private val binding: TimePeriodLayoutBinding =
@@ -46,34 +53,34 @@ class WeekMonthPicker @JvmOverloads constructor(
 //        _binding = null
     }
 
-    fun setup(selected: MacrosFragment.TimePeriod, listener: TimePeriodListener) {
+    fun setup(selected: TimePeriod, listener: TimePeriodListener) {
 //        if (_binding == null) return
         this.listener = listener
         renderState(selected)
 
         with(binding) {
             week.setOnClickListener {
-                renderState(MacrosFragment.TimePeriod.WEEK)
-                listener.onValueChanged(MacrosFragment.TimePeriod.WEEK)
+                renderState(TimePeriod.WEEK)
+                listener.onValueChanged(TimePeriod.WEEK)
             }
             month.setOnClickListener {
-                renderState(MacrosFragment.TimePeriod.MONTH)
-                listener.onValueChanged(MacrosFragment.TimePeriod.MONTH)
+                renderState(TimePeriod.MONTH)
+                listener.onValueChanged(TimePeriod.MONTH)
             }
         }
     }
 
-    private fun renderState(timePeriod: MacrosFragment.TimePeriod) {
+    private fun renderState(timePeriod: TimePeriod) {
         with(binding) {
             when (timePeriod) {
-                MacrosFragment.TimePeriod.WEEK -> {
+                TimePeriod.WEEK -> {
                     week.background = leftBackgroundSelected
                     week.setTextColor(textColorSelected)
                     month.background = rightBackgroundDeselected
                     month.setTextColor(textColorDeselected)
                 }
 
-                MacrosFragment.TimePeriod.MONTH -> {
+                TimePeriod.MONTH -> {
                     week.background = leftBackgroundDeselected
                     week.setTextColor(textColorDeselected)
                     month.background = rightBackgroundSelected

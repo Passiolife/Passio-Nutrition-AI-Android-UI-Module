@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.profile.ActivityLevel
 import ai.passio.nutrition.uimodule.ui.profile.CalorieDeficit
 import ai.passio.nutrition.uimodule.ui.profile.Gender
@@ -28,7 +29,8 @@ data class UserProfile(
     var proteinPer: Int = 25, //percentage
     var fatPer: Int = 25, //percentage
     var caloriesTarget: Int = 2100,
-    val measurementUnit: MeasurementUnit = MeasurementUnit()
+    val measurementUnit: MeasurementUnit = MeasurementUnit(),
+    val userReminder: UserReminder = UserReminder()
 ) {
 
     // Calculate BMI value
@@ -64,33 +66,48 @@ data class UserProfile(
         if (weight <= 0)
             return ""
         val displayText: String = if (measurementUnit.weightUnit == WeightUnit.Metric) {
-            "$weight"
+            weight.toString()
         } else {
-            "${kgToLbs(weight)}"
+            kgToLbs(weight).toString()
         }
         return displayText
+    }
+
+    fun getTargetWightInCurrentUnit(): Double {
+        if (targetWeight <= 0)
+            return 0.0
+        return if (UserCache.getProfile().measurementUnit.weightUnit == WeightUnit.Metric) {
+            targetWeight
+        } else {
+            kgToLbs(targetWeight)
+        }
     }
 
     fun getDisplayTargetWeight(): String {
-        if (targetWeight <= 0)
-            return ""
-        val displayText: String = if (measurementUnit.weightUnit == WeightUnit.Metric) {
-            "$targetWeight"
+        return if (targetWeight <= 0) {
+            ""
         } else {
-            "${kgToLbs(targetWeight)}"
+            getTargetWightInCurrentUnit().toString()
         }
-        return displayText
+    }
+
+
+    fun getTargetWaterInCurrentUnit(): Double {
+        if (waterTarget <= 0)
+            return 0.0
+        return if (UserCache.getProfile().measurementUnit.waterUnit == WaterUnit.Metric) {
+            waterTarget
+        } else {
+            mlToOz(waterTarget)
+        }
     }
 
     fun getDisplayTargetWater(): String {
-        if (waterTarget <= 0)
-            return ""
-        val displayText: String = if (measurementUnit.waterUnit == WaterUnit.Metric) {
-            "$waterTarget"
+        return if (waterTarget <= 0) {
+            ""
         } else {
-            "${mlToOz(waterTarget)}"
+            getTargetWaterInCurrentUnit().toString()
         }
-        return displayText
     }
 
     fun getCarbsGrams(): Float = (carbsPer * caloriesTarget) / 400f

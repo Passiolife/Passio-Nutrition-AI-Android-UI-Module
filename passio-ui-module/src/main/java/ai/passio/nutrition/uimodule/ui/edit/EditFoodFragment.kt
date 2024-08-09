@@ -9,13 +9,15 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +26,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -32,7 +35,6 @@ import com.warkiz.tickseekbar.OnSeekChangeListener
 import com.warkiz.tickseekbar.SeekParams
 import com.warkiz.tickseekbar.TickSeekBar
 import com.yanzhenjie.recyclerview.SwipeMenuItem
-import java.text.DecimalFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -47,7 +49,6 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     private var carbColor: Int = -1
     private var proteinColor: Int = -1
     private var fatColor: Int = -1
-    private val decimalFormat = DecimalFormat("0.#")
 
     // private val dateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.getDefault())
     private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
@@ -65,7 +66,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEditFoodBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -160,6 +161,16 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 val fr = viewModel.navigateToAddIngredient()
                 sharedViewModel.addIngredient(fr)
             }
+
+            openFoodFacts.setOnClickListener {
+                OpenFoodFactsDialog().show(childFragmentManager, "EditFood")
+            }
+
+            moreDetails.setOnClickListener {
+                val foodRecord = viewModel.navigateToNutritionInfo()
+                sharedViewModel.passToNutritionInfo(foodRecord)
+
+            }
         }
 
         sharedViewModel.editFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
@@ -178,7 +189,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             if (editFoodModel.foodRecord == null) {
                 renderError()
             } else {
-                Log.d("HHHH", "Edit food: ${editFoodModel.foodRecord?.name} at $this")
+                binding.openFoodFacts.isVisible =
+                    !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
                 renderFoodRecord(editFoodModel)
             }
         }
@@ -192,6 +204,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 is ResultWrapper.Error -> {
                     Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
                 }
+
                 is ResultWrapper.Success -> {
                     viewModel.navigateToDiary(result.value.createdAtTime())
                 }
@@ -203,6 +216,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         binding.toolbar.apply {
             setup(getString(R.string.edit), toolbarListener)
             setRightIcon(R.drawable.icon_switch)
+            hideRightIcon()
         }
     }
 
@@ -248,7 +262,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     private fun setupImmutableProperties(foodRecord: FoodRecord) {
         if (_binding == null) return
 
-        val units = foodRecord.servingUnits.map { it.unitName.capitalize() }
+        val units = foodRecord.servingUnits.map { it.unitName.capitalized() }
         val indexOfSelected = units.indexOfFirst { it.lowercase() == foodRecord.getSelectedUnit() }
         servingUnitAdapter =
             ArrayAdapter<String>(requireContext(), R.layout.serving_unit_item, units)
@@ -256,8 +270,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         with(binding) {
             foodImage.loadPassioIcon(foodRecord.iconId)
-            foodName.text = foodRecord.name.capitalize()
-            infoName.text = foodRecord.additionalData.capitalize()
+            foodName.text = foodRecord.name.capitalized()
+            infoName.text = foodRecord.additionalData.capitalized()
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener
@@ -327,9 +341,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 carbPercent -= 1
             }
 
-            val carbGrams = "${decimalFormat.format(carbs)} g"
-            val proteinGrams = "${decimalFormat.format(protein)} g"
-            val fatGrams = "${decimalFormat.format(fat)} g"
+            val carbGrams = "${carbs.singleDecimal()} g"
+            val proteinGrams = "${protein.singleDecimal()} g"
+            val fatGrams = "${fat.singleDecimal()} g"
 
             val carbString = SpannableString(" $carbGrams ($carbPercent%)")
             carbString.setSpan(
@@ -360,22 +374,23 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
             renderChart(carbPercent, proteinPercent, fatPercent)
 
-            caloriesValue.text = calories.toInt().toString()
+            caloriesValue.text = calories.roundToInt().toString()
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderServingSize(foodRecord: FoodRecord, origin: UpdateOrigin? = null) {
         if (_binding == null) return
 
         with(binding) {
-            val weightGrams = decimalFormat.format(foodRecord.servingWeight().gramsValue())
+            val weightGrams = foodRecord.servingWeight().gramsValue().singleDecimal()
             servingSizeValue.text = " $weightGrams g"
 
             if (origin != UpdateOrigin.QUANTITY) {
                 if (foodRecord.getSelectedQuantity() == FoodRecord.ZERO_QUANTITY) {
                     servingQuantity.setText("0")
                 } else {
-                    val quantity = decimalFormat.format(foodRecord.getSelectedQuantity())
+                    val quantity = foodRecord.getSelectedQuantity().singleDecimal()
                     servingQuantity.setText(quantity)
                 }
             }
@@ -508,7 +523,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun onIngredientSelected(index: Int) {
-        val ingredient = viewModel.getIngredient(index)
-        sharedViewModel.editIngredient(ingredient, index)
+//        val ingredient = viewModel.getIngredient(index)
+//        sharedViewModel.editIngredient(ingredient, index)
     }
 }

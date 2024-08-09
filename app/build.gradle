@@ -12,7 +12,26 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+
+def appKeysFile = file('keystore.properties')
+def appKeysProps = new Properties()
+appKeysProps.load(new FileInputStream(appKeysFile))
+
 android {
+    signingConfigs {
+        debug {
+            storeFile file('passio_ui_module_keystore')
+            storePassword appKeysProps['storePassword']
+            keyAlias appKeysProps['keyAlias']
+            keyPassword appKeysProps['keyPassword']
+        }
+        release {
+            storeFile file('passio_ui_module_keystore')
+            storePassword appKeysProps['storePassword']
+            keyAlias appKeysProps['keyAlias']
+            keyPassword appKeysProps['keyPassword']
+        }
+    }
     namespace 'ai.passio.uimodule'
     compileSdk 33
 
@@ -32,9 +51,15 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

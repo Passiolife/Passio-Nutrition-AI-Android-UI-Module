@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/passio_gray900"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="152" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/weightUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:textColor="@color/passio_gray500"
+        android:textSize="14sp"
+        tools:text="lbs" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dateTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:lines="2"
+        android:textColor="@color/passio_gray900"
+        android:textSize="12sp"
+        tools:text="Sat, Mar 9\n9:16 AM" />
+
+</LinearLayout>

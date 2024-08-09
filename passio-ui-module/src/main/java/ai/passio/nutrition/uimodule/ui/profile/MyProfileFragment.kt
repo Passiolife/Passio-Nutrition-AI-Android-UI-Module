@@ -10,6 +10,7 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.DailyNutritionTargetDialog.DailyNutritionTarget
 import ai.passio.nutrition.uimodule.ui.settings.HeightPickerDialog
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import android.graphics.Color
 import android.os.Bundle
@@ -28,7 +29,6 @@ import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import java.text.DecimalFormat
 
 class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
 
@@ -51,6 +51,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
         with(binding)
         {
             toolbar.setup(getString(R.string.my_profile), baseToolbarListener)
+            toolbar.hideRightIcon()
 
             height.setOnClickListener {
                 showHeightPicker()
@@ -161,7 +162,6 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
         }
     }
 
-    private val decimalFormat = DecimalFormat("0.#")
     private fun renderChart(userProfile: UserProfile) {
 
         binding.height.text = userProfile.getDisplayHeight()
@@ -180,9 +180,9 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
 
         with(binding) {
 
-            val carbGrams = "${decimalFormat.format(userProfile.getCarbsGrams())} g"
-            val proteinGrams = "${decimalFormat.format(userProfile.getProteinGrams())} g"
-            val fatGrams = "${decimalFormat.format(userProfile.getFatGrams())} g"
+            val carbGrams = "${userProfile.getCarbsGrams().singleDecimal()} g"
+            val proteinGrams = "${userProfile.getProteinGrams().singleDecimal()} g"
+            val fatGrams = "${userProfile.getFatGrams().singleDecimal()} g"
 
             val carbString = SpannableString(" $carbGrams ($carbPercent%)")
             carbString.setSpan(

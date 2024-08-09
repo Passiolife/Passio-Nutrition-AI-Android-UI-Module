@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 
 class BaseToolbar @JvmOverloads constructor(
     context: Context,
@@ -30,6 +31,9 @@ class BaseToolbar @JvmOverloads constructor(
 
     fun setRightIcon(resId: Int) {
         binding.toolbarMenu.setImageResource(resId)
+    }
+    fun hideRightIcon() {
+        binding.toolbarMenu.isVisible = false
     }
 
     fun setup(title: String, listener: ToolbarListener) {

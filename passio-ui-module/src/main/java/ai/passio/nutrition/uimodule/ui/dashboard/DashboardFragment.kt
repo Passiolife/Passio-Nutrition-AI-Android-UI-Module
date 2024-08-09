@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.databinding.FragmentDashboardBinding
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.util.StringKT.setSpannableBold
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
-import android.view.MenuItem
+import android.annotation.SuppressLint
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.lang.reflect.Field
 import java.util.Date
 import java.util.Locale
 
@@ -43,7 +44,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         initObserver()
         with(binding) {
 
-            toolbar.setup(getString(R.string.welcome), baseToolbarListener)
+            var title = getString(R.string.welcome)
+            if (UserCache.getProfile().userName.isNotEmpty()) {
+                title += " " + UserCache.getProfile().userName
+            }
+            title += "!"
+            toolbar.setup(title, baseToolbarListener)
 
             timeTitle.setOnClickListener {
                 showDatePickerDialog(requireContext()) { selectedDate ->
@@ -58,6 +64,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             }
             toggleWeekMonth.setOnClickListener {
                 viewModel.toggleCalendarMode()
+            }
+            weightContainer.setOnClickListener {
+                viewModel.navigateToWeightTracking()
+            }
+            waterContainer.setOnClickListener {
+                viewModel.navigateToWaterTracking()
             }
 
 
@@ -102,10 +114,44 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.calendarMode.observe(viewLifecycleOwner, ::updateCalenderMode)
         viewModel.adherents.observe(viewLifecycleOwner, ::updateAdherence)
+        viewModel.waterSummary.observe(viewLifecycleOwner, ::showWaterSummary)
+        viewModel.weightSummary.observe(viewLifecycleOwner, ::showWeightSummary)
     }
 
     private fun navigateToProgressReport() {
         viewModel.navigateToProgress()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showWaterSummary(summary: Pair<Double, Double>) {
+        with(binding)
+        {
+            val unitVal = UserCache.getProfile().measurementUnit.waterUnit.value.lowercase()
+            val totalVal = summary.first.singleDecimal()
+            val remainingVal = summary.second.singleDecimal() + " $unitVal"
+            waterValue.text = totalVal
+            waterUnit.text = unitVal
+            waterTarget.text =
+                (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(
+                    remainingVal
+                )
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showWeightSummary(summary: Pair<Double, Double>) {
+        with(binding)
+        {
+            val unitVal = UserCache.getProfile().measurementUnit.weightUnit.value.lowercase()
+            val totalVal = summary.first.singleDecimal()
+            val remainingVal = summary.second.singleDecimal() + " $unitVal"
+            weightValue.text = totalVal
+            weightUnit.text = unitVal
+            weightTarget.text =
+                (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(
+                    remainingVal
+                )
+        }
     }
 
     private fun updateCalenderMode(calendarMode: CalendarMode) {
@@ -170,10 +216,11 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     }
 
-    private fun updateLogs(records: List<FoodRecord>) {
+    private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
 
         with(binding) {
-
+            val userProfile = data.first
+            val records = data.second
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()
             val currentCarbs = records.map { it.nutrients().carbs() }
@@ -185,65 +232,17 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
             dailyNutrition.setup(
                 currentCalories.toInt(),
-                2000,
+                userProfile.caloriesTarget,
                 currentCarbs.toInt(),
-                125,
+                userProfile.getCarbsGrams().toInt(),
                 currentProtein.toInt(),
-                100,
+                userProfile.getProteinGrams().toInt(),
                 currentFat.toInt(),
-                40
+                userProfile.getFatGrams().toInt()
             )
         }
     }
 
-    private fun showPopupMenu(view: View) {
-        val popupMenu = PopupMenu(requireContext(), view)
-        popupMenu.menuInflater.inflate(R.menu.dashboard_menu, popupMenu.menu)
-        showMenuIcons(popupMenu)
-        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.my_profile -> {
-                    viewModel.navigateToMyProfile()
-                    true
-                }
-
-                R.id.settings -> {
-                    viewModel.navigateToSettings()
-                    true
-                }
-
-                R.id.log_out -> {
-                    Toast.makeText(requireContext(), "Logout successfully!", Toast.LENGTH_LONG)
-                        .show()
-                    requireActivity().finish()
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        popupMenu.show()
-    }
-
-    private fun showMenuIcons(popupMenu: PopupMenu) {
-        try {
-            val fields: Array<Field> = popupMenu.javaClass.declaredFields
-            for (field in fields) {
-                if ("mPopup" == field.name) {
-                    field.isAccessible = true
-                    val menuPopupHelper = field.get(popupMenu)
-                    val classPopupHelper = Class.forName(menuPopupHelper.javaClass.name)
-                    val setForceIcons =
-                        classPopupHelper.getMethod("setForceShowIcon", Boolean::class.java)
-                    setForceIcons.invoke(menuPopupHelper, true)
-                    break
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

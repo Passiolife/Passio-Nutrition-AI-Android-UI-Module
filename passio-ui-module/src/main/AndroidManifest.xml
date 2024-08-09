@@ -2,13 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ai.passio.nutrition.uimodule">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+
     <application>
         <activity
             android:name=".ui.activity.PassioUiModuleActivity"
-            android:theme="@style/AppTheme"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:exported="true">
-        </activity>
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -1,13 +1,31 @@
 package ai.passio.nutrition.uimodule.ui.activity
 
+import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
+import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
-import android.util.Log
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
+object UserCache{
+    private lateinit var userProfile: UserProfile
+    fun getProfile() : UserProfile{
+        return userProfile
+    }
+    fun setProfile(userProfile: UserProfile)
+    {
+        this.userProfile = userProfile
+    }
+}
 class SharedViewModel : ViewModel() {
 
     private val _editFoodRecordLD = SingleLiveEvent<FoodRecord>()
@@ -22,6 +40,43 @@ class SharedViewModel : ViewModel() {
     private val _editSearchResultLD = SingleLiveEvent<PassioFoodDataInfo>()
     val editSearchResultLD: LiveData<PassioFoodDataInfo> get() = _editSearchResultLD
 
+
+    private val _nutritionInfoFoodRecordLD = SingleLiveEvent<FoodRecord>()
+    val nutritionInfoFoodRecordLD: LiveData<FoodRecord> get() = _nutritionInfoFoodRecordLD
+
+
+    private val _addWeightLD = SingleLiveEvent<WeightRecord>()
+    val addWeightLD: LiveData<WeightRecord> get() = _addWeightLD
+
+    private val _addWaterLD = SingleLiveEvent<WaterRecord>()
+    val addWaterLD: LiveData<WaterRecord> get() = _addWaterLD
+
+    private val _photoFoodResultLD = SingleLiveEvent<List<Bitmap>>()
+    val photoFoodResultLD: LiveData<List<Bitmap>> get() = _photoFoodResultLD
+
+    private val userProfileCase = UserProfileUseCase
+
+    private val _userProfileCacheEvent = SingleLiveEvent<ResultWrapper<UserProfile>>()
+    val userProfileCacheEvent: LiveData<ResultWrapper<UserProfile>> get() = _userProfileCacheEvent
+
+    init {
+        preCacheUserProfile()
+    }
+
+
+    private fun preCacheUserProfile() {
+        viewModelScope.launch {
+            val userProfile = userProfileCase.getUserProfile()
+            UserCache.setProfile(userProfile)
+            _userProfileCacheEvent.postValue(ResultWrapper.Success(userProfile))
+        }
+    }
+
+
+    fun passToNutritionInfo(foodRecord: FoodRecord) {
+        _nutritionInfoFoodRecordLD.postValue(foodRecord)
+    }
+
     fun passToEdit(searchResult: PassioFoodDataInfo) {
         _editSearchResultLD.postValue(searchResult)
     }
@@ -31,12 +86,20 @@ class SharedViewModel : ViewModel() {
     }
 
     fun editFoodRecord(foodRecord: FoodRecord) {
-        Log.d("logFoodRecord", "aaaa=== uuid ${foodRecord.uuid}")
         _editFoodRecordLD.postValue(foodRecord)
     }
 
     fun addIngredient(foodRecord: FoodRecord) {
         _addIngredientLD.postValue(foodRecord)
+    }
+    fun addEditWeight(weightRecord: WeightRecord) {
+        _addWeightLD.postValue(weightRecord)
+    }
+    fun addEditWater(waterRecord: WaterRecord) {
+        _addWaterLD.postValue(waterRecord)
+    }
+    fun addPhotoFoodResult(uris: List<Bitmap>) {
+        _photoFoodResultLD.postValue(uris)
     }
 
 }

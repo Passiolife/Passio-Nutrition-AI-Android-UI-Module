@@ -22,12 +22,13 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/rc_8_white"
                 android:elevation="4dp"
                 android:padding="8dp">
@@ -95,7 +96,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/lblHeight"
                     style="@style/TextProfile"
-                    android:text="@string/height"
+                    android:text="@string/height_txt"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/gender" />
 
@@ -111,7 +112,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/lblWeight"
                     style="@style/TextProfile"
-                    android:text="@string/weight"
+                    android:text="@string/weight_txt"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/height" />
 
@@ -139,6 +140,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rc_8_white"
                 android:elevation="4dp"
@@ -258,6 +260,7 @@
                 android:id="@+id/dailyNutritionContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rc_8_white"
                 android:elevation="4dp">
@@ -281,7 +284,7 @@
                     app:layout_constraintTop_toTopOf="@id/edit" />
 
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -297,7 +300,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_begin="190dp" />
+                    app:layout_constraintGuide_percent="0.5"  />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/macrosChart"
@@ -403,6 +406,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rc_8_white"
                 android:elevation="4dp"
@@ -476,8 +480,8 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="end"
-                    android:paddingEnd="4dp"
                     android:paddingStart="0dp"
+                    android:paddingEnd="4dp"
                     android:text="@string/obese"
                     android:textColor="@color/passio_gray900"
                     android:textSize="12sp"
@@ -488,13 +492,12 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="30dp"
-                android:layout_marginStart="4dp"
                 android:background="@drawable/rc_8_purple"
                 android:gravity="center"
                 android:paddingVertical="12dp"
@@ -503,6 +506,9 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <androidx.legacy.widget.Space
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 

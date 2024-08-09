@@ -1,9 +1,13 @@
 package ai.passio.nutrition.uimodule.ui.util
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.DateTimeConstants
+import org.joda.time.DateTimeZone
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -24,6 +28,10 @@ fun getStartOfMonth(date: DateTime): DateTime {
 
 fun getEndOfMonth(date: DateTime): DateTime {
     return date.plusMonths(1).withDayOfMonth(1).minusDays(1).withTime(23, 59, 59, 999)
+}
+
+fun getBefore30Days(date: DateTime): DateTime {
+    return date.minusDays(30).withTimeAtStartOfDay()
 }
 
 fun isPartOfCurrentWeek(date: DateTime): Boolean {
@@ -73,13 +81,50 @@ fun showDatePickerDialog(context: Context, onDateSelected: (selectedDateTime: Da
     datePickerDialog.show()
 }
 
-fun timestampToDate(timestamp: Long): Long {
-    // Convert millis to a date with only date part (ignoring time)
+fun showTimePickerDialog(context: Context, onTimeSelected: (selectedDateTime: DateTime) -> Unit) {
     val calendar = Calendar.getInstance()
-    calendar.timeInMillis = timestamp
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
-    return calendar.timeInMillis
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = TimePickerDialog(context, { _, selectedHour, selectedMinute ->
+        val selectedDateTime = DateTime.now()
+            .withHourOfDay(selectedHour)
+            .withMinuteOfHour(selectedMinute)
+
+//        val timeFormatter = DateTimeFormat.forPattern("hh:mm a")
+//        val formattedTime = selectedDateTime.toString(timeFormatter)
+        onTimeSelected.invoke(selectedDateTime)
+    }, hour, minute, false)
+
+    timePickerDialog.show()
+}
+
+
+fun isToday(milliseconds: Long): Boolean {
+    val dateTime = DateTime(milliseconds, DateTimeZone.getDefault())
+    val today = LocalDate.now()
+    val givenDate = dateTime.toLocalDate()
+    return givenDate == today
+}
+
+//yyyy-MM-dd
+fun dateToTimestamp(dateString: String, dateFormat: String): Long {
+    // Define the date format
+    val formatter = DateTimeFormat.forPattern(dateFormat)
+
+    // Parse the date string to a DateTime object
+    val dateTime = DateTime.parse(dateString, formatter)
+
+    // Convert the DateTime object to a timestamp in milliseconds
+    return dateTime.millis
+}
+
+const val DAY_FORMAT = "EE"
+fun dateToFormat(localDate: LocalDate, format: String): String {
+    // Define the formatter for the desired pattern
+    val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.ENGLISH)
+
+    // Format the date to the desired pattern
+    val formattedDate = localDate.toString(formatter)
+    return formattedDate
 }

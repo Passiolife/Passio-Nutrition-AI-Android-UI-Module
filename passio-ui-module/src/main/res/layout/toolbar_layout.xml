@@ -6,23 +6,25 @@
     android:layout_height="wrap_content"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/toolbarTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="48dp"
         android:layout_marginVertical="16dp"
+        android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="2"
         android:text="@string/my_diary"
         android:textColor="@color/passio_toolbar_title"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/toolbarBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +35,7 @@
         app:layout_constraintTop_toTopOf="@id/toolbarTitle"
         tools:ignore="ContentDescription" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/toolbarMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

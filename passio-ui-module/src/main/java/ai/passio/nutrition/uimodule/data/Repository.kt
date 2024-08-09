@@ -1,7 +1,16 @@
 package ai.passio.nutrition.uimodule.data
 
+import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.WaterRecord
+import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
+import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
+import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
+import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
+import ai.passio.nutrition.uimodule.ui.util.getStartOfMonth
+import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.passiosdk.passiofood.FoodCandidates
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.FoodRecognitionListener
@@ -14,6 +23,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import org.joda.time.DateTime
 import java.util.Date
 import kotlin.coroutines.suspendCoroutine
 
@@ -39,9 +49,10 @@ class Repository private constructor() {
     private lateinit var connector: PassioConnector
 
     suspend fun fetchPassioFoodItem(
-        searchResult: PassioFoodDataInfo
+        searchResult: PassioFoodDataInfo,
+        weighGrams: Double ?= null
     ): PassioFoodItem? = suspendCoroutine { cont ->
-        PassioSDK.instance.fetchFoodItemForDataInfo(searchResult) { foodItem ->
+        PassioSDK.instance.fetchFoodItemForDataInfo(searchResult, weighGrams) { foodItem ->
             cont.resumeWith(Result.success(foodItem))
         }
     }
@@ -92,6 +103,10 @@ class Repository private constructor() {
         return connector.updateRecord(record)
     }
 
+    suspend fun logFoodRecords(records: List<FoodRecord>): Boolean {
+        return connector.updateRecords(records)
+    }
+
     suspend fun deleteFoodRecord(record: FoodRecord): Boolean {
         return connector.deleteRecord(record)
     }
@@ -101,11 +116,26 @@ class Repository private constructor() {
     }
 
     suspend fun getLogsForWeek(day: Date): List<FoodRecord> {
-        return connector.fetchWeekRecords(day)
+        val today = DateTime(day.time)
+        val startOfWeek = getStartOfWeek(today)//.millis
+        val endOfWeek = getEndOfWeek(today)//.millis
+        return connector.fetchLogsRecords(startOfWeek.toDate(), endOfWeek.toDate())
     }
 
     suspend fun getLogsForMonth(day: Date): List<FoodRecord> {
-        return connector.fetchMonthRecords(day)
+
+        val today = DateTime(day.time)
+        val startOfMonth = getStartOfMonth(today)//.millis
+        val endOfMonth = getEndOfMonth(today)//.millis
+
+        return connector.fetchLogsRecords(startOfMonth.toDate(), endOfMonth.toDate())
+    }
+
+
+    suspend fun getLogsForLast30Days(): List<FoodRecord> {
+        val today = DateTime()
+        val before30Days = getBefore30Days(today)
+        return connector.fetchLogsRecords(before30Days.toDate(), today.toDate())
     }
 
     suspend fun fetchAdherence(): List<Long> {
@@ -113,11 +143,77 @@ class Repository private constructor() {
     }
 
     suspend fun updateUser(userProfile: UserProfile): Boolean {
+        UserCache.setProfile(userProfile)
         return connector.updateUserProfile(userProfile)
     }
 
     suspend fun getUser(): UserProfile {
-        return connector.fetchUserProfile()
+        val userProfile = connector.fetchUserProfile()
+        UserCache.setProfile(userProfile)
+        return userProfile
+    }
+
+
+    suspend fun updateWeight(weightRecord: WeightRecord): Boolean {
+        return connector.updateWeightRecord(weightRecord)
+    }
+
+    suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
+        return connector.removeWeightRecord(weightRecord)
+    }
+
+    suspend fun fetchLatestWeightRecord(): WeightRecord?
+    {
+        return connector.fetchLatestWeightRecord()
+    }
+    suspend fun fetchWeightRecords(currentDate: Date): List<WeightRecord> {
+        val forDate = DateTime(currentDate.time)
+        val startDate: DateTime = forDate.withTimeAtStartOfDay()
+        val endDate: DateTime = forDate.withTime(23, 59, 59, 999)
+        return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
+    }
+
+    suspend fun fetchWeightRecords(currentDate: Date, timePeriod: TimePeriod): List<WeightRecord> {
+        val today = DateTime(currentDate.time)
+        val startDate: DateTime
+        val endDate: DateTime
+        if (timePeriod == TimePeriod.MONTH) {
+            startDate = getStartOfMonth(today)
+            endDate = getEndOfMonth(today)
+        } else {
+            startDate = getStartOfWeek(today)
+            endDate = getEndOfWeek(today)
+        }
+        return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
+    }
+
+    suspend fun updateWater(waterRecord: WaterRecord): Boolean {
+        return connector.updateWaterRecord(waterRecord)
+    }
+
+    suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
+        return connector.removeWaterRecord(waterRecord)
+    }
+
+    suspend fun fetchWaterRecords(currentDate: Date): List<WaterRecord> {
+        val forDate = DateTime(currentDate.time)
+        val startDate: DateTime = forDate.withTimeAtStartOfDay()
+        val endDate: DateTime = forDate.withTime(23, 59, 59, 999)
+        return connector.fetchWaterRecords(startDate.toDate(), endDate.toDate())
+    }
+
+    suspend fun fetchWaterRecords(currentDate: Date, timePeriod: TimePeriod): List<WaterRecord> {
+        val today = DateTime(currentDate.time)
+        val startDate: DateTime
+        val endDate: DateTime
+        if (timePeriod == TimePeriod.MONTH) {
+            startDate = getStartOfMonth(today)
+            endDate = getEndOfMonth(today)
+        } else {
+            startDate = getStartOfWeek(today)
+            endDate = getEndOfWeek(today)
+        }
+        return connector.fetchWaterRecords(startDate.toDate(), endDate.toDate())
     }
 
 }

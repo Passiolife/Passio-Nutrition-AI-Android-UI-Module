@@ -105,6 +105,14 @@ class EditFoodViewModel : BaseViewModel() {
 
     }
 
+    fun navigateToNutritionInfo(): FoodRecord {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(EditFoodFragmentDirections.editToNutritionInfo())
+        }
+        return foodRecord
+
+    }
+
     fun navigateToAddIngredient(): FoodRecord {
         // navigate(EditFoodFragmentDirections.editToSearch())
         return foodRecord

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +29,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/rc_10_white">
 
-                <EditText
+                <android.inputmethodservice.ExtractEditText
                     android:id="@+id/searchEditText"
                     android:layout_width="318dp"
                     android:layout_height="wrap_content"
@@ -38,6 +39,7 @@
                     android:drawableStart="@drawable/icon_search"
                     android:drawablePadding="4dp"
                     android:inputType="text"
+                    android:imeOptions="actionDone"
                     android:paddingStart="4dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="40dp"
@@ -65,16 +67,20 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchSuggestionRecycler"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
+        android:orientation="horizontal"
         android:paddingStart="16dp"
-        android:paddingEnd="8dp" />
+        android:paddingEnd="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/suggestions_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/search_item_layout" />
 
 </merge>

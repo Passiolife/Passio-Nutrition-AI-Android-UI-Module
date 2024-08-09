@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.search
 
 import ai.passio.nutrition.uimodule.databinding.SuggestionsLayoutBinding
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +38,7 @@ class FoodSuggestionsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(suggestion: String) {
-            binding.foodSuggestion.text = suggestion.capitalize()
+            binding.foodSuggestion.text = suggestion.capitalized()
             binding.root.setOnClickListener {
                 suggestionCallback(suggestion)
             }

@@ -87,4 +87,18 @@ dependencies {
     implementation 'net.danlew:android.joda:2.12.5'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
+    implementation 'androidx.browser:browser:1.5.0'
+
+    implementation("io.coil-kt:coil:2.2.2")
+    // If you want to use Coil with Kotlin 1.8.0
+    implementation("io.coil-kt:coil-base:2.2.2")
+
+    implementation 'com.airbnb.android:lottie:6.4.0'
+
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'io.noties.markwon:linkify:4.6.2'
+    implementation 'io.noties.markwon:html:4.6.2'
+//    implementation 'io.noties.markwon:syntax-highlight:4.6.2'
+
+
 }

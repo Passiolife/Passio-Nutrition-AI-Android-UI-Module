@@ -18,12 +18,13 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/rc_8_white"
             android:elevation="4dp"
             android:padding="8dp">
@@ -57,7 +58,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/lblWeight"
                 style="@style/TextProfile"
-                android:text="@string/weight"
+                android:text="@string/weight_txt"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/length" />
 
@@ -74,8 +75,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
             android:background="@drawable/rc_8_white"
             android:elevation="4dp"
             android:orientation="vertical"
@@ -98,33 +98,33 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:checked="false"
-                app:thumbTint="@color/passio_white"
-                app:trackTint="@color/passio_gray300"
                 android:text="@string/_8_am_breakfast"
                 android:textColor="@color/passio_gray500"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:thumbTint="@color/passio_white"
+                app:trackTint="@color/passio_gray300" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/lunch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="false"
                 android:text="@string/_12_pm_lunch"
                 android:textColor="@color/passio_gray500"
-                android:checked="false"
+                android:textSize="14sp"
                 app:thumbTint="@color/passio_white"
-                app:trackTint="@color/passio_gray300"
-                android:textSize="14sp" />
+                app:trackTint="@color/passio_gray300" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/dinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="false"
                 android:text="@string/_5_pm_dinner"
                 android:textColor="@color/passio_gray500"
-                android:checked="false"
+                android:textSize="14sp"
                 app:thumbTint="@color/passio_white"
-                app:trackTint="@color/passio_gray300"
-                android:textSize="14sp" />
+                app:trackTint="@color/passio_gray300" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
