@@ -174,10 +174,10 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         override fun onEditProduct(result: RecognitionResult.ProductRecognition) {
             viewModel.stopDetection()
             with(binding) {
-                recognitionResult.visibility = View.GONE
-                scanningMessage.visibility = View.GONE
-                viewAddedToDiary.visibility = View.VISIBLE
-                recognitionResult.reset()
+//                recognitionResult.visibility = View.GONE
+//                scanningMessage.visibility = View.GONE
+//                viewAddedToDiary.visibility = View.VISIBLE
+//                recognitionResult.reset()
                 editFoodItem(ResultWrapper.Success(result.foodItem))
             }
         }

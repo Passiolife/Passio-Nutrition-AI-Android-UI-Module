@@ -247,7 +247,56 @@
         <action
             android:id="@+id/add_food_to_photo"
             app:destination="@id/take_select_photo" />
+        <action
+            android:id="@+id/add_food_to_voice_logging"
+            app:destination="@id/voice_logging" />
+        <action
+            android:id="@+id/add_food_to_advisor"
+            app:destination="@id/advisor" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/advisor"
+        android:name="ai.passio.nutrition.uimodule.ui.advisor.AdvisorFragment"
+        android:label="AdvisorFragment"
+        tools:layout="@layout/fragment_advisor">
+
+        <action
+            android:id="@+id/advisor_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+
+        <action
+            android:id="@+id/advisor_to_search"
+            app:destination="@id/search" />
+
+        <action
+            android:id="@+id/advisor_to_take_photo"
+            app:destination="@id/take_photo">
+            <argument
+                android:name="isPicker"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/voice_logging"
+        android:name="ai.passio.nutrition.uimodule.ui.voice.VoiceLoggingFragment"
+        android:label="VoiceLoggingFragment"
+        tools:layout="@layout/fragment_voice_logging">
+
+        <action
+            android:id="@+id/voice_logging_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+
+        <action
+            android:id="@+id/voice_logging_to_search"
+            app:destination="@id/search" />
     </fragment>
 
     <fragment
@@ -288,8 +337,7 @@
             android:id="@+id/image_food_result_to_diary"
             app:destination="@id/diary"
             app:launchSingleTop="true"
-            app:popUpTo="@id/dashboard">
-        </action>
+            app:popUpTo="@id/dashboard" />
 
     </fragment>
 

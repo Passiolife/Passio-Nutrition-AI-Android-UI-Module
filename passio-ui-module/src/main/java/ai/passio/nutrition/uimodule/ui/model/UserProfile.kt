@@ -29,7 +29,8 @@ data class UserProfile(
     var proteinPer: Int = 25, //percentage
     var fatPer: Int = 25, //percentage
     var caloriesTarget: Int = 2100,
-    val measurementUnit: MeasurementUnit = MeasurementUnit()
+    val measurementUnit: MeasurementUnit = MeasurementUnit(),
+    val userReminder: UserReminder = UserReminder()
 ) {
 
     // Calculate BMI value
@@ -65,9 +66,9 @@ data class UserProfile(
         if (weight <= 0)
             return ""
         val displayText: String = if (measurementUnit.weightUnit == WeightUnit.Metric) {
-            "$weight"
+            weight.toString()
         } else {
-            "${kgToLbs(weight)}"
+            kgToLbs(weight).toString()
         }
         return displayText
     }
@@ -83,7 +84,11 @@ data class UserProfile(
     }
 
     fun getDisplayTargetWeight(): String {
-        return "${getTargetWightInCurrentUnit()}"
+        return if (targetWeight <= 0) {
+            ""
+        } else {
+            getTargetWightInCurrentUnit().toString()
+        }
     }
 
 
@@ -98,7 +103,11 @@ data class UserProfile(
     }
 
     fun getDisplayTargetWater(): String {
-        return "${getTargetWaterInCurrentUnit()}"
+        return if (waterTarget <= 0) {
+            ""
+        } else {
+            getTargetWaterInCurrentUnit().toString()
+        }
     }
 
     fun getCarbsGrams(): Float = (carbsPer * caloriesTarget) / 400f

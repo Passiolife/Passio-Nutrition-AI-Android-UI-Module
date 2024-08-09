@@ -44,7 +44,12 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         initObserver()
         with(binding) {
 
-            toolbar.setup(getString(R.string.welcome), baseToolbarListener)
+            var title = getString(R.string.welcome)
+            if (UserCache.getProfile().userName.isNotEmpty()) {
+                title += " " + UserCache.getProfile().userName
+            }
+            title += "!"
+            toolbar.setup(title, baseToolbarListener)
 
             timeTitle.setOnClickListener {
                 showDatePickerDialog(requireContext()) { selectedDate ->
@@ -126,9 +131,13 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             val remainingVal = summary.second.singleDecimal() + " $unitVal"
             waterValue.text = totalVal
             waterUnit.text = unitVal
-            waterTarget.text = (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(remainingVal)
+            waterTarget.text =
+                (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(
+                    remainingVal
+                )
         }
     }
+
     @SuppressLint("SetTextI18n")
     private fun showWeightSummary(summary: Pair<Double, Double>) {
         with(binding)
@@ -138,7 +147,10 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             val remainingVal = summary.second.singleDecimal() + " $unitVal"
             weightValue.text = totalVal
             weightUnit.text = unitVal
-            weightTarget.text = (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(remainingVal)
+            weightTarget.text =
+                (remainingVal + " " + getString(R.string.remain_to_daily_goal)).setSpannableBold(
+                    remainingVal
+                )
         }
     }
 
@@ -230,7 +242,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             )
         }
     }
-
 
 
     override fun onDestroyView() {

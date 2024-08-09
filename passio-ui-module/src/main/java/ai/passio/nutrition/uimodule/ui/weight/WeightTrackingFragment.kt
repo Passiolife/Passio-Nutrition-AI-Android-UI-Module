@@ -258,9 +258,9 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
 
 
             val weightDataSet = LineDataSet(weightEntries, getString(R.string.weight_txt)).apply {
-                color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
+                color = Color.TRANSPARENT//ContextCompat.getColor(requireContext(), R.color.passio_primary)
                 setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
-                lineWidth = 2f
+                lineWidth = 0f
                 circleRadius = 0f
                 setDrawCircles(false)
                 setDrawCircleHole(false)
@@ -272,12 +272,12 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
                 LineDataSet(weightEntriesWithDots, getString(R.string.weight_txt)).apply {
                     color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
                     setCircleColor(ContextCompat.getColor(requireContext(), R.color.passio_primary))
-                    lineWidth = 0f
+                    lineWidth = 2f
                     circleRadius = 4f
                     setDrawCircleHole(false)
                     setDrawValues(false)
                     mode =
-                        LineDataSet.Mode.CUBIC_BEZIER // Set mode to cubic bezier for smooth curves
+                        LineDataSet.Mode.HORIZONTAL_BEZIER // Set mode to cubic bezier for smooth curves
                 }
 
             val targetDataSet =
@@ -305,6 +305,8 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
             xAxis.setDrawGridLinesBehindData(false)
             xAxis.setDrawLimitLinesBehindData(false)
             if (timePeriod == TimePeriod.MONTH) {
+                xAxis.labelCount = 4
+//                xAxis.mAxisMaximum = DateTime().dayOfMonth().maximumValue.toFloat() + 1
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
@@ -312,6 +314,8 @@ class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
                     }
                 }
             } else {
+                xAxis.labelCount = 7
+//                xAxis.mAxisMaximum = 7f
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         return startDate.plusDays(value.toInt() - 1).dayOfWeek()

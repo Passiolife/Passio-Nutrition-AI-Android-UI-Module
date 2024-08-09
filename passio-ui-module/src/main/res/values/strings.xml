@@ -40,6 +40,7 @@
     <string name="fat_per">Fat(%)</string>
     <string name="my_diary">My Diary</string>
     <string name="cancel">Cancel</string>
+    <string name="next_str">Next</string>
     <string name="engineering_ux_views"><![CDATA[Engineering & UX Views]]></string>
     <string name="engineering_subtitle">Engineering view show raw output of the SDK, and UX show various UX examples.</string>
     <string name="engineering_views">Engineering Views</string>
@@ -74,7 +75,7 @@
     <string name="weight_tracking">Weight Tracking</string>
     <string name="water_tracking">Water Tracking</string>
     <string name="nutrition_information">Nutrition Information</string>
-    <string name="welcome">Welcome!</string>
+    <string name="welcome">Welcome</string>
     <string name="not_what_you_re_looking_for_search_manually">Not what you\'re looking for? Search manually</string>
     <string name="macros">Macros</string>
     <string name="micros">Micros</string>
@@ -157,6 +158,18 @@
     <string name="log_selected">Log Selected</string>
     <string name="no_matched_result_found">No matched result found.</string>
     <string name="next_only">Next</string>
+    <string name="tap_start_listening_then_say_something_like">Tap <b>Start Listening</b>, then say something like:\n\n<i>“I had one blueberry muffin and a cup of green tea for my breakfast”</i></string>
+    <string name="start_listening">Start Listening</string>
+    <string name="stop_listening">Stop Listening</string>
+    <string name="clear_selected"><u>Clear Selected</u></string>
+    <string name="try_again">Try Again</string>
+    <string name="generating_results">Generating results…</string>
+    <string name="taking_a_good_picture">Taking a good picture</string>
+    <string name="food_photo_tip">Make sure all your food items are clearly visible in the shot</string>
+    <string name="send">Send</string>
+    <string name="type_your_message_here">Type your message here…</string>
+    <string name="failed_to_init_ai_advisor">Failed to initialize AI Advisor session.\nTap here to retry.</string>
+    <string name="find_foods">Find Foods</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

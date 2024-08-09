@@ -15,10 +15,12 @@ import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
 import ai.passio.nutrition.uimodule.ui.profile.ozToMl
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
 import ai.passio.nutrition.uimodule.ui.progress.WeekMonthPicker
+import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.setDrawableEnd
 import ai.passio.nutrition.uimodule.ui.util.StringKT.setSpannableBold
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.dateToFormat
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
 import ai.passio.nutrition.uimodule.ui.util.getMonthName
@@ -34,13 +36,16 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import org.joda.time.DateTime
 import org.joda.time.Days
+import org.joda.time.LocalDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -249,9 +254,18 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
         with(binding)
         {
             barChart.apply {
+
+                setDrawValueAboveBar(false)
+                setDrawValueAboveBar(false)
+                setFitBars(false)
+                description.isEnabled = false
                 setPinchZoom(false)
                 legend.isEnabled = false
                 setTouchEnabled(false)
+
+//                setPinchZoom(false)
+//                legend.isEnabled = false
+//                setTouchEnabled(false)
             }
         }
     }
@@ -296,35 +310,101 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
             val groupedRecords = waterRecords.groupBy {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.dateTime
-                calendar.get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.DAY_OF_YEAR)
             }
 
             val barEntries = ArrayList<BarEntry>()
             val calendar = Calendar.getInstance()
             val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
 
-            groupedRecords.toSortedMap().forEach { (dayOfYear, records) ->
+            groupedRecords.forEach { (dayOfYear, records) ->
                 val totalWeight = records.sumOf { it.getWaterInCurrentUnit() }.toFloat()
                 barEntries.add(BarEntry(dayOfYear.toFloat(), totalWeight))
             }
+
+            barChart.xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                granularity = 1f
+                labelCount = when (timePeriod) {
+                    TimePeriod.WEEK -> 7
+                    TimePeriod.MONTH -> 4
+                }
+//                axisMaximum = when (timePeriod) {
+//                    TimePeriod.WEEK -> 7f
+//                    TimePeriod.MONTH -> startDate.dayOfMonth().maximumValue.toFloat() + 1
+//                }
+                valueFormatter = when (timePeriod) {
+                    TimePeriod.WEEK -> object : ValueFormatter() {
+                        override fun getFormattedValue(value: Float): String {
+                            calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
+                            return dateToFormat(
+                                LocalDate(calendar.timeInMillis),
+                                DAY_FORMAT
+                            ).substring(0, 2)
+                        }
+                    }
+
+                    TimePeriod.MONTH -> object : ValueFormatter() {
+                        override fun getFormattedValue(value: Float): String {
+                            calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
+                            return dateFormat.format(calendar.time)
+                        }
+                    }
+                }
+            }
+
+            barChart.axisLeft.apply {
+//                labelCount = 3
+                setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+//                spaceTop = 15f
+            }
+
+            barChart.axisRight.isEnabled = false
+
 
             val barDataSet = BarDataSet(barEntries, "").apply {
                 color = ContextCompat.getColor(requireContext(), R.color.passio_primary)
                 setDrawValues(false)
             }
+            val calendarTemp = Calendar.getInstance()
+            calendarTemp.timeInMillis =
+                waterRecords.firstOrNull()?.dateTime ?: System.currentTimeMillis()
 
-            val barData = BarData(barDataSet)
-            if (timePeriod == TimePeriod.WEEK) {
-                barData.barWidth /= 2f
+            val barDataSetTarget = BarDataSet(
+                listOf(
+                    BarEntry(
+                        calendarTemp.get(Calendar.DAY_OF_YEAR).toFloat(),
+                        targetWater.toFloat()
+                    )
+                ), ""
+            ).apply {
+                color = Color.TRANSPARENT
+                setDrawValues(false)
             }
 
-            barChart.data = barData
+            val dataSets = listOf<IBarDataSet>(barDataSet, barDataSetTarget)
+            val data = BarData(dataSets).apply {
+                setValueTextSize(0f)
+                barWidth = when (timePeriod) {
+                    TimePeriod.WEEK -> 0.5f
+                    TimePeriod.MONTH -> 0.9f
+                }
 
-            val xAxis = barChart.xAxis
+            }
+//            if (timePeriod == TimePeriod.WEEK) {
+//                barData.barWidth /= 2f
+//            }
+
+            barChart.data = data
+
+            /*val xAxis = barChart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.granularity = 1f
 
             if (timePeriod == TimePeriod.MONTH) {
+                xAxis.labelCount = 4
+                xAxis.mAxisMaximum = DateTime().dayOfMonth().maximumValue.toFloat() + 1
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
@@ -332,11 +412,12 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
                     }
                 }
             } else {
+                xAxis.labelCount = 7
+                xAxis.mAxisMaximum = 7f
                 xAxis.valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
-                        return startDate.plusDays(value.toInt() - 1).dayOfWeek()
-                            .getAsText(Locale.getDefault())
-                            .substring(0, 2)
+                        calendar.set(Calendar.DAY_OF_YEAR, value.toInt())
+                        return dateToFormat(LocalDate(calendar.timeInMillis), DAY_FORMAT)
                     }
                 }
 
@@ -347,18 +428,19 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
             yAxisRight.isEnabled = false
 
             val yAxisLeft = barChart.axisLeft
-            yAxisLeft.granularity = 0.5f
+            yAxisLeft.granularity = 0.5f*/
 
-            // Add dashed annotation line for target water intake
-            val targetLine = LimitLine(targetWater.toFloat(), "").apply {
-                lineWidth = 2f
-                lineColor = ContextCompat.getColor(requireContext(), R.color.passio_green_800)
-                enableDashedLine(20f, 14f, 0f)
-                labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
-                textSize = 10f
+            if (targetWater > 0.0) {
+                // Add dashed annotation line for target water intake
+                val targetLine = LimitLine(targetWater.toFloat(), "").apply {
+                    lineWidth = 2f
+                    lineColor = ContextCompat.getColor(requireContext(), R.color.passio_green_800)
+                    enableDashedLine(20f, 14f, 0f)
+                    labelPosition = LimitLine.LimitLabelPosition.RIGHT_TOP
+                    textSize = 10f
+                }
+                barChart.axisLeft.addLimitLine(targetLine)
             }
-            yAxisLeft.addLimitLine(targetLine)
-
             barChart.description.isEnabled = false
             barChart.legend.form = Legend.LegendForm.LINE
             barChart.invalidate() // Refresh the chart

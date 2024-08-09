@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
 import android.graphics.Bitmap
@@ -33,9 +35,18 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         with(binding)
         {
             enableLogButton(false)
-            rvResult.adapter = FoodImageResultAdapter { selectedCount ->
-                enableLogButton(selectedCount != 0)
-            }
+            rvResult.adapter = FoodImageResultAdapter(object : OnItemSelectChange {
+                override fun onItemSelectChange(selectedCount: Int) {
+                    enableLogButton(selectedCount != 0)
+                }
+
+                override fun onIndexSelect(index: Int) {
+                }
+
+                override fun onIndexDeselect(index: Int) {
+                }
+
+            })
             cancel.setOnClickListener {
                 viewModel.navigateBack()
             }
@@ -52,11 +63,10 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
     private fun enableLogButton(isEnable: Boolean) {
         with(binding)
         {
-            log.isEnabled = isEnable
-            log.alpha = if (isEnable) {
-                1.0f
+            if (isEnable) {
+                log.enable()
             } else {
-                0.6f
+                log.disable()
             }
         }
     }

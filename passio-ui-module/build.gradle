@@ -48,8 +48,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-//    api(project(":passio-sdk"))
-    embed project(path: ':passio-sdk', configuration: 'default')
+    api(project(":passio-sdk"))
+//    embed project(path: ':passio-sdk', configuration: 'default')
 
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
@@ -92,5 +92,13 @@ dependencies {
     implementation("io.coil-kt:coil:2.2.2")
     // If you want to use Coil with Kotlin 1.8.0
     implementation("io.coil-kt:coil-base:2.2.2")
+
+    implementation 'com.airbnb.android:lottie:6.4.0'
+
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'io.noties.markwon:linkify:4.6.2'
+    implementation 'io.noties.markwon:html:4.6.2'
+//    implementation 'io.noties.markwon:syntax-highlight:4.6.2'
+
 
 }

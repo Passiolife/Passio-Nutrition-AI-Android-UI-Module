@@ -10,7 +10,9 @@ import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Spannable
@@ -33,7 +35,6 @@ import com.warkiz.tickseekbar.OnSeekChangeListener
 import com.warkiz.tickseekbar.SeekParams
 import com.warkiz.tickseekbar.TickSeekBar
 import com.yanzhenjie.recyclerview.SwipeMenuItem
-import java.text.DecimalFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -48,7 +49,6 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     private var carbColor: Int = -1
     private var proteinColor: Int = -1
     private var fatColor: Int = -1
-    private val decimalFormat = DecimalFormat("0.#")
 
     // private val dateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.getDefault())
     private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
@@ -163,7 +163,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             }
 
             openFoodFacts.setOnClickListener {
-                OpenFoodFactsDialog(openFoodFactsListener).show(childFragmentManager, "EditFood")
+                OpenFoodFactsDialog().show(childFragmentManager, "EditFood")
             }
 
             moreDetails.setOnClickListener {
@@ -189,7 +189,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             if (editFoodModel.foodRecord == null) {
                 renderError()
             } else {
-                binding.openFoodFacts.isVisible = !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
+                binding.openFoodFacts.isVisible =
+                    !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
                 renderFoodRecord(editFoodModel)
             }
         }
@@ -203,22 +204,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 is ResultWrapper.Error -> {
                     Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
                 }
+
                 is ResultWrapper.Success -> {
                     viewModel.navigateToDiary(result.value.createdAtTime())
                 }
             }
         }
-    }
-
-    private val openFoodFactsListener = object : OpenFoodFactsDialog.OpenFoodFactsListener{
-        override fun onOpenFoodFactsClicked() {
-
-        }
-
-        override fun onOpenDatabaseLicenseClicked() {
-
-        }
-
     }
 
     private fun setupToolbar() {
@@ -350,9 +341,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 carbPercent -= 1
             }
 
-            val carbGrams = "${decimalFormat.format(carbs)} g"
-            val proteinGrams = "${decimalFormat.format(protein)} g"
-            val fatGrams = "${decimalFormat.format(fat)} g"
+            val carbGrams = "${carbs.singleDecimal()} g"
+            val proteinGrams = "${protein.singleDecimal()} g"
+            val fatGrams = "${fat.singleDecimal()} g"
 
             val carbString = SpannableString(" $carbGrams ($carbPercent%)")
             carbString.setSpan(
@@ -387,18 +378,19 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderServingSize(foodRecord: FoodRecord, origin: UpdateOrigin? = null) {
         if (_binding == null) return
 
         with(binding) {
-            val weightGrams = decimalFormat.format(foodRecord.servingWeight().gramsValue())
+            val weightGrams = foodRecord.servingWeight().gramsValue().singleDecimal()
             servingSizeValue.text = " $weightGrams g"
 
             if (origin != UpdateOrigin.QUANTITY) {
                 if (foodRecord.getSelectedQuantity() == FoodRecord.ZERO_QUANTITY) {
                     servingQuantity.setText("0")
                 } else {
-                    val quantity = decimalFormat.format(foodRecord.getSelectedQuantity())
+                    val quantity = foodRecord.getSelectedQuantity().singleDecimal()
                     servingQuantity.setText(quantity)
                 }
             }
@@ -531,7 +523,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun onIngredientSelected(index: Int) {
-        val ingredient = viewModel.getIngredient(index)
-        sharedViewModel.editIngredient(ingredient, index)
+//        val ingredient = viewModel.getIngredient(index)
+//        sharedViewModel.editIngredient(ingredient, index)
     }
 }

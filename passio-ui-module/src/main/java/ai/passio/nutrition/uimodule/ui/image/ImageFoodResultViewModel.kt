@@ -3,18 +3,16 @@ package ai.passio.nutrition.uimodule.ui.image
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.edit.EditFoodFragmentDirections
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
-import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class ImageFoodResultViewModel : BaseViewModel() {
 
@@ -43,40 +41,6 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    private fun fetchResult11() {
-        _isProcessing.postValue(true)
-        resultFoodInfoList.clear()
-        val startTime = System.currentTimeMillis()
-        Log.d("food result", "start == ${currentBitmaps.size} ")
-        var currentCount = 0
-        viewModelScope.launch(Dispatchers.Main) {
-            currentBitmaps.forEach { bitmap ->
-
-                Log.d("food result", "started == ${currentBitmaps.size}/$currentCount ")
-                PassioSDK.instance.recognizeImageRemote(bitmap) { result ->
-                    currentCount += 1
-                    Log.d(
-                        "food result",
-                        "on result == result count: ${result.size} and current count:$currentCount "
-                    )
-                    resultFoodInfoList.addAll(result)
-                    if (resultFoodInfoList.isNotEmpty()) {
-                        _resultFoodInfo.postValue(resultFoodInfoList)
-                    }
-                    if (currentCount == currentBitmaps.size) {
-                        val endTime = System.currentTimeMillis()
-                        Log.d("food result", "duration: ${(endTime - startTime) / 1000f}")
-                        Log.d("food result", "done == count $currentCount")
-                        _isProcessing.postValue(false)
-                        if (resultFoodInfoList.isEmpty()) {
-                            _resultFoodInfo.postValue(resultFoodInfoList)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun fetchResult() {
         viewModelScope.launch {
             _isProcessing.postValue(true)
@@ -92,6 +56,9 @@ class ImageFoodResultViewModel : BaseViewModel() {
                         "food result",
                         "on result == result count: ${result.size} and current count:$currentCount "
                     )
+                    result.forEach {
+                        Log.d("resultFoodInfoList", Gson().toJson(it))
+                    }
                     resultFoodInfoList.addAll(result)
                     if (resultFoodInfoList.isNotEmpty()) {
                         _resultFoodInfo.postValue(resultFoodInfoList)
