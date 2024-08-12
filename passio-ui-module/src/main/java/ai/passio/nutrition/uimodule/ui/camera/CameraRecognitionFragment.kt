@@ -64,13 +64,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
         viewModel.cameraZoomLevelRangeEvent.observe(viewLifecycleOwner, ::setupCameraZoomMode)
         viewModel.cameraFlashToggleEvent.observe(viewLifecycleOwner) { isON ->
-//            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else android.R.drawable.star_off)
-            binding.cameraFlash.imageTintList = ColorStateList.valueOf(
-                if (isON)
-                    ContextCompat.getColor(requireContext(), R.color.passio_primary)
-                else
-                    ContextCompat.getColor(requireContext(), R.color.passio_white)
-            )
+            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else R.drawable.ic_camera_flash_off)
         }
         viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
 

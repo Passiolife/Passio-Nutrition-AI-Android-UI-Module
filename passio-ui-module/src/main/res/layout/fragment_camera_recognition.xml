@@ -141,7 +141,7 @@
             android:layout_marginStart="8dp"
             android:padding="8dp"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_camera_flash_on" />
+            tools:srcCompat="@drawable/ic_camera_flash_on" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
