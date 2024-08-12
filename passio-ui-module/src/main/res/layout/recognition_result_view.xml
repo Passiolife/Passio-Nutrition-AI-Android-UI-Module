@@ -62,7 +62,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:src="@drawable/icon_apple" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/foodName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/icon_apple" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/barcodeName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -231,10 +231,21 @@
                     android:textColor="@color/passio_black"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/barcodeImage"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/barcodeImage"
                     app:layout_constraintTop_toTopOf="@id/barcodeImage"
+                    tools:text="Green Apple" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/barcodeId"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/barcodeImage"
+                    app:layout_constraintTop_toBottomOf="@id/barcodeName"
                     tools:text="Green Apple" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

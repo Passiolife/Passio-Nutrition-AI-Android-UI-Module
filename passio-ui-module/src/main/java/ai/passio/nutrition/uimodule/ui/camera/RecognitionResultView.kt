@@ -5,14 +5,20 @@ import ai.passio.nutrition.uimodule.databinding.RecognitionResultViewBinding
 import ai.passio.nutrition.uimodule.domain.camera.RecognitionResult
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.DetectedCandidate
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.AttributeSet
@@ -24,8 +30,6 @@ import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 
 class RecognitionResultView @JvmOverloads constructor(
     context: Context,
@@ -40,25 +44,18 @@ class RecognitionResultView @JvmOverloads constructor(
     private var recognitionResultListener: RecognitionResultListener? = null
 
     interface RecognitionResultListener {
-        fun onLogVisual(detectedCandidate: DetectedCandidate)
-        fun onEditVisual(detectedCandidate: DetectedCandidate)
-        fun onEditProduct(result: RecognitionResult.ProductRecognition)
-        fun onLogProduct(result: RecognitionResult.ProductRecognition)
+        fun onLog(result: RecognitionResult)
+        fun onEdit(result: RecognitionResult)
+        fun onSearchTapped()
     }
 
     init {
         _binding = RecognitionResultViewBinding.inflate(LayoutInflater.from(context), this)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-//        binding.bottomView.post {
-//            bottomSheetBehavior.peekHeight = binding.bottomView.height
-//        }
         bottomSheetBehavior.peekHeight = DesignUtils.dp2px(172f)
 
-
-
         formatSearchManuallyText()
-
 
     }
 
@@ -71,13 +68,7 @@ class RecognitionResultView @JvmOverloads constructor(
         }
         (binding.bottomSheet.layoutParams as LayoutParams).behavior = bottomSheetBehavior
         binding.root.isEnabled = true
-        binding.root.setOnClickListener {
-            if (bottomSheetBehavior.state == STATE_EXPANDED) {
-                bottomSheetBehavior.state = STATE_HIDDEN
-            } else {
-                bottomSheetBehavior.state = STATE_EXPANDED
-            }
-        }
+
         binding.bottomSheet.isEnabled = true
         bottomSheetBehavior.isDraggable = true
     }
@@ -88,9 +79,9 @@ class RecognitionResultView @JvmOverloads constructor(
 //            binding.bottomSheet.setPadding(0, 0, 0, binding.bottomView.height)
         }
 //        (binding.bottomSheet.layoutParams as LayoutParams).behavior = null
-        binding.root.setOnClickListener {
+        /*binding.root.setOnClickListener {
 
-        }
+        }*/
         binding.root.isEnabled = false
         bottomSheetBehavior.isDraggable = false
     }
@@ -116,6 +107,25 @@ class RecognitionResultView @JvmOverloads constructor(
         val startIndex1 = searchManuallyFullText.indexOf(searchManuallyText)
         val endIndex1 = startIndex1 + searchManuallyText.length
         if (startIndex1 != -1) {
+            // Set a ClickableSpan
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    // Handle the click event for "Search Manually" text
+                    recognitionResultListener?.onSearchTapped()
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.isUnderlineText = false // Optional: Remove underline if you don't want it
+                }
+            }
+            spannableString.setSpan(
+                clickableSpan,
+                startIndex1,
+                endIndex1,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
             spannableString.setSpan(
                 ForegroundColorSpan(
                     ContextCompat.getColor(
@@ -133,8 +143,12 @@ class RecognitionResultView @JvmOverloads constructor(
                 endIndex1,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
+
+
+
         }
         binding.searchManually.text = spannableString
+        binding.searchManually.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onFinishInflate() {
@@ -165,11 +179,19 @@ class RecognitionResultView @JvmOverloads constructor(
             bottomSheetBehavior.state = STATE_COLLAPSED
 
             fun logVisualCandidate(detectedCandidate: DetectedCandidate) {
-                recognitionResultListener?.onLogVisual(detectedCandidate)
+                recognitionResultListener?.onLog(
+                    RecognitionResult.VisualRecognition(
+                        detectedCandidate
+                    )
+                )
             }
 
             fun editVisualCandidate(detectedCandidate: DetectedCandidate) {
-                recognitionResultListener?.onEditVisual(detectedCandidate)
+                recognitionResultListener?.onEdit(
+                    RecognitionResult.VisualRecognition(
+                        detectedCandidate
+                    )
+                )
             }
 
             fun removeDuplicates(candidates: List<DetectedCandidate>): List<DetectedCandidate> {
@@ -199,7 +221,8 @@ class RecognitionResultView @JvmOverloads constructor(
         }
     }
 
-    fun showProductResult(result: RecognitionResult.ProductRecognition) {
+    @SuppressLint("SetTextI18n")
+    fun showFoodRecordRecognition(result: RecognitionResult.FoodRecordRecognition) {
         if (shownId == result.foodItem.id) {
             return
         }
@@ -215,25 +238,31 @@ class RecognitionResultView @JvmOverloads constructor(
 
             shownId = result.foodItem.id
             it.viewDragUp.isVisible = false
-            it.foodName.text = result.foodItem.name.capitalized()
-            it.foodImage.loadPassioIcon(result.foodItem.iconId)
-            it.barcodeName.text = result.foodItem.name.capitalized()
+            val foodRecord = result.foodItem
+            it.barcodeName.text = foodRecord.name.capitalized()
+            it.barcodeId.text = if (foodRecord.barcode.isValid()) {
+                "UPC:${foodRecord.barcode}"
+            } else if (foodRecord.packagedFoodCode.isValid()) {
+                "UPC:${foodRecord.packagedFoodCode}"
+            } else {
+                foodRecord.additionalData
+            }
             it.barcodeImage.loadPassioIcon(result.foodItem.iconId)
             disableDrag()
-            bottomSheetBehavior.state = STATE_COLLAPSED
+//            bottomSheetBehavior.state = STATE_COLLAPSED
             it.rvAlternatives.adapter = null
 
             it.foodLog.text = resources.getString(R.string.log)
             it.foodEdit.text = resources.getString(R.string.edit)
             it.foodLog.setOnClickListener {
-                recognitionResultListener?.onLogProduct(result)
+                recognitionResultListener?.onLog(result)
             }
             it.foodEdit.setOnClickListener {
-                recognitionResultListener?.onEditProduct(result)
+                recognitionResultListener?.onEdit(result)
             }
 
             it.barcodeResultView.setOnClickListener {
-                recognitionResultListener?.onEditProduct(result)
+                recognitionResultListener?.onEdit(result)
             }
         }
     }
@@ -332,7 +361,7 @@ class RecognitionResultView @JvmOverloads constructor(
                 }
             }
             disableDrag()
-            bottomSheetBehavior.state = STATE_COLLAPSED
+//            bottomSheetBehavior.state = STATE_COLLAPSED
         }
     }
 

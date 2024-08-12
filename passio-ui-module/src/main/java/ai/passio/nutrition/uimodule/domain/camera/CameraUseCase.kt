@@ -62,7 +62,9 @@ object CameraUseCase {
         if (barcodeCandidate != null) {
             val foodItem = repository.fetchFoodItemForProduct(barcodeCandidate.barcode)
                 ?: return RecognitionResult.NoProductRecognition
-            return RecognitionResult.ProductRecognition(foodItem)
+            return RecognitionResult.FoodRecordRecognition(FoodRecord(foodItem).apply {
+                this.barcode = barcodeCandidate.barcode
+            })
         }
 
         val packagedCandidate =
@@ -70,7 +72,9 @@ object CameraUseCase {
         if (packagedCandidate != null) {
             val foodItem = repository.fetchFoodItemForProduct(packagedCandidate.packagedFoodCode)
                 ?: return RecognitionResult.NoProductRecognition
-            return RecognitionResult.ProductRecognition(foodItem)
+            return RecognitionResult.FoodRecordRecognition(FoodRecord(foodItem).apply {
+                this.packagedFoodCode = packagedCandidate.packagedFoodCode
+            })
         }
 
         return RecognitionResult.NoRecognition

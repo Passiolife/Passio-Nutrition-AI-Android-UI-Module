@@ -116,14 +116,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            tools:tsb_progress="50"
             app:tsb_progress_value_float="true"
             app:tsb_thumb_color="@color/passio_white"
             app:tsb_thumb_size="22dp"
             app:tsb_track_background_color="@color/passio_white40p"
             app:tsb_track_background_size="6dp"
             app:tsb_track_progress_color="@color/passio_primary"
-            app:tsb_track_progress_size="6dp" />
+            app:tsb_track_progress_size="6dp"
+            tools:tsb_progress="50" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cameraFocus"
@@ -131,6 +131,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:scaleType="center"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_camera_focus_on" />
 
         <androidx.appcompat.widget.AppCompatImageView

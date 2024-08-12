@@ -9,13 +9,12 @@ import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.ProgressDialog
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
-import ai.passio.passiosdk.passiofood.DetectedCandidate
-import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -65,7 +64,13 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
         viewModel.cameraZoomLevelRangeEvent.observe(viewLifecycleOwner, ::setupCameraZoomMode)
         viewModel.cameraFlashToggleEvent.observe(viewLifecycleOwner) { isON ->
-            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else android.R.drawable.star_off)
+//            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else android.R.drawable.star_off)
+            binding.cameraFlash.imageTintList = ColorStateList.valueOf(
+                if (isON)
+                    ContextCompat.getColor(requireContext(), R.color.passio_primary)
+                else
+                    ContextCompat.getColor(requireContext(), R.color.passio_white)
+            )
         }
         viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
 
@@ -174,8 +179,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
         when (resultWrapper) {
             is ResultWrapper.Success -> {
-                sharedViewModel.editFoodRecord(FoodRecord(resultWrapper.value))
-                viewModel.navigateToEdit()
+                editFoodRecord(FoodRecord(resultWrapper.value))
             }
 
             is ResultWrapper.Error -> {
@@ -189,53 +193,59 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         }
     }
 
+    private fun editFoodRecord(foodRecord: FoodRecord) {
+        sharedViewModel.editFoodRecord(foodRecord)
+        viewModel.navigateToEdit()
+    }
+
     private val recognitionResultListener = object :
         RecognitionResultView.RecognitionResultListener {
-        override fun onLogVisual(detectedCandidate: DetectedCandidate) {
+
+        override fun onLog(result: RecognitionResult) {
             viewModel.stopDetection()
-            with(binding) {
-                viewModel.logFood(detectedCandidate.passioID)
-                /*recognitionResult.visibility = View.GONE
-                scanningMessage.visibility = View.GONE
-                viewAddedToDiary.visibility = View.VISIBLE
-                recognitionResult.reset()*/
+            when (result) {
+                is RecognitionResult.VisualRecognition -> {
+                    viewModel.logFood(result.visualCandidate.passioID)
+                }
+
+                is RecognitionResult.FoodRecordRecognition -> {
+                    viewModel.logFoodRecord(result.foodItem)
+                }
+
+                is RecognitionResult.NutritionFactRecognition -> {
+
+                }
+
+                else -> {
+
+                }
             }
         }
 
-        override fun onEditVisual(detectedCandidate: DetectedCandidate) {
+        override fun onEdit(result: RecognitionResult) {
             viewModel.stopDetection()
-            with(binding) {
-//                recognitionResult.visibility = View.GONE
-//                scanningMessage.visibility = View.GONE
-//                viewAddedToDiary.visibility = View.VISIBLE
-//                recognitionResult.reset()
+            when (result) {
+                is RecognitionResult.VisualRecognition -> {
+                    viewModel.fetchFoodItemToEdit(result.visualCandidate.passioID)
+                }
 
-                viewModel.fetchFoodItemToEdit(detectedCandidate.passioID)
+                is RecognitionResult.FoodRecordRecognition -> {
+                    editFoodRecord(result.foodItem)
+                }
+
+                is RecognitionResult.NutritionFactRecognition -> {
+
+                }
+
+                else -> {
+
+                }
             }
         }
 
-        override fun onEditProduct(result: RecognitionResult.ProductRecognition) {
-            viewModel.stopDetection()
-            with(binding) {
-//                recognitionResult.visibility = View.GONE
-//                scanningMessage.visibility = View.GONE
-//                viewAddedToDiary.visibility = View.VISIBLE
-//                recognitionResult.reset()
-                editFoodItem(ResultWrapper.Success(result.foodItem))
-            }
+        override fun onSearchTapped() {
+            viewModel.navigateToSearch()
         }
-
-        override fun onLogProduct(result: RecognitionResult.ProductRecognition) {
-            viewModel.stopDetection()
-            with(binding) {
-                viewModel.logFood(result.foodItem)
-                /*recognitionResult.visibility = View.GONE
-                scanningMessage.visibility = View.GONE
-                viewAddedToDiary.visibility = View.VISIBLE
-                recognitionResult.reset()*/
-            }
-        }
-
     }
 
     private val bottomSheetCallback = object : BottomSheetCallback() {
@@ -399,12 +409,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.recognitionResult.reset()
                 }
 
-                is RecognitionResult.ProductRecognition -> {
+                is RecognitionResult.FoodRecordRecognition -> {
                     it.viewAddedToDiary.visibility = View.GONE
                     it.recognitionResult.visibility = View.VISIBLE
                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showProductResult(result)
+                    it.recognitionResult.showFoodRecordRecognition(result)
                 }
 
                 is RecognitionResult.VisualRecognition -> {
