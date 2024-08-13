@@ -36,9 +36,14 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addData(newData: List<PassioAdvisorFoodInfo>) {
+    fun addData(
+        newData: List<PassioAdvisorFoodInfo>,
+        selectedItemPositions: List<Int>,
+    ) {
         list.clear()
         list.addAll(newData)
+        this.selectedItemPositions.clear()
+        this.selectedItemPositions.addAll(selectedItemPositions)
         notifyDataSetChanged()
     }
 

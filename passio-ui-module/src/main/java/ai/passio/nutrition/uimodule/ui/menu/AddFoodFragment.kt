@@ -45,6 +45,9 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
             buttonClose.setOnClickListener {
                 viewModel.navigateBack()
             }
+            root.setOnClickListener {
+                viewModel.navigateBack()
+            }
         }
     }
 

@@ -21,8 +21,9 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
     private val selectedItemPositions = mutableListOf<Int>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addData(newData: List<PassioSpeechRecognitionModel>) {
-        selectedItemPositions.clear()
+    fun addData(newData: List<PassioSpeechRecognitionModel>, selectedItemPositions: List<Int>) {
+        this.selectedItemPositions.clear()
+        this.selectedItemPositions.addAll(selectedItemPositions)
         list.clear()
         list.addAll(newData)
         onItemSelectChange.invoke(selectedItemPositions.size)
@@ -44,6 +45,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
             val nutritionPreview = foodInfo.advisorInfo.foodDataInfo!!.nutritionPreview
 
             with(binding) {
+
                 image.loadPassioIcon(foodRecord.iconID)
                 name.text = foodRecord.foodName.capitalized()
 
