@@ -72,6 +72,7 @@
     <string name="meal_plan">Meal Plan</string>
     <string name="progress">Progress</string>
     <string name="my_progress">My Progress</string>
+    <string name="food_creator">Food Creator</string>
     <string name="weight_tracking">Weight Tracking</string>
     <string name="water_tracking">Water Tracking</string>
     <string name="nutrition_information">Nutrition Information</string>
@@ -170,6 +171,24 @@
     <string name="type_your_message_here">Type your message here…</string>
     <string name="failed_to_init_ai_advisor">Failed to initialize AI Advisor session.\nTap here to retry.</string>
     <string name="find_foods">Find Foods</string>
+    <string name="scan_description">Scan Description</string>
+    <string name="brand">Brand</string>
+    <string name="enter_brand">Enter brand</string>
+    <string name="enter_name">Enter name</string>
+    <string name="barcode">Barcode</string>
+    <string name="scan_a_barcode">Scan a barcode</string>
+    <string name="enter_serving_size">Enter serving size</string>
+    <string name="required_nutrition_facts">Required Nutrition Facts</string>
+    <string name="enter_unit_name">Enter unit name</string>
+    <string name="units">Units</string>
+    <string name="weight">Weight</string>
+    <string name="enter_calories">Enter calories</string>
+    <string name="enter_carbs">Enter carbs</string>
+    <string name="enter_weight_lower">Enter weight</string>
+    <string name="value_txt">Value</string>
+    <string name="custom_foods">Custom Foods</string>
+    <string name="recipes">Recipes</string>
+    <string name="edit_image"><u>Edit Image</u></string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

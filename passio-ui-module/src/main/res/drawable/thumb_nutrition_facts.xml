@@ -1,0 +1,100 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="90dp"
+    android:height="90dp"
+    android:autoMirrored="true"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <group>
+
+        <clip-path android:pathData="M50,0L50,0A50,50 0,0 1,100 50L100,50A50,50 0,0 1,50 100L50,100A50,50 0,0 1,0 50L0,50A50,50 0,0 1,50 0z" />
+
+        <path
+            android:fillColor="@color/passio_primary"
+            android:pathData="M100,0H0V100H100V0Z" />
+
+        <path
+            android:fillAlpha="0.3"
+            android:fillColor="#000000"
+            android:pathData="M100,52.82L72.73,18.15L27.44,82.06L41.3,100H100V52.82Z"
+            android:strokeAlpha="0.3" />
+
+        <path
+            android:fillColor="#ffffff"
+            android:pathData="M25.38,76.49V23.51C25.38,18.8 29.2,14.98 33.91,14.98H66.09C70.8,14.98 74.62,18.8 74.62,23.51V76.49C74.62,81.21 70.8,85.03 66.09,85.03H33.91C29.2,85.03 25.38,81.21 25.38,76.49Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,36.94H29.47V38.51H70.53V36.94Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M35.36,40.75H29.47V43.91H35.36V40.75Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M41.81,49.94H29.47V53.11H41.81V49.94Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M36.25,59.14H29.47V62.31H36.25V59.14Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M39.41,68.34H29.47V71.5H39.41V68.34Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,30.49H53.52V33.12H70.53V30.49Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,25.66H46.3V28.29H70.53V25.66Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,40.75H67.32V43.91H70.53V40.75Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,49.94H67.32V53.11H70.53V49.94Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,59.14H67.32V62.31H70.53V59.14Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,68.34H67.32V71.5H70.53V68.34Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,46.14H29.47V47.71H70.53V46.14Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,55.34H29.47V56.91H70.53V55.34Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,64.54H29.47V66.11H70.53V64.54Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M70.53,73.74H29.47V75.31H70.53V73.74Z" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M35.11,20.08C34.75,19.83 34.37,19.64 34,19.51C34.58,19.49 35.23,19.68 35.82,20.08C36.02,20.21 36.2,20.36 36.35,20.52C36.35,19.96 35.93,19.26 35.23,18.73C34.29,18.01 32.09,18.16 32.09,18.16C32.09,18.16 32.77,20 33.72,20.72C34.66,21.44 35.76,21.58 36.18,21.04C35.9,20.69 35.54,20.36 35.11,20.07" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M37.76,18.7C37.43,18.7 37.13,18.8 37.13,18.8C37.02,18.8 36.93,18.89 36.93,19C36.93,19 36.73,19.78 36.68,20.31C36.63,20.85 36.63,21.63 36.63,21.63C36.63,21.74 36.72,21.83 36.83,21.83H37.07C37.18,21.83 37.26,21.74 37.26,21.63C37.26,21.63 37.34,20.98 37.61,20.31C37.89,19.65 38.16,19 38.16,19C38.16,18.89 38.09,18.7 37.76,18.7" />
+
+        <path
+            android:fillColor="#6B7280"
+            android:pathData="M39.61,21.86C38.62,21.72 37.63,22.08 36.82,22.79C36,22.08 35.02,21.72 34.02,21.86C31.82,22.17 30.38,24.83 30.8,27.78C31.23,30.74 33.35,32.88 35.56,32.57C36.01,32.5 36.44,32.34 36.82,32.09C37.2,32.34 37.63,32.5 38.09,32.57C40.29,32.88 42.42,30.74 42.84,27.78C43.26,24.83 41.82,22.17 39.62,21.86M41.73,25.56C41.36,25.88 40.79,25.38 40.21,24.7C39.62,24.01 39.25,23.4 39.62,23.09C39.99,22.77 40.76,23.07 41.34,23.76C41.93,24.44 42.1,25.25 41.73,25.56" />
+
+    </group>
+
+</vector>

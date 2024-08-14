@@ -37,6 +37,7 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
     }
 
     private var isPicker = false
+    private var isSinglePhoto = false
     private lateinit var imageAdapter: ImageAdapter
     private val imageList: MutableList<Bitmap> = mutableListOf()
     private lateinit var imageAnalyzer: ImageAnalysis
@@ -59,6 +60,9 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
             arguments?.getBoolean("isPicker", false)?.let {
                 isPicker = it
+            }
+            arguments?.getBoolean("isSinglePhoto", false)?.let {
+                isSinglePhoto = it
             }
 
             imageAdapter = ImageAdapter(imageList) {
@@ -92,11 +96,12 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
     private fun validateImageCount() {
         if (imageList.size > 0) {
             binding.next.enable()
-        }
-        else{
+        } else {
             binding.next.disable()
         }
-        if (imageList.size >= MAX_IMAGES) {
+        if (isSinglePhoto && imageList.isNotEmpty()) {
+            binding.captureButton.disable()
+        } else if (imageList.size >= MAX_IMAGES) {
             binding.captureButton.disable()
         } else {
             binding.captureButton.enable()
