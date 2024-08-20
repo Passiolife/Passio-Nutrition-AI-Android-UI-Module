@@ -1,5 +1,8 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.passiosdk.passiofood.Barcode
+import ai.passio.passiosdk.passiofood.PackagedFoodCode
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodAmount
@@ -32,6 +35,8 @@ class FoodRecord() {
     var createdAt: Long? = null
 
     var openFoodLicense: String? = null
+    var barcode: Barcode? = null
+    var packagedFoodCode: PackagedFoodCode? = null
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
@@ -227,6 +232,7 @@ class FoodRecord() {
         }
         return PassioNutrients(ingredientNutrients, UnitMass(Grams, 100.0))
     }
+
 }
 
 fun List<FoodRecord>.meals(mealLabel: MealLabel): List<FoodRecord> {

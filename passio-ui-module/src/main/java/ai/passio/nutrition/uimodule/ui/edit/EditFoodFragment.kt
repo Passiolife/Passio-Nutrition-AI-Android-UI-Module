@@ -271,7 +271,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         with(binding) {
             foodImage.loadPassioIcon(foodRecord.iconId)
             foodName.text = foodRecord.name.capitalized()
-            infoName.text = foodRecord.additionalData.capitalized()
+            if (!foodRecord.name.equals(foodRecord.additionalData, true)) {
+                infoName.text = foodRecord.additionalData.capitalized()
+            }
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener

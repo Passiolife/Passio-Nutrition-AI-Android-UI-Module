@@ -12,6 +12,9 @@ import java.text.DecimalFormat
 
 object StringKT {
 
+    fun String?.isValid(): Boolean {
+        return this!=null && this.trim().isNotEmpty()
+    }
     fun String.capitalized(): String {
         return this.split(" ").joinToString(" ") { it.capitalizeWord() }
     }

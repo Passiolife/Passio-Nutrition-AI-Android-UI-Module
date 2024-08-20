@@ -108,7 +108,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         showResultView(result.isNotEmpty())
         with(binding) {
             val adapter = rvResult.adapter as FoodImageResultAdapter
-            adapter.addData(result)
+            adapter.addData(result, result.indices.toList())
         }
     }
 

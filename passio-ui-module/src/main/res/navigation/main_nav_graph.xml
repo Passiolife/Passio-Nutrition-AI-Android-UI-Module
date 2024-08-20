@@ -212,6 +212,12 @@
             app:launchSingleTop="true">
 
         </action>
+        <action
+            android:id="@+id/camera_to_search"
+            app:destination="@id/search"
+            app:launchSingleTop="true">
+
+        </action>
 
     </fragment>
 

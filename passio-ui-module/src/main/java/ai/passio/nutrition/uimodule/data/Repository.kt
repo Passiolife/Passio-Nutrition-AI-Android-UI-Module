@@ -14,9 +14,11 @@ import ai.passio.nutrition.uimodule.ui.util.getStartOfWeek
 import ai.passio.passiosdk.passiofood.FoodCandidates
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.FoodRecognitionListener
+import ai.passio.passiosdk.passiofood.NutritionFactsRecognitionListener
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.content.Context
 import android.graphics.Bitmap
 import kotlinx.coroutines.channels.awaitClose
@@ -50,7 +52,7 @@ class Repository private constructor() {
 
     suspend fun fetchPassioFoodItem(
         searchResult: PassioFoodDataInfo,
-        weighGrams: Double ?= null
+        weighGrams: Double? = null
     ): PassioFoodItem? = suspendCoroutine { cont ->
         PassioSDK.instance.fetchFoodItemForDataInfo(searchResult, weighGrams) { foodItem ->
             cont.resumeWith(Result.success(foodItem))
@@ -67,12 +69,27 @@ class Repository private constructor() {
 
     fun stopFoodDetection() {
         PassioSDK.instance.stopFoodDetection()
+        PassioSDK.instance.stopNutritionFactsDetection()
+    }
+
+    fun nutritionFactsResultFlow(): Flow<Pair<PassioNutritionFacts?, String>> = callbackFlow {
+        stopFoodDetection()
+        val callback = object : NutritionFactsRecognitionListener {
+            override fun onRecognitionResult(nutritionFacts: PassioNutritionFacts?, text: String) {
+                trySendBlocking(nutritionFacts to text)
+            }
+        }
+        PassioSDK.instance.startNutritionFactsDetection(callback)
+
+        awaitClose {
+            PassioSDK.instance.stopNutritionFactsDetection()
+        }
     }
 
     fun recognitionResultFlow(
         config: FoodDetectionConfiguration
     ): Flow<FoodCandidates?> = callbackFlow {
-        PassioSDK.instance.stopFoodDetection()
+        stopFoodDetection()
         val callback = object : FoodRecognitionListener {
             override fun onRecognitionResults(candidates: FoodCandidates?, image: Bitmap?) {
                 trySendBlocking(candidates)
@@ -162,10 +179,10 @@ class Repository private constructor() {
         return connector.removeWeightRecord(weightRecord)
     }
 
-    suspend fun fetchLatestWeightRecord(): WeightRecord?
-    {
+    suspend fun fetchLatestWeightRecord(): WeightRecord? {
         return connector.fetchLatestWeightRecord()
     }
+
     suspend fun fetchWeightRecords(currentDate: Date): List<WeightRecord> {
         val forDate = DateTime(currentDate.time)
         val startDate: DateTime = forDate.withTimeAtStartOfDay()

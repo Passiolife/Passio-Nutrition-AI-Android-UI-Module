@@ -13,6 +13,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.nutrition.uimodule.ui.view.BottomSpaceItemDecoration
 import androidx.core.view.isVisible
@@ -91,7 +92,15 @@ class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
         {
             image.loadPassioIcon(foodRecord.iconId)
             name.text = foodRecord.name.capitalized()
-            upcInfo.text = foodRecord.additionalData
+            upcInfo.text =
+                if (foodRecord.barcode.isValid()) {
+                    "UPC:${foodRecord.barcode}"
+                } else if (foodRecord.packagedFoodCode.isValid()) {
+                    "UPC:${foodRecord.packagedFoodCode}"
+                } else {
+                    foodRecord.additionalData
+                }
+
         }
     }
 
