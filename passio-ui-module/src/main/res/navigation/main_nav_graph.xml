@@ -218,6 +218,12 @@
             app:launchSingleTop="true">
 
         </action>
+        <action
+            android:id="@+id/camera_to_food_creator"
+            app:destination="@id/food_creator"
+            app:launchSingleTop="true">
+
+        </action>
 
     </fragment>
 
@@ -273,6 +279,9 @@
         <action
             android:id="@+id/my_foods_to_food_creator"
             app:destination="@id/food_creator" />
+        <action
+            android:id="@+id/my_foods_to_edit"
+            app:destination="@id/edit" />
     </fragment>
 
     <fragment
@@ -284,6 +293,15 @@
         <action
             android:id="@+id/custom_food_to_food_creator"
             app:destination="@id/food_creator" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/scan_barcode"
+        android:name="ai.passio.nutrition.uimodule.ui.foodcreator.ScanBarcodeFragment"
+        android:label="ScanBarcodeFragment"
+        tools:layout="@layout/fragment_scan_barcode">
+
+
     </fragment>
 
     <fragment
@@ -304,6 +322,9 @@
                 android:defaultValue="true"
                 app:argType="boolean" />
         </action>
+        <action
+            android:id="@+id/food_creator_to_scan_barcode"
+            app:destination="@id/scan_barcode" />
     </fragment>
 
     <fragment

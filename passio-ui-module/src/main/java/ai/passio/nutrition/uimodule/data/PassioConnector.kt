@@ -44,4 +44,8 @@ interface PassioConnector {
 
     suspend fun fetchWaterRecords(startDate: Date, endDate: Date): List<WaterRecord>
 
+    suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean
+
+    suspend fun fetchCustomFoods(): List<FoodRecord>
+
 }

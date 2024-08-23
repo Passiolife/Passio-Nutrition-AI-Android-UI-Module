@@ -201,4 +201,10 @@ class CameraRecognitionViewModel : BaseViewModel() {
             navigate(CameraRecognitionFragmentDirections.cameraToSearch())
         }
     }
+
+    fun navigateToFoodCreator() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.cameraToFoodCreator())
+        }
+    }
 }

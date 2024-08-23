@@ -189,6 +189,16 @@
     <string name="custom_foods">Custom Foods</string>
     <string name="recipes">Recipes</string>
     <string name="edit_image"><u>Edit Image</u></string>
+    <string name="scanning_barcode">Scanning...\nPlace your barcode within the frame</string>
+    <string name="barcode_in_system">Barcode In System</string>
+    <string name="barcode_in_system_info">This barcode matches an existing item in our database. You can use the data from the database, or continue with creating a custom food.</string>
+    <string name="view_existing_item">View Existing Item</string>
+    <string name="create_custom_food_anyway">Create Custom Food Anyway</string>
+    <string name="custom_food_already_exists">Custom Food Already Exists</string>
+    <string name="custom_food_already_exists_info">This barcode matches an existing item in your custom food list. You can use the existing item, or create a new food without the barcode.</string>
+    <string name="create_custom_food_without_barcode">Create Custom Food Without Barcode</string>
+    <string name="other_nutrition_facts">Other Nutrition Facts</string>
+    <string name="create_new_food">Create New Food</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

@@ -195,6 +195,10 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     private val recognitionResultListener = object :
         RecognitionResultView.RecognitionResultListener {
 
+        override fun onCancelled() {
+            viewModel.navigateBack()
+        }
+
         override fun onLog(result: RecognitionResult) {
             viewModel.stopDetection()
             when (result) {
@@ -228,7 +232,8 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                 }
 
                 is RecognitionResult.NutritionFactRecognition -> {
-
+                    sharedViewModel.sendNutritionFactsToFoodCreator(result.nutritionFactsPair)
+                    viewModel.navigateToFoodCreator()
                 }
 
                 else -> {

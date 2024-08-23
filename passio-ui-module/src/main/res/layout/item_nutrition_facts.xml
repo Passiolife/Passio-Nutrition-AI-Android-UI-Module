@@ -8,15 +8,16 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/lblName"
         style="@style/TextProfile"
-        tools:text="@string/weight"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Label Name" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/lblValue"
         style="@style/EditTextProfile"
         android:hint="@string/value_txt"
-        android:inputType="text"
+        android:inputType="numberDecimal"
+        android:maxLength="5"
         app:layout_constraintBottom_toBottomOf="@id/lblName"
         app:layout_constraintEnd_toStartOf="@id/ivRemove"
         app:layout_constraintTop_toTopOf="@id/lblName" />
@@ -39,6 +40,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/lblValue"
         app:srcCompat="@drawable/ic_remove_item"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

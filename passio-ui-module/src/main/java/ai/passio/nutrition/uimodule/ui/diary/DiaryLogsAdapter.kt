@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.databinding.FoodLogBodyLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -41,7 +42,7 @@ class DiaryLogsAdapter(
 
         fun bindTo(foodRecord: FoodRecord, position: Int) {
             with(binding) {
-                image.loadPassioIcon(foodRecord.iconId)
+                image.loadFoodImage(foodRecord)
                 name.text = foodRecord.name.capitalized()
                 val cal = foodRecord.nutrientsSelectedSize().calories()?.value?.roundToInt() ?: 0
                 calories.text = "$cal cal"

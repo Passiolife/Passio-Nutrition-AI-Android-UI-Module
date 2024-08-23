@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -269,7 +270,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         servingUnitAdapter.setDropDownViewResource(R.layout.serving_unit_item)
 
         with(binding) {
-            foodImage.loadPassioIcon(foodRecord.iconId)
+            foodImage.loadFoodImage(foodRecord)
             foodName.text = foodRecord.name.capitalized()
             if (!foodRecord.name.equals(foodRecord.additionalData, true)) {
                 infoName.text = foodRecord.additionalData.capitalized()
