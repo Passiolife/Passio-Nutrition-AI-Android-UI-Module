@@ -15,119 +15,181 @@
         android:background="@color/passio_white"
         android:elevation="4dp" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rc_8_white"
-            android:elevation="4dp"
-            android:padding="8dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/lbsMyUnits"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/units_for_my_profile"
-                android:textColor="@color/passio_gray900"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/lblLength"
-                style="@style/TextProfile"
-                android:text="@string/length"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lbsMyUnits" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/length"
-                style="@style/SpinnerTextProfile"
-                app:layout_constraintBottom_toBottomOf="@id/lblLength"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/lblLength" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/lblWeight"
-                style="@style/TextProfile"
-                android:text="@string/weight_txt"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/length" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/weight"
-                style="@style/SpinnerTextProfile"
-                app:layout_constraintBottom_toBottomOf="@id/lblWeight"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/lblWeight" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/rc_8_white"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/lblReminders"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reminders"
-                android:textColor="@color/passio_gray900"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/breakfast"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:checked="false"
-                android:text="@string/_8_am_breakfast"
-                android:textColor="@color/passio_gray500"
-                android:textSize="14sp"
-                app:thumbTint="@color/passio_white"
-                app:trackTint="@color/passio_gray300" />
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rc_8_white"
+                android:elevation="4dp"
+                android:padding="8dp">
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/lunch"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lbsMyUnits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/units_for_my_profile"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblLength"
+                    style="@style/TextProfile"
+                    android:text="@string/length"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lbsMyUnits" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/length"
+                    style="@style/SpinnerTextProfile"
+                    app:layout_constraintBottom_toBottomOf="@id/lblLength"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/lblLength" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblWeight"
+                    style="@style/TextProfile"
+                    android:text="@string/weight_txt"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/length" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/weight"
+                    style="@style/SpinnerTextProfile"
+                    app:layout_constraintBottom_toBottomOf="@id/lblWeight"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/lblWeight" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/_12_pm_lunch"
-                android:textColor="@color/passio_gray500"
-                android:textSize="14sp"
-                app:thumbTint="@color/passio_white"
-                app:trackTint="@color/passio_gray300" />
+                android:layout_margin="16dp"
+                android:background="@drawable/rc_8_white"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/dinner"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblReminders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reminders"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/breakfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/_8_am_breakfast"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="14sp"
+                    app:thumbTint="@color/passio_white"
+                    app:trackTint="@color/passio_gray300" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/lunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="@string/_12_pm_lunch"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="14sp"
+                    app:thumbTint="@color/passio_white"
+                    app:trackTint="@color/passio_gray300" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/dinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="@string/_5_pm_dinner"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="14sp"
+                    app:thumbTint="@color/passio_white"
+                    app:trackTint="@color/passio_gray300" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/_5_pm_dinner"
-                android:textColor="@color/passio_gray500"
-                android:textSize="14sp"
-                app:thumbTint="@color/passio_white"
-                app:trackTint="@color/passio_gray300" />
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/rc_8_white"
+                android:elevation="4dp"
+                android:padding="16dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/lblLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/food_language"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/languageGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lblLanguage">
+
+                    <RadioButton
+                        android:id="@+id/radioEnglish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="English" />
+
+                    <RadioButton
+                        android:id="@+id/radioGerman"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="German" />
+
+                    <RadioButton
+                        android:id="@+id/radioFrench"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="French" />
+
+                    <RadioButton
+                        android:id="@+id/radioSpanish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Spanish" />
+
+                </RadioGroup>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

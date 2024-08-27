@@ -14,7 +14,9 @@ import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.profile.LengthUnit
 import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
 import ai.passio.nutrition.uimodule.ui.util.toast
+import ai.passio.passiosdk.passiofood.PassioSDK
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 
@@ -74,6 +76,19 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
                 }
                 if (checkbox.isPressed) {
                     viewModel.updateBreakfastReminder(isChecked)
+                }
+            }
+            languageGroup.check(R.id.radioEnglish)
+            languageGroup.setOnCheckedChangeListener { _, checkedId ->
+                val success = when (checkedId) {
+                    R.id.radioEnglish -> PassioSDK.instance.changeLanguage("en")
+                    R.id.radioGerman -> PassioSDK.instance.changeLanguage("de")
+                    R.id.radioFrench -> PassioSDK.instance.changeLanguage("fr")
+                    R.id.radioSpanish -> PassioSDK.instance.changeLanguage("es")
+                    else -> throw IllegalStateException("No known radio id: $checkedId")
+                }
+                if (success) {
+                    Toast.makeText(requireContext(), "SDK Language Changed!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
