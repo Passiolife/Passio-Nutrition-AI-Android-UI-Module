@@ -7,13 +7,17 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
+import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
+import ai.passio.passiosdk.passiofood.PackagedFoodCode
 import ai.passio.passiosdk.passiofood.PassioID
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CameraRecognitionViewModel : BaseViewModel() {
@@ -25,6 +29,13 @@ class CameraRecognitionViewModel : BaseViewModel() {
     val showLoading = SingleLiveEvent<Boolean>()
     private var scanMode: ScanMode = ScanMode.VISUAL
     val scanModeEvent = MutableLiveData<ScanMode>()
+
+    private var cameraZoomLevel: Float = 1f
+    private var cameraZoomLevelMin: Float? = null
+    private var cameraZoomLevelMax: Float? = null
+    val cameraZoomLevelRangeEvent = SingleLiveEvent<Triple<Float, Float?, Float?>>()
+    private var isCameraFlashOn = false
+    val cameraFlashToggleEvent = SingleLiveEvent<Boolean>()
 
     fun setFoodScanMode(scanMode: ScanMode) {
         this.scanMode = scanMode
@@ -40,63 +51,109 @@ class CameraRecognitionViewModel : BaseViewModel() {
     fun startOrUpdateDetection() {
         viewModelScope.launch {
             recognitionResults.postValue(RecognitionResult.NoRecognition)
-            val config =
-                when (scanMode) {
-                    ScanMode.BARCODE -> {
-                        FoodDetectionConfiguration(
-                            detectBarcodes = true,
-                            detectPackagedFood = false,
-                            detectVisual = false
-                        )
-                    }
-
-                    ScanMode.NUTRITION_FACTS -> {
-                        //TODO later we will do this, current set it as default
-                        FoodDetectionConfiguration()
-                    }
-
-                    else -> { // default ScanMode.VISUAL
-                        FoodDetectionConfiguration(
-                            detectBarcodes = false,
-                            detectPackagedFood = false,
-                            detectVisual = true
-                        )
-                    }
+            when (scanMode) {
+                ScanMode.BARCODE -> {
+                    setCameraZoomLevel(2f) //default 2f for barcode scanning
+                    val config = FoodDetectionConfiguration(
+                        detectBarcodes = true,
+                        detectPackagedFood = false,
+                        detectVisual = false
+                    )
+                    recognitionFlow(config)
                 }
-            cameraUseCase.recognitionFlow(config).collect { recognitionResult ->
-                if (recognitionResult == RecognitionResult.NoRecognition) {
-                    if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
-                        recognitionResults.postValue(RecognitionResult.NoRecognition)
-                    }
-                } else {
-                    lastNoScanDetected = System.currentTimeMillis()
-                    recognitionResults.postValue(recognitionResult)
+
+                ScanMode.NUTRITION_FACTS -> {
+                    recognitionNutritionFactsFlow()
                 }
+
+                ScanMode.VISUAL -> { // default ScanMode.VISUAL
+                    val config = FoodDetectionConfiguration(
+                        detectBarcodes = false,
+                        detectPackagedFood = true,
+                        detectVisual = true
+                    )
+                    recognitionFlow(config)
+                }
+            }
+
+        }
+    }
+
+    private suspend fun recognitionFlow(config: FoodDetectionConfiguration) {
+        cameraUseCase.recognitionFlow(config).collect { recognitionResult ->
+            if (recognitionResult == RecognitionResult.NoRecognition) {
+                if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
+                    recognitionResults.postValue(RecognitionResult.NoRecognition)
+                }
+            } else {
+                lastNoScanDetected = System.currentTimeMillis()
+                recognitionResults.postValue(recognitionResult)
             }
         }
     }
 
+    private suspend fun recognitionNutritionFactsFlow() {
+        cameraUseCase.nutritionFactsFlow().collect { recognitionResult ->
+            if (recognitionResult == RecognitionResult.NoRecognition) {
+                if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
+                    recognitionResults.postValue(RecognitionResult.NoRecognition)
+                }
+            } else {
+                lastNoScanDetected = System.currentTimeMillis()
+                recognitionResults.postValue(recognitionResult)
+            }
+        }
+    }
+
+    fun toggleCameraFlash() {
+        isCameraFlashOn = !isCameraFlashOn
+        PassioSDK.instance.enableFlashlight(isCameraFlashOn)
+        cameraFlashToggleEvent.postValue(isCameraFlashOn)
+    }
 
     fun startRecognitionSession(cameraViewProvider: PassioCameraViewProvider) {
-        PassioSDK.instance.startCamera(cameraViewProvider)
-        startOrUpdateDetection()
+
+        viewModelScope.launch {
+            PassioSDK.instance.startCamera(
+                cameraViewProvider,
+                displayRotation = 0,
+                cameraFacing = CameraSelector.LENS_FACING_BACK,
+                tapToFocus = true
+            )
+            isCameraFlashOn = false
+            startOrUpdateDetection()
+            cameraFlashToggleEvent.postValue(isCameraFlashOn)
+            delay(1000)
+            cameraZoomLevelMin = PassioSDK.instance.getMinMaxCameraZoomLevel().first
+            cameraZoomLevelMax = PassioSDK.instance.getMinMaxCameraZoomLevel().second
+
+            setCameraZoomLevel(cameraZoomLevel)
+        }
+    }
+
+    fun setCameraZoomLevel(zoomLevel: Float) {
+        if (cameraZoomLevelMin != null && cameraZoomLevelMax != null) {
+            cameraZoomLevel = zoomLevel
+            PassioSDK.instance.setCameraZoomLevel(zoomLevel)
+            cameraZoomLevelRangeEvent.postValue(
+                Triple(cameraZoomLevel, cameraZoomLevelMin, cameraZoomLevelMax)
+            )
+        }
     }
 
     fun stopRecognitionSession() {
         PassioSDK.instance.stopCamera()
     }
 
-    fun logFood(foodItem: PassioFoodItem) {
+    fun logFoodRecord(foodRecord: FoodRecord) {
         viewModelScope.launch {
+            showLoading.postValue(true)
             logFoodEvent.postValue(
                 ResultWrapper.Success(
-                    cameraUseCase.logFoodRecord(
-                        FoodRecord(
-                            foodItem
-                        )
-                    )
+                    cameraUseCase.logFoodRecord(foodRecord)
                 )
             )
+            showLoading.postValue(false)
         }
     }
 
@@ -105,20 +162,11 @@ class CameraRecognitionViewModel : BaseViewModel() {
             showLoading.postValue(true)
             val foodItem = cameraUseCase.fetchFoodItemForPassioID(passioID)
             if (foodItem != null) {
-                logFoodEvent.postValue(
-                    ResultWrapper.Success(
-                        cameraUseCase.logFoodRecord(
-                            FoodRecord(
-                                foodItem
-                            )
-                        )
-                    )
-                )
+                logFoodRecord(FoodRecord(foodItem))
             } else {
                 logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: $passioID"))
             }
             showLoading.postValue(false)
-
         }
     }
 
@@ -145,6 +193,12 @@ class CameraRecognitionViewModel : BaseViewModel() {
     fun navigateToDiary() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(CameraRecognitionFragmentDirections.cameraToDiary())
+        }
+    }
+
+    fun navigateToSearch() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.cameraToSearch())
         }
     }
 }

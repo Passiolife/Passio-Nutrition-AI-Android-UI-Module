@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.menu.AddFoodAdapter
-import ai.passio.nutrition.uimodule.ui.menu.AddFoodFragmentDirections
 import ai.passio.nutrition.uimodule.ui.menu.AddFoodOption
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
@@ -54,6 +53,10 @@ class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
             addFoodList.adapter = adapter
 
             buttonClose.setOnClickListener {
+                viewModel.navigateBack()
+            }
+
+            root.setOnClickListener {
                 viewModel.navigateBack()
             }
         }

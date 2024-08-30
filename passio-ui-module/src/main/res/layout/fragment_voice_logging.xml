@@ -100,6 +100,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.90" />
 
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.26"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/voiceQuery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_rounded_corner_indio50"
+            android:gravity="start"
+            android:padding="16dp"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            tools:text="I had scrambled egg whites, turkey bacon, whole grain toast, and a black coffee for breakfast" />
+    </FrameLayout>
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/resultContainer"
         android:layout_width="0dp"
@@ -110,28 +133,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:context=".ui.progress.ProgressFragment">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/voiceQuery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_rounded_corner_indio50"
-                android:gravity="start"
-                android:padding="16dp"
-                android:textColor="@color/gray"
-                android:textSize="14sp"
-                tools:text="I had scrambled egg whites, turkey bacon, whole grain toast, and a black coffee for breakfast" />
-        </FrameLayout>
 
 
         <androidx.appcompat.widget.LinearLayoutCompat

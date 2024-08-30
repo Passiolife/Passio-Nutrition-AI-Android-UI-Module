@@ -9,11 +9,12 @@ import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.ProgressDialog
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
-import ai.passio.passiosdk.passiofood.DetectedCandidate
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -31,6 +32,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.warkiz.tickseekbar.OnSeekChangeListener
+import com.warkiz.tickseekbar.SeekParams
+import com.warkiz.tickseekbar.TickSeekBar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -58,6 +62,10 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         viewModel.scanModeEvent.observe(viewLifecycleOwner, ::scanModeUpdated)
         viewModel.foodItemResult.observe(viewLifecycleOwner, ::editFoodItem)
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.cameraZoomLevelRangeEvent.observe(viewLifecycleOwner, ::setupCameraZoomMode)
+        viewModel.cameraFlashToggleEvent.observe(viewLifecycleOwner) { isON ->
+            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else R.drawable.ic_camera_flash_off)
+        }
         viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
@@ -84,7 +92,41 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
             // Permission is already granted
             cameraPermissionGranted()
         }
+
+        binding.cameraFlash.setOnClickListener {
+            viewModel.toggleCameraFlash()
+        }
+
+        binding.cameraZoomLevel.onSeekChangeListener = object : OnSeekChangeListener {
+            override fun onSeeking(seekParams: SeekParams?) {
+                if (seekParams != null && seekParams.fromUser) {
+                    viewModel.setCameraZoomLevel(seekParams.progressFloat)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: TickSeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: TickSeekBar?) {
+            }
+
+        }
+
     }
+
+    private fun setupCameraZoomMode(zoomLevel: Triple<Float, Float?, Float?>) {
+        with(binding) {
+            if (zoomLevel.second == null || zoomLevel.third == null) {
+                cameraZoomLevel.visibility = View.GONE
+            } else {
+                cameraZoomLevel.visibility = View.VISIBLE
+                cameraZoomLevel.min = zoomLevel.second!!
+                cameraZoomLevel.max = zoomLevel.third!!
+                cameraZoomLevel.setProgress(zoomLevel.first)
+            }
+        }
+    }
+
 
     private fun initOnClickCallback() {
         with(binding)
@@ -131,8 +173,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
         when (resultWrapper) {
             is ResultWrapper.Success -> {
-                sharedViewModel.editFoodRecord(FoodRecord(resultWrapper.value))
-                viewModel.navigateToEdit()
+                editFoodRecord(FoodRecord(resultWrapper.value))
             }
 
             is ResultWrapper.Error -> {
@@ -146,53 +187,59 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         }
     }
 
+    private fun editFoodRecord(foodRecord: FoodRecord) {
+        sharedViewModel.editFoodRecord(foodRecord)
+        viewModel.navigateToEdit()
+    }
+
     private val recognitionResultListener = object :
         RecognitionResultView.RecognitionResultListener {
-        override fun onLogVisual(detectedCandidate: DetectedCandidate) {
+
+        override fun onLog(result: RecognitionResult) {
             viewModel.stopDetection()
-            with(binding) {
-                viewModel.logFood(detectedCandidate.passioID)
-                /*recognitionResult.visibility = View.GONE
-                scanningMessage.visibility = View.GONE
-                viewAddedToDiary.visibility = View.VISIBLE
-                recognitionResult.reset()*/
+            when (result) {
+                is RecognitionResult.VisualRecognition -> {
+                    viewModel.logFood(result.visualCandidate.passioID)
+                }
+
+                is RecognitionResult.FoodRecordRecognition -> {
+                    viewModel.logFoodRecord(result.foodItem)
+                }
+
+                is RecognitionResult.NutritionFactRecognition -> {
+
+                }
+
+                else -> {
+
+                }
             }
         }
 
-        override fun onEditVisual(detectedCandidate: DetectedCandidate) {
+        override fun onEdit(result: RecognitionResult) {
             viewModel.stopDetection()
-            with(binding) {
-//                recognitionResult.visibility = View.GONE
-//                scanningMessage.visibility = View.GONE
-//                viewAddedToDiary.visibility = View.VISIBLE
-//                recognitionResult.reset()
+            when (result) {
+                is RecognitionResult.VisualRecognition -> {
+                    viewModel.fetchFoodItemToEdit(result.visualCandidate.passioID)
+                }
 
-                viewModel.fetchFoodItemToEdit(detectedCandidate.passioID)
+                is RecognitionResult.FoodRecordRecognition -> {
+                    editFoodRecord(result.foodItem)
+                }
+
+                is RecognitionResult.NutritionFactRecognition -> {
+
+                }
+
+                else -> {
+
+                }
             }
         }
 
-        override fun onEditProduct(result: RecognitionResult.ProductRecognition) {
-            viewModel.stopDetection()
-            with(binding) {
-//                recognitionResult.visibility = View.GONE
-//                scanningMessage.visibility = View.GONE
-//                viewAddedToDiary.visibility = View.VISIBLE
-//                recognitionResult.reset()
-                editFoodItem(ResultWrapper.Success(result.foodItem))
-            }
+        override fun onSearchTapped() {
+            viewModel.navigateToSearch()
         }
-
-        override fun onLogProduct(result: RecognitionResult.ProductRecognition) {
-            viewModel.stopDetection()
-            with(binding) {
-                viewModel.logFood(result.foodItem)
-                /*recognitionResult.visibility = View.GONE
-                scanningMessage.visibility = View.GONE
-                viewAddedToDiary.visibility = View.VISIBLE
-                recognitionResult.reset()*/
-            }
-        }
-
     }
 
     private val bottomSheetCallback = object : BottomSheetCallback() {
@@ -223,6 +270,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun scanModeUpdated(scanMode: ScanMode) {
         when (scanMode) {
             ScanMode.VISUAL -> {
@@ -355,12 +403,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.recognitionResult.reset()
                 }
 
-                is RecognitionResult.ProductRecognition -> {
+                is RecognitionResult.FoodRecordRecognition -> {
                     it.viewAddedToDiary.visibility = View.GONE
                     it.recognitionResult.visibility = View.VISIBLE
                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showProductResult(result)
+                    it.recognitionResult.showFoodRecordRecognition(result)
                 }
 
                 is RecognitionResult.VisualRecognition -> {
@@ -369,6 +417,14 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.scanningMessage.visibility = View.GONE
 
                     it.recognitionResult.showVisualResult(result)
+                }
+
+                is RecognitionResult.NutritionFactRecognition -> {
+                    it.viewAddedToDiary.visibility = View.GONE
+                    it.recognitionResult.visibility = View.VISIBLE
+                    it.scanningMessage.visibility = View.GONE
+
+                    it.recognitionResult.showNutritionFactsResult(result)
                 }
             }
         }

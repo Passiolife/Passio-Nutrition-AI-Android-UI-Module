@@ -298,7 +298,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
                 rvResult.adapter = SpeechRecognitionAdapter(::foodItemSelection)
             }
             val adapter = (rvResult.adapter as SpeechRecognitionAdapter)
-            adapter.addData(passioRecognitionResult)
+            adapter.addData(passioRecognitionResult, passioRecognitionResult.indices.toList())
             if (passioRecognitionResult.isEmpty()) {
                 clearSelected.visibility = View.GONE
                 noResult.visibility = View.VISIBLE
@@ -324,6 +324,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
         {
             when (voiceLoggingState) {
                 VoiceLoggingState.START_LISTENING -> {
+                    binding.voiceQuery.text = ""
                     groupStartListening.visibility = View.VISIBLE
                     groupStopListening.visibility = View.GONE
                     resultContainer.visibility = View.GONE
