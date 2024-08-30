@@ -1,17 +1,16 @@
 package ai.passio.nutrition.uimodule.ui.foodcreator
 
-import ai.passio.nutrition.uimodule.domain.camera.CameraUseCase
-import ai.passio.nutrition.uimodule.domain.camera.RecognitionResult
+import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
+import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.PassioSDK
 import androidx.camera.core.CameraSelector
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
@@ -25,57 +24,38 @@ enum class ScanBarcodeStatus {
 
 class ScanBarcodeViewModel : BaseViewModel() {
 
-    private val cameraUseCase = CameraUseCase
+    private val useCase = CustomFoodUseCase
 
     private var scanBarcodeStatus: ScanBarcodeStatus = ScanBarcodeStatus.SCANNING
     private val _scanBarcodeStatusEvent = SingleLiveEvent<ScanBarcodeStatus>()
     val scanBarcodeStatusEvent: LiveData<ScanBarcodeStatus> = _scanBarcodeStatusEvent
 
-    private var foodRecord: FoodRecord? = null
+    //    private var foodRecord: FoodRecord? = null
+    private var barcode: Barcode? = null
+
+    var existingSystemItem: FoodRecord? = null
+    var existingCustomFood: FoodRecord? = null
 
     private fun stopDetection() {
-        cameraUseCase.stopFoodDetection()
+        useCase.stopFoodDetection()
     }
 
-    private var lastNoScanDetected = System.currentTimeMillis()
-    private fun startOrUpdateDetection() {
-        viewModelScope.launch {
-            val config = FoodDetectionConfiguration(
-                detectBarcodes = true,
-                detectPackagedFood = false,
-                detectVisual = false
-            )
-            recognitionFlow(config)
+    private val config = FoodDetectionConfiguration(
+        detectBarcodes = true,
+        detectPackagedFood = false,
+        detectVisual = false
+    )
 
-        }
-    }
-
-    private suspend fun recognitionFlow(config: FoodDetectionConfiguration) {
+    private suspend fun recognitionFlow() {
         scanBarcodeStatus = ScanBarcodeStatus.SCANNING
         _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
-        cameraUseCase.recognitionFlow(config).collect { recognitionResult ->
-
-            if (recognitionResult is RecognitionResult.FoodRecordRecognition && recognitionResult.foodItem.barcode.isValid()) {
+        useCase.recognitionBarcode(config).collect { recognitionResult ->
+            val barcodeCandidate = recognitionResult?.barcodeCandidates?.firstOrNull()
+            if (barcodeCandidate != null && barcodeCandidate.barcode.isValid()) {
                 stopDetection()
-                foodRecord = recognitionResult.foodItem
-                scanBarcodeStatus = ScanBarcodeStatus.NEW_BARCODE
+                barcode = barcodeCandidate.barcode
                 validateBarcode()
             }
-
-            /*if (recognitionResult == RecognitionResult.NoRecognition) {
-                if (System.currentTimeMillis() - lastNoScanDetected > 5000) {
-                    scanBarcodeStatus = ScanBarcodeStatus.NOT_FOUND
-                    _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
-                }
-            } else {
-                lastNoScanDetected = System.currentTimeMillis()
-                if (recognitionResult is RecognitionResult.FoodRecordRecognition && recognitionResult.foodItem.barcode.isValid()) {
-                    stopDetection()
-                    foodRecord = recognitionResult.foodItem
-                    scanBarcodeStatus = ScanBarcodeStatus.BARCODE_IN_SYSTEM //NEW_BARCODE
-                    validateBarcode()
-                }
-            }*/
         }
     }
 
@@ -89,7 +69,7 @@ class ScanBarcodeViewModel : BaseViewModel() {
                 cameraFacing = CameraSelector.LENS_FACING_BACK,
                 tapToFocus = true
             )
-            startOrUpdateDetection()
+            recognitionFlow()
         }
     }
 
@@ -99,16 +79,36 @@ class ScanBarcodeViewModel : BaseViewModel() {
     }
 
     private fun validateBarcode() {
-        _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+        viewModelScope.launch {
+            if (!barcode.isValid()) {
+                ScanBarcodeStatus.NOT_FOUND
+                _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+                return@launch
+            }
+            existingCustomFood = useCase.fetchFoodFromCustomFoods(barcode!!)
+            if (existingCustomFood != null) {
+                scanBarcodeStatus = ScanBarcodeStatus.CUSTOM_FOOD_ALREADY_EXIST
+                _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+                return@launch
+            }
+            existingSystemItem = useCase.fetchFoodItemForProduct(barcode!!)
+            if (existingSystemItem != null) {
+                scanBarcodeStatus = ScanBarcodeStatus.BARCODE_IN_SYSTEM
+                _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+                return@launch
+            }
+            scanBarcodeStatus = ScanBarcodeStatus.NEW_BARCODE
+            _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+        }
     }
 
-    fun geBarcode(): String {
-        return foodRecord?.barcode ?: ""
+    fun geBarcode(): Barcode {
+        return barcode ?: ""
     }
 
-
-    fun getFoodRecord(): FoodRecord? {
-        return foodRecord
+    fun navigateToFoodDetails()
+    {
+        navigate(ScanBarcodeFragmentDirections.scanBarcodeToEdit())
     }
 
 }

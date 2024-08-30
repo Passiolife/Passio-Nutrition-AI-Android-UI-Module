@@ -283,4 +283,18 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     override suspend fun fetchCustomFoods(): List<FoodRecord> {
         return customFoods
     }
+
+    override suspend fun deleteCustomFood(uuid: String): Boolean {
+        val indexToRemove = customFoods.indexOfFirst { it.uuid == uuid }
+        if (indexToRemove != -1) {
+            customFoods.removeAt(indexToRemove)
+        }
+        val json = customFoods.map { gson.toJson(it) }
+        sharedPreferences.saveCustomFoods(json)
+        return true
+    }
+
+    override suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
+        return customFoods.find { it.barcode == barcode }
+    }
 }

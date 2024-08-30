@@ -43,6 +43,7 @@ open class FoodRecord() {
     var openFoodLicense: String? = null
     var barcode: Barcode? = null
     var packagedFoodCode: PackagedFoodCode? = null
+    internal var referenceNutrients: PassioNutrients? = null
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
@@ -99,6 +100,57 @@ open class FoodRecord() {
         selectedUnit = gramUnitName //foodItem.amount.selectedUnit
         selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
         ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
+    }
+
+    fun editCustomFood(
+        productName: String,
+        brandName: String,
+        barcode: String?,
+        servingWeight: Double,
+        servingUnit: String,
+        weightInGrams: Double,
+        weightInGramsUnit: String,
+        passioNutrients: PassioNutrients,
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
+        foodImagePath: String? = null
+    ): FoodRecord {
+        this.name = productName
+        this.additionalData = brandName
+        this.barcode = barcode
+        this.passioIDEntityType = passioIDEntityType.value
+        this.foodImagePath = foodImagePath
+
+        val gramUnit =
+            if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
+        val gramUnitName = if (weightInGramsUnit.equals(
+                Milliliters.symbol,
+                true
+            )
+        ) Milliliters.symbol else Grams.unitName
+//        iconId = foodItem.iconId
+
+        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
+                Grams.symbol,
+                true
+            ) || servingUnit.equals(Milliliters.symbol, true))
+        ) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
+        servingSizes.add(PassioServingSize(servingWeight, servingUnit))
+
+
+        servingUnits.add(
+            PassioServingUnit(
+                servingUnit,
+                UnitMass(Grams, weightInGrams / servingWeight)
+            )
+        )
+        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
+        return this
     }
 
     constructor(
@@ -237,7 +289,11 @@ open class FoodRecord() {
 
         selectedUnit = unit
 
-        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true) || selectedUnit.equals(Milliliters.symbol, true)) {
+        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true) || selectedUnit.equals(
+                Milliliters.symbol,
+                true
+            )
+        ) {
             100.0
         } else {
             1.0
@@ -334,4 +390,13 @@ fun FoodRecord.copy(): FoodRecord {
     val gson = GsonBuilder().create()
     return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
         .apply { uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT) }
+}
+
+fun FoodRecord.newCustomFood(): FoodRecord {
+    val gson = GsonBuilder().create()
+    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+        .apply {
+            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        }
 }

@@ -8,6 +8,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
+import ai.passio.passiosdk.passiofood.Barcode
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -66,20 +67,14 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
             cancel.setOnClickListener {
                 viewModel.navigateBack()
             }
-            viewItem.setOnClickListener {
 
-            }
-
-            createFood.setOnClickListener {
-                sendResult(viewModel.getFoodRecord())
-            }
 
         }
     }
 
 
-    private fun sendResult(foodRecord: FoodRecord?) {
-        sharedViewModel.sendBarcodeScanResult(foodRecord)
+    private fun sendResult(barcode: Barcode) {
+        sharedViewModel.sendBarcodeScanResult(barcode)
         viewModel.navigateBack()
     }
 
@@ -187,29 +182,54 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
     override fun requestPreviewView(): PreviewView = binding.cameraPreview
 
     private fun onRecognitionResult(result: ScanBarcodeStatus) {
-        binding.let {
+        with(binding) {
+            viewItem.setOnClickListener {
+            }
+            createFood.setOnClickListener {
+            }
             when (result) {
                 ScanBarcodeStatus.SCANNING -> {
-                    it.viewResult.visibility = View.GONE
-                    it.scanningMessage.visibility = View.VISIBLE
+                    viewResult.visibility = View.GONE
+                    scanningMessage.visibility = View.VISIBLE
                 }
 
                 ScanBarcodeStatus.NEW_BARCODE -> {
-                    it.viewResult.visibility = View.GONE
-                    it.scanningMessage.visibility = View.GONE
-                    sendResult(viewModel.getFoodRecord())
+                    viewResult.visibility = View.GONE
+                    scanningMessage.visibility = View.GONE
+                    sendResult(viewModel.geBarcode())
                 }
 
                 ScanBarcodeStatus.BARCODE_IN_SYSTEM -> {
-                    it.viewResult.visibility = View.VISIBLE
-                    it.scanningMessage.visibility = View.GONE
+                    viewResult.visibility = View.VISIBLE
+                    scanningMessage.visibility = View.GONE
                     showBarcodeInSystemView()
+                    viewItem.setOnClickListener {
+                        viewModel.existingSystemItem?.let {
+                            sharedViewModel.editFoodRecord(it)
+                            viewModel.navigateToFoodDetails()
+                        }
+                    }
+                    createFood.setOnClickListener {
+                        sendResult(viewModel.geBarcode())
+                        viewModel.navigateBack()
+                    }
                 }
 
                 ScanBarcodeStatus.CUSTOM_FOOD_ALREADY_EXIST -> {
-                    it.viewResult.visibility = View.VISIBLE
-                    it.scanningMessage.visibility = View.GONE
+                    viewResult.visibility = View.VISIBLE
+                    scanningMessage.visibility = View.GONE
                     showCustomFoodAlreadyExistView()
+                    viewItem.setOnClickListener {
+                        viewModel.existingCustomFood?.let {
+                            sharedViewModel.editFoodRecord(it)
+                            viewModel.navigateToFoodDetails()
+                        }
+                    }
+
+                    createFood.setOnClickListener {
+                        sendResult("")
+                        viewModel.navigateBack()
+                    }
                 }
 
                 ScanBarcodeStatus.NOT_FOUND -> {

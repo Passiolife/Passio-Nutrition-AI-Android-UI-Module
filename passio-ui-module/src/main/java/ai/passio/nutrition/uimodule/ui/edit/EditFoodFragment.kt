@@ -7,12 +7,13 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.model.copy
+import ai.passio.nutrition.uimodule.ui.model.newCustomFood
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
-import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
@@ -216,7 +217,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     private fun setupToolbar() {
         binding.toolbar.apply {
             setup(getString(R.string.edit), toolbarListener)
-            setRightIcon(R.drawable.icon_switch)
+            setRightIcon(R.drawable.ic_edit)
             hideRightIcon()
         }
     }
@@ -227,7 +228,24 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
 
         override fun onRightIconClicked() {
-
+            val foodRecord = viewModel.getFoodRecord()
+            if (foodRecord.isCustomFood()) {
+//                sharedViewModel.editCustomFood(foodRecord.copy())
+                sharedViewModel.editCustomFood(foodRecord)
+                viewModel.navigateToFoodCreator()
+            } else {
+                CreateUserFoodDialog(viewModel.isEditMode(), object : OnCreateFoodListener {
+                    override fun onCreateFood(isUpdateLog: Boolean) {
+                        sharedViewModel.editCustomFood(foodRecord)
+                        if (isUpdateLog) {
+                            sharedViewModel.editCustomFood(foodRecord)
+                        } else {
+                            sharedViewModel.editCustomFood(foodRecord.newCustomFood())
+                        }
+                        viewModel.navigateToFoodCreator()
+                    }
+                }).show(childFragmentManager, "CreateUserFoodDialog")
+            }
         }
 
     }
@@ -283,6 +301,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun renderFoodRecord(model: EditFoodModel) {
+        setupEditOption(model.foodRecord)
         setupImmutableProperties(model.foodRecord!!)
         renderNutrients(model.foodRecord)
         renderServingSize(model.foodRecord)
@@ -291,6 +310,14 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             renderIngredients(model.foodRecord)
         } else {
             hideSecondaryViews()
+        }
+    }
+
+    private fun setupEditOption(foodRecord: FoodRecord?) {
+        if (foodRecord != null && foodRecord.ingredients.size <= 1) {
+            binding.toolbar.showRightIcon()
+        } else {
+            binding.toolbar.hideRightIcon()
         }
     }
 

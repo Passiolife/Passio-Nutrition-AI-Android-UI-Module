@@ -144,6 +144,10 @@
             app:destination="@id/nutrition_info" />
 
         <action
+            android:id="@+id/edit_to_food_creator"
+            app:destination="@id/food_creator" />
+
+        <action
             android:id="@+id/edit_to_search"
             app:destination="@id/search"
             app:launchSingleTop="true"
@@ -302,6 +306,9 @@
         tools:layout="@layout/fragment_scan_barcode">
 
 
+        <action
+            android:id="@+id/scan_barcode_to_edit"
+            app:destination="@id/edit" />
     </fragment>
 
     <fragment
@@ -325,6 +332,16 @@
         <action
             android:id="@+id/food_creator_to_scan_barcode"
             app:destination="@id/scan_barcode" />
+        <action
+            android:id="@+id/food_creator_to_my_foods"
+            app:destination="@id/my_foods"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+        <action
+            android:id="@+id/food_creator_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
     </fragment>
 
     <fragment

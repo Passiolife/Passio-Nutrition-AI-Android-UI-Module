@@ -9,17 +9,15 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import ai.passio.nutrition.uimodule.ui.profile.Gender
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerListener
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
+import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.saveBitmapToStorage
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
-import ai.passio.passiosdk.passiofood.data.measurement.KiloCalories
-import ai.passio.passiosdk.passiofood.data.measurement.Milligrams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
 import android.net.Uri
 import android.view.MenuItem
@@ -66,6 +64,9 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             }
             save.setOnClickListener {
                 viewModel.saveCustomFood()
+            }
+            cancel.setOnClickListener {
+                viewModel.navigateBack()
             }
 
             name.setupEditable { txt ->
@@ -224,9 +225,11 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
     private fun showPrefilledData(customFood: FoodRecord) {
         with(binding)
         {
+            ivThumb.loadFoodImage(customFood)
             name.setText(customFood.name)
             brand.setText(customFood.additionalData)
-            barcode.text = customFood.barcode ?: ""
+
+            viewModel.setBarcode(customFood.barcode ?: "")
 
             val gramSize =
                 customFood.servingSizes.find { it.unitName == Grams.unitName || it.unitName == Grams.symbol || it.unitName == Milliliters.symbol }
@@ -238,6 +241,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             otherSize?.let {
                 servingSize.setText(it.quantity.toString())
                 setupUnits(it.unitName)
+                viewModel.setServingUnit(it.unitName)
             }
 //            servingSize.setText(customFood.servingWeight().value.toString())
 //            setupUnits(customFood.servingWeight().unit.symbol)
@@ -270,8 +274,11 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         sharedViewModel.nutritionFactsPair.observe(viewLifecycleOwner) {
             viewModel.setDataFromNutritionFacts(it)
         }
-        sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) {
-            viewModel.setBarcode(it?.barcode ?: "")
+        sharedViewModel.editCustomFood.observe(viewLifecycleOwner) {
+            viewModel.setDataToEdit(it)
+        }
+        sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcode ->
+            viewModel.setBarcode(barcode)
         }
         viewModel.barcodeEvent.observe(viewLifecycleOwner) { barcode ->
             binding.barcode.text = barcode
@@ -287,6 +294,10 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
                     Milliliters.symbol,
                     true
                 ))
+            val index = viewModel.unitList.indexOfLast { it.lowercase() == servingUnit.lowercase() }
+            if (binding.units.selectedItemPosition != index) {
+                binding.units.setSelection(index)
+            }
         }
         viewModel.showMessageEvent.observe(viewLifecycleOwner) { message ->
             requireContext().toast(message)

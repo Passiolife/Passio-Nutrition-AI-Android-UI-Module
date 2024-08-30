@@ -199,6 +199,10 @@
     <string name="create_custom_food_without_barcode">Create Custom Food Without Barcode</string>
     <string name="other_nutrition_facts">Other Nutrition Facts</string>
     <string name="create_new_food">Create New Food</string>
+    <string name="create_user_food">Create User Food?</string>
+    <string name="create_a_user_food_from_this_food">You are about to create a user food from this food</string>
+    <string name="create">Create</string>
+    <string name="update_log_upon_creating">Update log upon creating?</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

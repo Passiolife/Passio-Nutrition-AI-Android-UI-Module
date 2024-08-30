@@ -240,5 +240,11 @@ class Repository private constructor() {
     suspend fun fetchCustomFoods(): List<FoodRecord> {
         return connector.fetchCustomFoods()
     }
+    suspend fun deleteCustomFood(uuid: String): Boolean {
+        return connector.deleteCustomFood(uuid)
+    }
+    suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
+        return connector.getCustomFoodUsingBarcode(barcode)
+    }
 
 }

@@ -1,5 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.customfoods
 
+import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentCustomFoodsBinding
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +11,10 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
-import ai.passio.nutrition.uimodule.ui.view.VerticalSpaceItemDecoration
+import ai.passio.nutrition.uimodule.ui.util.toast
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+import com.yanzhenjie.recyclerview.SwipeMenuItem
 
 class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
 
@@ -34,8 +39,59 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
             createFood.setOnClickListener {
                 viewModel.navigateToFoodCreator()
             }
-            rvFoods.addItemDecoration(VerticalSpaceItemDecoration(DesignUtils.dp2px(8f)))
+
             customFoodsAdapter = CustomFoodsAdapter(::onEdit, ::onLog)
+            rvFoods.adapter = null
+
+            rvFoods.setSwipeMenuCreator { leftMenu, rightMenu, position ->
+                val editItem = SwipeMenuItem(requireContext()).apply {
+                    text = getString(R.string.edit)
+                    setTextColor(Color.WHITE)
+                    setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.passio_primary
+                        )
+                    )
+                    width = DesignUtils.dp2px(80f)
+                    height = ViewGroup.LayoutParams.MATCH_PARENT
+                }
+                rightMenu.addMenuItem(editItem)
+                val deleteItem = SwipeMenuItem(requireContext()).apply {
+                    text = getString(R.string.delete)
+                    setTextColor(Color.WHITE)
+                    setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.passio_red500
+                        )
+                    )
+                    width = DesignUtils.dp2px(80f)
+                    height = ViewGroup.LayoutParams.MATCH_PARENT
+                }
+                rightMenu.addMenuItem(deleteItem)
+            }
+            rvFoods.setOnItemMenuClickListener { menuBridge, adapterPosition ->
+                menuBridge.closeMenu()
+                when (menuBridge.position) {
+                    0 -> {
+                        sharedViewModel.editCustomFood(
+                            customFoodsAdapter.getItem(
+                                adapterPosition
+                            )
+                        )
+                        viewModel.navigateToFoodCreator()
+                    }
+
+                    1 -> {
+                        //delete
+                        viewModel.deleteCustomFood(customFoodsAdapter.getItem(adapterPosition).uuid)
+                    }
+                }
+            }
+
+
+//            rvFoods.addItemDecoration(VerticalSpaceItemDecoration(DesignUtils.dp2px(8f)))
             rvFoods.adapter = customFoodsAdapter
         }
         viewModel.getCustomFoods()
@@ -46,15 +102,32 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
         viewModel.customFoodListEvent.observe(viewLifecycleOwner) {
             customFoodsAdapter.updateItems(it)
         }
+        viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
     }
 
     private fun onEdit(customFood: FoodRecord) {
-        sharedViewModel.editFoodRecord(customFood.copy())
+        sharedViewModel.editFoodRecord(customFood)
         viewModel.navigateToEditFood()
     }
 
     private fun onLog(customFood: FoodRecord) {
+        viewModel.logCustomFood(customFood)
+    }
 
+    private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                if (resultWrapper.value) {
+                    requireContext().toast("Logged food successfully.")
+                } else {
+                    requireContext().toast("Could not log food item.")
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
+            }
+        }
     }
 
 

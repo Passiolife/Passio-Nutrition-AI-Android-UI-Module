@@ -1,9 +1,14 @@
 package ai.passio.nutrition.uimodule.ui.util
 
+import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.markSwitchOn
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 
 object ViewEXT {
     fun View.enable() {
@@ -37,5 +42,42 @@ object ViewEXT {
             }
 
         })
+    }
+
+    fun SwitchCompat.setOnChangeListener(listened: OnCheckedChangeListener) {
+        if (this.isChecked)
+        {
+            this.markSwitchOn()
+        }
+        else{
+            this.markSwitchOff()
+        }
+        this.setOnCheckedChangeListener { view, isChecked ->
+            listened.onCheckedChanged(view, isChecked)
+            if (isChecked) {
+                this.markSwitchOn()
+            } else {
+                this.markSwitchOff()
+            }
+
+
+        }
+    }
+
+
+    fun SwitchCompat.markSwitchOn() {
+        val context = this.context
+        this.thumbTintList =
+            ContextCompat.getColorStateList(context, R.color.passio_primary)
+        this.trackTintList =
+            ContextCompat.getColorStateList(context, R.color.passio_primary40p)
+    }
+
+    fun SwitchCompat.markSwitchOff() {
+        val context = this.context
+        this.thumbTintList =
+            ContextCompat.getColorStateList(context, R.color.passio_white)
+        this.trackTintList =
+            ContextCompat.getColorStateList(context, R.color.passio_gray300)
     }
 }

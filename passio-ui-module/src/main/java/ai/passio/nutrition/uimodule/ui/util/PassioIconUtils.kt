@@ -8,13 +8,16 @@ import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import android.widget.ImageView
 import coil.load
+import coil.transform.CircleCropTransformation
 import java.io.File
 
 internal fun ImageView.loadFoodImage(
     foodRecord: FoodRecord
 ) {
     if (foodRecord.isCustomFood() && foodRecord.foodImagePath.isValid() && File(foodRecord.foodImagePath!!).exists()) {
-        this.load(foodRecord.foodImagePath)
+        this.load(foodRecord.foodImagePath) {
+            transformations(CircleCropTransformation())
+        }
         return
     }
     loadPassioIcon(foodRecord.iconId, PassioIDEntityType.fromString(foodRecord.passioIDEntityType))

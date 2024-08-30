@@ -11,6 +11,7 @@ interface PassioConnector {
     fun initialize()
 
     suspend fun updateRecord(foodRecord: FoodRecord): Boolean
+
     suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean
 
     suspend fun deleteRecord(foodRecord: FoodRecord): Boolean
@@ -47,5 +48,7 @@ interface PassioConnector {
     suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean
 
     suspend fun fetchCustomFoods(): List<FoodRecord>
+    suspend fun deleteCustomFood(uuid: String): Boolean
+    suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord?
 
 }

@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FIBERS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_IRON_ID
+import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_MAGNESIUM_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_POTASSIUM_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_PROTEIN_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_SAT_FAT_ID
@@ -38,6 +39,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FoodCreatorViewModel : BaseViewModel() {
@@ -82,6 +84,7 @@ class FoodCreatorViewModel : BaseViewModel() {
     val otherNutritionFactsAdded get() = otherNutritionFacts.filter { it.isAdded }
     val otherNutritionFactsNotAdded get() = otherNutritionFacts.filter { !it.isAdded }
 
+    private var customFoodRecord: FoodRecord? = null
     private val _prefillFoodData = SingleLiveEvent<FoodRecord>()
     val prefillFoodData: LiveData<FoodRecord> = _prefillFoodData
 
@@ -232,6 +235,60 @@ class FoodCreatorViewModel : BaseViewModel() {
         _photoPathEvent.postValue(path)
     }
 
+    fun setDataToEdit(foodRecord: FoodRecord) {
+//        val nutritionFacts = nutritionFactsPair.first
+        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.passioIDEntityType)
+
+//        Log.d("nutritionFacts====", Gson().toJson(nutritionFacts))
+//        productName = nutritionFactsPair.second
+
+//        foodRecord.servingSizes
+//        setWeightGram(foodRecord.weightInGrams))
+//        nutritionFacts.servingSize?.let { servingSize ->
+//            val pair = splitServingSize(servingSize)
+//            setServingSize(pair.first)
+//            setServingUnit(pair.second)
+//        }
+//        nutritionFacts.servingSizeQuantity?.let {
+//            setWeightGram(it)
+//        }
+
+//        nutritionFacts.servingSizeQuantity
+//        nutritionFacts.servingSizeUnitName
+//        nutritionFacts.servingSize
+//        nutritionFacts.sugarAlcohol
+
+        foodRecord.foodImagePath?.let {
+            setPhotoPath(it)
+        }
+
+        val nutritionFacts = foodRecord.nutrientsReference()
+        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs()?.value ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories()?.value ?: 0.0)
+        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein()?.value ?: 0.0)
+        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat()?.value ?: 0.0)
+
+        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.satFat()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars()?.value ?: 0.0)
+        otherNutritionFacts.setValue(
+            REF_SUGARS_ADDED_ID,
+            nutritionFacts.sugarsAdded()?.value ?: 0.0
+        )
+
+        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium()?.value ?: 0.0)
+
+        customFoodRecord = foodRecord
+        _prefillFoodData.postValue(foodRecord)
+    }
+
     fun setDataFromNutritionFacts(nutritionFactsPair: Pair<PassioNutritionFacts, String>) {
         val nutritionFacts = nutritionFactsPair.first
         this.passioIDEntityType = PassioIDEntityType.nutritionFacts
@@ -247,8 +304,8 @@ class FoodCreatorViewModel : BaseViewModel() {
             setWeightGram(it)
         }
 
-        nutritionFacts.servingSizeQuantity
-        nutritionFacts.servingSizeUnitName
+//        nutritionFacts.servingSizeQuantity
+//        nutritionFacts.servingSizeUnitName
 //        nutritionFacts.servingSize
 //        nutritionFacts.sugarAlcohol
 
@@ -319,6 +376,7 @@ class FoodCreatorViewModel : BaseViewModel() {
             passioIDEntityType = passioIDEntityType,
             foodImagePath = photoPath
         )
+        customFoodRecord = customFood
         _prefillFoodData.postValue(customFood)
     }
 
@@ -455,25 +513,47 @@ class FoodCreatorViewModel : BaseViewModel() {
                     UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
                 )
 
-                val customFood = FoodRecord(
-                    productName = productName,
-                    brandName = brandName,
-                    barcode = barcode,
-                    servingWeight = servingQuantity,
-                    servingUnit = servingUnit,
-                    weightInGrams = weightGram,
-                    weightInGramsUnit = weightGramUnit,
-                    passioNutrients = passioNutrients,
-                    passioIDEntityType = passioIDEntityType,
-                    foodImagePath = photoPath
-                )
+                val customFood =
+                    if (customFoodRecord != null) {
+                        customFoodRecord!!.editCustomFood(
+                            productName = productName,
+                            brandName = brandName,
+                            barcode = barcode,
+                            servingWeight = servingQuantity,
+                            servingUnit = servingUnit,
+                            weightInGrams = weightGram,
+                            weightInGramsUnit = weightGramUnit,
+                            passioNutrients = passioNutrients,
+                            passioIDEntityType = passioIDEntityType,
+                            foodImagePath = photoPath
+                        )
+                    } else {
+                        FoodRecord(
+                            productName = productName,
+                            brandName = brandName,
+                            barcode = barcode,
+                            servingWeight = servingQuantity,
+                            servingUnit = servingUnit,
+                            weightInGrams = weightGram,
+                            weightInGramsUnit = weightGramUnit,
+                            passioNutrients = passioNutrients,
+                            passioIDEntityType = passioIDEntityType,
+                            foodImagePath = photoPath
+                        )
+                    }
 
+                val isLogUpdated = !customFood.isCustomFood()
                 if (useCase.saveCustomFood(customFood)) {
                     _showMessageEvent.postValue("Food saved successfully.")
+//                    navigateBack()
+                    if (isLogUpdated) {
+                        navigateToDiary()
+                    } else {
+                        navigateToMyFoods()
+                    }
                 } else {
                     _showMessageEvent.postValue("Error while saving food.")
                 }
-
                 _showLoading.postValue(false)
             }
         }
@@ -488,6 +568,18 @@ class FoodCreatorViewModel : BaseViewModel() {
         return true
     }
 
+
+    fun navigateToMyFoods() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(FoodCreatorFragmentDirections.foodCreatorToMyFoods())
+        }
+    }
+
+    fun navigateToDiary() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(FoodCreatorFragmentDirections.foodCreatorToDiary())
+        }
+    }
 
     fun navigateToTakePhoto() {
         navigate(FoodCreatorFragmentDirections.foodCreatorToTakePhoto())

@@ -113,8 +113,24 @@ class EditFoodViewModel : BaseViewModel() {
 
     }
 
+    fun navigateToFoodCreator()
+    {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(EditFoodFragmentDirections.editToFoodCreator())
+        }
+    }
+
     fun navigateToAddIngredient(): FoodRecord {
         // navigate(EditFoodFragmentDirections.editToSearch())
+        return foodRecord
+    }
+
+    fun isEditMode(): Boolean
+    {
+        return isEditMode
+    }
+    fun getFoodRecord() : FoodRecord
+    {
         return foodRecord
     }
 }

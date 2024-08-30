@@ -8,6 +8,7 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
@@ -31,8 +32,11 @@ class SharedViewModel : ViewModel() {
     private val _nutritionFactsPair = SingleLiveEvent<Pair<PassioNutritionFacts, String>>()
     val nutritionFactsPair: LiveData<Pair<PassioNutritionFacts, String>> get() = _nutritionFactsPair
 
-    private val _barcodeScanFoodRecord = SingleLiveEvent<FoodRecord?>()
-    val barcodeScanFoodRecord: LiveData<FoodRecord?> get() = _barcodeScanFoodRecord
+    private val _editCustomFood = SingleLiveEvent<FoodRecord>()
+    val editCustomFood: LiveData<FoodRecord> get() = _editCustomFood
+
+    private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
+    val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
 
     private val _editFoodRecordLD = SingleLiveEvent<FoodRecord>()
     val editFoodRecordLD: LiveData<FoodRecord> get() = _editFoodRecordLD
@@ -84,9 +88,13 @@ class SharedViewModel : ViewModel() {
         _nutritionFactsPair.postValue(nutritionFacts)
     }
 
+    fun editCustomFood(foodRecord: FoodRecord) {
+        _editCustomFood.postValue(foodRecord)
+    }
 
-    fun sendBarcodeScanResult(foodRecord: FoodRecord?) {
-        _barcodeScanFoodRecord.postValue(foodRecord)
+
+    fun sendBarcodeScanResult(barcode: Barcode) {
+        _barcodeScanFoodRecord.postValue(barcode)
     }
 
     fun passToNutritionInfo(foodRecord: FoodRecord) {

@@ -8,6 +8,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.ProgressDialog
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.Manifest
@@ -151,20 +152,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                         recognitionResult.reset()
                     }
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not log food item.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Could not log food item.")
                 }
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
     }
