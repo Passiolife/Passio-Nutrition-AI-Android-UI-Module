@@ -50,7 +50,7 @@ class DiaryCategory @JvmOverloads constructor(
 
             logList.setSwipeMenuCreator { _, rightMenu, position ->
                 val editItem = SwipeMenuItem(context).apply {
-                    text = context.getString(R.string.edit)
+                    text = context.getString(R.string.details)
                     setTextColor(Color.WHITE)
                     setBackgroundColor(ContextCompat.getColor(context, R.color.passio_primary))
                     width = DesignUtils.dp2px(80f)

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="details">Details</string>
+    <string name="food_details">Food Details</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
     <string name="log">Log</string>
@@ -189,7 +191,7 @@
     <string name="custom_foods">Custom Foods</string>
     <string name="recipes">Recipes</string>
     <string name="edit_image"><u>Edit Image</u></string>
-    <string name="scanning_barcode">Scanning...\nPlace your barcode within the frame</string>
+    <string name="scanning_barcode">Scanning…\nPlace your barcode within the frame</string>
     <string name="barcode_in_system">Barcode In System</string>
     <string name="barcode_in_system_info">This barcode matches an existing item in our database. You can use the data from the database, or continue with creating a custom food.</string>
     <string name="view_existing_item">View Existing Item</string>

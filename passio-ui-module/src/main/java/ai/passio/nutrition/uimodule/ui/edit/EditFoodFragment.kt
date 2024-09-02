@@ -7,7 +7,6 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
-import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.newCustomFood
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
@@ -216,7 +215,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
     private fun setupToolbar() {
         binding.toolbar.apply {
-            setup(getString(R.string.edit), toolbarListener)
+            setup(getString(R.string.food_details), toolbarListener)
             setRightIcon(R.drawable.ic_edit)
             hideRightIcon()
         }
