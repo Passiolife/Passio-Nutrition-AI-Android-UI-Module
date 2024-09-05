@@ -35,6 +35,9 @@ class BaseToolbar @JvmOverloads constructor(
     fun hideRightIcon() {
         binding.toolbarMenu.isVisible = false
     }
+    fun showRightIcon() {
+        binding.toolbarMenu.isVisible = true
+    }
 
     fun setup(title: String, listener: ToolbarListener) {
         this.listener = listener

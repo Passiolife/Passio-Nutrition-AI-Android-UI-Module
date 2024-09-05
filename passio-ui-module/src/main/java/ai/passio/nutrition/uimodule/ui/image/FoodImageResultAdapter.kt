@@ -44,6 +44,7 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
         list.addAll(newData)
         this.selectedItemPositions.clear()
         this.selectedItemPositions.addAll(selectedItemPositions)
+        onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
         notifyDataSetChanged()
     }
 
@@ -58,6 +59,7 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
         list.addAll(newData)
         this.selectedItemPositions.clear()
         this.selectedItemPositions.addAll(selectedItemPositions)
+        onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
         notifyDataSetChanged()
     }
 

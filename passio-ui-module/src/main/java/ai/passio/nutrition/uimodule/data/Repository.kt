@@ -233,4 +233,18 @@ class Repository private constructor() {
         return connector.fetchWaterRecords(startDate.toDate(), endDate.toDate())
     }
 
+    suspend fun saveCustomFood(record: FoodRecord): Boolean {
+        return connector.saveCustomFood(record)
+    }
+
+    suspend fun fetchCustomFoods(): List<FoodRecord> {
+        return connector.fetchCustomFoods()
+    }
+    suspend fun deleteCustomFood(uuid: String): Boolean {
+        return connector.deleteCustomFood(uuid)
+    }
+    suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
+        return connector.getCustomFoodUsingBarcode(barcode)
+    }
+
 }

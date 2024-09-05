@@ -1,14 +1,17 @@
 package ai.passio.nutrition.uimodule.ui.model
 
-import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
+import ai.passio.passiosdk.passiofood.data.measurement.Converter
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
+import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
+import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodAmount
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import android.util.Log
 import com.google.gson.GsonBuilder
@@ -16,12 +19,15 @@ import java.util.Locale
 import java.util.UUID
 
 private const val TIMESTAMP_1970 = 978300000
+const val CUSTOM_FOOD_PREFIX = "custom_food_"
 
-class FoodRecord() {
+open class FoodRecord() {
     var id: String = ""
     var name: String = ""
     var additionalData: String = ""
     var iconId: String = ""
+    var foodImagePath: String? = null
+    var passioIDEntityType = PassioIDEntityType.item.value
 
     lateinit var ingredients: MutableList<FoodRecordIngredient>
 
@@ -37,15 +43,124 @@ class FoodRecord() {
     var openFoodLicense: String? = null
     var barcode: Barcode? = null
     var packagedFoodCode: PackagedFoodCode? = null
+    internal var referenceNutrients: PassioNutrients? = null
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
     }
 
-    constructor(ingredient: FoodRecordIngredient) : this() {
+    //custom food
+    constructor(
+        productName: String,
+        brandName: String,
+        barcode: String?,
+        servingWeight: Double,
+        servingUnit: String,
+        weightInGrams: Double,
+        weightInGramsUnit: String,
+        passioNutrients: PassioNutrients,
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
+        foodImagePath: String? = null
+    ) : this() {
+
+        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        this.name = productName
+        this.additionalData = brandName
+        this.barcode = barcode
+        this.passioIDEntityType = passioIDEntityType.value
+        this.foodImagePath = foodImagePath
+
+        val gramUnit =
+            if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
+        val gramUnitName = if (weightInGramsUnit.equals(
+                Milliliters.symbol,
+                true
+            )
+        ) Milliliters.symbol else Grams.unitName
+//        iconId = foodItem.iconId
+
+        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
+                Grams.symbol,
+                true
+            ) || servingUnit.equals(Milliliters.symbol, true))
+        ) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
+        servingSizes.add(PassioServingSize(servingWeight, servingUnit))
+
+
+        servingUnits.add(
+            PassioServingUnit(
+                servingUnit,
+                UnitMass(Grams, weightInGrams / servingWeight)
+            )
+        )
+        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
+    }
+
+    fun editCustomFood(
+        productName: String,
+        brandName: String,
+        barcode: String?,
+        servingWeight: Double,
+        servingUnit: String,
+        weightInGrams: Double,
+        weightInGramsUnit: String,
+        passioNutrients: PassioNutrients,
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
+        foodImagePath: String? = null
+    ): FoodRecord {
+        this.name = productName
+        this.additionalData = brandName
+        this.barcode = barcode
+        this.passioIDEntityType = passioIDEntityType.value
+        this.foodImagePath = foodImagePath
+
+        val gramUnit =
+            if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
+        val gramUnitName = if (weightInGramsUnit.equals(
+                Milliliters.symbol,
+                true
+            )
+        ) Milliliters.symbol else Grams.unitName
+//        iconId = foodItem.iconId
+
+        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
+                Grams.symbol,
+                true
+            ) || servingUnit.equals(Milliliters.symbol, true))
+        ) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
+        servingSizes.add(PassioServingSize(servingWeight, servingUnit))
+
+
+        servingUnits.add(
+            PassioServingUnit(
+                servingUnit,
+                UnitMass(Grams, weightInGrams / servingWeight)
+            )
+        )
+        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
+        return this
+    }
+
+    constructor(
+        ingredient: FoodRecordIngredient,
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
+    ) : this() {
         id = ingredient.id
         name = ingredient.name
         iconId = ingredient.iconId
+        this.passioIDEntityType = passioIDEntityType.value
         servingSizes.addAll(ingredient.servingSizes)
         servingUnits.addAll(ingredient.servingUnits)
         selectedUnit = ingredient.selectedUnit
@@ -55,11 +170,15 @@ class FoodRecord() {
         openFoodLicense = ingredient.openFoodLicense
     }
 
-    constructor(foodItem: PassioFoodItem) : this() {
+    constructor(
+        foodItem: PassioFoodItem,
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
+    ) : this() {
         id = foodItem.id
         name = foodItem.name
         additionalData = foodItem.details
         iconId = foodItem.iconId
+        this.passioIDEntityType = passioIDEntityType.value
         servingSizes.addAll(foodItem.amount.servingSizes)
         servingUnits.addAll(foodItem.amount.servingUnits)
         selectedUnit = foodItem.amount.selectedUnit
@@ -68,6 +187,10 @@ class FoodRecord() {
         Log.d("foodItem.isOpenFood()", "===foodItem.isOpenFood(): ${foodItem.isOpenFood()}")
         ingredients = foodItem.ingredients.map { FoodRecordIngredient(it) }.toMutableList()
         calculateQuantityForIngredients()
+    }
+
+    fun isCustomFood(): Boolean {
+        return id.startsWith(CUSTOM_FOOD_PREFIX)
     }
 
     fun addIngredient(record: FoodRecord, index: Int? = null) {
@@ -166,7 +289,11 @@ class FoodRecord() {
 
         selectedUnit = unit
 
-        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true)) {
+        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true) || selectedUnit.equals(
+                Milliliters.symbol,
+                true
+            )
+        ) {
             100.0
         } else {
             1.0
@@ -263,4 +390,13 @@ fun FoodRecord.copy(): FoodRecord {
     val gson = GsonBuilder().create()
     return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
         .apply { uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT) }
+}
+
+fun FoodRecord.newCustomFood(): FoodRecord {
+    val gson = GsonBuilder().create()
+    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+        .apply {
+            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        }
 }

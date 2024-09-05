@@ -21,6 +21,21 @@ class FoodRecordIngredient {
 
     var openFoodLicense: String? = null
 
+    //custom food
+    constructor(foodRecord: FoodRecord, passioNutrients: PassioNutrients) {
+        id = foodRecord.id
+        name = foodRecord.name
+        additionalData = foodRecord.additionalData
+        iconId = foodRecord.iconId
+
+        selectedUnit = foodRecord.getSelectedUnit()
+        selectedQuantity = foodRecord.getSelectedQuantity()
+        servingSizes = foodRecord.servingSizes
+        servingUnits = foodRecord.servingUnits
+
+        referenceNutrients = passioNutrients
+        openFoodLicense = foodRecord.openFoodLicense
+    }
     constructor(foodRecord: FoodRecord) {
         id = foodRecord.id
         name = foodRecord.name

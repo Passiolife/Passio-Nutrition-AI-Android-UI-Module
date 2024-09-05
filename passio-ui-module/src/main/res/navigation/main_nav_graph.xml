@@ -144,6 +144,10 @@
             app:destination="@id/nutrition_info" />
 
         <action
+            android:id="@+id/edit_to_food_creator"
+            app:destination="@id/food_creator" />
+
+        <action
             android:id="@+id/edit_to_search"
             app:destination="@id/search"
             app:launchSingleTop="true"
@@ -218,6 +222,12 @@
             app:launchSingleTop="true">
 
         </action>
+        <action
+            android:id="@+id/camera_to_food_creator"
+            app:destination="@id/food_creator"
+            app:launchSingleTop="true">
+
+        </action>
 
     </fragment>
 
@@ -259,7 +269,79 @@
         <action
             android:id="@+id/add_food_to_advisor"
             app:destination="@id/advisor" />
+        <action
+            android:id="@+id/add_food_to_my_foods"
+            app:destination="@id/my_foods" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/my_foods"
+        android:name="ai.passio.nutrition.uimodule.ui.myfood.MyFoodsFragment"
+        android:label="MyFoodsFragment"
+        tools:layout="@layout/fragment_my_foods">
+        <action
+            android:id="@+id/my_foods_to_food_creator"
+            app:destination="@id/food_creator" />
+        <action
+            android:id="@+id/my_foods_to_edit"
+            app:destination="@id/edit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/custom_foods"
+        android:name="ai.passio.nutrition.uimodule.ui.customfoods.CustomFoodsFragment"
+        android:label="CustomFoodsFragment"
+        tools:layout="@layout/fragment_custom_foods">
+
+        <action
+            android:id="@+id/custom_food_to_food_creator"
+            app:destination="@id/food_creator" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/scan_barcode"
+        android:name="ai.passio.nutrition.uimodule.ui.foodcreator.ScanBarcodeFragment"
+        android:label="ScanBarcodeFragment"
+        tools:layout="@layout/fragment_scan_barcode">
+
+
+        <action
+            android:id="@+id/scan_barcode_to_edit"
+            app:destination="@id/edit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/food_creator"
+        android:name="ai.passio.nutrition.uimodule.ui.foodcreator.FoodCreatorFragment"
+        android:label="FoodCreatorFragment"
+        tools:layout="@layout/fragment_food_creator">
+
+        <action
+            android:id="@+id/food_creator_to_take_photo"
+            app:destination="@id/take_photo">
+            <argument
+                android:name="isPicker"
+                android:defaultValue="true"
+                app:argType="boolean" />
+            <argument
+                android:name="isSinglePhoto"
+                android:defaultValue="true"
+                app:argType="boolean" />
+        </action>
+        <action
+            android:id="@+id/food_creator_to_scan_barcode"
+            app:destination="@id/scan_barcode" />
+        <action
+            android:id="@+id/food_creator_to_my_foods"
+            app:destination="@id/my_foods"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+        <action
+            android:id="@+id/food_creator_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
     </fragment>
 
     <fragment

@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.domain.search
 
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.util.Log
 import java.util.Date
@@ -17,7 +18,10 @@ object EditFoodUseCase {
 
     suspend fun logFoodRecord(record: FoodRecord, isEditMode: Boolean): Boolean {
         Log.d("logFoodRecord", "before=== uuid ${record.uuid}")
-        if (!isEditMode) {
+
+        if (!isEditMode && record.isCustomFood()) {
+            record.copy().create(record.createdAtTime() ?: Date().time)
+        } else if (!isEditMode) {
             record.create(record.createdAtTime() ?: Date().time)
         } else if (record.createdAtTime() == null) {
             record.create(Date().time)

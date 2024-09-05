@@ -8,7 +8,9 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
+import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -27,6 +29,14 @@ object UserCache{
     }
 }
 class SharedViewModel : ViewModel() {
+    private val _nutritionFactsPair = SingleLiveEvent<Pair<PassioNutritionFacts, String>>()
+    val nutritionFactsPair: LiveData<Pair<PassioNutritionFacts, String>> get() = _nutritionFactsPair
+
+    private val _editCustomFood = SingleLiveEvent<FoodRecord>()
+    val editCustomFood: LiveData<FoodRecord> get() = _editCustomFood
+
+    private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
+    val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
 
     private val _editFoodRecordLD = SingleLiveEvent<FoodRecord>()
     val editFoodRecordLD: LiveData<FoodRecord> get() = _editFoodRecordLD
@@ -59,6 +69,7 @@ class SharedViewModel : ViewModel() {
     private val _userProfileCacheEvent = SingleLiveEvent<ResultWrapper<UserProfile>>()
     val userProfileCacheEvent: LiveData<ResultWrapper<UserProfile>> get() = _userProfileCacheEvent
 
+
     init {
         preCacheUserProfile()
     }
@@ -72,6 +83,19 @@ class SharedViewModel : ViewModel() {
         }
     }
 
+
+    fun sendNutritionFactsToFoodCreator(nutritionFacts: Pair<PassioNutritionFacts, String>) {
+        _nutritionFactsPair.postValue(nutritionFacts)
+    }
+
+    fun editCustomFood(foodRecord: FoodRecord) {
+        _editCustomFood.postValue(foodRecord)
+    }
+
+
+    fun sendBarcodeScanResult(barcode: Barcode) {
+        _barcodeScanFoodRecord.postValue(barcode)
+    }
 
     fun passToNutritionInfo(foodRecord: FoodRecord) {
         _nutritionInfoFoodRecordLD.postValue(foodRecord)

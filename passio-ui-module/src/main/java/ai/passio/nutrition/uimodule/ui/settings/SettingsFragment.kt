@@ -13,10 +13,9 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.profile.LengthUnit
 import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setOnChangeListener
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.widget.AdapterView
-import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
 
 class SettingsFragment : BaseFragment<SettingsViewModel>() {
 
@@ -40,38 +39,17 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         {
             toolbar.setup(getString(R.string.settings), baseToolbarListener)
             toolbar.hideRightIcon()
-            lunch.setOnCheckedChangeListener { checkbox, isChecked ->
-                if (isChecked) {
-                    markSwitchOn(lunch)
-//                    scheduleNotification(requireContext(), 12, 0, "Take your lunch.", 1002)
-                } else {
-                    markSwitchOff(lunch)
-//                    cancelNotification(requireContext(), 1002)
-                }
+            lunch.setOnChangeListener { checkbox, isChecked ->
                 if (checkbox.isPressed) {
                     viewModel.updateLunchReminder(isChecked)
                 }
             }
-            dinner.setOnCheckedChangeListener { checkbox, isChecked ->
-                if (isChecked) {
-                    markSwitchOn(dinner)
-//                    scheduleNotification(requireContext(), 17, 0, "Take your dinner.", 1003)
-                } else {
-                    markSwitchOff(dinner)
-//                    cancelNotification(requireContext(), 1003)
-                }
+            dinner.setOnChangeListener { checkbox, isChecked ->
                 if (checkbox.isPressed) {
                     viewModel.updateDinnerReminder(isChecked)
                 }
             }
-            breakfast.setOnCheckedChangeListener { checkbox, isChecked ->
-                if (isChecked) {
-                    markSwitchOn(breakfast)
-//                    scheduleNotification(requireContext(), 8, 0, "Take your breakfast.", 1001)
-                } else {
-                    markSwitchOff(breakfast)
-//                    cancelNotification(requireContext(), 1001)
-                }
+            breakfast.setOnChangeListener { checkbox, isChecked ->
                 if (checkbox.isPressed) {
                     viewModel.updateBreakfastReminder(isChecked)
                 }
@@ -124,20 +102,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
 
         }
 
-    }
-
-    private fun markSwitchOn(switchCompat: SwitchCompat) {
-        switchCompat.thumbTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.passio_primary)
-        switchCompat.trackTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.passio_primary40p)
-    }
-
-    private fun markSwitchOff(switchCompat: SwitchCompat) {
-        switchCompat.thumbTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.passio_white)
-        switchCompat.trackTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.passio_gray300)
     }
 
     private fun setupLengthView(selectedLengthUnit: LengthUnit) {

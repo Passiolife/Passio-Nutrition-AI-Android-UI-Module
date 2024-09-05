@@ -28,9 +28,13 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     private lateinit var weightRecords: MutableList<WeightRecord>
     private lateinit var waterRecords: MutableList<WaterRecord>
     private var userProfile: UserProfile = UserProfile()
+    private lateinit var customFoods: MutableList<FoodRecord>
 
     override fun initialize() {
         records = sharedPreferences.getRecords().map {
+            gson.fromJson(it, FoodRecord::class.java) as FoodRecord
+        }.toMutableList()
+        customFoods = sharedPreferences.getCustomFoods().map {
             gson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
 
@@ -261,5 +265,36 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
         return waterRecords.filter { it.dateTime in startOfWeek..endOfWeek }
             .sortedByDescending { it.dateTime }
+    }
+
+    override suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
+        val indexToRemove = customFoods.indexOfFirst { it.uuid == foodRecord.uuid }
+        if (indexToRemove != -1) {
+            customFoods.removeAt(indexToRemove)
+            customFoods.add(indexToRemove, foodRecord)
+        } else {
+            customFoods.add(foodRecord)
+        }
+        val json = customFoods.map { gson.toJson(it) }
+        sharedPreferences.saveCustomFoods(json)
+        return true
+    }
+
+    override suspend fun fetchCustomFoods(): List<FoodRecord> {
+        return customFoods
+    }
+
+    override suspend fun deleteCustomFood(uuid: String): Boolean {
+        val indexToRemove = customFoods.indexOfFirst { it.uuid == uuid }
+        if (indexToRemove != -1) {
+            customFoods.removeAt(indexToRemove)
+        }
+        val json = customFoods.map { gson.toJson(it) }
+        sharedPreferences.saveCustomFoods(json)
+        return true
+    }
+
+    override suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
+        return customFoods.find { it.barcode == barcode }
     }
 }

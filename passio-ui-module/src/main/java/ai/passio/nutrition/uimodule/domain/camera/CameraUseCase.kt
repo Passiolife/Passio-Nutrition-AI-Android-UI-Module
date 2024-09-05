@@ -7,6 +7,7 @@ import ai.passio.passiosdk.passiofood.FoodCandidates
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.PassioID
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.Date
@@ -25,7 +26,7 @@ object CameraUseCase {
                 if (it.first == null) {
                     RecognitionResult.NoRecognition
                 } else {
-                    RecognitionResult.NutritionFactRecognition(it)
+                    RecognitionResult.NutritionFactRecognition(Pair(it.first!!, it.second))
                 }
             }
     }
@@ -62,9 +63,13 @@ object CameraUseCase {
         if (barcodeCandidate != null) {
             val foodItem = repository.fetchFoodItemForProduct(barcodeCandidate.barcode)
                 ?: return RecognitionResult.NoProductRecognition
-            return RecognitionResult.FoodRecordRecognition(FoodRecord(foodItem).apply {
-                this.barcode = barcodeCandidate.barcode
-            })
+            return RecognitionResult.FoodRecordRecognition(
+                FoodRecord(
+                    foodItem,
+                    PassioIDEntityType.barcode
+                ).apply {
+                    this.barcode = barcodeCandidate.barcode
+                })
         }
 
         val packagedCandidate =
@@ -72,9 +77,13 @@ object CameraUseCase {
         if (packagedCandidate != null) {
             val foodItem = repository.fetchFoodItemForProduct(packagedCandidate.packagedFoodCode)
                 ?: return RecognitionResult.NoProductRecognition
-            return RecognitionResult.FoodRecordRecognition(FoodRecord(foodItem).apply {
-                this.packagedFoodCode = packagedCandidate.packagedFoodCode
-            })
+            return RecognitionResult.FoodRecordRecognition(
+                FoodRecord(
+                    foodItem,
+                    PassioIDEntityType.packagedFoodCode
+                ).apply {
+                    this.packagedFoodCode = packagedCandidate.packagedFoodCode
+                })
         }
 
         return RecognitionResult.NoRecognition

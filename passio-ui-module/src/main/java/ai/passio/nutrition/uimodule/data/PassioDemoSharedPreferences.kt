@@ -7,6 +7,7 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
     companion object Key {
         const val PREF_NAME = "PassioDemoPrefs"
         private const val PREF_FOOD_RECORDS = "foodRecords"
+        private const val PREF_CUSTOM_FOODS = "customFoods"
         private const val PREF_WEIGHT_RECORDS = "weightRecords"
         private const val PREF_WATER_RECORDS = "waterRecords"
         private const val PREF_FOOD_FAVORITES = "foodFavorites"
@@ -19,6 +20,14 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
 
     fun getRecords(): Set<String> {
         return sharedPreferences.getStringSet(PREF_FOOD_RECORDS, hashSetOf())!!
+    }
+
+    fun saveCustomFoods(customFoods: List<String>) {
+        sharedPreferences.edit().putStringSet(PREF_CUSTOM_FOODS, customFoods.toSet()).apply()
+    }
+
+    fun getCustomFoods(): Set<String> {
+        return sharedPreferences.getStringSet(PREF_CUSTOM_FOODS, hashSetOf())!!
     }
     fun getWeightRecords(): Set<String> {
         return sharedPreferences.getStringSet(PREF_WEIGHT_RECORDS, hashSetOf())!!

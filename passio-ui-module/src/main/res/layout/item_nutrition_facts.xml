@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblName"
+        style="@style/TextProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Label Name" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/lblValue"
+        style="@style/EditTextProfile"
+        android:hint="@string/value_txt"
+        android:inputType="numberDecimal"
+        android:maxLength="5"
+        app:layout_constraintBottom_toBottomOf="@id/lblName"
+        app:layout_constraintEnd_toStartOf="@id/ivRemove"
+        app:layout_constraintTop_toTopOf="@id/lblName" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/lblUnit"
+        style="@style/TextProfileUnit"
+        app:layout_constraintBottom_toBottomOf="@id/lblValue"
+        app:layout_constraintEnd_toEndOf="@id/lblValue"
+        app:layout_constraintTop_toTopOf="@id/lblValue"
+        tools:text="g" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="@id/lblValue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/lblValue"
+        app:srcCompat="@drawable/ic_remove_item"
+        tools:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

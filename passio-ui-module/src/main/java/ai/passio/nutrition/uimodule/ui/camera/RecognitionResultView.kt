@@ -7,8 +7,10 @@ import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.DetectedCandidate
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -47,6 +49,7 @@ class RecognitionResultView @JvmOverloads constructor(
         fun onLog(result: RecognitionResult)
         fun onEdit(result: RecognitionResult)
         fun onSearchTapped()
+        fun onCancelled()
     }
 
     init {
@@ -247,7 +250,7 @@ class RecognitionResultView @JvmOverloads constructor(
             } else {
                 foodRecord.additionalData
             }
-            it.barcodeImage.loadPassioIcon(result.foodItem.iconId)
+            it.barcodeImage.loadFoodImage(result.foodItem)
             disableDrag()
 //            bottomSheetBehavior.state = STATE_COLLAPSED
             it.rvAlternatives.adapter = null
@@ -350,10 +353,10 @@ class RecognitionResultView @JvmOverloads constructor(
                 it.foodLog.text = resources.getString(R.string.next_str)
                 it.foodEdit.text = resources.getString(R.string.cancel)
                 it.foodLog.setOnClickListener {
-//                recognitionResultListener?.onLogProduct(result)
+                recognitionResultListener?.onEdit(result)
                 }
                 it.foodEdit.setOnClickListener {
-//                recognitionResultListener?.onEditProduct(result)
+                recognitionResultListener?.onCancelled()
                 }
 
                 it.viewTopCandidate.setOnClickListener {
