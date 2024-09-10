@@ -1,7 +1,9 @@
 package ai.passio.nutrition.uimodule.ui.foodcreator
 
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
+import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.editrecipe.EditRecipeFragmentDirections
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALCIUM_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALORIES_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
@@ -22,6 +24,7 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitEnergyOf
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitMassOf
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
@@ -44,8 +47,8 @@ import kotlinx.coroutines.launch
 
 class FoodCreatorViewModel : BaseViewModel() {
 
-    val useCase = CustomFoodUseCase
-
+    private val useCase = CustomFoodUseCase
+    private val editFoodUseCase = EditFoodUseCase
     val unitList = mutableListOf(
         "serving",
         "piece",
@@ -92,6 +95,8 @@ class FoodCreatorViewModel : BaseViewModel() {
     private var photoPath: String? = null
     private val _photoPathEvent = MutableLiveData<String>()
     val photoPathEvent: LiveData<String> = _photoPathEvent
+
+    private var loggedRecord: FoodRecord? = null
 
     init {
 
@@ -233,6 +238,10 @@ class FoodCreatorViewModel : BaseViewModel() {
     fun setPhotoPath(path: String) {
         this.photoPath = path
         _photoPathEvent.postValue(path)
+    }
+
+    fun setToUpdateLog(loggedRecord: FoodRecord) {
+        this.loggedRecord = loggedRecord
     }
 
     fun setDataToEdit(foodRecord: FoodRecord) {
@@ -542,15 +551,32 @@ class FoodCreatorViewModel : BaseViewModel() {
                         )
                     }
 
-                val isLogUpdated = !customFood.isCustomFood()
-                if (useCase.saveCustomFood(customFood)) {
-                    _showMessageEvent.postValue("Food saved successfully.")
-//                    navigateBack()
-                    if (isLogUpdated) {
-                        navigateToDiary()
-                    } else {
-                        navigateToMyFoods()
+                val customFoodNew: FoodRecord = if (!customFood.isCustomFood()) {
+                    customFood.copyAsCustomFood()
+                } else {
+                    customFood
+                }
+                if (useCase.saveCustomFood(customFoodNew)) {
+                    if (loggedRecord != null) {
+                        loggedRecord?.apply {
+                            this.name = customFoodNew.name
+                            this.ingredients = customFoodNew.ingredients
+                            this.foodImagePath = customFoodNew.foodImagePath
+                            this.iconId = customFoodNew.iconId
+                            this.id = customFoodNew.uuid
+                            this.passioIDEntityType = customFoodNew.passioIDEntityType
+                            this.servingSizes.clear()
+                            this.servingSizes.addAll(customFoodNew.servingSizes)
+                            this.servingUnits.clear()
+                            this.servingUnits.addAll(customFoodNew.servingUnits)
+                            this.setSelectedQuantity(customFoodNew.getSelectedQuantity())
+                            this.setSelectedUnit(customFoodNew.getSelectedUnit())
+                            editFoodUseCase.logFoodRecord(this, true)
+                        }
                     }
+                    _showMessageEvent.postValue("Food saved successfully.")
+
+                    navigateOnSave()
                 } else {
                     _showMessageEvent.postValue("Error while saving food.")
                 }
@@ -568,6 +594,23 @@ class FoodCreatorViewModel : BaseViewModel() {
         return true
     }
 
+    private fun navigateOnSave() {
+        if (loggedRecord != null) //update log upon create or save
+        {
+            navigate(FoodCreatorFragmentDirections.foodCreatorToDiary())
+        }
+        /*else if (isEditRecipe && loggedRecord == null)
+        {
+            navigateBack()
+        }
+        else if (isEditRecipe)
+        {
+            navigateBack()
+        }*/
+        else {
+            navigate(FoodCreatorFragmentDirections.foodCreatorToMyFoods())
+        }
+    }
 
     fun navigateToMyFoods() {
         viewModelScope.launch(Dispatchers.Main) {

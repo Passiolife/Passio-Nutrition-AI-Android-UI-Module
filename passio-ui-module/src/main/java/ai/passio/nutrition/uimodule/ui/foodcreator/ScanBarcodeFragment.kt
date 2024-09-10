@@ -2,10 +2,8 @@ package ai.passio.nutrition.uimodule.ui.foodcreator
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentScanBarcodeBinding
-import ai.passio.nutrition.uimodule.domain.camera.RecognitionResult
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
 import ai.passio.passiosdk.passiofood.Barcode
@@ -205,7 +203,7 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     showBarcodeInSystemView()
                     viewItem.setOnClickListener {
                         viewModel.existingSystemItem?.let {
-                            sharedViewModel.editFoodRecord(it)
+                            sharedViewModel.detailsFoodRecord(it)
                             viewModel.navigateToFoodDetails()
                         }
                     }
@@ -221,7 +219,7 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     showCustomFoodAlreadyExistView()
                     viewItem.setOnClickListener {
                         viewModel.existingCustomFood?.let {
-                            sharedViewModel.editFoodRecord(it)
+                            sharedViewModel.detailsFoodRecord(it)
                             viewModel.navigateToFoodDetails()
                         }
                     }

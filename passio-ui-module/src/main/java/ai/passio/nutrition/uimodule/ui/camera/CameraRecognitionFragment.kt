@@ -15,7 +15,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -181,7 +180,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     }
 
     private fun editFoodRecord(foodRecord: FoodRecord) {
-        sharedViewModel.editFoodRecord(foodRecord)
+        sharedViewModel.detailsFoodRecord(foodRecord)
         viewModel.navigateToEdit()
     }
 

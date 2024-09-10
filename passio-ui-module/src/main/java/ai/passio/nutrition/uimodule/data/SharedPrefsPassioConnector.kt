@@ -29,12 +29,16 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     private lateinit var waterRecords: MutableList<WaterRecord>
     private var userProfile: UserProfile = UserProfile()
     private lateinit var customFoods: MutableList<FoodRecord>
+    private lateinit var recipes: MutableList<FoodRecord>
 
     override fun initialize() {
         records = sharedPreferences.getRecords().map {
             gson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
         customFoods = sharedPreferences.getCustomFoods().map {
+            gson.fromJson(it, FoodRecord::class.java) as FoodRecord
+        }.toMutableList()
+        recipes = sharedPreferences.getRecipes().map {
             gson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
 
@@ -284,6 +288,10 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return customFoods
     }
 
+    override suspend fun fetchCustomFood(uuid: String): FoodRecord? {
+        return customFoods.find { it.uuid == uuid }
+    }
+
     override suspend fun deleteCustomFood(uuid: String): Boolean {
         val indexToRemove = customFoods.indexOfFirst { it.uuid == uuid }
         if (indexToRemove != -1) {
@@ -296,5 +304,36 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
         return customFoods.find { it.barcode == barcode }
+    }
+
+    override suspend fun saveRecipe(foodRecord: FoodRecord): Boolean {
+        val indexToRemove = recipes.indexOfFirst { it.uuid == foodRecord.uuid }
+        if (indexToRemove != -1) {
+            recipes.removeAt(indexToRemove)
+            recipes.add(indexToRemove, foodRecord)
+        } else {
+            recipes.add(foodRecord)
+        }
+        val json = recipes.map { gson.toJson(it) }
+        sharedPreferences.saveRecipes(json)
+        return true
+    }
+
+    override suspend fun fetchRecipes(): List<FoodRecord> {
+        return recipes
+    }
+
+    override suspend fun fetchRecipe(uuid: String): FoodRecord? {
+        return recipes.find { it.uuid == uuid }
+    }
+
+    override suspend fun deleteRecipe(uuid: String): Boolean {
+        val indexToRemove = recipes.indexOfFirst { it.uuid == uuid }
+        if (indexToRemove != -1) {
+            recipes.removeAt(indexToRemove)
+        }
+        val json = recipes.map { gson.toJson(it) }
+        sharedPreferences.saveRecipes(json)
+        return true
     }
 }

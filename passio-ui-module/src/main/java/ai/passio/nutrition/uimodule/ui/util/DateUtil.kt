@@ -120,6 +120,7 @@ fun dateToTimestamp(dateString: String, dateFormat: String): Long {
 }
 
 const val DAY_FORMAT = "EE"
+const val DAY_FORMAT_FULL = "EEEE, MMMM dd, yyyy"
 fun dateToFormat(localDate: LocalDate, format: String): String {
     // Define the formatter for the desired pattern
     val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.ENGLISH)

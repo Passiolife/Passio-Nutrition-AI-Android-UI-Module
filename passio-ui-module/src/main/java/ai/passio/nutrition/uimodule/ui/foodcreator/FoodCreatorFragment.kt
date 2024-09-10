@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerListener
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
@@ -276,6 +277,10 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         }
         sharedViewModel.editCustomFood.observe(viewLifecycleOwner) {
             viewModel.setDataToEdit(it)
+        }
+
+        sharedViewModel.editFoodUpdateLog.observe(viewLifecycleOwner) { editRecipe ->
+            viewModel.setToUpdateLog(editRecipe.clone())
         }
         sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcode ->
             viewModel.setBarcode(barcode)

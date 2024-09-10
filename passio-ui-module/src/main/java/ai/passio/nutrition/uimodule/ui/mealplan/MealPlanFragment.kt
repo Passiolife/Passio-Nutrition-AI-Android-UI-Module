@@ -99,7 +99,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
     }
 
     private fun editFoodRecord(foodRecord: FoodRecord) {
-        sharedViewModel.editFoodRecord(foodRecord)
+        sharedViewModel.detailsFoodRecord(foodRecord)
         viewModel.navigateToEdit()
     }
 

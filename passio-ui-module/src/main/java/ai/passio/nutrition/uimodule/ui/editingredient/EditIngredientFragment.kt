@@ -1,22 +1,16 @@
-package ai.passio.nutrition.uimodule.ui.edit
+package ai.passio.nutrition.uimodule.ui.editingredient
 
 import ai.passio.nutrition.uimodule.R
-import ai.passio.nutrition.uimodule.data.ResultWrapper
-import ai.passio.nutrition.uimodule.databinding.FragmentEditFoodBinding
+import ai.passio.nutrition.uimodule.databinding.FragmentEditIngredientBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+import ai.passio.nutrition.uimodule.ui.edit.EditFoodModel
+import ai.passio.nutrition.uimodule.ui.edit.OpenFoodFactsDialog
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import ai.passio.nutrition.uimodule.ui.model.MealLabel
-import ai.passio.nutrition.uimodule.ui.model.clone
-import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
-import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
-import ai.passio.nutrition.uimodule.ui.util.CommonDialog
-import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT_FULL
-import ai.passio.nutrition.uimodule.ui.util.OnCommonDialogListener
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
-import ai.passio.nutrition.uimodule.ui.util.dateToFormat
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -36,27 +30,21 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.warkiz.tickseekbar.OnSeekChangeListener
 import com.warkiz.tickseekbar.SeekParams
 import com.warkiz.tickseekbar.TickSeekBar
-import org.joda.time.DateTime
-import java.util.Date
 import kotlin.math.roundToInt
 
-class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
+class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
 
-    private var _binding: FragmentEditFoodBinding? = null
-    private val binding: FragmentEditFoodBinding get() = _binding!!
+    private var _binding: FragmentEditIngredientBinding? = null
+    private val binding: FragmentEditIngredientBinding get() = _binding!!
 
     private var carbColor: Int = -1
     private var proteinColor: Int = -1
     private var fatColor: Int = -1
 
-    // private val dateFormat = SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.getDefault())
-//    private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
     private lateinit var servingUnitAdapter: ArrayAdapter<String>
-    private val ingredientAdapter = IngredientAdapter(::onIngredientSelected)
 
     enum class UpdateOrigin {
         QUANTITY,
@@ -70,19 +58,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEditFoodBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentEditIngredientBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        arguments?.getBoolean("isEditLog", false)?.let {
-            viewModel.setEditLogMode(it)
-            if (it) {
-                binding.log.text = requireContext().getString(R.string.save)
-            }
-        }
 
         carbColor = ContextCompat.getColor(requireContext(), R.color.passio_carbs)
         proteinColor = ContextCompat.getColor(requireContext(), R.color.passio_protein)
@@ -107,19 +88,29 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             }
             servingQuantitySeekBar.onSeekChangeListener = seekChangeListener
 
-            ingredientList.adapter = null
-
-            ingredientList.adapter = ingredientAdapter
-
             cancel.setOnClickListener {
                 viewModel.navigateBack()
             }
 
             log.setOnClickListener {
-                viewModel.logCurrentRecord()
+                if (viewModel.getEditIngredientIndex() == -1) {
+                    val foodRecord = viewModel.navigateBackToEditRecipe()
+                    sharedViewModel.addFoodIngredient(FoodRecordIngredient(foodRecord))
+                } else {
+                    val indexToEdit = viewModel.getEditIngredientIndex()
+                    sharedViewModel.updateFoodIngredientToRecipe(
+                        viewModel.getEditIngredient(),
+                        indexToEdit
+                    )
+                    viewModel.navigateBack()
+                }
             }
 
-            setupRecipeAddEditMode()
+            delete.setOnClickListener {
+                val indexToRemove = viewModel.getEditIngredientIndex()
+                sharedViewModel.updateFoodIngredientToRecipe(null, indexToRemove)
+                viewModel.navigateBack()
+            }
 
             openFoodFacts.setOnClickListener {
                 OpenFoodFactsDialog().show(childFragmentManager, "EditFood")
@@ -132,12 +123,18 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             }
         }
 
-        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
+        sharedViewModel.addFoodIngredientsLD.observe(viewLifecycleOwner) { foodRecord ->
             viewModel.setFoodRecord(foodRecord)
         }
-
-        sharedViewModel.editSearchResultLD.observe(viewLifecycleOwner) { searchResult ->
-            viewModel.getFoodRecord(searchResult)
+//        sharedViewModel.editFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
+//            viewModel.setFoodRecord(foodRecord)
+//        }
+        sharedViewModel.editIngredientLD.observe(viewLifecycleOwner) { editIngredient ->
+            if (editIngredient.second != -1) {
+                binding.delete.isVisible = true
+                binding.log.text = getString(R.string.save)
+                viewModel.editFoodRecord(editIngredient)
+            }
         }
 
         viewModel.editFoodModelLD.observe(viewLifecycleOwner) { editFoodModel ->
@@ -154,133 +151,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             updateFoodRecord(pair.first, pair.second)
         }
 
-        viewModel.resultLogFood.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is ResultWrapper.Error -> {
-                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
-                }
-
-                is ResultWrapper.Success -> {
-                    viewModel.navigateToDiary(result.value.createdAtTime())
-                }
-            }
-        }
-
-
-        viewModel.recipeInfo.observe(viewLifecycleOwner) { result ->
-            val recipe = result.first
-            val isUpdateLog = result.second
-
-            if (recipe != null) {
-                sharedViewModel.editRecipe(recipe)
-                if (isUpdateLog) {
-                    sharedViewModel.editRecipeUpdateLog(viewModel.getFoodRecord())
-                }
-                viewModel.navigateToEditRecipe()
-            } else {
-                CommonDialog.show(context = requireContext(),
-                    title = "Recipe Not Found",
-                    description = "The custom recipe you are trying to edit no longer exists. You can continue to create a new one.",
-                    positiveActionText = "Create",
-                    negativeActionText = "Cancel",
-                    listener = object : OnCommonDialogListener {
-                        override fun onNegativeAction() {
-
-                        }
-
-                        override fun onPositiveAction() {
-                            sharedViewModel.editRecipe(viewModel.getFoodRecord().clone())
-                            if (isUpdateLog) {
-                                sharedViewModel.editRecipeUpdateLog(viewModel.getFoodRecord())
-                            }
-                            viewModel.navigateToEditRecipe()
-                        }
-
-                    })
-            }
-
-        }
-
-        viewModel.customFoodInfo.observe(viewLifecycleOwner) { result ->
-            val recipe = result.first
-            val isUpdateLog = result.second
-
-            if (recipe != null) {
-                sharedViewModel.editCustomFood(recipe)
-                if (isUpdateLog) {
-                    sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
-                }
-                viewModel.navigateToFoodCreator()
-            } else {
-                CommonDialog.show(context = requireContext(),
-                    title = "User Food Not Found",
-                    description = "The user food you are trying to edit no longer exists. You can continue to create a new one.",
-                    positiveActionText = "Create",
-                    negativeActionText = "Cancel",
-                    listener = object : OnCommonDialogListener {
-                        override fun onNegativeAction() {
-
-                        }
-
-                        override fun onPositiveAction() {
-                            sharedViewModel.editCustomFood(viewModel.getFoodRecord().clone())
-                            if (isUpdateLog) {
-                                sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
-                            }
-                            viewModel.navigateToFoodCreator()
-                        }
-
-                    })
-            }
-
-        }
-
-
     }
 
     private fun setupToolbar() {
         binding.toolbar.apply {
-            setup(getString(R.string.food_details), toolbarListener)
-            setRightIcon(R.drawable.ic_edit)
+            setup(getString(R.string.edit_ingredient), toolbarListener)
             hideRightIcon()
-        }
-    }
-
-    private fun setupRecipeAddEditMode() {
-        with(binding) {
-            addEditRecipe.setOnClickListener {
-
-                val foodRecord = viewModel.getFoodRecord()
-                val createUserFoodType = if (foodRecord.isUserRecipe()) {
-                    CreateUserFoodType.USER_RECIPE
-                } else {
-                    CreateUserFoodType.PASSIO_RECIPE
-                }
-                if (foodRecord.isUserRecipe() && !viewModel.isEditLogMode()) {
-                    sharedViewModel.editRecipe(foodRecord)
-                    viewModel.navigateToEditRecipe()
-                } else {
-                    CreateUserFoodDialog(
-                        viewModel.isEditLogMode(),
-                        createUserFoodType,
-                        object : OnCreateFoodListener {
-                            override fun onEdit(isUpdateLog: Boolean) {
-                                viewModel.editRecipeFromLoggedFood(isUpdateLog)
-                            }
-
-                            override fun onCreate(isUpdateLog: Boolean) {
-                                sharedViewModel.editRecipe(foodRecord.copyAsRecipe())
-                                if (isUpdateLog) {
-                                    sharedViewModel.editRecipeUpdateLog(viewModel.getFoodRecord())
-                                }
-                                viewModel.navigateToEditRecipe()
-
-                            }
-
-                        }
-                    ).show(childFragmentManager, "CreateUserFoodDialog")
-                }
-            }
         }
     }
 
@@ -290,65 +166,10 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
 
         override fun onRightIconClicked() {
-            val foodRecord = viewModel.getFoodRecord()
-            val createUserFoodType = if (foodRecord.isCustomFood()) {
-                CreateUserFoodType.USER_FOOD
-            } else {
-                CreateUserFoodType.PASSIO_FOOD
-            }
-            if (foodRecord.isCustomFood() && !viewModel.isEditLogMode()) {
-                sharedViewModel.editCustomFood(foodRecord)
-                viewModel.navigateToFoodCreator()
-            } else {
 
-                CreateUserFoodDialog(
-                    viewModel.isEditLogMode(),
-                    createUserFoodType,
-                    object : OnCreateFoodListener {
-                        override fun onEdit(isUpdateLog: Boolean) {
-                            viewModel.editCustomFromLoggedFood(isUpdateLog)
-                        }
-
-                        override fun onCreate(isUpdateLog: Boolean) {
-                            sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood())
-                            if (isUpdateLog) {
-                                sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
-                            }
-                            viewModel.navigateToFoodCreator()
-
-                        }
-
-                    }
-                ).show(childFragmentManager, "CreateUserFoodDialog")
-
-                /*CreateUserFoodDialog(
-                    viewModel.isEditLogMode(),
-                    createUserFoodType,
-                    onCreateFoodListener = object : OnCreateFoodListener {
-                        override fun onCreate(isUpdateLog: Boolean) {
-                            if (isUpdateLog) {
-                                sharedViewModel.editCustomFood(foodRecord)
-                            } else {
-                                sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood())
-                            }
-                            viewModel.navigateToFoodCreator()
-                        }
-
-                        override fun onEdit(isUpdateLog: Boolean) {
-                            if (isUpdateLog) {
-                                sharedViewModel.editCustomFood(foodRecord)
-                            } else {
-                                sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood())
-                            }
-                            viewModel.navigateToFoodCreator()
-                        }
-                    }
-                ).show(childFragmentManager, "CreateUserFoodDialog")*/
-            }
         }
 
     }
-
 
     private val servingUnitListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -405,47 +226,23 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         setupImmutableProperties(model.foodRecord!!)
         renderNutrients(model.foodRecord)
         renderServingSize(model.foodRecord)
-        if (model.showIngredients) {
-            renderMealTimeAndDate(model.foodRecord)
-            renderIngredients(model.foodRecord)
-        } else {
-            hideSecondaryViews()
-        }
     }
 
     private fun setupEditOption(foodRecord: FoodRecord?) {
-        if (foodRecord == null) {
-            binding.toolbar.hideRightIcon()
-            return
-        }
-        if (!foodRecord.isRecipe()) {
+        if (foodRecord != null && foodRecord.ingredients.size <= 1) {
             binding.toolbar.showRightIcon()
-            binding.addEditRecipe.text = getString(R.string.make_custom_recipe)
         } else {
             binding.toolbar.hideRightIcon()
-            binding.addEditRecipe.text = getString(R.string.edit_recipe_)
-        }
-
-
-    }
-
-    private fun hideSecondaryViews() {
-        if (_binding == null) return
-        with(binding) {
-            mealTimeLayout.visibility = View.GONE
-            dateLayout.visibility = View.GONE
-            addIngredientLayout.visibility = View.GONE
         }
     }
+
 
     private fun updateFoodRecord(foodRecord: FoodRecord, origin: UpdateOrigin) {
         renderNutrients(foodRecord)
         renderServingSize(foodRecord, origin)
         if (origin == UpdateOrigin.INGREDIENT) {
             setupImmutableProperties(foodRecord)
-//            renderIngredients(foodRecord)
         }
-        renderIngredients(foodRecord)
     }
 
     private fun renderNutrients(foodRecord: FoodRecord) {
@@ -622,53 +419,5 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         binding.macrosChart.invalidate()
     }
 
-    private fun renderMealTimeAndDate(foodRecord: FoodRecord) {
-        if (_binding == null) return
-        val mealLabel =
-            foodRecord.mealLabel ?: MealLabel.dateToMealLabel(System.currentTimeMillis())
-        viewModel.updateMealLabel(mealLabel)
-        binding.mealTimePicker.setup(mealLabel, object : MealTimePicker.MealTimeListener {
-            override fun onValueChanged(mealLabel: MealLabel) {
-                viewModel.updateMealLabel(mealLabel)
-            }
-        })
-        val creationDate = foodRecord.createdAtTime() ?: System.currentTimeMillis()
-        val date = Date(creationDate)
-        //        binding.date.text = dateFormat.format(date)
-        val localDate =
-            DateTime(date.time)//date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-        binding.date.text =
-            dateToFormat(localDate.toLocalDate(), DAY_FORMAT_FULL) //localDate.format(dateFormatter)
-        viewModel.updateCreatedAt(localDate.millis)
-        binding.date.setOnClickListener {
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.select_meal_date))
-                .setSelection(creationDate)
-                .build()
-            datePicker.addOnPositiveButtonClickListener { dateTime ->
-                val newDate = DateTime(dateTime)
-//                val newLocalDate = newDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                binding.date.text = dateToFormat(
-                    newDate.toLocalDate(),
-                    DAY_FORMAT_FULL
-                ) //newLocalDate.format(dateFormatter)
-                viewModel.updateCreatedAt(dateTime)
-            }
-            datePicker.show(requireActivity().supportFragmentManager, "DATE")
-        }
-    }
 
-    private fun renderIngredients(foodRecord: FoodRecord) {
-        if (foodRecord.ingredients.size == 1) {
-            ingredientAdapter.updateIngredients(emptyList())
-            return
-        }
-
-        ingredientAdapter.updateIngredients(foodRecord.ingredients)
-    }
-
-    private fun onIngredientSelected(index: Int) {
-//        val ingredient = viewModel.getIngredient(index)
-//        sharedViewModel.editIngredient(ingredient, index)
-    }
 }

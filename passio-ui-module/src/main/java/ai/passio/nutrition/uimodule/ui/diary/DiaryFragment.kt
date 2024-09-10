@@ -100,7 +100,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
         override fun onEditFood(suggestedFoods: SuggestedFoods) {
             if (suggestedFoods.foodRecord != null) {
-                sharedViewModel.editFoodRecord(suggestedFoods.foodRecord!!)
+                sharedViewModel.detailsFoodRecord(suggestedFoods.foodRecord!!)
                 viewModel.navigateToDetails()
             } else if (suggestedFoods.searchResult != null) {
                 sharedViewModel.passToEdit(suggestedFoods.searchResult!!)
@@ -202,7 +202,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         val gson = GsonBuilder().create()
 
         val foodRecordCopy = gson.fromJson(gson.toJson(foodRecord), FoodRecord::class.java)
-        sharedViewModel.editFoodRecord(foodRecordCopy)
+        sharedViewModel.detailsFoodRecord(foodRecordCopy)
         viewModel.navigateToEdit()
     }
 

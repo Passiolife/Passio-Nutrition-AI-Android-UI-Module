@@ -19,14 +19,27 @@ object EditFoodUseCase {
     suspend fun logFoodRecord(record: FoodRecord, isEditMode: Boolean): Boolean {
         Log.d("logFoodRecord", "before=== uuid ${record.uuid}")
 
-        if (!isEditMode && record.isCustomFood()) {
-            record.copy().create(record.createdAtTime() ?: Date().time)
+        /*  if (!isEditMode && record.isCustomFood()) {
+              record.copy().create(record.createdAtTime() ?: Date().time)
+          } else if (!isEditMode && record.isRecipe()) {
+              record.copy().create(record.createdAtTime() ?: Date().time)
+          } else if (!isEditMode) {
+              record.create(record.createdAtTime() ?: Date().time)
+          } else if (record.createdAtTime() == null) {
+              record.create(Date().time)
+          }*/
+
+        val foodRecord = if (!isEditMode && record.isCustomFood()) {
+            record.copy()
+        } else if (!isEditMode && record.isRecipe()) {
+            record.copy()
         } else if (!isEditMode) {
-            record.create(record.createdAtTime() ?: Date().time)
-        } else if (record.createdAtTime() == null) {
-            record.create(Date().time)
+            record.copy()
+        } else {
+            record
         }
+        foodRecord.create(record.createdAtTime() ?: Date().time)
         Log.d("logFoodRecord", "after=== uuid ${record.uuid}")
-        return repository.logFoodRecord(record)
+        return repository.logFoodRecord(foodRecord)
     }
 }

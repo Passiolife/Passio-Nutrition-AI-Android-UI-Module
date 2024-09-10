@@ -12,22 +12,22 @@ import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-object UserCache{
+object UserCache {
     private lateinit var userProfile: UserProfile
-    fun getProfile() : UserProfile{
+    fun getProfile(): UserProfile {
         return userProfile
     }
-    fun setProfile(userProfile: UserProfile)
-    {
+
+    fun setProfile(userProfile: UserProfile) {
         this.userProfile = userProfile
     }
 }
+
 class SharedViewModel : ViewModel() {
     private val _nutritionFactsPair = SingleLiveEvent<Pair<PassioNutritionFacts, String>>()
     val nutritionFactsPair: LiveData<Pair<PassioNutritionFacts, String>> get() = _nutritionFactsPair
@@ -35,17 +35,34 @@ class SharedViewModel : ViewModel() {
     private val _editCustomFood = SingleLiveEvent<FoodRecord>()
     val editCustomFood: LiveData<FoodRecord> get() = _editCustomFood
 
+    private val _editRecipe = SingleLiveEvent<FoodRecord>()
+    val editRecipe: LiveData<FoodRecord> get() = _editRecipe
+    private val _editRecipeUpdateLog = SingleLiveEvent<FoodRecord>()
+    val editRecipeUpdateLog: LiveData<FoodRecord> get() = _editRecipeUpdateLog
+
+    private val _editFoodUpdateLog = SingleLiveEvent<FoodRecord>()
+    val editFoodUpdateLog: LiveData<FoodRecord> get() = _editFoodUpdateLog
+
     private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
     val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
 
-    private val _editFoodRecordLD = SingleLiveEvent<FoodRecord>()
-    val editFoodRecordLD: LiveData<FoodRecord> get() = _editFoodRecordLD
+    private val _detailsFoodRecordLD = SingleLiveEvent<FoodRecord>()
+    val detailsFoodRecordLD: LiveData<FoodRecord> get() = _detailsFoodRecordLD
 
     private val _editIngredientLD = SingleLiveEvent<Pair<FoodRecordIngredient, Int>>()
     val editIngredientLD: LiveData<Pair<FoodRecordIngredient, Int>> get() = _editIngredientLD
 
-    private val _addIngredientLD = SingleLiveEvent<FoodRecord>()
-    val addIngredientLD: LiveData<FoodRecord> get() = _addIngredientLD
+    private val _editIngredientToRecipeLD = SingleLiveEvent<Pair<FoodRecordIngredient?, Int>>()
+    val editIngredientToRecipeLD: LiveData<Pair<FoodRecordIngredient?, Int>> get() = _editIngredientToRecipeLD
+
+    private val _addFoodIngredientLD = SingleLiveEvent<FoodRecordIngredient>()
+    val addFoodIngredientLD: LiveData<FoodRecordIngredient> get() = _addFoodIngredientLD
+
+    private val _addFoodIngredientsLD = SingleLiveEvent<FoodRecord>()
+    val addFoodIngredientsLD: LiveData<FoodRecord> get() = _addFoodIngredientsLD
+
+    private val _isAddIngredientLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientLD: LiveData<Boolean> get() = _isAddIngredientLD
 
     private val _editSearchResultLD = SingleLiveEvent<PassioFoodDataInfo>()
     val editSearchResultLD: LiveData<PassioFoodDataInfo> get() = _editSearchResultLD
@@ -92,6 +109,17 @@ class SharedViewModel : ViewModel() {
         _editCustomFood.postValue(foodRecord)
     }
 
+    fun editRecipe(foodRecord: FoodRecord) {
+        _editRecipe.postValue(foodRecord)
+    }
+
+    fun editRecipeUpdateLog(foodRecord: FoodRecord) {
+        _editRecipeUpdateLog.postValue(foodRecord)
+    }
+    fun editFoodUpdateLog(foodRecord: FoodRecord) {
+        _editFoodUpdateLog.postValue(foodRecord)
+    }
+
 
     fun sendBarcodeScanResult(barcode: Barcode) {
         _barcodeScanFoodRecord.postValue(barcode)
@@ -109,19 +137,36 @@ class SharedViewModel : ViewModel() {
         _editIngredientLD.postValue(ingredient to ingredientIndex)
     }
 
-    fun editFoodRecord(foodRecord: FoodRecord) {
-        _editFoodRecordLD.postValue(foodRecord)
+    fun detailsFoodRecord(foodRecord: FoodRecord) {
+        _detailsFoodRecordLD.postValue(foodRecord)
     }
 
-    fun addIngredient(foodRecord: FoodRecord) {
-        _addIngredientLD.postValue(foodRecord)
+    //to add ingredient from EditIngredient screen to Recipe screen. send ingredient to recipe screen
+    fun addFoodIngredient(foodRecordIngredient: FoodRecordIngredient) {
+        _addFoodIngredientLD.postValue(foodRecordIngredient)
     }
+
+    fun updateFoodIngredientToRecipe(ingredient: FoodRecordIngredient?,index: Int) {
+        _editIngredientToRecipeLD.postValue(ingredient to index)
+    }
+
+    //    send more then one ingredients to recipe screen to add to recipe
+    fun addFoodIngredients(foodRecord: FoodRecord) {
+        _addFoodIngredientsLD.postValue(foodRecord)
+    }
+
+    fun setIsAddIngredient(isAddIngredient: Boolean) {
+        _isAddIngredientLD.postValue(isAddIngredient)
+    }
+
     fun addEditWeight(weightRecord: WeightRecord) {
         _addWeightLD.postValue(weightRecord)
     }
+
     fun addEditWater(waterRecord: WaterRecord) {
         _addWaterLD.postValue(waterRecord)
     }
+
     fun addPhotoFoodResult(uris: List<Bitmap>) {
         _photoFoodResultLD.postValue(uris)
     }

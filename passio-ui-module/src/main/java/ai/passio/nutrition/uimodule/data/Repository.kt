@@ -240,11 +240,33 @@ class Repository private constructor() {
     suspend fun fetchCustomFoods(): List<FoodRecord> {
         return connector.fetchCustomFoods()
     }
+    suspend fun fetchCustomFood(uuid: String): FoodRecord? {
+        return connector.fetchCustomFood(uuid)
+    }
+
     suspend fun deleteCustomFood(uuid: String): Boolean {
         return connector.deleteCustomFood(uuid)
     }
+
     suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
         return connector.getCustomFoodUsingBarcode(barcode)
+    }
+
+
+    suspend fun saveRecipe(record: FoodRecord): Boolean {
+        return connector.saveRecipe(record)
+    }
+
+    suspend fun fetchRecipes(): List<FoodRecord> {
+        return connector.fetchRecipes()
+    }
+
+    suspend fun fetchRecipe(id: String): FoodRecord? {
+        return connector.fetchRecipe(id)
+    }
+
+    suspend fun deleteRecipe(uuid: String): Boolean {
+        return connector.deleteRecipe(uuid)
     }
 
 }

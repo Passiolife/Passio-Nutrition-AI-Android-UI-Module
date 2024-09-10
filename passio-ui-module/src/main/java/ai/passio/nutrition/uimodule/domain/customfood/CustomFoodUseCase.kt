@@ -4,7 +4,7 @@ import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.copy
-import ai.passio.nutrition.uimodule.ui.model.newCustomFood
+import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.FoodCandidates
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
@@ -16,19 +16,26 @@ object CustomFoodUseCase {
     private val repository = Repository.getInstance()
 
     suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
+        return repository.saveCustomFood(foodRecord)
+    }
+    /*suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
         val newFood: FoodRecord
         if (!foodRecord.isCustomFood()) {
-            newFood = foodRecord.newCustomFood()
+            newFood = foodRecord.copyAsCustomFood()
             repository.deleteFoodRecord(foodRecord)
             repository.logFoodRecord(newFood)
         } else {
             newFood = foodRecord
         }
         return repository.saveCustomFood(newFood)
-    }
+    }*/
 
     suspend fun fetchCustomFoods(): List<FoodRecord> {
         return repository.fetchCustomFoods()
+
+    }
+    suspend fun fetchCustomFood(uuid: String): FoodRecord? {
+        return repository.fetchCustomFood(uuid)
 
     }
 

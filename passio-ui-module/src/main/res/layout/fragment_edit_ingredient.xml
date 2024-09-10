@@ -300,117 +300,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/mealTimeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meal_time"
-                    android:textColor="@color/passio_black"
-                    android:textStyle="bold" />
-
-                <ai.passio.nutrition.uimodule.ui.edit.MealTimePicker
-                    android:id="@+id/mealTimePicker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/dateLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:textColor="@color/passio_black"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rc_6_border_gray300"
-                    android:paddingStart="13dp"
-                    android:paddingTop="9dp"
-                    android:paddingEnd="13dp"
-                    android:paddingBottom="9dp"
-                    android:textColor="@color/passio_black"
-                    android:textSize="16sp"
-                    tools:text="Tuesday, February 14, 2024" />
-
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/addIngredientLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/addIngredientLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/ingredients"
-                    android:textColor="@color/passio_black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/addEditRecipe"
-                    app:layout_constraintEnd_toStartOf="@id/addEditRecipe"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/addEditRecipe" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/addEditRecipe"
-                    style="@style/btn_positive_action"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:text="@string/make_custom_recipe"
-                    android:textSize="14sp"
-                    android:textStyle="normal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.yanzhenjie.recyclerview.SwipeRecyclerView
-                    android:id="@+id/ingredientList"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/addIngredientLabel"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/ingredient_layout"
-                    tools:visibility="visible" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -430,15 +319,27 @@
                     android:text="@string/cancel" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/delete"
+                    style="@style/btn_delete_action"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:text="@string/delete"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/log"
                     style="@style/btn_positive_action"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:text="@string/log" />
+                    android:text="@string/add_ingredient" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -13,12 +13,21 @@ import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 
-interface OnCreateFoodListener {
-    fun onCreateFood(isUpdateLog: Boolean)
+internal enum class CreateUserFoodType {
+    USER_FOOD,
+    PASSIO_FOOD,
+    USER_RECIPE,
+    PASSIO_RECIPE,
 }
 
-class CreateUserFoodDialog(
-    private val isEditMode: Boolean,
+interface OnCreateFoodListener {
+    fun onEdit(isUpdateLog: Boolean)
+    fun onCreate(isUpdateLog: Boolean)
+}
+
+internal class CreateUserFoodDialog(
+    private val isEditLogMode: Boolean,
+    private val foodDetailType: CreateUserFoodType,
     private val onCreateFoodListener: OnCreateFoodListener
 ) : DialogFragment() {
 
@@ -51,18 +60,56 @@ class CreateUserFoodDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.updateLog.isVisible = isEditMode
-        binding.updateLog.isChecked = true
-        binding.cancel.setOnClickListener {
-            dismiss()
-        }
-        binding.create.setOnClickListener {
-            dismiss()
-            onCreateFoodListener.onCreateFood(binding.updateLog.isChecked && isEditMode)
+
+        with(binding) {
+
+            when (foodDetailType) {
+                CreateUserFoodType.USER_FOOD -> {
+                    title.text = "Create or Edit User Food?"
+                    description.text =
+                        "Do you want to create a new user food based off this one, or edit the existing user food?"
+                    edit.isVisible = isEditLogMode
+                }
+
+                CreateUserFoodType.PASSIO_FOOD -> {
+                    title.text = "Create User Food?"
+                    description.text = "You are about to create a user food from this food"
+                    edit.isVisible = false
+                }
+
+                CreateUserFoodType.USER_RECIPE -> {
+                    title.text = "Create or Edit User Recipe?"
+                    description.text =
+                        "Do you want to create a new user recipe based off this one, or edit the existing recipe?"
+                    edit.isVisible = isEditLogMode
+                }
+
+                CreateUserFoodType.PASSIO_RECIPE -> {
+                    title.text = "Create User Recipe?"
+                    description.text = "You are about to create a user recipe from this food"
+                    edit.isVisible = false
+                }
+            }
+
+            updateLog.isVisible = isEditLogMode
+            updateLog.isChecked = true
+            cancel.setOnClickListener {
+                dismiss()
+            }
+            edit.setOnClickListener {
+                dismiss()
+                onCreateFoodListener.onEdit(updateLog.isChecked && isEditLogMode)
+            }
+            create.setOnClickListener {
+                dismiss()
+                onCreateFoodListener.onCreate(updateLog.isChecked && isEditLogMode)
+            }
+
+            updateLog.setOnChangeListener { _, _ ->
+
+            }
         }
 
-        binding.updateLog.setOnChangeListener { _, _ ->
 
-        }
     }
 }

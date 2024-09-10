@@ -3,6 +3,8 @@ package ai.passio.nutrition.uimodule.ui.search
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentSearchBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.os.Bundle
@@ -16,12 +18,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 
-class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(), FoodSearchView.PassioSearchListener {
+class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(),
+    FoodSearchView.PassioSearchListener {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,18 +46,57 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(), FoodSearchView.P
             )
         }
 
-        sharedViewModel.addIngredientLD.observe(viewLifecycleOwner) { fr ->
-            // viewModel.setFoodRecord(fr)
+        sharedViewModel.isAddIngredientLD.observe(viewLifecycleOwner) { isAddIngredient ->
+            viewModel.setIsAddIngredient(isAddIngredient)
         }
         viewModel.showLoading.observe(viewLifecycleOwner) {
             binding.loading.isVisible = it
         }
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+
+        viewModel.addIngredientEvent.observe(viewLifecycleOwner, ::addFoodIngredient)
+        viewModel.editIngredientEvent.observe(viewLifecycleOwner, ::editFoodIngredient)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    private fun addFoodIngredient(resultWrapper: ResultWrapper<FoodRecord>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+//                requireContext().toast("Food item(s) logged.")
+                sharedViewModel.addFoodIngredients(resultWrapper.value)
+//                sharedViewModel.addFoodIngredient(resultWrapper.value)
+//                viewModel.navigateToEditIngredient()
+                viewModel.navigateBack()
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
+            }
+        }
+    }
+
+    private fun editFoodIngredient(resultWrapper: ResultWrapper<FoodRecord>) {
+        when (resultWrapper) {
+            is ResultWrapper.Success -> {
+                val foodRecord = resultWrapper.value
+                if (foodRecord.ingredients.size > 1) {
+                    sharedViewModel.addFoodIngredients(resultWrapper.value)
+                    viewModel.navigateBack()
+                } else {
+                    sharedViewModel.addFoodIngredients(resultWrapper.value)
+                    viewModel.navigateToEditIngredient()
+                }
+            }
+
+            is ResultWrapper.Error -> {
+                requireContext().toast(resultWrapper.error)
+            }
+        }
     }
 
     private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
@@ -75,12 +121,20 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(), FoodSearchView.P
     }
 
     override fun onFoodItemSelected(searchItem: PassioFoodDataInfo) {
-        sharedViewModel.passToEdit(searchItem)
-        viewModel.navigateToEdit()
+        if (viewModel.getIsAddIngredient()) {
+            viewModel.editIngredient(searchItem)
+        } else {
+            sharedViewModel.passToEdit(searchItem)
+            viewModel.navigateToEdit()
+        }
     }
 
     override fun onFoodItemLog(searchItem: PassioFoodDataInfo) {
-        viewModel.logFood(searchItem)
+        if (viewModel.getIsAddIngredient()) {
+            viewModel.addIngredient(searchItem)
+        } else {
+            viewModel.logFood(searchItem)
+        }
     }
 
     override fun onTextCleared() {

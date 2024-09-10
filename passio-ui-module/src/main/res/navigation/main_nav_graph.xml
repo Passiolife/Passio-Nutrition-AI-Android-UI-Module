@@ -94,7 +94,7 @@
             android:id="@+id/diary_to_edit"
             app:destination="@id/edit">
             <argument
-                android:name="isEdit"
+                android:name="isEditLog"
                 android:defaultValue="false"
                 app:argType="boolean" />
         </action>
@@ -148,6 +148,10 @@
             app:destination="@id/food_creator" />
 
         <action
+            android:id="@+id/edit_to_edit_recipe"
+            app:destination="@id/edit_recipe" />
+
+        <action
             android:id="@+id/edit_to_search"
             app:destination="@id/search"
             app:launchSingleTop="true"
@@ -193,6 +197,16 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/add_food"
             app:popUpToInclusive="true">
+
+        </action>
+        <action
+            android:id="@+id/search_to_edit_ingredient"
+            app:destination="@id/edit_ingredient">
+
+
+            <!--app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false"-->
 
         </action>
 
@@ -286,7 +300,82 @@
         <action
             android:id="@+id/my_foods_to_edit"
             app:destination="@id/edit" />
+        <action
+            android:id="@+id/my_foods_to_edit_recipe"
+            app:destination="@id/edit_recipe" />
+        <action
+            android:id="@+id/my_foods_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/edit_recipe"
+        android:name="ai.passio.nutrition.uimodule.ui.editrecipe.EditRecipeFragment"
+        android:label="EditRecipeFragment"
+        tools:layout="@layout/fragment_edit_recipe">
+
+        <action
+            android:id="@+id/edit_recipe_to_take_photo"
+            app:destination="@id/take_photo">
+            <argument
+                android:name="isPicker"
+                android:defaultValue="true"
+                app:argType="boolean" />
+            <argument
+                android:name="isSinglePhoto"
+                android:defaultValue="true"
+                app:argType="boolean" />
+        </action>
+
+        <action
+            android:id="@+id/edit_recipe_to_edit_ingredient"
+            app:destination="@id/edit_ingredient" />
+
+        <action
+            android:id="@+id/edit_recipe_to_search"
+            app:destination="@id/search" />
+
+        <action
+            android:id="@+id/edit_recipe_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+
+        <action
+            android:id="@+id/edit_recipe_to_my_foods"
+            app:destination="@id/my_foods"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" >
+            <argument
+                android:name="isRecipeShow"
+                app:argType="boolean"
+                android:defaultValue="true"/>
+        </action>
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/edit_ingredient"
+        android:name="ai.passio.nutrition.uimodule.ui.editingredient.EditIngredientFragment"
+        android:label="EditIngredientFragment"
+        tools:layout="@layout/fragment_edit_ingredient">
+
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/edit_ingredient_to_nutrition_info"
+            app:destination="@id/nutrition_info" />
+
+    </fragment>
+
 
     <fragment
         android:id="@+id/custom_foods"

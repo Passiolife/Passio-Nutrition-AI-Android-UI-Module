@@ -8,6 +8,12 @@
         <item name="android:fontFamily">@font/regular</item>
     </style>
 
+    <style name="btn_delete_action" parent="AppTheme">
+        <item name="android:background">@drawable/rc_8_border_red</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/passio_white</item>
+    </style>
+
     <style name="btn_negative_action" parent="AppTheme">
         <item name="android:background">@drawable/rc_8_border_purple</item>
         <item name="android:gravity">center</item>

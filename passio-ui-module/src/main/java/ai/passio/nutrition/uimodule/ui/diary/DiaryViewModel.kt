@@ -110,13 +110,13 @@ class DiaryViewModel : BaseViewModel() {
 
     fun navigateToEdit() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(DiaryFragmentDirections.diaryToEdit(isEdit = true))
+            navigate(DiaryFragmentDirections.diaryToEdit(isEditLog = true))
         }
     }
 
     fun navigateToDetails() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(DiaryFragmentDirections.diaryToEdit(isEdit = false))
+            navigate(DiaryFragmentDirections.diaryToEdit(isEditLog = false))
         }
     }
 

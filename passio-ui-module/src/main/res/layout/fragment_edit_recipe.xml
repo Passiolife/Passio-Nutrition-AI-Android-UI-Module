@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/passio_background"
+    android:orientation="vertical"
+    tools:context=".ui.profile.MyProfileFragment">
+
+    <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/passio_white"
+        android:elevation="4dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:padding="8dp">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblPersonalInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/recipe_details"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivThumb"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toTopOf="@id/name"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblName"
+                        app:srcCompat="@drawable/thumb_nutrition_facts" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblThumb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:padding="0dp"
+                        android:text="@string/edit_image"
+                        android:textColor="@color/passio_primary"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@id/ivThumb"
+                        app:layout_constraintStart_toStartOf="@id/ivThumb"
+                        app:layout_constraintTop_toBottomOf="@id/ivThumb" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblName"
+                        style="@style/TextProfile"
+                        android:layout_marginStart="12dp"
+                        android:padding="0dp"
+                        android:text="@string/recipe_name"
+                        app:layout_constraintStart_toEndOf="@id/ivThumb"
+                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/name"
+                        style="@style/EditTextMyFood"
+                        android:hint="@string/recipe_name"
+                        android:inputType="textCapWords"
+                        android:lines="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/lblName"
+                        app:layout_constraintTop_toBottomOf="@id/lblName" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:padding="16dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/servingSizeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/serving_size"
+                        android:textColor="@color/passio_black"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/servingSizeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/passio_black"
+                        app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text=" (123 g)" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/servingQuantity"
+                        android:layout_width="64dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:gravity="center"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:lines="1"
+                        android:paddingTop="9dp"
+                        android:paddingBottom="9dp"
+                        android:textColor="@color/passio_black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
+                        tools:ignore="Autofill,LabelFor"
+                        tools:text="45" />
+
+                    <Spinner
+                        android:id="@+id/servingUnit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:clipToPadding="false"
+                        android:padding="2dp"
+                        android:spinnerMode="dropdown"
+                        app:layout_constraintBottom_toBottomOf="@id/servingQuantity"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/servingQuantity"
+                        app:layout_constraintTop_toTopOf="@id/servingQuantity" />
+
+                    <com.warkiz.tickseekbar.TickSeekBar
+                        android:id="@+id/servingQuantitySeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/servingQuantity"
+                        app:tsb_progress_value_float="true"
+                        app:tsb_thumb_color="@color/passio_primary"
+                        app:tsb_thumb_size="24dp"
+                        app:tsb_track_background_color="@color/passio_indigo50"
+                        app:tsb_track_background_size="8dp"
+                        app:tsb_track_progress_color="@color/passio_primary"
+                        app:tsb_track_progress_size="8dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/addIngredientLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/addIngredientLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/add_ingredient"
+                        android:textColor="@color/passio_black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:drawableEndCompat="@drawable/icon_plus"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+                        android:id="@+id/ingredientList"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/addIngredientLabel"
+                        tools:itemCount="3"
+                        tools:listitem="@layout/ingredient_layout"
+                        tools:visibility="visible" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/cancel"
+                        style="@style/btn_negative_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/cancel" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/save"
+                        style="@style/btn_positive_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/save" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <FrameLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/passio_white40p"
+            android:clickable="true"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/passio_primary" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
