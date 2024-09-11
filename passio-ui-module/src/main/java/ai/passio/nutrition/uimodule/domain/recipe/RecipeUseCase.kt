@@ -4,7 +4,6 @@ import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.copy
-import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import java.util.Date
 
 object RecipeUseCase {

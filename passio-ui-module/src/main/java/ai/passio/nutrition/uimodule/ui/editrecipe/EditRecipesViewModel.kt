@@ -46,7 +46,6 @@ class EditRecipesViewModel : BaseViewModel() {
     private var isEditRecipe = false
 
 
-    private val servingName = "serving"
     private val defaultSizeGram = PassioServingSize(1.0, Grams.unitName) //g or ml
     private val defaultUnitGram = PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0))
 
