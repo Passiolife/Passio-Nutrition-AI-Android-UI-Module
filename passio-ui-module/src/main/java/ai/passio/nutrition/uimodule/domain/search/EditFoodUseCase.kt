@@ -1,7 +1,6 @@
 package ai.passio.nutrition.uimodule.domain.search
 
 import ai.passio.nutrition.uimodule.data.Repository
-import ai.passio.nutrition.uimodule.domain.diary.DiaryUseCase
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo

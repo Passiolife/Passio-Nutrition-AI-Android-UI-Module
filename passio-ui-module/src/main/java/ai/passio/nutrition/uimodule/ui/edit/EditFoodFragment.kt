@@ -30,7 +30,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
@@ -382,7 +381,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             description.isEnabled = false
             legend.isEnabled = false
             setDrawEntryLabels(false)
-            setDrawSliceText(false)
+//            setDrawSliceText(false)
             setDrawMarkers(false)
             setTouchEnabled(false)
         }

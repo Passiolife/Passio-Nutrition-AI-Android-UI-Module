@@ -17,7 +17,6 @@ import ai.passio.nutrition.uimodule.ui.util.showTimePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
 
 class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
 

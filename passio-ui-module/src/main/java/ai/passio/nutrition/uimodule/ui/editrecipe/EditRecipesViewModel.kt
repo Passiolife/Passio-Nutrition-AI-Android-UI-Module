@@ -47,16 +47,12 @@ class EditRecipesViewModel : BaseViewModel() {
 
     private val servingName = "serving"
     private val defaultSizeGram = PassioServingSize(1.0, Grams.unitName) //g or ml
-    private val defaultSizeServing = PassioServingSize(1.0, servingName)
     private val defaultUnitGram = PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0))
-    private val defaultUnitServing = PassioServingUnit(servingName, UnitMass(Grams, 1.0))
 
     init {
 
         foodRecord.servingSizes.add(defaultSizeGram)
         foodRecord.servingUnits.add(defaultUnitGram)
-//        foodRecord.servingSizes.add(PassioServingSize(100.0, Grams.unitName)) //g or ml
-//        foodRecord.servingUnits.add(PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0)))
         foodRecord.setSelectedUnit(Grams.unitName)
         foodRecord.setSelectedQuantity(100.0)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
@@ -138,10 +134,6 @@ class EditRecipesViewModel : BaseViewModel() {
     }
 
     fun getIngredient(index: Int) = foodRecord.ingredients[index]
-
-    fun isEditLog(): Boolean {
-        return loggedRecord != null
-    }
 
     fun saveRecipe() {
         viewModelScope.launch {

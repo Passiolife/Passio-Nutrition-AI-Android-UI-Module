@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.data.PieData
@@ -157,7 +156,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
             description.isEnabled = false
             legend.isEnabled = false
             setDrawEntryLabels(false)
-            setDrawSliceText(false)
+//            setDrawSliceText(false)
             setDrawMarkers(false)
             setTouchEnabled(false)
         }

@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.databinding.FragmentSpeechBinding
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.PassioSDK
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -15,7 +16,6 @@ import android.speech.SpeechRecognizer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -107,20 +107,25 @@ class VoiceFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun changeRecordingState(state: Int) {
-        if (state == 2) {
-            binding.toggleSpeech.background = redBackground
-            binding.toggleSpeech.text = "Stop listening"
-            binding.toggleSpeech.setCompoundDrawablesWithIntrinsicBounds(null, null, micOff, null)
-            currentSpeech = ""
-        } else if (state == 1) {
-            binding.toggleSpeech.background = orangeBackground
-            binding.toggleSpeech.text = "Fetching result..."
-            binding.toggleSpeech.setCompoundDrawablesWithIntrinsicBounds(null, null, micOff, null)
-        } else if (state == 0){
-            binding.toggleSpeech.background = greenBackground
-            binding.toggleSpeech.text = "Start listening"
-            binding.toggleSpeech.setCompoundDrawablesWithIntrinsicBounds(null, null, micOn, null)
+        when (state) {
+            2 -> {
+                binding.toggleSpeech.background = redBackground
+                binding.toggleSpeech.text = "Stop listening"
+                binding.toggleSpeech.setCompoundDrawablesWithIntrinsicBounds(null, null, micOff, null)
+                currentSpeech = ""
+            }
+            1 -> {
+                binding.toggleSpeech.background = orangeBackground
+                binding.toggleSpeech.text = "Fetching result..."
+                binding.toggleSpeech.setCompoundDrawablesWithIntrinsicBounds(null, null, micOff, null)
+            }
+            0 -> {
+                binding.toggleSpeech.background = greenBackground
+                binding.toggleSpeech.text = "Start listening"
+                binding.toggleSpeech.setCompoundDrawablesWithIntrinsicBounds(null, null, micOn, null)
+            }
         }
     }
 
