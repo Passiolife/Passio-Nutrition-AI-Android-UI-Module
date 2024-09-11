@@ -37,13 +37,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/noDataFound"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="20dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:text="@string/no_records_found"
+        android:textColor="@color/passio_gray900"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
     <FrameLayout
         android:id="@+id/loading"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/passio_white40p"
-        android:visibility="gone"
         android:clickable="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,6 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminateTint="@color/passio_primary" />
+
 
     </FrameLayout>
 

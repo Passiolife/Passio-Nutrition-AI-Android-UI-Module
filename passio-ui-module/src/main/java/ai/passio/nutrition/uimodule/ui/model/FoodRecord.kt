@@ -240,7 +240,7 @@ open class FoodRecord() {
         setUnitToServing()
     }
 
-    private fun setUnitToServing() {
+    fun setUnitToServing() {
         if (ingredients.isEmpty())
             return
         val weight = ingredientWeight()
@@ -460,7 +460,7 @@ fun FoodRecord.copyAsCustomFood(): FoodRecord {
     val gson = GsonBuilder().create()
     return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
         .apply {
-            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
 //            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
         }
 }

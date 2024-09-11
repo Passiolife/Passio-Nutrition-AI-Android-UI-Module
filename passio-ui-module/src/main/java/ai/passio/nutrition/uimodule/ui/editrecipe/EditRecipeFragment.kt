@@ -79,6 +79,9 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             save.setOnClickListener {
                 viewModel.saveRecipe()
             }
+            delete.setOnClickListener {
+                viewModel.deleteRecipe()
+            }
             cancel.setOnClickListener {
                 viewModel.navigateBack()
             }
@@ -107,13 +110,16 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             servingQuantitySeekBar.onSeekChangeListener = seekChangeListener
 
             setupIngredients()
+
+            viewModel.showPrefilledData()
         }
 
     }
 
-    private fun onIngredientSelected(index: Int) {
-//        val ingredient = viewModel.getIngredient(index)
-//        sharedViewModel.editIngredient(ingredient, index)
+    private fun onIngredientSelected(adapterPosition: Int) {
+        val ingredient = viewModel.getIngredient(adapterPosition)
+        sharedViewModel.editIngredient(ingredient, adapterPosition)
+        viewModel.navigateToEditIngredient()
     }
 
     private fun setupIngredients() {
@@ -185,7 +191,10 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
         }
         sharedViewModel.addFoodIngredientLD.observe(viewLifecycleOwner, ::addFoodIngredient)
         sharedViewModel.addFoodIngredientsLD.observe(viewLifecycleOwner, ::addFoodIngredients)
-        sharedViewModel.editIngredientToRecipeLD.observe(viewLifecycleOwner, ::editDeleteFoodIngredients)
+        sharedViewModel.editIngredientToRecipeLD.observe(
+            viewLifecycleOwner,
+            ::editDeleteFoodIngredients
+        )
         viewModel.photoPathEvent.observe(viewLifecycleOwner) { photoPath ->
             binding.ivThumb.load(photoPath) {
                 transformations(CircleCropTransformation())
@@ -195,6 +204,12 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             updateFoodRecord(pair.first, pair.second)
         }
         viewModel.saveRecipeEvent.observe(viewLifecycleOwner, ::recipeSaved)
+        viewModel.showMessageEvent.observe(viewLifecycleOwner, ::showMessage)
+    }
+
+
+    private fun showMessage(message: String) {
+        requireContext().toast(message)
     }
 
     private fun recipeSaved(resultWrapper: ResultWrapper<Boolean>) {
@@ -216,6 +231,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
 
     private fun updateFoodRecord(foodRecord: FoodRecord, origin: UpdateOrigin) {
 //        renderNutrients(foodRecord)
+        binding.delete.isVisible = viewModel.isEditRecipe()
         renderServingSize(foodRecord, origin)
         if (origin == UpdateOrigin.INGREDIENT) {
             setupImmutableProperties(foodRecord)
@@ -335,6 +351,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
     private fun addFoodIngredients(foodRecord: FoodRecord) {
         viewModel.addIngredients(foodRecord)
     }
+
     private fun editDeleteFoodIngredients(ingredient: Pair<FoodRecordIngredient?, Int>) {
         viewModel.editIngredient(ingredient)
     }

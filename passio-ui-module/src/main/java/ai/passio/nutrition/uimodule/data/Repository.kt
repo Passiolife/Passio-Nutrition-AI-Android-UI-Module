@@ -124,8 +124,8 @@ class Repository private constructor() {
         return connector.updateRecords(records)
     }
 
-    suspend fun deleteFoodRecord(record: FoodRecord): Boolean {
-        return connector.deleteRecord(record)
+    suspend fun deleteFoodRecord(uuid: String): Boolean {
+        return connector.deleteRecord(uuid)
     }
 
     suspend fun getLogsForDay(day: Date): List<FoodRecord> {

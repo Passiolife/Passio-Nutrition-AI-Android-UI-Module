@@ -430,6 +430,18 @@
                     android:text="@string/cancel" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/delete"
+                    style="@style/btn_delete_action"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:text="@string/delete" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/log"
                     style="@style/btn_positive_action"
                     android:layout_width="0dp"

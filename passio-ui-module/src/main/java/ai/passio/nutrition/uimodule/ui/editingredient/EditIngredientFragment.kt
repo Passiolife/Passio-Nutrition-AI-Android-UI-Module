@@ -12,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
@@ -196,7 +197,7 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
     }
 
     private fun renderError() {
-        Toast.makeText(requireContext(), "Could not fetch nutrition data", Toast.LENGTH_LONG).show()
+        requireContext().toast("Could not fetch nutrition data")
     }
 
     private fun setupImmutableProperties(foodRecord: FoodRecord) {
@@ -222,18 +223,9 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
     }
 
     private fun renderFoodRecord(model: EditFoodModel) {
-        setupEditOption(model.foodRecord)
         setupImmutableProperties(model.foodRecord!!)
         renderNutrients(model.foodRecord)
         renderServingSize(model.foodRecord)
-    }
-
-    private fun setupEditOption(foodRecord: FoodRecord?) {
-        if (foodRecord != null && foodRecord.ingredients.size <= 1) {
-            binding.toolbar.showRightIcon()
-        } else {
-            binding.toolbar.hideRightIcon()
-        }
     }
 
 

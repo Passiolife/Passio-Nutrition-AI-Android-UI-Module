@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.app.DatePickerDialog
@@ -123,26 +124,14 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Food item logged.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Food item logged.")
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not log food item.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Could not log food item.")
                 }
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
     }

@@ -66,6 +66,9 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             save.setOnClickListener {
                 viewModel.saveCustomFood()
             }
+            delete.setOnClickListener {
+                viewModel.deleteCustomFood()
+            }
             cancel.setOnClickListener {
                 viewModel.navigateBack()
             }
@@ -311,6 +314,10 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             binding.loading.isVisible = it
         }
         viewModel.prefillFoodData.observe(viewLifecycleOwner, ::showPrefilledData)
+        viewModel.isEditCustomFood.observe(viewLifecycleOwner) { isEditCustomFood ->
+            binding.delete.isVisible = isEditCustomFood
+
+        }
     }
 
     private val photoPickerListener = object : PhotoPickerListener {

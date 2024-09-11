@@ -14,7 +14,7 @@ interface PassioConnector {
 
     suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean
 
-    suspend fun deleteRecord(foodRecord: FoodRecord): Boolean
+    suspend fun deleteRecord(uuid: String): Boolean
 
     suspend fun fetchDayRecords(day: Date): List<FoodRecord>
 

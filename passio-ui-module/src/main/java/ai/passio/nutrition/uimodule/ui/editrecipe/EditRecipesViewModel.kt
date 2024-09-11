@@ -37,14 +37,26 @@ class EditRecipesViewModel : BaseViewModel() {
     private val _saveRecipeEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
     val saveRecipeEvent: LiveData<ResultWrapper<Boolean>> = _saveRecipeEvent
 
+    private val _showMessageEvent = SingleLiveEvent<String>()
+    val showMessageEvent: LiveData<String> = _showMessageEvent
+
     private var foodRecord = FoodRecord()
     private var loggedRecord: FoodRecord? = null
     private var isEditRecipe = false
 
 
+    private val servingName = "serving"
+    private val defaultSizeGram = PassioServingSize(1.0, Grams.unitName) //g or ml
+    private val defaultSizeServing = PassioServingSize(1.0, servingName)
+    private val defaultUnitGram = PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0))
+    private val defaultUnitServing = PassioServingUnit(servingName, UnitMass(Grams, 1.0))
+
     init {
-        foodRecord.servingSizes.add(PassioServingSize(100.0, Grams.unitName)) //g or ml
-        foodRecord.servingUnits.add(PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0)))
+
+        foodRecord.servingSizes.add(defaultSizeGram)
+        foodRecord.servingUnits.add(defaultUnitGram)
+//        foodRecord.servingSizes.add(PassioServingSize(100.0, Grams.unitName)) //g or ml
+//        foodRecord.servingUnits.add(PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0)))
         foodRecord.setSelectedUnit(Grams.unitName)
         foodRecord.setSelectedQuantity(100.0)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
@@ -54,12 +66,25 @@ class EditRecipesViewModel : BaseViewModel() {
         this.loggedRecord = loggedRecord
     }
 
-    fun setRecipeToEditOrCreateNew(editRecipe: FoodRecord) {
-        this.foodRecord = editRecipe
-        if (editRecipe.isUserRecipe()) {
-            isEditRecipe = true
-        }
+    fun showPrefilledData()
+    {
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+    }
+
+    fun setRecipeToEditOrCreateNew(editRecipe: FoodRecord) {
+        viewModelScope.launch {
+            foodRecord = editRecipe
+            if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
+                isEditRecipe = true
+            }
+
+            foodRecord.setUnitToServing()
+            _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+        }
+    }
+
+    fun isEditRecipe(): Boolean {
+        return isEditRecipe
     }
 
     fun setPhotoPath(path: String) {
@@ -114,6 +139,9 @@ class EditRecipesViewModel : BaseViewModel() {
 
     fun getIngredient(index: Int) = foodRecord.ingredients[index]
 
+    fun isEditLog(): Boolean {
+        return loggedRecord != null
+    }
 
     fun saveRecipe() {
         viewModelScope.launch {
@@ -151,6 +179,19 @@ class EditRecipesViewModel : BaseViewModel() {
                 }
                 _showLoading.postValue(false)
             }
+        }
+    }
+
+    fun deleteRecipe() {
+        viewModelScope.launch {
+            _showLoading.postValue(true)
+            if (useCase.deleteRecipe(foodRecord.uuid)) {
+                _showMessageEvent.postValue("Recipe deleted!")
+            } else {
+                _showMessageEvent.postValue("Could not delete recipe, Please try again.")
+            }
+            navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+            _showLoading.postValue(false)
         }
     }
 

@@ -31,6 +31,9 @@ class EditFoodViewModel : BaseViewModel() {
     private val _resultLogFood = SingleLiveEvent<ResultWrapper<FoodRecord>>()
     val resultLogFood: LiveData<ResultWrapper<FoodRecord>> get() = _resultLogFood
 
+    private val _deleteLogFood = SingleLiveEvent<Boolean>()
+    val deleteLogFood: LiveData<Boolean> get() = _deleteLogFood
+
     private val _recipeInfo =
         SingleLiveEvent<Pair<FoodRecord?, Boolean>>() //custom recipe, is log update
     val recipeInfo: LiveData<Pair<FoodRecord?, Boolean>> get() = _recipeInfo
@@ -81,6 +84,11 @@ class EditFoodViewModel : BaseViewModel() {
         foodRecord.create(date)
     }
 
+    fun deleteCurrentRecord() {
+        viewModelScope.launch {
+            _deleteLogFood.postValue(useCase.deleteRecord(foodRecord.uuid))
+        }
+    }
     fun logCurrentRecord() {
         viewModelScope.launch {
             if (useCase.logFoodRecord(foodRecord, isEditLogMode)) {

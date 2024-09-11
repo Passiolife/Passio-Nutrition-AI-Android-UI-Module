@@ -7,7 +7,6 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
-import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
 import ai.passio.nutrition.uimodule.ui.util.CommonDialog
@@ -18,6 +17,7 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.dateToFormat
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
@@ -81,6 +81,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             viewModel.setEditLogMode(it)
             if (it) {
                 binding.log.text = requireContext().getString(R.string.save)
+                binding.delete.isVisible = true
             }
         }
 
@@ -115,6 +116,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 viewModel.navigateBack()
             }
 
+            delete.setOnClickListener {
+                viewModel.deleteCurrentRecord()
+            }
             log.setOnClickListener {
                 viewModel.logCurrentRecord()
             }
@@ -157,12 +161,20 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         viewModel.resultLogFood.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is ResultWrapper.Error -> {
-                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
+                    requireContext().toast(result.error)
                 }
 
                 is ResultWrapper.Success -> {
                     viewModel.navigateToDiary(result.value.createdAtTime())
                 }
+            }
+        }
+        viewModel.deleteLogFood.observe(viewLifecycleOwner) { isDeleted ->
+            if (isDeleted) {
+                requireContext().toast("Record deleted.")
+                viewModel.navigateBack()
+            } else {
+                requireContext().toast("Failed to delete record. Please try again")
             }
         }
 
@@ -189,7 +201,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                         }
 
                         override fun onPositiveAction() {
-                            sharedViewModel.editRecipe(viewModel.getFoodRecord().clone())
+                            sharedViewModel.editRecipe(viewModel.getFoodRecord().copyAsRecipe())
                             if (isUpdateLog) {
                                 sharedViewModel.editRecipeUpdateLog(viewModel.getFoodRecord())
                             }
@@ -223,7 +235,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                         }
 
                         override fun onPositiveAction() {
-                            sharedViewModel.editCustomFood(viewModel.getFoodRecord().clone())
+                            sharedViewModel.editCustomFood(
+                                viewModel.getFoodRecord().copyAsCustomFood()
+                            )
                             if (isUpdateLog) {
                                 sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
                             }
@@ -375,7 +389,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun renderError() {
-        Toast.makeText(requireContext(), "Could not fetch nutrition data", Toast.LENGTH_LONG).show()
+        requireContext().toast("Could not fetch nutrition data")
     }
 
     private fun setupImmutableProperties(foodRecord: FoodRecord) {

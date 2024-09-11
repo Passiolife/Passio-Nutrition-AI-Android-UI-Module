@@ -103,13 +103,13 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
             binding.loading.isVisible = it
         }
         viewModel.recipeListEvent.observe(viewLifecycleOwner) {
+            binding.noDataFound.isVisible = it.isEmpty()
             customFoodsAdapter.updateItems(it)
         }
         viewModel.logRecipeEvent.observe(viewLifecycleOwner, ::foodItemLogged)
     }
 
     private fun onRecipeDetails(customFood: FoodRecord) {
-//        sharedViewModel.editRecipe(customFood)
         sharedViewModel.detailsFoodRecord(customFood)
         viewModel.navigateToDetails()
     }
@@ -133,8 +133,6 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
             }
         }
     }
-
-
 
 
 }

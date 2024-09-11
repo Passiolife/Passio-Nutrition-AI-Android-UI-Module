@@ -169,11 +169,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
 
         }

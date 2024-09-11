@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.foodcreator
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.editrecipe.EditRecipeFragmentDirections
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALCIUM_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALORIES_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
@@ -88,6 +87,8 @@ class FoodCreatorViewModel : BaseViewModel() {
     val otherNutritionFactsNotAdded get() = otherNutritionFacts.filter { !it.isAdded }
 
     private var customFoodRecord: FoodRecord? = null
+    private val _isEditCustomFood = SingleLiveEvent<Boolean>()
+    val isEditCustomFood: LiveData<Boolean> = _isEditCustomFood
     private val _prefillFoodData = SingleLiveEvent<FoodRecord>()
     val prefillFoodData: LiveData<FoodRecord> = _prefillFoodData
 
@@ -295,6 +296,7 @@ class FoodCreatorViewModel : BaseViewModel() {
         otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium()?.value ?: 0.0)
 
         customFoodRecord = foodRecord
+        _isEditCustomFood.postValue(true)
         _prefillFoodData.postValue(foodRecord)
     }
 
@@ -386,6 +388,7 @@ class FoodCreatorViewModel : BaseViewModel() {
             foodImagePath = photoPath
         )
         customFoodRecord = customFood
+        _isEditCustomFood.postValue(false)
         _prefillFoodData.postValue(customFood)
     }
 
@@ -457,6 +460,22 @@ class FoodCreatorViewModel : BaseViewModel() {
         this.brandName = brandName
     }
 
+    fun deleteCustomFood() {
+        viewModelScope.launch {
+            if (customFoodRecord != null) {
+                _showLoading.postValue(true)
+                if (useCase.deleteCustomFood(customFoodRecord!!.uuid)) {
+                    _showMessageEvent.postValue("Food deleted successfully.")
+                    navigateToMyFoods()
+
+                } else {
+                    _showMessageEvent.postValue("Failed to delete food. Please try again.")
+                }
+                _showLoading.postValue(false)
+            }
+        }
+    }
+
     fun saveCustomFood() {
         viewModelScope.launch {
 
@@ -471,9 +490,9 @@ class FoodCreatorViewModel : BaseViewModel() {
 
             if (!productName.isValid()) {
                 _showMessageEvent.postValue("Please add valid product name.")
-            } else if (!brandName.isValid()) {
+            } /*else if (!brandName.isValid()) {
                 _showMessageEvent.postValue("Please add valid brand name.")
-            } else if (servingQuantity == 0.0) {
+            }*/ else if (servingQuantity == 0.0) {
                 _showMessageEvent.postValue("Please add valid serving size.")
             } else if (!servingUnit.isValid()) {
                 _showMessageEvent.postValue("Please add valid serving unit.")
@@ -586,9 +605,11 @@ class FoodCreatorViewModel : BaseViewModel() {
     }
 
     private fun isAddedNutrientsValid(): Boolean {
-        if (requiredNutritionFacts.any { it.value == 0.0 }) {
+//        if (requiredNutritionFacts.any { it.value == 0.0 }) {
+        if (requiredNutritionFacts.any { it.value < 0.0 }) {
             return false
-        } else if (otherNutritionFactsAdded.any { it.value == 0.0 }) {
+//        } else if (otherNutritionFactsAdded.any { it.value == 0.0 }) {
+        } else if (otherNutritionFactsAdded.any { it.value < 0.0 }) {
             return false
         }
         return true
@@ -597,7 +618,7 @@ class FoodCreatorViewModel : BaseViewModel() {
     private fun navigateOnSave() {
         if (loggedRecord != null) //update log upon create or save
         {
-            navigate(FoodCreatorFragmentDirections.foodCreatorToDiary())
+            navigateToDiary()
         }
         /*else if (isEditRecipe && loggedRecord == null)
         {
@@ -608,7 +629,7 @@ class FoodCreatorViewModel : BaseViewModel() {
             navigateBack()
         }*/
         else {
-            navigate(FoodCreatorFragmentDirections.foodCreatorToMyFoods())
+            navigateToMyFoods()
         }
     }
 

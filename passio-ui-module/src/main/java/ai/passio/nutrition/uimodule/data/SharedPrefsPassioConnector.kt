@@ -101,8 +101,8 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return true
     }
 
-    override suspend fun deleteRecord(foodRecord: FoodRecord): Boolean {
-        val recordToDelete = records.find { it.uuid == foodRecord.uuid } ?: return false
+    override suspend fun deleteRecord(uuid: String): Boolean {
+        val recordToDelete = records.find { it.uuid == uuid } ?: return false
         records.remove(recordToDelete)
         sharedPreferences.saveRecords(records.map { gson.toJson(it) })
         return true

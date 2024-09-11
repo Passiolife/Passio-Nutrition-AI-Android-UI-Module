@@ -103,6 +103,7 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
             binding.loading.isVisible = it
         }
         viewModel.customFoodListEvent.observe(viewLifecycleOwner) {
+            binding.noDataFound.isVisible = it.isEmpty()
             customFoodsAdapter.updateItems(it)
         }
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)

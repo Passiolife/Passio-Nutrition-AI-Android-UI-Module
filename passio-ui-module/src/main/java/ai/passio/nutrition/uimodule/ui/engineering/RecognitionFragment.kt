@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.engineering
 
 import ai.passio.nutrition.uimodule.databinding.FragmentRecognitionBinding
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,11 +27,7 @@ class RecognitionFragment(
     override fun getPreviewView(): PreviewView = binding.previewView
 
     override fun onCameraPermissionDenied() {
-        Toast.makeText(
-            requireContext(),
-            "The app requires Camera Permission to run recognition",
-            Toast.LENGTH_SHORT
-        ).show()
+        requireContext().toast("The app requires Camera Permission to run recognition")
     }
 
     override fun onCameraReady() {

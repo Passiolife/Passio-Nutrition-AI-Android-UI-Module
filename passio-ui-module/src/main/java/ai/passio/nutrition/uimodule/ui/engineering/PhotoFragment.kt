@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentPhotoBinding
 import ai.passio.nutrition.uimodule.ui.util.PathUtil
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.PassioSDK
 import android.Manifest
@@ -149,7 +150,7 @@ class PhotoFragment(
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
+                requireContext().toast("Canceled")
             }
         }
 
@@ -164,7 +165,7 @@ class PhotoFragment(
                 fis.close()
                 file.delete()
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
+                requireContext().toast("Canceled")
             }
         }
     }

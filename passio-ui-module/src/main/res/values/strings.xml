@@ -213,6 +213,7 @@
     <string name="ingredients">Ingredients</string>
     <string name="make_custom_recipe">Make custom recipe</string>
     <string name="edit_recipe_">Edit recipe</string>
+    <string name="no_records_found">No records found.</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

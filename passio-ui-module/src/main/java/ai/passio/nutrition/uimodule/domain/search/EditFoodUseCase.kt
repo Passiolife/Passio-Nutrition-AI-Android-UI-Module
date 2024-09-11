@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.domain.search
 
 import ai.passio.nutrition.uimodule.data.Repository
+import ai.passio.nutrition.uimodule.domain.diary.DiaryUseCase
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
@@ -41,5 +42,9 @@ object EditFoodUseCase {
         foodRecord.create(record.createdAtTime() ?: Date().time)
         Log.d("logFoodRecord", "after=== uuid ${record.uuid}")
         return repository.logFoodRecord(foodRecord)
+    }
+
+    suspend fun deleteRecord(uuid: String): Boolean {
+        return repository.deleteFoodRecord(uuid)
     }
 }

@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.engineering
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentSpeechBinding
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.PassioSDK
 import android.Manifest
 import android.content.Intent
@@ -34,11 +35,7 @@ class VoiceFragment : Fragment() {
             permissions.entries.forEach {
                 if (!it.value) {
                     allGranted = false
-                    Toast.makeText(
-                        requireContext(),
-                        "Permission: ${it.key} needed",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Permission: ${it.key} needed")
                 }
             }
             if (allGranted) {
@@ -153,11 +150,7 @@ class VoiceFragment : Fragment() {
             override fun onError(error: Int) {
                 if (context == null) return
                 isRecording = false
-                Toast.makeText(
-                    requireContext(),
-                    "Speech recognizer error: $error",
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast("Speech recognizer error: $error")
             }
 
             override fun onResults(results: Bundle?) {

@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.profile.DailyNutritionTargetDialog.DailyN
 import ai.passio.nutrition.uimodule.ui.settings.HeightPickerDialog
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import android.graphics.Color
 import android.os.Bundle
@@ -113,12 +114,12 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
     private fun showUpdateUserResult(resultWrapper: ResultWrapper<UserProfile>) {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
-                Toast.makeText(requireContext(), "User Profile Saved!", Toast.LENGTH_SHORT).show()
+                requireContext().toast("User Profile Saved!")
 //                viewModel.navigateBack()
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(requireContext(), resultWrapper.error, Toast.LENGTH_SHORT).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
 
