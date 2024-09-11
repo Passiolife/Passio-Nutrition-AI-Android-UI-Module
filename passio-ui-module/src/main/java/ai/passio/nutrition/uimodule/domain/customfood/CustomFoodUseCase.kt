@@ -16,6 +16,7 @@ object CustomFoodUseCase {
     private val repository = Repository.getInstance()
 
     suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
+        foodRecord.create(null)
         return repository.saveCustomFood(foodRecord)
     }
     /*suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
@@ -32,6 +33,10 @@ object CustomFoodUseCase {
 
     suspend fun fetchCustomFoods(): List<FoodRecord> {
         return repository.fetchCustomFoods()
+
+    }
+    suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
+        return repository.fetchCustomFoods(searchQuery)
 
     }
     suspend fun fetchCustomFood(uuid: String): FoodRecord? {

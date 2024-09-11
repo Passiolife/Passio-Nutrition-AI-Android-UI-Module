@@ -12,19 +12,16 @@ object RecipeUseCase {
     private val repository = Repository.getInstance()
 
     suspend fun saveRecipe(foodRecord: FoodRecord): Boolean {
-        /*val newFood: FoodRecord
-        if (!foodRecord.isCustomFood()) {
-            newFood = foodRecord.copyAsCustomFood()
-            repository.deleteFoodRecord(foodRecord)
-            repository.logFoodRecord(newFood)
-        } else {
-            newFood = foodRecord
-        }*/
+        foodRecord.create(null)
         return repository.saveRecipe(foodRecord)
     }
 
     suspend fun fetchRecipes(): List<FoodRecord> {
         return repository.fetchRecipes()
+    }
+
+    suspend fun fetchRecipes(searchQuery: String): List<FoodRecord> {
+        return repository.fetchRecipes(searchQuery)
     }
 
     suspend fun deleteRecipe(uuid: String): Boolean {

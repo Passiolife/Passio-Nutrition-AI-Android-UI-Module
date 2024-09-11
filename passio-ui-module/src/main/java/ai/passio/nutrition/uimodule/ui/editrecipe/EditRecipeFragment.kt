@@ -18,6 +18,7 @@ import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerListener
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
@@ -196,8 +197,13 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             ::editDeleteFoodIngredients
         )
         viewModel.photoPathEvent.observe(viewLifecycleOwner) { photoPath ->
-            binding.ivThumb.load(photoPath) {
-                transformations(CircleCropTransformation())
+            if (photoPath.isValid()) {
+                binding.ivThumb.load(photoPath) {
+                    transformations(CircleCropTransformation())
+                }
+            }
+            else{
+                binding.ivThumb.loadPassioIcon("", PassioIDEntityType.recipe)
             }
         }
         viewModel.internalUpdate.observe(viewLifecycleOwner) { pair ->

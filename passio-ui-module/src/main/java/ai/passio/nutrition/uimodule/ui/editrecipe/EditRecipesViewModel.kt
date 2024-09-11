@@ -12,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import androidx.lifecycle.LiveData
@@ -50,7 +51,7 @@ class EditRecipesViewModel : BaseViewModel() {
     private val defaultUnitGram = PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0))
 
     init {
-
+        foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
         foodRecord.servingSizes.add(defaultSizeGram)
         foodRecord.servingUnits.add(defaultUnitGram)
         foodRecord.setSelectedUnit(Grams.unitName)
@@ -70,6 +71,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun setRecipeToEditOrCreateNew(editRecipe: FoodRecord) {
         viewModelScope.launch {
             foodRecord = editRecipe
+            foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
             if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
                 isEditRecipe = true
             }
