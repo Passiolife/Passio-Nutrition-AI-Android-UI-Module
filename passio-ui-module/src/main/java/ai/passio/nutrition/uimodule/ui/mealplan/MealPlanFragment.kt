@@ -13,11 +13,11 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.view.HorizontalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 
@@ -99,7 +99,7 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
     }
 
     private fun editFoodRecord(foodRecord: FoodRecord) {
-        sharedViewModel.editFoodRecord(foodRecord)
+        sharedViewModel.detailsFoodRecord(foodRecord)
         viewModel.navigateToEdit()
     }
 
@@ -107,26 +107,14 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Food item(s) logged.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Food item(s) logged.")
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not log food item(s).",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Could not log food item(s).")
                 }
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
     }

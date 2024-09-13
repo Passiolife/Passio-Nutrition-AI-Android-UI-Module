@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.graphics.Color
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
 class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
@@ -40,7 +40,7 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
                 viewModel.navigateToFoodCreator()
             }
 
-            customFoodsAdapter = CustomFoodsAdapter(::onEdit, ::onLog)
+            customFoodsAdapter = CustomFoodsAdapter(::onDetails, ::onLog)
             rvFoods.adapter = null
 
             rvFoods.setSwipeMenuCreator { leftMenu, rightMenu, position ->
@@ -99,14 +99,18 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
     }
 
     private fun initObserver() {
+        viewModel.showLoading.observe(viewLifecycleOwner) {
+            binding.loading.isVisible = it
+        }
         viewModel.customFoodListEvent.observe(viewLifecycleOwner) {
+            binding.noDataFound.isVisible = it.isEmpty()
             customFoodsAdapter.updateItems(it)
         }
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
     }
 
-    private fun onEdit(customFood: FoodRecord) {
-        sharedViewModel.editFoodRecord(customFood)
+    private fun onDetails(customFood: FoodRecord) {
+        sharedViewModel.detailsFoodRecord(customFood)
         viewModel.navigateToEditFood()
     }
 

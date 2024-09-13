@@ -14,7 +14,7 @@ import java.io.File
 internal fun ImageView.loadFoodImage(
     foodRecord: FoodRecord
 ) {
-    if (foodRecord.isCustomFood() && foodRecord.foodImagePath.isValid() && File(foodRecord.foodImagePath!!).exists()) {
+    if (/*foodRecord.isCustomFood() && */foodRecord.foodImagePath.isValid() && File(foodRecord.foodImagePath!!).exists()) {
         this.load(foodRecord.foodImagePath) {
             transformations(CircleCropTransformation())
         }
@@ -32,15 +32,24 @@ internal fun ImageView.loadPassioIcon(
     val localImageResult = PassioSDK.instance.lookupIconsFor(context, passioID, iconSize, type)
 
     if (localImageResult.second != null) {
-        setImageDrawable(localImageResult.second)
+        this.load(localImageResult.second) {
+            transformations(CircleCropTransformation())
+        }
+//        setImageDrawable(localImageResult.second)
         return
     }
 
-    setImageDrawable(localImageResult.first)
+    this.load(localImageResult.first) {
+        transformations(CircleCropTransformation())
+    }
+//    setImageDrawable(localImageResult.first)
 
     PassioSDK.instance.fetchIconFor(context, passioID, iconSize) { drawable ->
         if (drawable != null && this.tag == passioID) {
-            setImageDrawable(drawable)
+            this.load(drawable) {
+                transformations(CircleCropTransformation())
+            }
+//            setImageDrawable(drawable)
         }
     }
 }

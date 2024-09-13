@@ -14,7 +14,7 @@ interface PassioConnector {
 
     suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean
 
-    suspend fun deleteRecord(foodRecord: FoodRecord): Boolean
+    suspend fun deleteRecord(uuid: String): Boolean
 
     suspend fun fetchDayRecords(day: Date): List<FoodRecord>
 
@@ -37,6 +37,7 @@ interface PassioConnector {
     suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean
 
     suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord>
+
     suspend fun fetchLatestWeightRecord(): WeightRecord?
 
     suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean
@@ -48,7 +49,18 @@ interface PassioConnector {
     suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean
 
     suspend fun fetchCustomFoods(): List<FoodRecord>
+
+    suspend fun fetchCustomFood(uuid: String): FoodRecord?
+
     suspend fun deleteCustomFood(uuid: String): Boolean
+
     suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord?
 
+    suspend fun saveRecipe(foodRecord: FoodRecord): Boolean
+
+    suspend fun fetchRecipe(uuid: String): FoodRecord?
+
+    suspend fun fetchRecipes(): List<FoodRecord>
+
+    suspend fun deleteRecipe(uuid: String): Boolean
 }

@@ -27,6 +27,7 @@ class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         with(binding)
         {
             toolbar.setup(getString(R.string.my_foods), baseToolbarListener)
@@ -38,6 +39,14 @@ class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
                     1 -> tab.text = requireContext().getString(R.string.recipes)
                 }
             }.attach()
+        }
+
+        arguments?.getBoolean("isRecipeShow", false)?.let {
+            if (it) {
+                binding.tabLayout.post {
+                    binding.tabLayout.getTabAt(1)?.select()
+                }
+            }
         }
 
     }

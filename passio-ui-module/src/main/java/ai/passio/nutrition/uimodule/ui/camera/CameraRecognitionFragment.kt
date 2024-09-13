@@ -15,7 +15,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -23,7 +22,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.camera.view.PreviewView
@@ -170,18 +168,14 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
 
         }
     }
 
     private fun editFoodRecord(foodRecord: FoodRecord) {
-        sharedViewModel.editFoodRecord(foodRecord)
+        sharedViewModel.detailsFoodRecord(foodRecord)
         viewModel.navigateToEdit()
     }
 

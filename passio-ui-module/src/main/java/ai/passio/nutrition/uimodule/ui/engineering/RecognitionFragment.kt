@@ -1,6 +1,8 @@
 package ai.passio.nutrition.uimodule.ui.engineering
 
 import ai.passio.nutrition.uimodule.databinding.FragmentRecognitionBinding
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.toast
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +12,8 @@ import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.FoodRecognitionListener
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.fragment.PassioCameraFragment
-import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.widget.Toast
 import androidx.camera.view.PreviewView
 import java.lang.IllegalStateException
 
@@ -26,11 +27,7 @@ class RecognitionFragment(
     override fun getPreviewView(): PreviewView = binding.previewView
 
     override fun onCameraPermissionDenied() {
-        Toast.makeText(
-            requireContext(),
-            "The app requires Camera Permission to run recognition",
-            Toast.LENGTH_SHORT
-        ).show()
+        requireContext().toast("The app requires Camera Permission to run recognition")
     }
 
     override fun onCameraReady() {
@@ -64,6 +61,7 @@ class RecognitionFragment(
         PassioSDK.instance.stopFoodDetection()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onRecognitionResults(candidates: FoodCandidates?, image: Bitmap?) {
         with(binding) {
             if (mode != 3) {
@@ -73,9 +71,9 @@ class RecognitionFragment(
 
                 candidates?.detectedCandidates?.forEachIndexed { index, detectedCandidate ->
                     when (index) {
-                        0 -> result1.text = detectedCandidate.foodName.capitalize() + " (${detectedCandidate.confidence})"
-                        1 -> result2.text = detectedCandidate.foodName.capitalize() + " (${detectedCandidate.confidence})"
-                        2 -> result3.text = detectedCandidate.foodName.capitalize() + " (${detectedCandidate.confidence})"
+                        0 -> result1.text = detectedCandidate.foodName.capitalized() + " (${detectedCandidate.confidence})"
+                        1 -> result2.text = detectedCandidate.foodName.capitalized() + " (${detectedCandidate.confidence})"
+                        2 -> result3.text = detectedCandidate.foodName.capitalized() + " (${detectedCandidate.confidence})"
                     }
                 }
 
@@ -84,9 +82,9 @@ class RecognitionFragment(
                         if (fi == null) return@fetchFoodItemForProductCode
 
                         when (index) {
-                            0 -> result1.text = fi.name.capitalize()
-                            1 -> result2.text = fi.name.capitalize()
-                            2 -> result3.text = fi.name.capitalize()
+                            0 -> result1.text = fi.name.capitalized()
+                            1 -> result2.text = fi.name.capitalized()
+                            2 -> result3.text = fi.name.capitalized()
                         }
                     }
                 }
@@ -96,9 +94,9 @@ class RecognitionFragment(
                         if (fi == null) return@fetchFoodItemForProductCode
 
                         when (index) {
-                            0 -> result1.text = fi.name.capitalize()
-                            1 -> result2.text = fi.name.capitalize()
-                            2 -> result3.text = fi.name.capitalize()
+                            0 -> result1.text = fi.name.capitalized()
+                            1 -> result2.text = fi.name.capitalized()
+                            2 -> result3.text = fi.name.capitalized()
                         }
                     }
                 }

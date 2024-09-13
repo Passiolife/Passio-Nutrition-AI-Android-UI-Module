@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.app.DatePickerDialog
@@ -18,7 +19,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
@@ -100,7 +100,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
         override fun onEditFood(suggestedFoods: SuggestedFoods) {
             if (suggestedFoods.foodRecord != null) {
-                sharedViewModel.editFoodRecord(suggestedFoods.foodRecord!!)
+                sharedViewModel.detailsFoodRecord(suggestedFoods.foodRecord!!)
                 viewModel.navigateToDetails()
             } else if (suggestedFoods.searchResult != null) {
                 sharedViewModel.passToEdit(suggestedFoods.searchResult!!)
@@ -123,26 +123,14 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Food item logged.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Food item logged.")
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not log food item.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Could not log food item.")
                 }
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
     }
@@ -202,7 +190,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
         val gson = GsonBuilder().create()
 
         val foodRecordCopy = gson.fromJson(gson.toJson(foodRecord), FoodRecord::class.java)
-        sharedViewModel.editFoodRecord(foodRecordCopy)
+        sharedViewModel.detailsFoodRecord(foodRecordCopy)
         viewModel.navigateToEdit()
     }
 

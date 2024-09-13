@@ -8,6 +8,7 @@ import ai.passio.nutrition.uimodule.ui.myfood.MyFoodsFragmentDirections
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CustomFoodsViewModel : BaseViewModel() {
@@ -54,5 +55,11 @@ class CustomFoodsViewModel : BaseViewModel() {
 
     fun navigateToEditFood() {
         navigate(MyFoodsFragmentDirections.myFoodsToEdit())
+    }
+
+    fun navigateToDiary() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(MyFoodsFragmentDirections.myFoodsToDiary())
+        }
     }
 }

@@ -1,14 +1,14 @@
 package ai.passio.nutrition.uimodule.ui.edit
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
+import ai.passio.nutrition.uimodule.domain.recipe.RecipeUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,48 +18,51 @@ import kotlinx.coroutines.launch
 class EditFoodViewModel : BaseViewModel() {
 
     private val useCase = EditFoodUseCase
+    private val recipeUseCase = RecipeUseCase
+    private val customFoodUseCase = CustomFoodUseCase
 
     private val _editFoodModelLD = MutableLiveData<EditFoodModel>()
     val editFoodModelLD: LiveData<EditFoodModel> get() = _editFoodModelLD
     private val _internalUpdate = SingleLiveEvent<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>>()
     val internalUpdate: LiveData<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>> get() = _internalUpdate
-    private var isEditMode = false
+    private var isEditLogMode = false
 
 
-    private val _resultLogFood = MutableLiveData<ResultWrapper<FoodRecord>>()
+    private val _resultLogFood = SingleLiveEvent<ResultWrapper<FoodRecord>>()
     val resultLogFood: LiveData<ResultWrapper<FoodRecord>> get() = _resultLogFood
 
-    private lateinit var foodRecord: FoodRecord
-    private var ingredientIndex = -1
+    private val _deleteLogFood = SingleLiveEvent<Boolean>()
+    val deleteLogFood: LiveData<Boolean> get() = _deleteLogFood
 
-    fun setEditMode(isEditMode: Boolean) {
-        this.isEditMode = isEditMode
+    private val _recipeInfo =
+        SingleLiveEvent<Pair<FoodRecord?, Boolean>>() //custom recipe, is log update
+    val recipeInfo: LiveData<Pair<FoodRecord?, Boolean>> get() = _recipeInfo
+
+    private val _customFoodInfo =
+        SingleLiveEvent<Pair<FoodRecord?, Boolean>>() //custom food, is log update
+    val customFoodInfo: LiveData<Pair<FoodRecord?, Boolean>> get() = _customFoodInfo
+
+    private lateinit var foodRecord: FoodRecord
+
+    fun setEditLogMode(isEditMode: Boolean) {
+        this.isEditLogMode = isEditMode
     }
 
     fun setFoodRecord(foodRecord: FoodRecord) {
-        Log.d("logFoodRecord", "tttt=== uuid ${foodRecord.uuid}")
         this.foodRecord = foodRecord
-        val model = EditFoodModel(foodRecord, true, true)
+        val model = EditFoodModel(foodRecord, true)
         _editFoodModelLD.postValue(model)
     }
 
     fun getFoodRecord(searchResult: PassioFoodDataInfo) {
         viewModelScope.launch {
             val fr = useCase.getFoodRecord(searchResult)
-            val model = EditFoodModel(fr, true, true)
+            val model = EditFoodModel(fr, true)
             _editFoodModelLD.postValue(model)
             if (fr != null) {
                 foodRecord = fr
             }
         }
-    }
-
-    fun getFoodRecordForIngredient(ingredient: FoodRecordIngredient, ingredientIndex: Int) {
-        this.ingredientIndex = ingredientIndex
-        val ingredientRecord = FoodRecord(ingredient)
-        val model = EditFoodModel(ingredientRecord, false, true)
-        _editFoodModelLD.postValue(model)
-        this.foodRecord = ingredientRecord
     }
 
     fun updateServingQuantity(value: Double, origin: EditFoodFragment.UpdateOrigin) {
@@ -81,20 +84,31 @@ class EditFoodViewModel : BaseViewModel() {
         foodRecord.create(date)
     }
 
-    fun removeIngredient(index: Int) {
-        foodRecord.removeIngredient(index)
-        _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+    fun deleteCurrentRecord() {
+        viewModelScope.launch {
+            _deleteLogFood.postValue(useCase.deleteRecord(foodRecord.uuid))
+        }
     }
-
-    fun getIngredient(index: Int) = foodRecord.ingredients[index]
-
     fun logCurrentRecord() {
         viewModelScope.launch {
-            if (useCase.logFoodRecord(foodRecord, isEditMode)) {
+            if (useCase.logFoodRecord(foodRecord, isEditLogMode)) {
                 _resultLogFood.postValue(ResultWrapper.Success(foodRecord))
             } else {
                 _resultLogFood.postValue(ResultWrapper.Error("Failed to log food. Please try again"))
             }
+        }
+    }
+
+    fun editRecipeFromLoggedFood(isUpdateLog: Boolean) {
+        viewModelScope.launch {
+            val recipe = recipeUseCase.getRecipe(foodRecord.id)
+            _recipeInfo.postValue(recipe to isUpdateLog)
+        }
+    }
+    fun editCustomFromLoggedFood(isUpdateLog: Boolean) {
+        viewModelScope.launch {
+            val customFood = customFoodUseCase.fetchCustomFood(foodRecord.id)
+            _customFoodInfo.postValue(customFood to isUpdateLog)
         }
     }
 
@@ -113,24 +127,24 @@ class EditFoodViewModel : BaseViewModel() {
 
     }
 
-    fun navigateToFoodCreator()
-    {
+    fun navigateToFoodCreator() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(EditFoodFragmentDirections.editToFoodCreator())
         }
     }
 
-    fun navigateToAddIngredient(): FoodRecord {
-        // navigate(EditFoodFragmentDirections.editToSearch())
-        return foodRecord
+    fun navigateToEditRecipe() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(EditFoodFragmentDirections.editToEditRecipe())
+        }
     }
 
-    fun isEditMode(): Boolean
-    {
-        return isEditMode
+
+    fun isEditLogMode(): Boolean {
+        return isEditLogMode
     }
-    fun getFoodRecord() : FoodRecord
-    {
+
+    fun getFoodRecord(): FoodRecord {
         return foodRecord
     }
 }

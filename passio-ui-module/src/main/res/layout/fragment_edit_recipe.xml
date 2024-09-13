@@ -43,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
-                        android:text="@string/scan_description"
+                        android:text="@string/recipe_details"
                         android:textColor="@color/passio_gray900"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -55,9 +55,9 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:scaleType="fitCenter"
-                        app:layout_constraintBottom_toTopOf="@id/barcode"
+                        app:layout_constraintBottom_toTopOf="@id/name"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo"
+                        app:layout_constraintTop_toBottomOf="@id/lblName"
                         app:srcCompat="@drawable/thumb_nutrition_facts" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -79,58 +79,22 @@
                         style="@style/TextProfile"
                         android:layout_marginStart="12dp"
                         android:padding="0dp"
-                        android:text="@string/name"
+                        android:text="@string/recipe_name"
                         app:layout_constraintStart_toEndOf="@id/ivThumb"
                         app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/name"
                         style="@style/EditTextMyFood"
-                        android:hint="@string/enter_name"
+                        android:hint="@string/recipe_name"
                         android:inputType="textCapWords"
+                        android:lines="1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/lblName"
                         app:layout_constraintTop_toBottomOf="@id/lblName" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblBrand"
-                        style="@style/TextProfile"
-                        android:padding="0dp"
-                        android:text="@string/brand"
-                        app:layout_constraintStart_toStartOf="@id/lblName"
-                        app:layout_constraintTop_toBottomOf="@id/name" />
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/brand"
-                        style="@style/EditTextMyFood"
-                        android:layout_width="0dp"
-                        android:hint="@string/enter_brand"
-                        android:inputType="textCapWords"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/lblName"
-                        app:layout_constraintTop_toBottomOf="@id/lblBrand" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblBarcode"
-                        style="@style/TextProfile"
-                        android:padding="0dp"
-                        android:text="@string/barcode"
-                        app:layout_constraintStart_toStartOf="@id/lblName"
-                        app:layout_constraintTop_toBottomOf="@id/brand" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/barcode"
-                        style="@style/TextMyFoodEditClone"
-                        android:text="@string/scan_a_barcode"
-                        android:textColor="@color/passio_gray500"
-                        app:drawableEndCompat="@drawable/ic_scan_barcode"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/lblName"
-                        app:layout_constraintTop_toBottomOf="@id/lblBarcode" />
-
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -139,145 +103,116 @@
                     android:layout_marginTop="16dp"
                     android:background="@drawable/rc_8_white"
                     android:elevation="4dp"
-                    android:padding="8dp">
+                    android:padding="16dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblPersonalInfo2"
+                        android:id="@+id/servingSizeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:text="@string/required_nutrition_facts"
-                        android:textColor="@color/passio_gray900"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblServingSize"
-                        style="@style/TextProfile"
                         android:text="@string/serving_size"
+                        android:textColor="@color/passio_black"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo2" />
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/servingSize"
-                        style="@style/EditTextProfile"
-                        android:hint="@string/value_txt"
-                        android:inputType="numberDecimal"
-                        android:maxLength="5"
-                        app:layout_constraintBottom_toBottomOf="@id/lblServingSize"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/lblServingSize" />
-
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblUnits"
-                        style="@style/TextProfile"
-                        android:text="@string/units"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/servingSize" />
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/units"
-                        style="@style/SpinnerTextProfile"
-                        app:drawableEndCompat="@drawable/ic_arrow_down"
-                        app:layout_constraintBottom_toBottomOf="@id/lblUnits"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/lblUnits" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblWeight"
-                        style="@style/TextProfile"
-                        android:text="@string/weight"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/units" />
+                        android:id="@+id/servingSizeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/passio_black"
+                        app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text=" (123 g)" />
 
                     <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/weight"
-                        style="@style/EditTextProfile"
-                        android:hint="@string/value_txt"
+                        android:id="@+id/servingQuantity"
+                        android:layout_width="64dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:gravity="center"
+                        android:imeOptions="actionDone"
                         android:inputType="numberDecimal"
-                        android:maxLength="5"
-                        app:layout_constraintBottom_toBottomOf="@id/lblWeight"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/lblWeight" />
+                        android:lines="1"
+                        android:paddingTop="9dp"
+                        android:paddingBottom="9dp"
+                        android:textColor="@color/passio_black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
+                        tools:ignore="Autofill,LabelFor"
+                        tools:text="45" />
 
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/weightUnit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:minHeight="24dp"
-                        android:padding="12dp"
-                        app:drawableEndCompat="@drawable/ic_arrow_down"
-                        app:layout_constraintBottom_toBottomOf="@id/weight"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/weight" />
-
-                    <androidx.constraintlayout.widget.Group
-                        android:id="@+id/weightGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="weight,weightUnit,lblWeight"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvRequiredNutritionFacts"
+                    <Spinner
+                        android:id="@+id/servingUnit"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:clipToPadding="false"
+                        android:padding="2dp"
+                        android:spinnerMode="dropdown"
+                        app:layout_constraintBottom_toBottomOf="@id/servingQuantity"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/servingQuantity"
+                        app:layout_constraintTop_toTopOf="@id/servingQuantity" />
+
+                    <com.warkiz.tickseekbar.TickSeekBar
+                        android:id="@+id/servingQuantitySeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/weight"
-                        tools:itemCount="4"
-                        tools:listitem="@layout/item_nutrition_facts" />
+                        app:layout_constraintTop_toBottomOf="@id/servingQuantity"
+                        app:tsb_progress_value_float="true"
+                        app:tsb_thumb_color="@color/passio_primary"
+                        app:tsb_thumb_size="24dp"
+                        app:tsb_track_background_color="@color/passio_indigo50"
+                        app:tsb_track_background_size="8dp"
+                        app:tsb_track_progress_color="@color/passio_primary"
+                        app:tsb_track_progress_size="8dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/addIngredientLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/rc_8_white"
-                    android:elevation="4dp"
-                    android:padding="8dp">
+                    android:elevation="4dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/lblPersonalInfo3"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/addIngredientLabel"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:text="@string/other_nutrition_facts"
-                        android:textColor="@color/passio_gray900"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/add_ingredient"
+                        android:textColor="@color/passio_black"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        app:drawableEndCompat="@drawable/icon_plus"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvOtherNutritionFacts"
+                    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+                        android:id="@+id/ingredientList"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_marginTop="16dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo3"
-                        tools:itemCount="4"
-                        tools:listitem="@layout/item_nutrition_facts" />
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/spinnerNutritionFacts"
-                        style="@style/SpinnerTextProfile"
-                        android:layout_marginTop="16dp"
-                        app:drawableEndCompat="@drawable/ic_arrow_down"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/rvOtherNutritionFacts"
-                        app:layout_constraintWidth_percent="1.0" />
+                        app:layout_constraintTop_toBottomOf="@id/addIngredientLabel"
+                        tools:itemCount="3"
+                        tools:listitem="@layout/ingredient_layout"
+                        tools:visibility="visible" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -335,8 +270,10 @@
             android:id="@+id/loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/passio_white40p"
+            android:clickable="true"
             android:visibility="gone"
-            android:background="@color/passio_white40p">
+            tools:visibility="visible">
 
             <ProgressBar
                 android:layout_width="wrap_content"

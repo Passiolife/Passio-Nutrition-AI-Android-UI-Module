@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerListener
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
@@ -64,6 +65,9 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             }
             save.setOnClickListener {
                 viewModel.saveCustomFood()
+            }
+            delete.setOnClickListener {
+                viewModel.deleteCustomFood()
             }
             cancel.setOnClickListener {
                 viewModel.navigateBack()
@@ -277,6 +281,10 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         sharedViewModel.editCustomFood.observe(viewLifecycleOwner) {
             viewModel.setDataToEdit(it)
         }
+
+        sharedViewModel.editFoodUpdateLog.observe(viewLifecycleOwner) { editRecipe ->
+            viewModel.setToUpdateLog(editRecipe.clone())
+        }
         sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcode ->
             viewModel.setBarcode(barcode)
         }
@@ -306,6 +314,10 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             binding.loading.isVisible = it
         }
         viewModel.prefillFoodData.observe(viewLifecycleOwner, ::showPrefilledData)
+        viewModel.isEditCustomFood.observe(viewLifecycleOwner) { isEditCustomFood ->
+            binding.delete.isVisible = isEditCustomFood
+
+        }
     }
 
     private val photoPickerListener = object : PhotoPickerListener {

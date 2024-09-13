@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentPhotoBinding
 import ai.passio.nutrition.uimodule.ui.util.PathUtil
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
 import ai.passio.passiosdk.passiofood.PassioSDK
 import android.Manifest
@@ -22,8 +22,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.File
@@ -149,7 +147,7 @@ class PhotoFragment(
                     }
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
+                requireContext().toast("Canceled")
             }
         }
 
@@ -164,7 +162,7 @@ class PhotoFragment(
                 fis.close()
                 file.delete()
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show()
+                requireContext().toast("Canceled")
             }
         }
     }
@@ -262,17 +260,5 @@ class PhotoFragment(
             matrix,
             true
         )
-    }
-
-    private fun loadBitmapFromUri(uri: Uri): Bitmap? {
-        val file = File(uri.path!!)
-        if (!file.exists()) {
-            return null
-        }
-
-        val fis = FileInputStream(file)
-        val bitmap = BitmapFactory.decodeStream(fis)
-        fis.close()
-        return bitmap
     }
 }

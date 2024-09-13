@@ -213,16 +213,9 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
 
             override fun onError(error: Int) {
                 if (context == null) return
-                Log.d("VoiceLoggingFragment", "onError $error")
+                Log.d("VoiceLoggingFragment", "osnError $error")
                 requireContext().toast("Speech recognizer error: $error")
                 viewModel.errorVoiceRecognition()
-                /* if (context == null) return
-                 isRecording = false
-                 Toast.makeText(
-                     requireContext(),
-                     "Speech recognizer error: $error",
-                     Toast.LENGTH_SHORT
-                 ).show()*/
             }
 
             override fun onResults(results: Bundle?) {

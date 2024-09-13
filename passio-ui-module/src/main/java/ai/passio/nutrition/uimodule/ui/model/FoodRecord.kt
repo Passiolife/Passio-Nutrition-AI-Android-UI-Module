@@ -1,11 +1,10 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
-import ai.passio.passiosdk.passiofood.data.measurement.Converter
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
-import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodAmount
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
@@ -19,7 +18,8 @@ import java.util.Locale
 import java.util.UUID
 
 private const val TIMESTAMP_1970 = 978300000
-const val CUSTOM_FOOD_PREFIX = "custom_food_"
+private const val CUSTOM_FOOD_PREFIX = "custom_food_"
+private const val FOOD_RECIPE_PREFIX = "food_recipe_"
 
 open class FoodRecord() {
     var id: String = ""
@@ -29,7 +29,7 @@ open class FoodRecord() {
     var foodImagePath: String? = null
     var passioIDEntityType = PassioIDEntityType.item.value
 
-    lateinit var ingredients: MutableList<FoodRecordIngredient>
+    var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
 
     private var selectedUnit: String = ""
     private var selectedQuantity: Double = 0.0
@@ -43,7 +43,6 @@ open class FoodRecord() {
     var openFoodLicense: String? = null
     var barcode: Barcode? = null
     var packagedFoodCode: PackagedFoodCode? = null
-    internal var referenceNutrients: PassioNutrients? = null
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
@@ -63,7 +62,8 @@ open class FoodRecord() {
         foodImagePath: String? = null
     ) : this() {
 
-        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+//        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        this.uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
         this.name = productName
         this.additionalData = brandName
         this.barcode = barcode
@@ -153,6 +153,7 @@ open class FoodRecord() {
         return this
     }
 
+
     constructor(
         ingredient: FoodRecordIngredient,
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
@@ -190,7 +191,20 @@ open class FoodRecord() {
     }
 
     fun isCustomFood(): Boolean {
-        return id.startsWith(CUSTOM_FOOD_PREFIX)
+//        return id.startsWith(CUSTOM_FOOD_PREFIX)
+        return uuid.startsWith(CUSTOM_FOOD_PREFIX)
+    }
+
+    fun isRecipe(): Boolean {
+        return isUserRecipe() || isPassioRecipe()
+    }
+
+    fun isUserRecipe(): Boolean {
+        return uuid.startsWith(FOOD_RECIPE_PREFIX)
+    }
+
+    fun isPassioRecipe(): Boolean {
+        return ingredients.size > 1 && !uuid.startsWith(FOOD_RECIPE_PREFIX)
     }
 
     fun addIngredient(record: FoodRecord, index: Int? = null) {
@@ -199,13 +213,36 @@ open class FoodRecord() {
         }
         if (record.ingredients.size == 1) {
             ingredients.add(index ?: ingredients.size, FoodRecordIngredient(record))
+//            ingredients.add(index ?: ingredients.size, record.ingredients.first())
         } else {
             ingredients.addAll(index ?: ingredients.size, record.ingredients)
+        }
+        if (!name.isValid()) {
+            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
+        }
+        if (!foodImagePath.isValid() && iconId.isValid()) {
+            iconId = record.iconId
+            passioIDEntityType = record.passioIDEntityType
         }
         setUnitToServing()
     }
 
-    private fun setUnitToServing() {
+    fun addIngredient(record: FoodRecordIngredient, index: Int? = null) {
+        ingredients.add(index ?: ingredients.size, record)
+        if (!name.isValid()) {
+            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
+        }
+        if (!foodImagePath.isValid() && iconId.isValid()) {
+            iconId = record.iconId
+            passioIDEntityType = PassioIDEntityType.item.value
+        }
+//        ingredients.add(index ?: ingredients.size, record)
+        setUnitToServing()
+    }
+
+    fun setUnitToServing() {
+        if (ingredients.isEmpty())
+            return
         val weight = ingredientWeight()
         val currentServing = servingUnits.find { it.unitName == PassioFoodAmount.SERVING_UNIT_NAME }
         if (currentServing != null) {
@@ -256,6 +293,15 @@ open class FoodRecord() {
         addIngredient(newIngredient, index)
         return true
     }
+    fun replaceIngredient(newIngredient: FoodRecordIngredient, index: Int): Boolean {
+        if (index >= ingredients.size) {
+            return false
+        }
+
+        removeIngredient(index)
+        addIngredient(newIngredient, index)
+        return true
+    }
 
     private fun calculateQuantity() {
         val weight = ingredientWeight().gramsValue()
@@ -277,7 +323,9 @@ open class FoodRecord() {
         if (selectedQuantity == quantity) return
 
         selectedQuantity = if (quantity != 0.0) quantity else ZERO_QUANTITY
-        calculateQuantityForIngredients()
+        if (ingredients.isNotEmpty()) {
+            calculateQuantityForIngredients()
+        }
     }
 
     fun getSelectedUnit(): String = selectedUnit
@@ -298,7 +346,9 @@ open class FoodRecord() {
         } else {
             1.0
         }
-        calculateQuantityForIngredients()
+        if (ingredients.isNotEmpty()) {
+            calculateQuantityForIngredients()
+        }
         return true
     }
 
@@ -389,14 +439,39 @@ fun List<FoodRecord>.fatSum(): Double {
 fun FoodRecord.copy(): FoodRecord {
     val gson = GsonBuilder().create()
     return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
-        .apply { uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT) }
+        .apply {
+            id = if (uuid.isValid()) uuid else UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            uuid = if (isCustomFood()) {
+                "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+            } else if (isUserRecipe()) {
+                "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+            } else {
+                UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            }
+        }
 }
 
-fun FoodRecord.newCustomFood(): FoodRecord {
+fun FoodRecord.clone(): FoodRecord {
+    val gson = GsonBuilder().create()
+    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+}
+
+fun FoodRecord.copyAsCustomFood(): FoodRecord {
     val gson = GsonBuilder().create()
     return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
         .apply {
-            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
-            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+            uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+//            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        }
+}
+
+fun FoodRecord.copyAsRecipe(): FoodRecord {
+    val gson = GsonBuilder().create()
+    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+        .apply {
+            uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+//            if (!id.isValid()) {
+//                id = uuid
+//            }
         }
 }
