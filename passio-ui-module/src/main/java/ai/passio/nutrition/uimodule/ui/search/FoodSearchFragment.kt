@@ -4,22 +4,15 @@ import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentSearchBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
-import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
-import kotlinx.coroutines.launch
 
-class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(),
-    FoodSearchView.PassioSearchListener {
+class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -28,7 +21,7 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -36,13 +29,14 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.searchFoodSearchView.setup(this)
+        binding.searchFoodSearchView.setup(passioSearchListener)
 
         viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
             _binding?.searchFoodSearchView?.updateSearchResult(
                 searchResult.query,
                 searchResult.results,
-                searchResult.suggestions
+                searchResult.suggestions,
+                searchResult.myFoods
             )
         }
 
@@ -116,33 +110,52 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>(),
         }
     }
 
-    override fun onQueryChange(query: String) {
-        viewModel.fetchSearchResults(query)
-    }
-
-    override fun onFoodItemSelected(searchItem: PassioFoodDataInfo) {
-        if (viewModel.getIsAddIngredient()) {
-            viewModel.editIngredient(searchItem)
-        } else {
-            sharedViewModel.passToEdit(searchItem)
-            viewModel.navigateToEdit()
+    private val passioSearchListener = object : FoodSearchView.PassioSearchListener {
+        override fun onQueryChange(query: String) {
+            viewModel.fetchSearchResults(query)
         }
-    }
 
-    override fun onFoodItemLog(searchItem: PassioFoodDataInfo) {
-        if (viewModel.getIsAddIngredient()) {
-            viewModel.addIngredient(searchItem)
-        } else {
-            viewModel.logFood(searchItem)
+        override fun onFoodItemSelected(searchItem: PassioFoodDataInfo) {
+            if (viewModel.getIsAddIngredient()) {
+                viewModel.editIngredient(searchItem)
+            } else {
+                sharedViewModel.passToEdit(searchItem)
+                viewModel.navigateToEdit()
+            }
         }
-    }
 
-    override fun onTextCleared() {
+        override fun onFoodItemSelected(searchItem: FoodRecord) {
+            if (viewModel.getIsAddIngredient()) {
+                editFoodIngredient(ResultWrapper.Success(searchItem))
+            } else {
+                sharedViewModel.detailsFoodRecord(searchItem)
+                viewModel.navigateToEdit()
+            }
+        }
 
-    }
+        override fun onFoodItemLog(searchItem: PassioFoodDataInfo) {
+            if (viewModel.getIsAddIngredient()) {
+                viewModel.addIngredient(searchItem)
+            } else {
+                viewModel.logFood(searchItem)
+            }
+        }
 
-    override fun onViewDismissed() {
-        viewModel.requestNavigateBack()
+        override fun onFoodItemLog(searchItem: FoodRecord) {
+            if (viewModel.getIsAddIngredient()) {
+                addFoodIngredient(ResultWrapper.Success(searchItem))
+            } else {
+                viewModel.logFood(searchItem)
+            }
+        }
+
+        override fun onTextCleared() {
+        }
+
+        override fun onViewDismissed() {
+            viewModel.requestNavigateBack()
+        }
+
     }
 
 }

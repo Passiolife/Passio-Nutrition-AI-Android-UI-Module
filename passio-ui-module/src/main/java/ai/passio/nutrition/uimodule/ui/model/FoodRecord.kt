@@ -415,7 +415,7 @@ open class FoodRecord() {
 fun List<FoodRecord>.meals(mealLabel: MealLabel): List<FoodRecord> {
     return this.filter {
         val mealLabelTemp =
-            it.mealLabel ?: MealLabel.dateToMealLabel(it.createdAt ?: System.currentTimeMillis())
+            it.mealLabel ?: MealLabel.dateToMealLabel(it.createdAtTime() ?: System.currentTimeMillis())
         mealLabelTemp == mealLabel
     }
 }

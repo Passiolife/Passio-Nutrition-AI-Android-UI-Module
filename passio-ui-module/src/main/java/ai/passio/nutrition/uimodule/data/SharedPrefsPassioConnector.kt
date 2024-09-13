@@ -288,6 +288,13 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return customFoods
     }
 
+    override suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
+        return customFoods.filter {
+            it.name.trim().replace(" ", "").lowercase()
+                .contains(searchQuery.trim().replace(" ", "").lowercase())
+        }
+    }
+
     override suspend fun fetchCustomFood(uuid: String): FoodRecord? {
         return customFoods.find { it.uuid == uuid }
     }
@@ -317,6 +324,13 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         val json = recipes.map { gson.toJson(it) }
         sharedPreferences.saveRecipes(json)
         return true
+    }
+
+    override suspend fun fetchRecipes(searchQuery: String): List<FoodRecord> {
+        return recipes.filter {
+            it.name.trim().replace(" ", "").lowercase()
+                .contains(searchQuery.trim().replace(" ", "").lowercase())
+        }
     }
 
     override suspend fun fetchRecipes(): List<FoodRecord> {

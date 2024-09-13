@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.meals
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
@@ -146,10 +147,10 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
         val userProfile = data.first
         val records = data.second
-        val breakfastLogs = records.filter { it.mealLabel == MealLabel.Breakfast }
-        val lunchLogs = records.filter { it.mealLabel == MealLabel.Lunch }
-        val dinnerLogs = records.filter { it.mealLabel == MealLabel.Dinner }
-        val snackLogs = records.filter { it.mealLabel == MealLabel.Snack }
+        val breakfastLogs = records.meals(MealLabel.Breakfast) //filter { it.mealLabel == MealLabel.Breakfast }
+        val lunchLogs = records.meals(MealLabel.Lunch) //filter { it.mealLabel == MealLabel.Lunch }
+        val dinnerLogs = records.meals(MealLabel.Dinner) //filter { it.mealLabel == MealLabel.Dinner }
+        val snackLogs = records.meals(MealLabel.Snack) //filter { it.mealLabel == MealLabel.Snack }
 
         with(binding) {
             toolbarCalendar.text = dateFormat.format(viewModel.getCurrentDate())

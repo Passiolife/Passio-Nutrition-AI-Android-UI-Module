@@ -11,14 +11,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F2F5FB">
+        android:background="@color/passio_white_search">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="58dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
@@ -31,36 +31,46 @@
 
                 <android.inputmethodservice.ExtractEditText
                     android:id="@+id/searchEditText"
-                    android:layout_width="318dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="42dp"
                     android:background="@null"
                     android:drawableStart="@drawable/icon_search"
                     android:drawablePadding="4dp"
-                    android:inputType="text"
                     android:imeOptions="actionDone"
-                    android:paddingStart="4dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="40dp"
-                    android:paddingBottom="4dp"
+                    android:inputType="text"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="6dp"
                     android:textColor="@color/passio_black"
                     android:textSize="18sp"
                     tools:ignore="Autofill" />
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/clearText"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:padding="4dp"
+                    android:scaleType="center"
+                    android:tint="@color/passio_primary"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_close"
+                    tools:visibility="visible" />
+
             </FrameLayout>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/searchExit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:padding="8dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textColor="@color/passio_black"
                 android:textSize="16sp" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </FrameLayout>
 
@@ -75,12 +85,60 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/suggestions_layout" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchRecyclerView"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/search_item_layout" />
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblMyFoods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_foods"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:textColor="@color/passio_gray900"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMyFoods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/search_item_layout" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/lblPassioFoods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_results"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:textSize="16sp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:textColor="@color/passio_gray900"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPassioFoods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="5"
+                tools:listitem="@layout/search_item_layout" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
 
 </merge>
