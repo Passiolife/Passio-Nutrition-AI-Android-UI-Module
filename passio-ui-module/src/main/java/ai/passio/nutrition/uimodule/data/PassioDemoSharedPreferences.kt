@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferences) {
 
     companion object Key {
-        const val PREF_NAME = "PassioDemoPrefs"
+        const val PREF_NAME = "PassioUIPrefs"
         private const val PREF_FOOD_RECORDS = "foodRecords"
         private const val PREF_CUSTOM_FOODS = "customFoods"
         private const val PREF_RECIPES = "recipes"

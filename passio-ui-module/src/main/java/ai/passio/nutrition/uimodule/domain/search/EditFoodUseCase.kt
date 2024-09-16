@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.domain.search
 
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.util.Log
@@ -38,8 +39,12 @@ object EditFoodUseCase {
         } else {
             record
         }
-        foodRecord.create(record.createdAtTime() ?: Date().time)
-        Log.d("logFoodRecord", "after=== uuid ${record.uuid}")
+
+        foodRecord.create(foodRecord.createdAtTime() ?: Date().time)
+        if (foodRecord.mealLabel == null) {
+            foodRecord.mealLabel = MealLabel.dateToMealLabel(foodRecord.createdAtTime()!!)
+        }
+        Log.d("logFoodRecord", "after=== uuid ${foodRecord.uuid}")
         return repository.logFoodRecord(foodRecord)
     }
 

@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.progress.TimePeriod
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.getBefore30Days
 import ai.passio.nutrition.uimodule.ui.util.getEndOfMonth
 import ai.passio.nutrition.uimodule.ui.util.getEndOfWeek
@@ -240,6 +241,15 @@ class Repository private constructor() {
     suspend fun fetchCustomFoods(): List<FoodRecord> {
         return connector.fetchCustomFoods()
     }
+
+    suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
+        return if (!searchQuery.isValid()) {
+            emptyList()
+        } else {
+            connector.fetchCustomFoods(searchQuery)
+        }
+    }
+
     suspend fun fetchCustomFood(uuid: String): FoodRecord? {
         return connector.fetchCustomFood(uuid)
     }
@@ -259,6 +269,14 @@ class Repository private constructor() {
 
     suspend fun fetchRecipes(): List<FoodRecord> {
         return connector.fetchRecipes()
+    }
+
+    suspend fun fetchRecipes(searchQuery: String): List<FoodRecord> {
+        return if (!searchQuery.isValid()) {
+            emptyList()
+        } else {
+            connector.fetchRecipes(searchQuery)
+        }
     }
 
     suspend fun fetchRecipe(id: String): FoodRecord? {
