@@ -208,9 +208,6 @@ open class FoodRecord() {
     }
 
     fun addIngredient(record: FoodRecord, index: Int? = null) {
-        if (ingredients.size == 1) {
-            name = "Recipe with ${ingredients.first().name}"
-        }
         if (record.ingredients.size == 1) {
             ingredients.add(index ?: ingredients.size, FoodRecordIngredient(record))
 //            ingredients.add(index ?: ingredients.size, record.ingredients.first())
@@ -220,7 +217,7 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && iconId.isValid()) {
+        if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
             passioIDEntityType = record.passioIDEntityType
         }
@@ -232,8 +229,23 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && iconId.isValid()) {
+        if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
+            passioIDEntityType = PassioIDEntityType.item.value
+        }
+//        ingredients.add(index ?: ingredients.size, record)
+        setUnitToServing()
+    }
+
+    fun addIngredients(records: List<FoodRecordIngredient>, index: Int? = null) {
+        if (records.isEmpty()) return
+
+        ingredients.addAll(index ?: ingredients.size, records)
+        if (!name.isValid()) {
+            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
+        }
+        if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
+            iconId = records.first().iconId
             passioIDEntityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
@@ -293,6 +305,7 @@ open class FoodRecord() {
         addIngredient(newIngredient, index)
         return true
     }
+
     fun replaceIngredient(newIngredient: FoodRecordIngredient, index: Int): Boolean {
         if (index >= ingredients.size) {
             return false
@@ -415,7 +428,9 @@ open class FoodRecord() {
 fun List<FoodRecord>.meals(mealLabel: MealLabel): List<FoodRecord> {
     return this.filter {
         val mealLabelTemp =
-            it.mealLabel ?: MealLabel.dateToMealLabel(it.createdAtTime() ?: System.currentTimeMillis())
+            it.mealLabel ?: MealLabel.dateToMealLabel(
+                it.createdAtTime() ?: System.currentTimeMillis()
+            )
         mealLabelTemp == mealLabel
     }
 }

@@ -210,12 +210,18 @@
 
         </action>
 
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
+
     </fragment>
 
     <fragment
         android:id="@+id/camera"
         android:name="ai.passio.nutrition.uimodule.ui.camera.CameraRecognitionFragment"
-        android:label="Account"
+        android:label="CameraRecognitionFragment"
         tools:layout="@layout/fragment_camera_recognition">
 
         <action
@@ -242,6 +248,18 @@
             app:launchSingleTop="true">
 
         </action>
+
+
+        <action
+            android:id="@+id/camera_to_edit_ingredient"
+            app:destination="@id/edit_ingredient">
+        </action>
+
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
 
     </fragment>
 
@@ -334,9 +352,18 @@
             android:id="@+id/edit_recipe_to_edit_ingredient"
             app:destination="@id/edit_ingredient" />
 
+
+        <action
+            android:id="@+id/edit_recipe_to_voice_logging"
+            app:destination="@id/voice_logging" />
+
         <action
             android:id="@+id/edit_recipe_to_search"
             app:destination="@id/search" />
+
+        <action
+            android:id="@+id/edit_recipe_to_camera"
+            app:destination="@id/camera" />
 
         <action
             android:id="@+id/edit_recipe_to_diary"
@@ -474,6 +501,12 @@
         <action
             android:id="@+id/voice_logging_to_search"
             app:destination="@id/search" />
+
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

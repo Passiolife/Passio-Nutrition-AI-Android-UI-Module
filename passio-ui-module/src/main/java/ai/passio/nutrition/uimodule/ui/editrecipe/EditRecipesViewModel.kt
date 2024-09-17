@@ -116,6 +116,10 @@ class EditRecipesViewModel : BaseViewModel() {
         foodRecord.addIngredient(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
+    fun addIngredients(foodRecordIngredient: List<FoodRecordIngredient>) {
+        foodRecord.addIngredients(foodRecordIngredient)
+        _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+    }
 
     fun updateServingQuantity(value: Double, origin: EditFoodFragment.UpdateOrigin) {
         foodRecord.setSelectedQuantity(value)
@@ -193,8 +197,15 @@ class EditRecipesViewModel : BaseViewModel() {
 
     }
 
+    fun navigateToCameraScanning() {
+        navigate(EditRecipeFragmentDirections.editRecipeToCamera())
+    }
     fun navigateToSearch() {
         navigate(EditRecipeFragmentDirections.editRecipeToSearch())
+    }
+
+    fun navigateToVoice() {
+        navigate(EditRecipeFragmentDirections.editRecipeToVoiceLogging())
     }
 
     fun navigateOnSave() {

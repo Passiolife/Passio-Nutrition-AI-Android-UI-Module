@@ -163,7 +163,7 @@ class RecognitionResultView @JvmOverloads constructor(
     }
 
 
-    fun showVisualResult(result: RecognitionResult.VisualRecognition) {
+    fun showVisualResult(result: RecognitionResult.VisualRecognition, saveTxt: String) {
         if (shownId == result.visualCandidate.passioID) {
             return
         }
@@ -210,7 +210,7 @@ class RecognitionResultView @JvmOverloads constructor(
                     ::editVisualCandidate
                 )
 
-            it.foodLog.text = resources.getString(R.string.log)
+            it.foodLog.text = saveTxt
             it.foodEdit.text = resources.getString(R.string.edit)
             it.foodLog.setOnClickListener {
                 logVisualCandidate(result.visualCandidate)
@@ -225,7 +225,7 @@ class RecognitionResultView @JvmOverloads constructor(
     }
 
     @SuppressLint("SetTextI18n")
-    fun showFoodRecordRecognition(result: RecognitionResult.FoodRecordRecognition) {
+    fun showFoodRecordRecognition(result: RecognitionResult.FoodRecordRecognition, saveTxt: String) {
         if (shownId == result.foodItem.id) {
             return
         }
@@ -255,7 +255,7 @@ class RecognitionResultView @JvmOverloads constructor(
 //            bottomSheetBehavior.state = STATE_COLLAPSED
             it.rvAlternatives.adapter = null
 
-            it.foodLog.text = resources.getString(R.string.log)
+            it.foodLog.text = saveTxt
             it.foodEdit.text = resources.getString(R.string.edit)
             it.foodLog.setOnClickListener {
                 recognitionResultListener?.onLog(result)

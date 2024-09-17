@@ -123,9 +123,9 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
             }
         }
 
-        sharedViewModel.addFoodIngredientsLD.observe(viewLifecycleOwner) { foodRecord ->
-            viewModel.setFoodRecord(foodRecord)
-        }
+//        sharedViewModel.addFoodIngredientsLD.observe(viewLifecycleOwner) { foodRecord ->
+//            viewModel.setFoodRecord(foodRecord)
+//        }
 //        sharedViewModel.editFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
 //            viewModel.setFoodRecord(foodRecord)
 //        }
@@ -133,8 +133,8 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
             if (editIngredient.second != -1) {
                 binding.delete.isVisible = true
                 binding.log.text = getString(R.string.save)
-                viewModel.editFoodRecord(editIngredient)
             }
+            viewModel.editFoodRecord(editIngredient)
         }
 
         viewModel.editFoodModelLD.observe(viewLifecycleOwner) { editFoodModel ->

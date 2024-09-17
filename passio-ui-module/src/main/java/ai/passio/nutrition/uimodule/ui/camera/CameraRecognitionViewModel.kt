@@ -36,6 +36,18 @@ class CameraRecognitionViewModel : BaseViewModel() {
     val cameraZoomLevelRangeEvent = SingleLiveEvent<Triple<Float, Float?, Float?>>()
     private var isCameraFlashOn = false
     val cameraFlashToggleEvent = SingleLiveEvent<Boolean>()
+    val editIngredientEvent = SingleLiveEvent<FoodRecord>()
+    val addIngredientEvent = SingleLiveEvent<FoodRecord>()
+
+    private var isAddIngredient = false
+
+    fun setIsAddIngredient(isAddIngredient: Boolean) {
+        this.isAddIngredient = isAddIngredient
+    }
+
+    fun getIsAddIngredient(): Boolean {
+        return isAddIngredient
+    }
 
     fun setFoodScanMode(scanMode: ScanMode) {
         this.scanMode = scanMode
@@ -145,14 +157,26 @@ class CameraRecognitionViewModel : BaseViewModel() {
         PassioSDK.instance.stopCamera()
     }
 
+    fun editIngredient(foodRecord: FoodRecord) {
+        editIngredientEvent.postValue(foodRecord)
+    }
+
+    fun addIngredient(foodRecord: FoodRecord) {
+        addIngredientEvent.postValue(foodRecord)
+    }
+
     fun logFoodRecord(foodRecord: FoodRecord) {
         viewModelScope.launch {
             showLoading.postValue(true)
-            logFoodEvent.postValue(
-                ResultWrapper.Success(
-                    cameraUseCase.logFoodRecord(foodRecord)
+            if (isAddIngredient) {
+                addIngredient(foodRecord)
+            } else {
+                logFoodEvent.postValue(
+                    ResultWrapper.Success(
+                        cameraUseCase.logFoodRecord(foodRecord)
+                    )
                 )
-            )
+            }
             showLoading.postValue(false)
         }
     }
@@ -181,6 +205,17 @@ class CameraRecognitionViewModel : BaseViewModel() {
                 foodItemResult.postValue(ResultWrapper.Error("Could not fetch food item for: $passioID"))
             }
             showLoading.postValue(false)
+        }
+    }
+
+    fun navigateBackToEditRecipe() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.backToEditRecipe())
+        }
+    }
+    fun navigateToEditIngredient() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.cameraToEditIngredient())
         }
     }
 

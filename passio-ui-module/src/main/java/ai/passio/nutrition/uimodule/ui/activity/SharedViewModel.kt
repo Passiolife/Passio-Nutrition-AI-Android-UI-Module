@@ -61,8 +61,17 @@ class SharedViewModel : ViewModel() {
     private val _addFoodIngredientsLD = SingleLiveEvent<FoodRecord>()
     val addFoodIngredientsLD: LiveData<FoodRecord> get() = _addFoodIngredientsLD
 
-    private val _isAddIngredientLD = SingleLiveEvent<Boolean>()
-    val isAddIngredientLD: LiveData<Boolean> get() = _isAddIngredientLD
+    private val _addMultipleIngredientsLD = SingleLiveEvent<List<FoodRecordIngredient>>()
+    val addMultipleIngredientsLD: LiveData<List<FoodRecordIngredient>> get() = _addMultipleIngredientsLD
+
+    private val _isAddIngredientFromSearchLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientFromSearchLD: LiveData<Boolean> get() = _isAddIngredientFromSearchLD
+
+    private val _isAddIngredientFromScanningLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientFromScanningLD: LiveData<Boolean> get() = _isAddIngredientFromScanningLD
+
+    private val _isAddIngredientFromVoiceLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientFromVoiceLD: LiveData<Boolean> get() = _isAddIngredientFromVoiceLD
 
     private val _editSearchResultLD = SingleLiveEvent<PassioFoodDataInfo>()
     val editSearchResultLD: LiveData<PassioFoodDataInfo> get() = _editSearchResultLD
@@ -136,6 +145,9 @@ class SharedViewModel : ViewModel() {
     fun editIngredient(ingredient: FoodRecordIngredient, ingredientIndex: Int) {
         _editIngredientLD.postValue(ingredient to ingredientIndex)
     }
+    fun editIngredient(ingredient: FoodRecordIngredient) {
+        _editIngredientLD.postValue(ingredient to -1)
+    }
 
     fun detailsFoodRecord(foodRecord: FoodRecord) {
         _detailsFoodRecordLD.postValue(foodRecord)
@@ -154,9 +166,19 @@ class SharedViewModel : ViewModel() {
     fun addFoodIngredients(foodRecord: FoodRecord) {
         _addFoodIngredientsLD.postValue(foodRecord)
     }
+    //    send more then one ingredients to recipe screen to add to recipe
+    fun addFoodIngredients(ingredients: List<FoodRecordIngredient>) {
+        _addMultipleIngredientsLD.postValue(ingredients)
+    }
 
-    fun setIsAddIngredient(isAddIngredient: Boolean) {
-        _isAddIngredientLD.postValue(isAddIngredient)
+    fun setIsAddIngredientFromSearch(isAddIngredient: Boolean) {
+        _isAddIngredientFromSearchLD.postValue(isAddIngredient)
+    }
+    fun setIsAddIngredientFromScanning(isAddIngredient: Boolean) {
+        _isAddIngredientFromScanningLD.postValue(isAddIngredient)
+    }
+    fun setIsAddIngredientUsingVoice(isAddIngredient: Boolean) {
+        _isAddIngredientFromVoiceLD.postValue(isAddIngredient)
     }
 
     fun addEditWeight(weightRecord: WeightRecord) {
