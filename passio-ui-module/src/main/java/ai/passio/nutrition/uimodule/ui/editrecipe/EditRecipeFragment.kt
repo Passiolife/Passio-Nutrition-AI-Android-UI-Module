@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.edit.EditFoodFragment.UpdateOrigin
 import ai.passio.nutrition.uimodule.ui.edit.IngredientAdapter
+import ai.passio.nutrition.uimodule.ui.menu.AddFoodOption
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.clone
@@ -91,8 +92,10 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
                 viewModel.setRecipeName(txt)
             }
             addIngredientLabel.setOnClickListener {
-                sharedViewModel.setIsAddIngredient(isAddIngredient = true)
-                viewModel.navigateToSearch()
+                PickIngredientMenuDialog(onPickIngredientOption).show(
+                    childFragmentManager,
+                    "PickIngredientMenuDialog"
+                )
             }
 
             servingQuantity.setOnEditorActionListener { v, actionId, event ->
@@ -113,6 +116,40 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             setupIngredients()
 
             viewModel.showPrefilledData()
+        }
+
+    }
+
+    private val onPickIngredientOption = object : OnPickIngredientOption {
+        override fun onPickIngredient(addFoodOption: AddFoodOption) {
+
+            /*when (id) {
+            0 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToCamera())
+            1 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToSearch())
+            2 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToPhoto())
+            3 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToAdvisor())
+            4 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToVoiceLogging())
+            6 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToMyFoods())
+        }*/
+
+            when (addFoodOption.id) {
+                //food scanner
+                0 -> {
+                    sharedViewModel.setIsAddIngredientFromSearch(isAddIngredient = true)
+                    viewModel.navigateToCameraScanning()
+                }
+                //food search
+                1 -> {
+                    sharedViewModel.setIsAddIngredientFromSearch(isAddIngredient = true)
+                    viewModel.navigateToSearch()
+                }
+                //voice logging
+                4 -> {
+                    sharedViewModel.setIsAddIngredientUsingVoice(isAddIngredient = true)
+                    viewModel.navigateToVoice()
+                }
+            }
+
         }
 
     }
@@ -192,6 +229,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
         }
         sharedViewModel.addFoodIngredientLD.observe(viewLifecycleOwner, ::addFoodIngredient)
         sharedViewModel.addFoodIngredientsLD.observe(viewLifecycleOwner, ::addFoodIngredients)
+        sharedViewModel.addMultipleIngredientsLD.observe(viewLifecycleOwner, ::addFoodIngredients)
         sharedViewModel.editIngredientToRecipeLD.observe(
             viewLifecycleOwner,
             ::editDeleteFoodIngredients
@@ -201,8 +239,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
                 binding.ivThumb.load(photoPath) {
                     transformations(CircleCropTransformation())
                 }
-            }
-            else{
+            } else {
                 binding.ivThumb.loadPassioIcon("", PassioIDEntityType.recipe)
             }
         }
@@ -356,6 +393,9 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
 
     private fun addFoodIngredients(foodRecord: FoodRecord) {
         viewModel.addIngredients(foodRecord)
+    }
+    private fun addFoodIngredients(ingredients: List<FoodRecordIngredient>) {
+        viewModel.addIngredients(ingredients)
     }
 
     private fun editDeleteFoodIngredients(ingredient: Pair<FoodRecordIngredient?, Int>) {
