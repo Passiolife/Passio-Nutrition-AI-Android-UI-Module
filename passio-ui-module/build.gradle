@@ -100,5 +100,8 @@ dependencies {
     implementation 'io.noties.markwon:html:4.6.2'
 //    implementation 'io.noties.markwon:syntax-highlight:4.6.2'
 
+    implementation 'com.intuit.sdp:sdp-android:1.1.1'
+    implementation 'com.intuit.ssp:ssp-android:1.1.1'
+
 
 }

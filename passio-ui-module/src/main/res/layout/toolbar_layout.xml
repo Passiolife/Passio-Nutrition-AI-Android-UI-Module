@@ -17,7 +17,7 @@
         android:maxLines="2"
         android:text="@string/my_diary"
         android:textColor="@color/passio_toolbar_title"
-        android:textSize="22sp"
+        android:textSize="@dimen/_18ssp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
