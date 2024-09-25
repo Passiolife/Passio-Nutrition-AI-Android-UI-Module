@@ -6,6 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
     android:background="@drawable/rc_6_white"
     android:elevation="4dp"
     android:paddingVertical="8dp"
@@ -58,7 +61,7 @@
             android:maxLines="2"
             android:textColor="@color/passio_gray900"
             android:textSize="14sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             tools:text="Food 2 as/šdla špasldaš asdaašspldasšdplasašspdlasšpdl ašspdlasšdpl" />
 
         <androidx.appcompat.widget.AppCompatTextView

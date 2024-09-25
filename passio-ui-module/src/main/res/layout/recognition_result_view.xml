@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/passio_black"
+    android:background="@color/passio_gray900"
     tools:parentTag="androidx.coordinatorlayout.widget.CoordinatorLayout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,9 +67,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:textColor="@color/passio_black"
+                        android:textColor="@color/passio_gray900"
                         android:textSize="14sp"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintBottom_toBottomOf="@id/foodImage"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/foodImage"
@@ -137,7 +137,7 @@
                 android:text="@string/nutrition_facts"
                 android:textColor="@color/passio_gray900"
                 android:textSize="14sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -228,9 +228,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:textColor="@color/passio_black"
+                    android:textColor="@color/passio_gray900"
                     android:textSize="14sp"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_semi_bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/barcodeImage"
                     app:layout_constraintTop_toTopOf="@id/barcodeImage"
@@ -264,7 +264,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/not_what_you_re_looking_for_search_manually"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 app:layout_constraintBottom_toTopOf="@id/foodEdit"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -282,7 +282,7 @@
                 android:text="@string/edit"
                 android:textColor="@color/passio_primary"
                 android:textSize="14sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_semi_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/foodLog"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -300,7 +300,7 @@
                 android:text="@string/log"
                 android:textColor="@color/passio_white"
                 android:textSize="14sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_semi_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/foodEdit" />

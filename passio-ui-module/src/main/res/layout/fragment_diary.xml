@@ -34,12 +34,12 @@
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:padding="8dp"
-            android:textSize="@dimen/_14ssp"
+            android:textSize="@dimen/_10ssp"
             tools:text="February 5, 2024"
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/ripple_effect"
-            android:textColor="@color/passio_black"
+            android:textColor="@color/passio_gray900"
             app:drawableStartCompat="@drawable/icon_calendar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -168,7 +168,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/topContainer"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"

@@ -39,7 +39,7 @@
             android:padding="8dp"
             android:textColor="@color/passio_gray900"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             app:drawableStartCompat="@drawable/ic_mealplan"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

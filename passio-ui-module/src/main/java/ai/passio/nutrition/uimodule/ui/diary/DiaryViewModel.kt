@@ -15,8 +15,8 @@ import ai.passio.nutrition.uimodule.ui.util.isToday
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.PassioSDK
-import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ class DiaryViewModel : BaseViewModel() {
     private val useCaseUserProfile = UserProfileUseCase
     private val mealPlanUseCase = MealPlanUseCase
 
-    private val _logsLD = SingleLiveEvent<Pair<UserProfile, List<FoodRecord>>>()
+    private val _logsLD = MutableLiveData<Pair<UserProfile, List<FoodRecord>>>()
     val logsLD: LiveData<Pair<UserProfile, List<FoodRecord>>> get() = _logsLD
 
     private var currentDate = Date()
@@ -42,11 +42,13 @@ class DiaryViewModel : BaseViewModel() {
     val logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
     val showLoading = SingleLiveEvent<Boolean>()
 
-    private fun fetchLogsForCurrentDay() {
+    fun fetchLogsForCurrentDay() {
         viewModelScope.launch {
+            showLoading.postValue(true)
             val userProfile = useCaseUserProfile.getUserProfile()
             val records = useCase.getLogsForDay(currentDate)
             _logsLD.postValue(Pair(userProfile, records))
+            showLoading.postValue(false)
 //            getQuickSuggestions()
         }
     }
@@ -76,6 +78,7 @@ class DiaryViewModel : BaseViewModel() {
 
     fun deleteLog(foodRecord: FoodRecord) {
         viewModelScope.launch {
+            showLoading.postValue(true)
             useCase.deleteRecord(foodRecord)
             fetchLogsForCurrentDay()
         }

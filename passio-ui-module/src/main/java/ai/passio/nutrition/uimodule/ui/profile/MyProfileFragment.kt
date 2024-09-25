@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -103,6 +104,9 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
             viewLifecycleOwner,
             ::showDailyNutritionTargetPicker
         )
+        viewModel.showLoading.observe(viewLifecycleOwner){ isLoading ->
+            binding.viewLoader.isVisible = isLoading
+        }
     }
 
     override fun onDestroyView() {

@@ -46,7 +46,7 @@
                         android:text="@string/recipe_details"
                         android:textColor="@color/passio_gray900"
                         android:textSize="16sp"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,8 +110,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/serving_size"
-                        android:textColor="@color/passio_black"
-                        android:textStyle="bold"
+                        android:textColor="@color/passio_gray900"
+                        android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -119,7 +119,7 @@
                         android:id="@+id/servingSizeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/passio_black"
+                        android:textColor="@color/passio_gray900"
                         app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text=" (123 g)" />
@@ -136,7 +136,7 @@
                         android:lines="1"
                         android:paddingTop="9dp"
                         android:paddingBottom="9dp"
-                        android:textColor="@color/passio_black"
+                        android:textColor="@color/passio_gray900"
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
@@ -193,9 +193,9 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:text="@string/add_ingredient"
-                        android:textColor="@color/passio_black"
+                        android:textColor="@color/passio_gray900"
                         android:textSize="16sp"
-                        android:textStyle="bold"
+                        android:fontFamily="@font/inter_semi_bold"
                         app:drawableEndCompat="@drawable/icon_plus"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

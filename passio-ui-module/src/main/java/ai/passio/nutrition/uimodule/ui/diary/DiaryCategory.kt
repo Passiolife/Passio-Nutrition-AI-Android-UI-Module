@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
 class DiaryCategory @JvmOverloads constructor(
@@ -104,10 +105,12 @@ class DiaryCategory @JvmOverloads constructor(
     private fun invalidateState() {
         with(binding) {
             if (!expanded) {
+                divider.isVisible = false
                 chevron.rotationX = 0f
                 logList.visibility = View.GONE
                 setPadding(0, 0, 0, 0)
             } else {
+                divider.isVisible = true
                 chevron.rotationX = 180f
                 logList.visibility = View.VISIBLE
                 if (adapter.itemCount > 0) {

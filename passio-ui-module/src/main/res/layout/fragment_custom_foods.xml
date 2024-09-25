@@ -32,7 +32,7 @@
         android:text="@string/create_new_food"
         android:textColor="@color/passio_white"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -48,7 +48,7 @@
         android:text="@string/no_records_found"
         android:textColor="@color/passio_gray900"
         android:textSize="16sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

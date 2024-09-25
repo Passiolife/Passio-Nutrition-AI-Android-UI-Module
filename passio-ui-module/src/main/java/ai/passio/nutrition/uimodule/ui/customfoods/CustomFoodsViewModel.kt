@@ -7,6 +7,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodsFragmentDirections
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ class CustomFoodsViewModel : BaseViewModel() {
 
     private val useCase = CustomFoodUseCase
 
-    private val _customFoodListEvent = SingleLiveEvent<List<FoodRecord>>()
+    private val _customFoodListEvent = MutableLiveData<List<FoodRecord>>()
     val customFoodListEvent: LiveData<List<FoodRecord>> = _customFoodListEvent
 
     private val _showLoading = SingleLiveEvent<Boolean>()
@@ -26,8 +27,10 @@ class CustomFoodsViewModel : BaseViewModel() {
 
     fun getCustomFoods() {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             val customFoods = useCase.fetchCustomFoods()
             _customFoodListEvent.postValue(customFoods)
+            _showLoading.postValue(false)
 
         }
     }

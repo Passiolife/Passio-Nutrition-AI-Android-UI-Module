@@ -47,8 +47,10 @@
                 android:gravity="center"
                 android:text="@string/this_week"
                 android:textColor="@color/passio_gray900"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:focusable="true"
+                android:fontFamily="@font/inter_semi_bold"
+                android:foreground="@drawable/ripple_effect"
+                android:textSize="@dimen/_10ssp"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/moveNext"
@@ -79,9 +81,9 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="@string/calories"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/inter_semi_bold"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/progressCaloriesBarChart"
@@ -112,9 +114,9 @@
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="@string/macros"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/inter_semi_bold"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/progressNutrientsBarChart"
@@ -146,7 +148,7 @@
                 android:drawableTint="@color/passio_calories"
                 android:gravity="center_vertical"
                 android:text="@string/calories"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/labelProtein"
                 app:layout_constraintHorizontal_chainStyle="spread"
@@ -163,7 +165,7 @@
                 android:drawableTint="@color/passio_protein"
                 android:gravity="center_vertical"
                 android:text="@string/protein"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/labelFat"
                 app:layout_constraintHorizontal_chainStyle="spread"
@@ -179,7 +181,7 @@
                 android:drawableTint="@color/passio_fat"
                 android:gravity="center_vertical"
                 android:text="@string/fat"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/labelCarbs"
                 app:layout_constraintHorizontal_chainStyle="spread"
@@ -195,7 +197,7 @@
                 android:drawableTint="@color/passio_carbs"
                 android:gravity="center_vertical"
                 android:text="@string/carbs"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"
@@ -221,7 +223,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labels" />
 
-        <Space
+        <androidx.legacy.widget.Space
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             app:layout_constraintStart_toStartOf="parent"

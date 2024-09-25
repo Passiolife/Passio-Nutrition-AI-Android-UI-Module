@@ -205,7 +205,7 @@
             android:text="@string/scanning"
             android:textColor="@color/passio_gray900"
             android:textSize="14sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             app:layout_constraintStart_toEndOf="@id/progress_bar"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -249,7 +249,7 @@
             android:text="@string/item_added_to_diary"
             android:textColor="@color/passio_gray900"
             android:textSize="20sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -280,7 +280,7 @@
             android:text="@string/view_diary"
             android:textColor="@color/passio_primary"
             android:textSize="14sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             app:layout_constraintEnd_toStartOf="@id/keepScanning"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_or_continue" />
@@ -298,7 +298,7 @@
             android:text="@string/keep_scanning"
             android:textColor="@color/passio_white"
             android:textSize="14sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/viewDiary"
             app:layout_constraintTop_toBottomOf="@id/view_or_continue" />

@@ -24,9 +24,9 @@
             android:paddingTop="16dp"
             android:paddingEnd="8dp"
             android:paddingBottom="16dp"
-            android:textColor="@color/passio_black"
+            android:textColor="@color/passio_gray900"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Breakfast" />
@@ -42,6 +42,9 @@
             android:text="@string/log_entire_meal"
             android:textColor="@color/passio_primary"
             android:textSize="14sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
             app:layout_constraintBottom_toBottomOf="@id/category"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/category" />

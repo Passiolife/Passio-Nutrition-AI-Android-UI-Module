@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
     android:padding="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -23,19 +26,19 @@
         android:autoSizeTextType="uniform"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/passio_black"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textColor="@color/passio_gray900"
+        android:textSize="@dimen/_10ssp"
+        android:fontFamily="@font/inter_semi_bold"
         tools:text="Plain Muffin" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/calories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="8dp"
-        android:textColor="@color/passio_black"
-        android:textSize="14sp"
+        android:textColor="@color/passio_gray900"
+        android:textSize="@dimen/_11ssp"
         tools:text="201 cal" />
 
 </LinearLayout>

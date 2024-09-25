@@ -84,7 +84,7 @@
             android:text="@string/cancel"
             android:textColor="@color/passio_primary"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/inter_semi_bold"/>
 
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -110,7 +110,7 @@
             android:text="@string/next_only"
             android:textColor="@color/passio_white"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/inter_semi_bold"/>
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

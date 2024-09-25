@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
 
 interface OnPickIngredientOption {
     fun onPickIngredient(addFoodOption: AddFoodOption)
@@ -67,9 +66,6 @@ class PickIngredientMenuDialog(private val onPickIngredientOption: OnPickIngredi
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            addFoodList.layoutManager = LinearLayoutManager(requireContext()).apply {
-                reverseLayout = true
-            }
             addFoodList.adapter = adapter
 
             buttonClose.setOnClickListener {

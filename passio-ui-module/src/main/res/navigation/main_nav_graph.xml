@@ -170,9 +170,7 @@
             app:destination="@id/diary"
             app:launchSingleTop="true"
             app:popUpTo="@id/dashboard">
-            <argument
-                android:name="currentDate"
-                app:argType="long" />
+
         </action>
 
     </fragment>

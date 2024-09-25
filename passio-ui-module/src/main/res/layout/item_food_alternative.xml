@@ -6,6 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
     android:background="@drawable/bg_rounded_corner_indio50"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -22,9 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_weight="1"
-        android:textColor="@color/passio_black"
+        android:textColor="@color/passio_gray900"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         tools:text="Green AppleGreen" />
 
     <androidx.appcompat.widget.AppCompatImageView

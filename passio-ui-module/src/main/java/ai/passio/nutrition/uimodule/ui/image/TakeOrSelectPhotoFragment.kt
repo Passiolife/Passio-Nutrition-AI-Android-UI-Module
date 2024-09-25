@@ -19,7 +19,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -47,9 +46,6 @@ class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            addFoodList.layoutManager = LinearLayoutManager(requireContext()).apply {
-                reverseLayout = true
-            }
             addFoodList.adapter = adapter
 
             buttonClose.setOnClickListener {

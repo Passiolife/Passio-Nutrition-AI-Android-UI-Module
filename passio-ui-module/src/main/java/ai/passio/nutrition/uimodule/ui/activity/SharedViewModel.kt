@@ -16,11 +16,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.util.Date
 
 object UserCache {
     private lateinit var userProfile: UserProfile
     fun getProfile(): UserProfile {
-        return userProfile
+        return if (::userProfile.isInitialized) {
+            userProfile
+        } else {
+            UserProfile()
+        }
     }
 
     fun setProfile(userProfile: UserProfile) {
@@ -29,6 +34,10 @@ object UserCache {
 }
 
 class SharedViewModel : ViewModel() {
+
+    private val _diaryCurrentDate = SingleLiveEvent<Date>()
+    val diaryCurrentDate: LiveData<Date> get() = _diaryCurrentDate
+
     private val _nutritionFactsPair = SingleLiveEvent<Pair<PassioNutritionFacts, String>>()
     val nutritionFactsPair: LiveData<Pair<PassioNutritionFacts, String>> get() = _nutritionFactsPair
 
@@ -125,6 +134,7 @@ class SharedViewModel : ViewModel() {
     fun editRecipeUpdateLog(foodRecord: FoodRecord) {
         _editRecipeUpdateLog.postValue(foodRecord)
     }
+
     fun editFoodUpdateLog(foodRecord: FoodRecord) {
         _editFoodUpdateLog.postValue(foodRecord)
     }
@@ -145,6 +155,7 @@ class SharedViewModel : ViewModel() {
     fun editIngredient(ingredient: FoodRecordIngredient, ingredientIndex: Int) {
         _editIngredientLD.postValue(ingredient to ingredientIndex)
     }
+
     fun editIngredient(ingredient: FoodRecordIngredient) {
         _editIngredientLD.postValue(ingredient to -1)
     }
@@ -158,7 +169,7 @@ class SharedViewModel : ViewModel() {
         _addFoodIngredientLD.postValue(foodRecordIngredient)
     }
 
-    fun updateFoodIngredientToRecipe(ingredient: FoodRecordIngredient?,index: Int) {
+    fun updateFoodIngredientToRecipe(ingredient: FoodRecordIngredient?, index: Int) {
         _editIngredientToRecipeLD.postValue(ingredient to index)
     }
 
@@ -166,6 +177,7 @@ class SharedViewModel : ViewModel() {
     fun addFoodIngredients(foodRecord: FoodRecord) {
         _addFoodIngredientsLD.postValue(foodRecord)
     }
+
     //    send more then one ingredients to recipe screen to add to recipe
     fun addFoodIngredients(ingredients: List<FoodRecordIngredient>) {
         _addMultipleIngredientsLD.postValue(ingredients)
@@ -174,9 +186,11 @@ class SharedViewModel : ViewModel() {
     fun setIsAddIngredientFromSearch(isAddIngredient: Boolean) {
         _isAddIngredientFromSearchLD.postValue(isAddIngredient)
     }
+
     fun setIsAddIngredientFromScanning(isAddIngredient: Boolean) {
         _isAddIngredientFromScanningLD.postValue(isAddIngredient)
     }
+
     fun setIsAddIngredientUsingVoice(isAddIngredient: Boolean) {
         _isAddIngredientFromVoiceLD.postValue(isAddIngredient)
     }
@@ -191,6 +205,10 @@ class SharedViewModel : ViewModel() {
 
     fun addPhotoFoodResult(uris: List<Bitmap>) {
         _photoFoodResultLD.postValue(uris)
+    }
+
+    fun setDiaryDate(currentDate: Date) {
+        _diaryCurrentDate.postValue(currentDate)
     }
 
 }

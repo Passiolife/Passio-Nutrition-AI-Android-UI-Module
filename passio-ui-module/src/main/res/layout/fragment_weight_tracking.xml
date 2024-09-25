@@ -55,8 +55,10 @@
             android:gravity="center"
             android:text="@string/this_week"
             android:textColor="@color/passio_gray900"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:focusable="true"
+            android:fontFamily="@font/inter_semi_bold"
+            android:foreground="@drawable/ripple_effect"
+            android:textSize="@dimen/_10ssp"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/moveNext"
@@ -99,9 +101,9 @@
                     android:gravity="center"
                     android:padding="4dp"
                     android:text="@string/weight_trend"
-                    android:textColor="@color/passio_black"
+                    android:textColor="@color/passio_gray900"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_semi_bold" />
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
@@ -134,9 +136,9 @@
                     app:drawableEndCompat="@drawable/ic_arrow_up"
                     android:padding="8dp"
                     android:text="@string/date"
-                    android:textColor="@color/passio_black"
+                    android:textColor="@color/passio_gray900"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_semi_bold" />
 
                 <View
                     android:layout_width="match_parent"

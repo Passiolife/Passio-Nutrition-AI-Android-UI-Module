@@ -1,16 +1,24 @@
 package ai.passio.nutrition.uimodule.ui.util
 
 import ai.passio.nutrition.uimodule.R
-import ai.passio.nutrition.uimodule.ui.util.ViewEXT.markSwitchOn
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 
 object ViewEXT {
+    fun View.sentEnable(isEnable: Boolean) {
+        if (isEnable)
+            this.enable()
+        else
+            this.disable()
+    }
+
     fun View.enable() {
         this.isEnabled = true
         this.alpha = 1.0f
@@ -45,11 +53,9 @@ object ViewEXT {
     }
 
     fun SwitchCompat.setOnChangeListener(listened: OnCheckedChangeListener) {
-        if (this.isChecked)
-        {
+        if (this.isChecked) {
             this.markSwitchOn()
-        }
-        else{
+        } else {
             this.markSwitchOff()
         }
         this.setOnCheckedChangeListener { view, isChecked ->
@@ -79,5 +85,14 @@ object ViewEXT {
             ContextCompat.getColorStateList(context, R.color.passio_white)
         this.trackTintList =
             ContextCompat.getColorStateList(context, R.color.passio_gray300)
+    }
+
+    fun AppCompatEditText.showKeyboard() {
+        this.requestFocus()
+        this.post {
+            val imm =
+                this.context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 }

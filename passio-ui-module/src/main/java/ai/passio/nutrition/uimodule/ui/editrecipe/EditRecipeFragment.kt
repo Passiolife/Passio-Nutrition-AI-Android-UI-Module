@@ -325,7 +325,11 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
 
         with(binding) {
             ivThumb.loadFoodImage(foodRecord)
-            name.setText(foodRecord.name.capitalized())
+            if (!foodRecord.name.isValid()) {
+                name.text?.clear()
+            } else {
+                name.setText(foodRecord.name.capitalized())
+            }
 //            if (!foodRecord.name.equals(foodRecord.additionalData, true)) {
 //                infoName.text = foodRecord.additionalData.capitalized()
 //            }
@@ -394,6 +398,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
     private fun addFoodIngredients(foodRecord: FoodRecord) {
         viewModel.addIngredients(foodRecord)
     }
+
     private fun addFoodIngredients(ingredients: List<FoodRecordIngredient>) {
         viewModel.addIngredients(ingredients)
     }

@@ -30,20 +30,31 @@ class DashboardViewModel : BaseViewModel() {
     private val _currentDateEvent = MutableLiveData<Date>()
     val currentDateEvent: LiveData<Date> get() = _currentDateEvent
 
-    private val _logsLD = SingleLiveEvent<Pair<UserProfile, List<FoodRecord>>>()
+    private val _logsLD = MutableLiveData<Pair<UserProfile, List<FoodRecord>>>()
     val logsLD: LiveData<Pair<UserProfile, List<FoodRecord>>> get() = _logsLD
-    private val _adherents = SingleLiveEvent<List<Long>>()
+    private val _isLogsLoading = SingleLiveEvent<Boolean>()
+    val isLogsLoading: LiveData<Boolean> get() = _isLogsLoading
+
+    private val _adherents = MutableLiveData<List<Long>>()
     val adherents: LiveData<List<Long>> get() = _adherents
+    private val _isAdherentsLoading = SingleLiveEvent<Boolean>()
+    val isAdherentsLoading: LiveData<Boolean> get() = _isAdherentsLoading
 
     private var calendarModeCurrent = CalendarMode.WEEKS
     private val _calendarMode = MutableLiveData<CalendarMode>()
     val calendarMode: LiveData<CalendarMode> get() = _calendarMode
 
-    private val _waterSummary = SingleLiveEvent<Pair<Double, Double>>()
+    private val _waterSummary = MutableLiveData<Pair<Double, Double>>()
     val waterSummary: LiveData<Pair<Double, Double>> get() = _waterSummary
+    private val _isWaterLoading = SingleLiveEvent<Boolean>()
+    val isWaterLoading: LiveData<Boolean> get() = _isWaterLoading
 
-    private val _weightSummary = SingleLiveEvent<Pair<Double, Double>>()
+    private val _weightSummary = MutableLiveData<Pair<Double, Double>>()
     val weightSummary: LiveData<Pair<Double, Double>> get() = _weightSummary
+    private val _isWeightLoading = SingleLiveEvent<Boolean>()
+    val isWeightLoading: LiveData<Boolean> get() = _isWeightLoading
+
+
 
     init {
         _calendarMode.postValue(calendarModeCurrent)
@@ -76,23 +87,29 @@ class DashboardViewModel : BaseViewModel() {
 
     fun fetchLogsForCurrentDay() {
         viewModelScope.launch {
+            _isLogsLoading.postValue(true)
             val userProfile = useCaseUserProfile.getUserProfile()
             val records = useCase.getLogsForDay(currentDate)
             _logsLD.postValue(Pair(userProfile, records))
-            fetchWaterSummary()
-            fetchWeightSummary()
+            _isLogsLoading.postValue(false)
         }
+        fetchWaterSummary()
+        fetchWeightSummary()
     }
+
 
     fun fetchAdherence() {
         viewModelScope.launch {
+            _isAdherentsLoading.postValue(true)
             val adherents = useCase.fetchAdherence()
             _adherents.postValue(adherents)
+            _isAdherentsLoading.postValue(false)
         }
     }
 
     private fun fetchWaterSummary() {
         viewModelScope.launch {
+            _isWaterLoading.postValue(true)
             val totalWater =
                 waterUseCase.getRecords(currentDate).sumOf { it.getWaterInCurrentUnit() }
             val targetWater = UserCache.getProfile().getTargetWaterInCurrentUnit()
@@ -101,11 +118,13 @@ class DashboardViewModel : BaseViewModel() {
                 remainingTarget = 0.0
             }
             _waterSummary.postValue(Pair(totalWater, remainingTarget))
+            _isWaterLoading.postValue(false)
         }
     }
 
     private fun fetchWeightSummary() {
         viewModelScope.launch {
+            _isWeightLoading.postValue(true)
             val totalWater =
                 weightUseCase.getLatest()?.getWightInCurrentUnit() ?: 0.0
             val targetWater = UserCache.getProfile().getTargetWightInCurrentUnit()
@@ -114,18 +133,7 @@ class DashboardViewModel : BaseViewModel() {
                 remainingTarget = 0.0
             }
             _weightSummary.postValue(Pair(totalWater, remainingTarget))
-        }
-    }
-
-    fun navigateToMyProfile() {
-        viewModelScope.launch(Dispatchers.Main) {
-            navigate(DashboardFragmentDirections.dashboardToMyProfile())
-        }
-    }
-
-    fun navigateToSettings() {
-        viewModelScope.launch(Dispatchers.Main) {
-            navigate(DashboardFragmentDirections.dashboardToSettings())
+            _isWeightLoading.postValue(false)
         }
     }
 

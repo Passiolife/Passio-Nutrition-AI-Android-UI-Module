@@ -3,15 +3,14 @@ package ai.passio.nutrition.uimodule.ui.activity
 import ai.passio.nutrition.uimodule.NutritionUIModule
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.Repository
-import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.data.SharedPrefsPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
+import ai.passio.nutrition.uimodule.ui.menu.MainMenuDialog
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 
@@ -38,6 +37,13 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedViewModel.userProfileCacheEvent.observe(this){
+            setupNav()
+        }
+    }
+
+    private fun setupNav()
+    {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         val navController = navHostFragment.navController
@@ -53,12 +59,10 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
                 binding.buttonAdd.visibility = View.GONE
             }
         }
-
-        sharedViewModel.userProfileCacheEvent.observe(this){
-            binding.viewLoading.isVisible = false
-            binding.buttonAdd.setOnClickListener {
-                navController.navigate(R.id.add_food)
-            }
+        binding.viewLoading.isVisible = false
+        binding.buttonAdd.setOnClickListener {
+//            navController.navigate(R.id.add_food)
+            MainMenuDialog(this@PassioUiModuleActivity).show()
         }
     }
 

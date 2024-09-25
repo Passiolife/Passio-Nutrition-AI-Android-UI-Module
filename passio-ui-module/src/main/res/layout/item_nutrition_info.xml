@@ -16,7 +16,7 @@
         android:gravity="start"
         android:textColor="@color/passio_gray900"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/passio_primary"
             android:textSize="30sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             tools:text="90" />
 
         <androidx.legacy.widget.Space
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/passio_gray500"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_medium"
             tools:text="g" />
 
 

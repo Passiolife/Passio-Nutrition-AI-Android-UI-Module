@@ -8,6 +8,6 @@
     android:paddingTop="8dp"
     android:paddingEnd="16dp"
     android:paddingBottom="8dp"
-    android:textColor="@color/passio_black"
-    android:textSize="14sp"
+    android:textColor="@color/passio_gray900"
+    android:textSize="@dimen/_10ssp"
     tools:text="Slice" />

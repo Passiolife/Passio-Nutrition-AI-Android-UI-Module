@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -14,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:textColor="@color/passio_gray900"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         tools:text="152" />
 
     <androidx.appcompat.widget.AppCompatTextView

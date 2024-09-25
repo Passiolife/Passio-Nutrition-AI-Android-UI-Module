@@ -7,6 +7,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.edit.EditFoodFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
@@ -69,7 +70,8 @@ class EditRecipesViewModel : BaseViewModel() {
 
     fun setRecipeToEditOrCreateNew(editRecipe: FoodRecord) {
         viewModelScope.launch {
-            foodRecord = editRecipe
+            _showLoading.postValue(true)
+            foodRecord = editRecipe.clone()
             foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
             if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
                 isEditRecipe = true
@@ -77,6 +79,7 @@ class EditRecipesViewModel : BaseViewModel() {
 
             foodRecord.setUnitToServing()
             _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+            _showLoading.postValue(false)
         }
     }
 

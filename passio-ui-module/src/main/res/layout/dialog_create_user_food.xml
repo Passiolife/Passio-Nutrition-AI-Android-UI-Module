@@ -18,7 +18,7 @@
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/inter_bold" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/description"

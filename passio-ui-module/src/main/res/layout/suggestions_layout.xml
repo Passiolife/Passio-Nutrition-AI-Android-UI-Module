@@ -6,6 +6,9 @@
     android:layout_marginEnd="8dp"
     android:background="@drawable/rc_8_white"
     android:elevation="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
     android:layout_marginTop="16dp"
     android:layout_marginBottom="8dp"
     android:paddingHorizontal="16dp"
@@ -18,9 +21,9 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:textColor="@color/passio_black"
+        android:textColor="@color/passio_gray900"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         tools:text="Blueberry pie" />
 
 </FrameLayout>

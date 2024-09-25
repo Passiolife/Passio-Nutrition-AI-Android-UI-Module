@@ -24,7 +24,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
 import java.util.Calendar
-import java.util.Date
 
 /**
  * A simple [Fragment] subclass.
@@ -54,13 +53,13 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
         initObserver()
 
-        var currentDate = Date()
+        /*var currentDate = Date()
         if (arguments?.containsKey("currentDate") == true) {
             arguments?.getLong("currentDate")?.let {
                 currentDate = Date(it)
             }
         }
-        viewModel.setDate(currentDate)
+        viewModel.setDate(currentDate)*/
 
         with(binding) {
             toolbar.setup(getString(R.string.my_diary), this@DiaryFragment)
@@ -91,6 +90,8 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
             }
             dailyNutrition.invokeProgressReport(::navigateToProgressReport)
             quickSuggestions.setup(quickSuggestionListener)
+
+            viewModel.fetchLogsForCurrentDay()
         }
     }
 
@@ -112,6 +113,10 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     }
 
     private fun initObserver() {
+        sharedViewModel.diaryCurrentDate.observe(viewLifecycleOwner) { currentDate ->
+            viewModel.setDate(currentDate)
+            binding.toolbarCalendar.text = dateFormat.format(viewModel.getCurrentDate())
+        }
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.quickSuggestions.observe(viewLifecycleOwner, ::setupQuickSuggestions)
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
@@ -147,9 +152,11 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
         val userProfile = data.first
         val records = data.second
-        val breakfastLogs = records.meals(MealLabel.Breakfast) //filter { it.mealLabel == MealLabel.Breakfast }
+        val breakfastLogs =
+            records.meals(MealLabel.Breakfast) //filter { it.mealLabel == MealLabel.Breakfast }
         val lunchLogs = records.meals(MealLabel.Lunch) //filter { it.mealLabel == MealLabel.Lunch }
-        val dinnerLogs = records.meals(MealLabel.Dinner) //filter { it.mealLabel == MealLabel.Dinner }
+        val dinnerLogs =
+            records.meals(MealLabel.Dinner) //filter { it.mealLabel == MealLabel.Dinner }
         val snackLogs = records.meals(MealLabel.Snack) //filter { it.mealLabel == MealLabel.Snack }
 
         with(binding) {

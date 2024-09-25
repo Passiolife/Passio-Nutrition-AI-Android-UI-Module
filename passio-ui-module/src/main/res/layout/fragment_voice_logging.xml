@@ -43,7 +43,7 @@
         android:text="@string/start_listening"
         android:textColor="@color/passio_white"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:drawableStartCompat="@drawable/ic_start_listening"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +92,7 @@
         android:text="@string/stop_listening"
         android:textColor="@color/passio_white"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:drawableStartCompat="@drawable/ic_stop_listening"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -195,7 +195,7 @@
                 android:text="@string/your_result"
                 android:textColor="@color/passio_gray900"
                 android:textSize="20sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/inter_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/clearSelected" />
@@ -246,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:text="@string/not_what_you_re_looking_for_search_manually"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 app:layout_constraintBottom_toTopOf="@id/actionContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -276,7 +276,7 @@
                     android:text="@string/try_again"
                     android:textColor="@color/passio_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_semi_bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/log"
@@ -291,7 +291,7 @@
                     android:text="@string/log_selected"
                     android:textColor="@color/passio_white"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_semi_bold" />
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>

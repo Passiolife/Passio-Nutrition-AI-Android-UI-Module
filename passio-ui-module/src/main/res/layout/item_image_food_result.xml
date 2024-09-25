@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_effect"
     android:background="@drawable/bg_rounded_corner_indio50"
     android:padding="8dp">
 
@@ -25,9 +28,9 @@
         android:autoSizeTextType="uniform"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/passio_black"
+        android:textColor="@color/passio_gray900"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:layout_constraintBottom_toTopOf="@id/servingSize"
         app:layout_constraintEnd_toStartOf="@id/foodSelect"
         app:layout_constraintStart_toEndOf="@id/image"

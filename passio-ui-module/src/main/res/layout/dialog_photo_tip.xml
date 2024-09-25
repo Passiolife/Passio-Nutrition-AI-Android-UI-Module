@@ -17,7 +17,7 @@
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/inter_bold" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"
@@ -51,6 +51,6 @@
         android:text="@string/ok"
         android:textColor="@color/passio_white"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/inter_semi_bold" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

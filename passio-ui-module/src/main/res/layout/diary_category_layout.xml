@@ -27,9 +27,9 @@
             android:layout_marginEnd="@dimen/_8sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:layout_weight="1"
-            android:textColor="@color/passio_black"
+            android:textColor="@color/passio_gray900"
             android:textSize="@dimen/_12ssp"
-            android:textStyle="bold"
+            android:fontFamily="@font/inter_semi_bold"
             tools:text="Breakfast" />
 
         <ImageView
@@ -42,6 +42,14 @@
             tools:ignore="ContentDescription" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@color/passio_background"/>
 
     <com.yanzhenjie.recyclerview.SwipeRecyclerView
         android:id="@+id/logList"
