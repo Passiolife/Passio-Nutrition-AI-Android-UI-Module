@@ -21,6 +21,7 @@ import ai.passio.nutrition.uimodule.ui.util.getWeekDuration
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentMonth
 import ai.passio.nutrition.uimodule.ui.util.isPartOfCurrentWeek
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -50,11 +51,9 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         parentFragment?.arguments?.let {
-            if (it.containsKey("currentDate"))
-            {
+            if (it.containsKey("currentDate")) {
                 val currentDate = it.getLong("currentDate", 0)
-                if (currentDate > 0)
-                {
+                if (currentDate > 0) {
                     viewModel.setDate(Date(currentDate))
                 }
             }
@@ -75,6 +74,9 @@ class MacrosFragment : BaseFragment<MacrosViewModel>() {
 
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.timePeriod.observe(viewLifecycleOwner, ::updateTimePeriod)
+        viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.loading.isVisible = isLoading
+        }
 
         viewModel.fetchLogsForCurrentWeek()
     }

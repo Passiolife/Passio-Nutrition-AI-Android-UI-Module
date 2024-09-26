@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:textColor="@color/passio_white"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/scan_info_message" />

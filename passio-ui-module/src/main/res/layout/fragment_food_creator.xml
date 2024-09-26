@@ -45,7 +45,7 @@
                         android:padding="8dp"
                         android:text="@string/scan_description"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/_12ssp"
                         android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -148,7 +148,7 @@
                         android:padding="8dp"
                         android:text="@string/required_nutrition_facts"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/_12ssp"
                         android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -252,7 +252,7 @@
                         android:padding="8dp"
                         android:text="@string/other_nutrition_facts"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/_12ssp"
                         android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

@@ -15,7 +15,7 @@
         app:behavior_hideable="false"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         tools:paddingBottom="300dp"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/visualResultCard"
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/_10ssp"
                         android:fontFamily="@font/inter_semi_bold"
                         app:layout_constraintBottom_toBottomOf="@id/foodImage"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +95,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="24dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="4"
+                    tools:itemCount="40"
                     tools:listitem="@layout/item_food_alternative" />
 
                 <androidx.legacy.widget.Space
@@ -136,7 +136,7 @@
                 android:gravity="center"
                 android:text="@string/nutrition_facts"
                 android:textColor="@color/passio_gray900"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 android:fontFamily="@font/inter_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -158,7 +158,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_10ssp"
                     tools:text="@string/calories" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -168,7 +168,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_10ssp"
                     tools:text="@string/carbs" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -178,7 +178,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_10ssp"
                     tools:text="@string/protein" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -188,7 +188,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_10ssp"
                     tools:text="@string/fat" />
 
 
@@ -203,7 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="-2dp"
             android:background="@drawable/bottom_sheet_background"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/barcodeResultView"
@@ -229,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_10ssp"
                     android:fontFamily="@font/inter_semi_bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/barcodeImage"
@@ -242,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:textColor="@color/passio_gray500"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_10ssp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/barcodeImage"
                     app:layout_constraintTop_toBottomOf="@id/barcodeName"
@@ -265,6 +265,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/not_what_you_re_looking_for_search_manually"
                 android:textColor="@color/passio_gray900"
+                android:textSize="@dimen/_10ssp"
                 app:layout_constraintBottom_toTopOf="@id/foodEdit"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -281,7 +282,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/edit"
                 android:textColor="@color/passio_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 android:fontFamily="@font/inter_semi_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/foodLog"
@@ -299,7 +300,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/log"
                 android:textColor="@color/passio_white"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 android:fontFamily="@font/inter_semi_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

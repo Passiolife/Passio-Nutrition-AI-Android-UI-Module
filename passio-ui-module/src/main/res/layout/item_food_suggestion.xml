@@ -30,7 +30,7 @@
         android:lineSpacingExtra="0dp"
         android:layout_weight="1"
         android:textColor="@color/passio_gray900"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         tools:text="Green AppleGreen" />
 
     <androidx.appcompat.widget.AppCompatImageView

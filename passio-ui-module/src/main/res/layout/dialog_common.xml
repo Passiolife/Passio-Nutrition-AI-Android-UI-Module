@@ -17,7 +17,7 @@
         android:padding="8dp"
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
-        android:textSize="18sp"
+        android:textSize="@dimen/_12ssp"
         tools:text="@string/create_user_food" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -28,7 +28,7 @@
         android:paddingHorizontal="8dp"
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         tools:text="@string/create_a_user_food_from_this_food" />
 
     <androidx.appcompat.widget.LinearLayoutCompat

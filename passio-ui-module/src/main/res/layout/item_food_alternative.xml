@@ -26,7 +26,7 @@
         android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:textColor="@color/passio_gray900"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="@font/inter_semi_bold"
         tools:text="Green AppleGreen" />
 

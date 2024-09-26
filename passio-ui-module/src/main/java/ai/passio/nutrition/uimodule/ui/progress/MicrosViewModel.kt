@@ -18,9 +18,12 @@ class MicrosViewModel : BaseViewModel() {
     private val _currentDateEvent = MutableLiveData<Date>()
     val currentDateEvent: LiveData<Date> get() = _currentDateEvent
 
+    private val nutrientsList = arrayListOf<MicroNutrient>()
     private val _logsLD = SingleLiveEvent<ArrayList<MicroNutrient>>()
     val logsLD: LiveData<ArrayList<MicroNutrient>> get() = _logsLD
 
+    private val _showLoading = SingleLiveEvent<Boolean>()
+    val showLoading: LiveData<Boolean> = _showLoading
 
     private var isExpanded = false
 
@@ -30,25 +33,35 @@ class MicrosViewModel : BaseViewModel() {
 
     fun fetchLogsForCurrentDay() {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             val records = useCase.getLogsForDay(currentDate)
             val nutrients = MicroNutrient.nutrientsFromFoodRecords(records)
-            val nutrientsList = arrayListOf<MicroNutrient>()
-            if (nutrients.size >= 10) {
-                if (!isExpanded) {
-                    nutrientsList.addAll(nutrients.take(10))
-                    nutrientsList.add(MicroNutrient("Show More", 0.0, 0.0, "showmore"))
-                } else {
-                    nutrientsList.addAll(nutrients)
-                    nutrientsList.add(MicroNutrient("Show Less", 0.0, 0.0, "showmore"))
-                }
-            }
-            _logsLD.postValue(nutrientsList)
+            nutrientsList.clear()
+            nutrientsList.addAll(nutrients)
+            _logsLD.postValue(filterDataAccordingToExpanded())
+            _showLoading.postValue(false)
         }
+    }
+
+    private fun filterDataAccordingToExpanded(): ArrayList<MicroNutrient> {
+        val tempNutrientsList = arrayListOf<MicroNutrient>()
+        if (nutrientsList.size >= 10) {
+            if (!isExpanded) {
+                tempNutrientsList.addAll(nutrientsList.take(10))
+                tempNutrientsList.add(MicroNutrient("Show More", 0.0, 0.0, "showmore"))
+            } else {
+                tempNutrientsList.addAll(nutrientsList)
+                tempNutrientsList.add(MicroNutrient("Show Less", 0.0, 0.0, "showmore"))
+            }
+        } else {
+            tempNutrientsList.addAll(nutrientsList)
+        }
+        return tempNutrientsList
     }
 
     fun setShowMore() {
         this.isExpanded = !this.isExpanded
-        fetchLogsForCurrentDay()
+        _logsLD.postValue(filterDataAccordingToExpanded())
     }
 
     fun setCurrentDate(date: Date) {

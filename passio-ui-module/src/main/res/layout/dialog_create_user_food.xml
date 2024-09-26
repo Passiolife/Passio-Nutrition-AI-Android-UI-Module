@@ -17,7 +17,7 @@
         android:text="@string/create_user_food"
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
-        android:textSize="18sp"
+        android:textSize="@dimen/_12ssp"
         android:fontFamily="@font/inter_bold" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -29,7 +29,7 @@
         android:text="@string/create_a_user_food_from_this_food"
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
-        android:textSize="14sp" />
+        android:textSize="@dimen/_10ssp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
         android:checked="false"
         android:text="@string/update_log_upon_creating"
         android:textColor="@color/passio_gray500"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         app:thumbTint="@color/passio_white"
         app:trackTint="@color/passio_gray300" />
 

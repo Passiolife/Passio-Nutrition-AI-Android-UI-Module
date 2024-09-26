@@ -4,15 +4,16 @@
     android:id="@+id/tvDay"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:fontFamily="@font/inter_semi_bold"
+    android:background="@drawable/rc_16_passio_primary"
     android:clickable="true"
     android:focusable="true"
     android:foreground="@drawable/ripple_effect"
-    android:background="@drawable/rc_16_passio_primary"
     android:gravity="center"
     android:paddingHorizontal="14dp"
-    android:paddingVertical="8dp"
+    android:paddingVertical="6dp"
     android:textColor="@color/passio_white"
-    android:textSize="12sp"
+    android:textSize="@dimen/_9ssp"
     tools:text="Day 1">
 
 </androidx.appcompat.widget.AppCompatTextView>

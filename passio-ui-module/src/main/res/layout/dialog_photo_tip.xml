@@ -16,7 +16,7 @@
         android:text="@string/taking_a_good_picture"
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
-        android:textSize="18sp"
+        android:textSize="@dimen/_12ssp"
         android:fontFamily="@font/inter_bold" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -35,7 +35,7 @@
         android:text="@string/food_photo_tip"
         android:textColor="@color/passio_gray900"
         android:textColorLink="@color/passio_gray900"
-        android:textSize="18sp" />
+        android:textSize="@dimen/_11ssp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/ok"
@@ -50,7 +50,7 @@
         android:paddingBottom="12dp"
         android:text="@string/ok"
         android:textColor="@color/passio_white"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="@font/inter_semi_bold" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

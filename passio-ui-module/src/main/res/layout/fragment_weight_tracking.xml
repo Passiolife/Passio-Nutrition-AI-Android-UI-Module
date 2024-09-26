@@ -44,6 +44,8 @@
             android:id="@+id/movePrevious"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_move_previous" />
 
@@ -56,14 +58,16 @@
             android:text="@string/this_week"
             android:textColor="@color/passio_gray900"
             android:focusable="true"
-            android:fontFamily="@font/inter_semi_bold"
             android:foreground="@drawable/ripple_effect"
+            android:fontFamily="@font/inter_semi_bold"
             android:textSize="@dimen/_10ssp"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/moveNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="true"
+            android:foreground="@drawable/ripple_effect"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_move_next" />
 
@@ -102,7 +106,7 @@
                     android:padding="4dp"
                     android:text="@string/weight_trend"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/_12ssp"
                     android:fontFamily="@font/inter_semi_bold" />
 
                 <com.github.mikephil.charting.charts.LineChart
@@ -137,7 +141,7 @@
                     android:padding="8dp"
                     android:text="@string/date"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/_12ssp"
                     android:fontFamily="@font/inter_semi_bold" />
 
                 <View

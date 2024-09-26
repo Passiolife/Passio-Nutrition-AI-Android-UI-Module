@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/passio_gray900"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="@font/inter_semi_bold"
         tools:text="152" />
 
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:textColor="@color/passio_gray500"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         tools:text="lbs" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -39,7 +39,7 @@
         android:gravity="end"
         android:lines="2"
         android:textColor="@color/passio_gray900"
-        android:textSize="12sp"
+        android:textSize="@dimen/_9ssp"
         tools:text="Sat, Mar 9\n9:16 AM" />
 
 </LinearLayout>

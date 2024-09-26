@@ -68,7 +68,7 @@ internal class MainMenuDialog(
 
         val animatorSet = AnimatorSet()
         val rotation = ObjectAnimator.ofFloat(binding.buttonClose, "rotation", 0f, 45f)
-        val translation = ObjectAnimator.ofFloat(binding.addFoodList, "translationY", 300f, -100f, 0f)
+        val translation = ObjectAnimator.ofFloat(binding.addFoodList, "translationY", 300f, -200f, 0f)
         val alpha = ObjectAnimator.ofFloat(binding.addFoodList, "alpha", 0f, 1f)
         animatorSet.duration = 500
         animatorSet.playTogether(rotation, translation, alpha)

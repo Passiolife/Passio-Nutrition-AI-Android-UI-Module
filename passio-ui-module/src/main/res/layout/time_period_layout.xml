@@ -16,12 +16,13 @@
         android:background="@drawable/rc_8_primary_left"
         android:clickable="true"
         android:focusable="true"
+        android:fontFamily="@font/inter_medium"
         android:foreground="@drawable/ripple_effect"
         android:gravity="center"
         android:paddingVertical="8dp"
         android:text="@string/week"
         android:textColor="@color/passio_white"
-        android:textSize="14sp" />
+        android:textSize="@dimen/_10ssp" />
 
     <View
         android:layout_width="1dp"
@@ -37,11 +38,12 @@
         android:background="@drawable/rc_8_white_right"
         android:clickable="true"
         android:focusable="true"
+        android:fontFamily="@font/inter_medium"
         android:foreground="@drawable/ripple_effect"
         android:gravity="center"
         android:paddingVertical="8dp"
         android:text="@string/month"
         android:textColor="@color/passio_gray500"
-        android:textSize="14sp" />
+        android:textSize="@dimen/_10ssp" />
 
 </merge>

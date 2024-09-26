@@ -33,11 +33,11 @@
                 android:id="@+id/lbsMyUnits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
                 android:padding="8dp"
                 android:text="@string/units_for_my_profile"
                 android:textColor="@color/passio_gray900"
-                android:textSize="16sp"
-                android:fontFamily="@font/inter_semi_bold"
+                android:textSize="@dimen/_12ssp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,10 +85,10 @@
                 android:id="@+id/lblReminders"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
                 android:text="@string/reminders"
                 android:textColor="@color/passio_gray900"
-                android:textSize="16sp"
-                android:fontFamily="@font/inter_semi_bold"
+                android:textSize="@dimen/_12ssp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,7 +100,7 @@
                 android:checked="false"
                 android:text="@string/_8_am_breakfast"
                 android:textColor="@color/passio_gray500"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 app:thumbTint="@color/passio_white"
                 app:trackTint="@color/passio_gray300" />
 
@@ -111,7 +111,7 @@
                 android:checked="false"
                 android:text="@string/_12_pm_lunch"
                 android:textColor="@color/passio_gray500"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 app:thumbTint="@color/passio_white"
                 app:trackTint="@color/passio_gray300" />
 
@@ -122,7 +122,7 @@
                 android:checked="false"
                 android:text="@string/_5_pm_dinner"
                 android:textColor="@color/passio_gray500"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 app:thumbTint="@color/passio_white"
                 app:trackTint="@color/passio_gray300" />
 

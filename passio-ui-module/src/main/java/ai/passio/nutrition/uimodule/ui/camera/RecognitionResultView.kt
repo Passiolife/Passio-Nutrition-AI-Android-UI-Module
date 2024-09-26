@@ -66,6 +66,7 @@ class RecognitionResultView @JvmOverloads constructor(
         binding.bottomView.post {
             val sizeTotal =
                 binding.bottomView.height + binding.foodResultCard.height + DesignUtils.dp2px(32f)
+//            val sizeTotal = binding.bottomView.height + DesignUtils.dp2px(32f)
             bottomSheetBehavior.peekHeight = sizeTotal
             binding.bottomSheet.setPadding(0, 0, 0, sizeTotal)
         }
