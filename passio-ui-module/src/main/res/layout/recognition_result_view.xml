@@ -5,115 +5,141 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/passio_gray900"
-    tools:parentTag="androidx.coordinatorlayout.widget.CoordinatorLayout">
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomSheet"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/topView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_sheet_background"
-        app:behavior_hideable="false"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:paddingBottom="300dp"
-        tools:visibility="visible">
+        android:layout_height="0dp"
+        android:translationY="1dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/visualResultCard"
-            android:layout_width="0dp"
+            android:id="@+id/bottomSheet"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:background="@drawable/bottom_sheet_background"
+            android:paddingBottom="8dp"
+            app:behavior_hideable="false"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            tools:visibility="visible">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/viewDragUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_drag_tray_up" />
-
-            <FrameLayout
-                android:id="@+id/foodResultCard"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/visualResultCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_6_white"
-                android:elevation="2dp"
-                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/viewTopCandidate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/viewDragUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toTopOf="@id/foodResultCard"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/ic_drag_tray_up" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/foodImage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@drawable/icon_apple" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/foodName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_10ssp"
-                        android:fontFamily="@font/inter_semi_bold"
-                        app:layout_constraintBottom_toBottomOf="@id/foodImage"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/foodImage"
-                        app:layout_constraintTop_toTopOf="@id/foodImage"
-                        tools:text="Green Apple" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </FrameLayout>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="50dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/foodResultCard">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvAlternatives"
-                    android:layout_width="match_parent"
+                <FrameLayout
+                    android:id="@+id/foodResultCard"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="24dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="40"
-                    tools:listitem="@layout/item_food_alternative" />
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_6_white"
+                    android:elevation="2dp"
+                    android:padding="8dp"
+                    app:layout_constraintBottom_toTopOf="@id/dragSheet"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
-                <androidx.legacy.widget.Space
-                    android:layout_width="10dp"
-                    android:layout_height="10dp" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/viewTopCandidate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/foodImage"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:src="@drawable/icon_apple" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/foodName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:fontFamily="@font/inter_semi_bold"
+                            android:textColor="@color/passio_gray900"
+                            android:textSize="@dimen/_10ssp"
+                            app:layout_constraintBottom_toBottomOf="@id/foodImage"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/foodImage"
+                            app:layout_constraintTop_toTopOf="@id/foodImage"
+                            tools:text="Green Apple" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </FrameLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/dragSheet"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_max="400dp"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:paddingHorizontal="16dp"
+                        android:text="@string/alternative_s"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_9ssp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAlternatives"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="20"
+                        tools:listitem="@layout/item_food_alternative" />
+
+                    <androidx.legacy.widget.Space
+                        android:layout_width="10dp"
+                        android:layout_height="10dp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/bottomView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/nutritionFactsResultCard"
@@ -133,11 +159,11 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
                 android:gravity="center"
                 android:text="@string/nutrition_facts"
                 android:textColor="@color/passio_gray900"
                 android:textSize="@dimen/_10ssp"
-                android:fontFamily="@font/inter_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -228,9 +254,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/inter_semi_bold"
                     android:textColor="@color/passio_gray900"
                     android:textSize="@dimen/_10ssp"
-                    android:fontFamily="@font/inter_semi_bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/barcodeImage"
                     app:layout_constraintTop_toTopOf="@id/barcodeImage"
@@ -277,13 +303,13 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/rc_4_passio_primary"
+                android:fontFamily="@font/inter_semi_bold"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/edit"
                 android:textColor="@color/passio_primary"
                 android:textSize="@dimen/_10ssp"
-                android:fontFamily="@font/inter_semi_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/foodLog"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -295,13 +321,13 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rc_8_purple"
+                android:fontFamily="@font/inter_semi_bold"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/log"
                 android:textColor="@color/passio_white"
                 android:textSize="@dimen/_10ssp"
-                android:fontFamily="@font/inter_semi_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/foodEdit" />

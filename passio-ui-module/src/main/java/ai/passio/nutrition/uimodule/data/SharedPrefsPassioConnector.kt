@@ -63,7 +63,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     suspend fun tempDelay()
     {
-//        delay(1000)
+        delay(1000)
     }
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {

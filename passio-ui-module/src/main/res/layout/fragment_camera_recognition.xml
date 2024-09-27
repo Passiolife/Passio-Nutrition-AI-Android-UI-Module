@@ -165,12 +165,13 @@
     <ai.passio.nutrition.uimodule.ui.camera.RecognitionResultView
         android:id="@+id/recognitionResult"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/scanningMessage"
@@ -182,6 +183,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="116dp"
         android:visibility="gone"
+        tools:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -191,7 +193,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:indeterminate="true"
-            android:indeterminateTint="@color/passio_primary"
             app:layout_constraintBottom_toBottomOf="@id/tvProgressInfo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/tvProgressTitle" />

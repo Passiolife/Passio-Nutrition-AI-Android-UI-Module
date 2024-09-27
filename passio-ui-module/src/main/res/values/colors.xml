@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="passio_primary">#4F46E5</color>
+        <color name="passio_primary">#4F46E5</color>
     <color name="passio_primary40p">#664F46E5</color>
     <color name="passio_background">#F9FAFB</color>
     <color name="passio_bottom_navigation_background">#FFFFFF</color>

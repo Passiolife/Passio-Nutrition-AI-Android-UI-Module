@@ -9,5 +9,5 @@
     android:paddingEnd="16dp"
     android:paddingBottom="8dp"
     android:textColor="@color/passio_gray900"
-    android:textSize="@dimen/_10ssp"
+    android:textSize="@dimen/_11ssp"
     tools:text="Slice" />

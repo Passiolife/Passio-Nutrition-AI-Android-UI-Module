@@ -311,7 +311,7 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
 
         with(binding) {
             val weightGrams = foodRecord.servingWeight().gramsValue().singleDecimal()
-            servingSizeValue.text = " $weightGrams g"
+            servingSizeValue.text = " ($weightGrams g)"
 
             if (origin != UpdateOrigin.QUANTITY) {
                 if (foodRecord.getSelectedQuantity() == FoodRecord.ZERO_QUANTITY) {

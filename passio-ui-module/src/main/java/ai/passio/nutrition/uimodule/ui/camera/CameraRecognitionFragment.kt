@@ -70,8 +70,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         setupToolbar()
         initOnClickCallback()
 
-        binding.recognitionResult.layoutParams.height =
-            (resources.displayMetrics.heightPixels * 0.6).toInt()
+//        binding.recognitionResult.layoutParams.height = (resources.displayMetrics.heightPixels * 0.6).toInt()
         binding.recognitionResult.addBottomSheetCallback(bottomSheetCallback)
         binding.recognitionResult.setRecognitionResultListener(recognitionResultListener)
 
@@ -257,7 +256,6 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     private val bottomSheetCallback = object : BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            Log.d("MMMM", "NEW STATE: $newState")
             if (newState == STATE_COLLAPSED) {
                 viewModel.startOrUpdateDetection()
             } else {
@@ -422,7 +420,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.recognitionResult.visibility = View.VISIBLE
                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showFoodRecordRecognition(result, if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(R.string.log))
+                    it.recognitionResult.showFoodRecordRecognition(
+                        result,
+                        if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
+                            R.string.log
+                        )
+                    )
                 }
 
                 is RecognitionResult.VisualRecognition -> {
@@ -430,8 +433,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.recognitionResult.visibility = View.VISIBLE
                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showVisualResult(result,
-                        if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(R.string.log))
+                    it.recognitionResult.showVisualResult(
+                        result,
+                        if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
+                            R.string.log
+                        )
+                    )
                 }
 
                 is RecognitionResult.NutritionFactRecognition -> {

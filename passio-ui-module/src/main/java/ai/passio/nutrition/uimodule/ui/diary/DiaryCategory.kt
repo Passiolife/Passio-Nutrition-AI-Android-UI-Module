@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.databinding.DiaryCategoryLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.sentEnable
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -95,6 +96,8 @@ class DiaryCategory @JvmOverloads constructor(
             expanded = true
             post { invalidateState() }
         }
+
+        binding.categoryLayout.sentEnable(records.isNotEmpty())
         adapter.updateLogs(records)
     }
 

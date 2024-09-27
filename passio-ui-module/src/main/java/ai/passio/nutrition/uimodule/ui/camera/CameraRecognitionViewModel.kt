@@ -30,7 +30,7 @@ class CameraRecognitionViewModel : BaseViewModel() {
     private var scanMode: ScanMode = ScanMode.VISUAL
     val scanModeEvent = MutableLiveData<ScanMode>()
 
-    private var cameraZoomLevel: Float = 1f
+    private var cameraZoomLevel: Float = 0f
     private var cameraZoomLevelMin: Float? = null
     private var cameraZoomLevelMax: Float? = null
     val cameraZoomLevelRangeEvent = SingleLiveEvent<Triple<Float, Float?, Float?>>()
@@ -50,6 +50,10 @@ class CameraRecognitionViewModel : BaseViewModel() {
     }
 
     fun setFoodScanMode(scanMode: ScanMode) {
+        if (this.scanMode == ScanMode.BARCODE && scanMode != ScanMode.BARCODE)
+        {
+            setCameraZoomLevel(cameraZoomLevelMin ?: 0f)
+        }
         this.scanMode = scanMode
         scanModeEvent.postValue(scanMode)
         startOrUpdateDetection()
