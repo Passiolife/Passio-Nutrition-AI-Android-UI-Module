@@ -500,9 +500,11 @@ class FoodCreatorViewModel : BaseViewModel() {
                 _showMessageEvent.postValue("Please add valid weight.")
             } else if (!weightGramUnit.isValid()) {
                 _showMessageEvent.postValue("Please add valid weight unit.")
-            } else if (!isAddedNutrientsValid()) {
-                _showMessageEvent.postValue("Please add valid information of nutrients.")
-            } else {
+            } else if (!isAddedRequiredNutritionFacts()) {
+                _showMessageEvent.postValue("Please add valid information of required nutrients.")
+            }/* else if (!isAddedOtherNutritionFacts()) {
+                _showMessageEvent.postValue("Please add valid information of other nutrients.")
+            } */else {
                 _showLoading.postValue(true)
 
                 val passioNutrientsTemp = PassioNutrients(
@@ -604,15 +606,15 @@ class FoodCreatorViewModel : BaseViewModel() {
         }
     }
 
-    private fun isAddedNutrientsValid(): Boolean {
+    private fun isAddedRequiredNutritionFacts(): Boolean {
 //        if (requiredNutritionFacts.any { it.value == 0.0 }) {
-        if (requiredNutritionFacts.any { it.value < 0.0 }) {
-            return false
-//        } else if (otherNutritionFactsAdded.any { it.value == 0.0 }) {
-        } else if (otherNutritionFactsAdded.any { it.value < 0.0 }) {
-            return false
-        }
-        return true
+        //        } else if (otherNutritionFactsAdded.any { it.value == 0.0 }) {
+        return !requiredNutritionFacts.any { it.value <= 0.0 }
+    }
+
+    private fun isAddedOtherNutritionFacts(): Boolean {
+//        if (requiredNutritionFacts.any { it.value == 0.0 }) {
+        return !otherNutritionFactsAdded.any { it.value <= 0.0 }
     }
 
     private fun navigateOnSave() {
