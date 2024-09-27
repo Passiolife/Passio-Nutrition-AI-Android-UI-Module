@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -332,42 +331,40 @@ class RecognitionResultView @JvmOverloads constructor(
             shownId = result.nutritionFactsPair.second
 
             val nutritionFacts = result.nutritionFactsPair.first
-            if (nutritionFacts != null) {
 
-                it.tvCalories.text = getLblValueFormat(
-                    context.resources.getString(R.string.calories),
-                    nutritionFacts.calories,
-                    ""
-                )
-                it.tvCarbs.text = getLblValueFormat(
-                    context.resources.getString(R.string.carbs),
-                    nutritionFacts.carbs,
-                    nutritionFacts.servingSizeUnitName ?: "g"
-                )
-                it.tvProtein.text = getLblValueFormat(
-                    context.resources.getString(R.string.protein),
-                    nutritionFacts.protein,
-                    nutritionFacts.servingSizeUnitName ?: "g"
-                )
-                it.tvFat.text = getLblValueFormat(
-                    context.resources.getString(R.string.fat),
-                    nutritionFacts.fat,
-                    nutritionFacts.servingSizeUnitName ?: "g"
-                )
+            it.tvCalories.text = getLblValueFormat(
+                context.resources.getString(R.string.calories),
+                nutritionFacts.calories,
+                ""
+            )
+            it.tvCarbs.text = getLblValueFormat(
+                context.resources.getString(R.string.carbs),
+                nutritionFacts.carbs,
+                nutritionFacts.servingSizeUnitName ?: "g"
+            )
+            it.tvProtein.text = getLblValueFormat(
+                context.resources.getString(R.string.protein),
+                nutritionFacts.protein,
+                nutritionFacts.servingSizeUnitName ?: "g"
+            )
+            it.tvFat.text = getLblValueFormat(
+                context.resources.getString(R.string.fat),
+                nutritionFacts.fat,
+                nutritionFacts.servingSizeUnitName ?: "g"
+            )
 
 
-                it.foodLog.text = resources.getString(R.string.next_str)
-                it.foodEdit.text = resources.getString(R.string.cancel)
-                it.foodLog.setOnClickListener {
-                recognitionResultListener?.onEdit(result)
-                }
-                it.foodEdit.setOnClickListener {
-                recognitionResultListener?.onCancelled()
-                }
+            it.foodLog.text = resources.getString(R.string.next_str)
+            it.foodEdit.text = resources.getString(R.string.cancel)
+            it.foodLog.setOnClickListener {
+            recognitionResultListener?.onEdit(result)
+            }
+            it.foodEdit.setOnClickListener {
+            recognitionResultListener?.onCancelled()
+            }
 
-                it.viewTopCandidate.setOnClickListener {
+            it.viewTopCandidate.setOnClickListener {
 //                recognitionResultListener?.onEditProduct(result)
-                }
             }
             disableDrag()
 //            bottomSheetBehavior.state = STATE_COLLAPSED
