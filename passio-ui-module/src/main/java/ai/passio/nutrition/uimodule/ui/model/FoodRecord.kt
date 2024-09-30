@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
@@ -76,31 +77,27 @@ open class FoodRecord() {
                 Milliliters.symbol,
                 true
             )
-        ) Milliliters.symbol else Grams.unitName
+        ) Milliliters.symbol else Grams.symbol
 //        iconId = foodItem.iconId
-
-
-        servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
-        servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
-
-        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
-                Grams.symbol,
-                true
-            ) || servingUnit.equals(Milliliters.symbol, true))
-        ) {
-            servingSizes.add(PassioServingSize(servingWeight, servingUnit))
-            servingUnits.add(
-                PassioServingUnit(
-                    servingUnit,
-                    UnitMass(Grams, weightInGrams / servingWeight)
-                )
-            )
-
-        }
-
 
         selectedUnit = gramUnitName //foodItem.amount.selectedUnit
         selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+
+        servingSizes.clear()
+        servingUnits.clear()
+
+        servingSizes.add(PassioServingSize(servingWeight, servingUnit))
+        servingUnits.add(
+            PassioServingUnit(
+                servingUnit,
+                UnitMass(Grams, weightInGrams / servingWeight)
+            )
+        )
+        if (!servingUnit.isGram()) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
         ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
     }
 
@@ -128,29 +125,28 @@ open class FoodRecord() {
                 Milliliters.symbol,
                 true
             )
-        ) Milliliters.symbol else Grams.unitName
+        ) Milliliters.symbol else Grams.symbol
 //        iconId = foodItem.iconId
 
-        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
-                Grams.symbol,
-                true
-            ) || servingUnit.equals(Milliliters.symbol, true))
-        ) {
-            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
-            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
-        }
+
+        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+
+        servingSizes.clear()
+        servingUnits.clear()
 
         servingSizes.add(PassioServingSize(servingWeight, servingUnit))
-
-
         servingUnits.add(
             PassioServingUnit(
                 servingUnit,
                 UnitMass(Grams, weightInGrams / servingWeight)
             )
         )
-        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
-        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        if (!servingUnit.isGram()) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
         ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
         return this
     }
@@ -352,11 +348,7 @@ open class FoodRecord() {
 
         selectedUnit = unit
 
-        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true) || selectedUnit.equals(
-                Milliliters.symbol,
-                true
-            )
-        ) {
+        selectedQuantity = if (selectedUnit.isGram()) {
             100.0
         } else {
             1.0

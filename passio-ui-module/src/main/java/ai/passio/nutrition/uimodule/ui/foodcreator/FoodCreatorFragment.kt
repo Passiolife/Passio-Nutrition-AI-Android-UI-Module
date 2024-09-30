@@ -13,6 +13,7 @@ import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerListener
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.saveBitmapToStorage
@@ -20,6 +21,7 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
+import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import android.net.Uri
 import android.view.MenuItem
 import android.widget.AdapterView
@@ -235,12 +237,16 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
 
             viewModel.setBarcode(customFood.barcode ?: "")
 
-            val gramSize =
-                customFood.servingSizes.find { it.unitName == Grams.unitName || it.unitName == Grams.symbol || it.unitName == Milliliters.symbol }
-            gramSize?.let {
-                weight.setText(it.quantity.toString())
-                setupWeightUnits(it.unitName)
+
+            var gramSize: PassioServingSize? = null
+            if (customFood.servingSizes.size > 1) {
+                gramSize = customFood.servingSizes.find { it.isGram() }
+                gramSize?.let {
+                    weight.setText(it.quantity.toString())
+                    setupWeightUnits(it.unitName)
+                }
             }
+
             val otherSize = customFood.servingSizes.find { it.unitName != gramSize?.unitName }
             otherSize?.let {
                 servingSize.setText(it.quantity.toString())
@@ -298,10 +304,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         }
         viewModel.servingUnitEvent.observe(viewLifecycleOwner) { servingUnit ->
             binding.weightGroup.isVisible =
-                !(servingUnit.equals(Grams.symbol, true) || servingUnit.equals(
-                    Milliliters.symbol,
-                    true
-                ))
+                !(servingUnit.isGram())
             val index = viewModel.unitList.indexOfLast { it.lowercase() == servingUnit.lowercase() }
             if (binding.units.selectedItemPosition != index) {
                 binding.units.setSelection(index)
