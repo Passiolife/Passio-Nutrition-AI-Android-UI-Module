@@ -15,12 +15,17 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:clipChildren="false"
-        android:layout_marginBottom="32dp" />
+        android:layout_marginBottom="32dp"
+        app:reverseLayout="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        />
 
     <FrameLayout
         android:id="@+id/buttonClose"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:rotation="45"
         android:layout_marginBottom="28dp"
         android:background="@drawable/circle_button_background"
         android:clickable="true">
@@ -29,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:rotation="45"
             android:src="@drawable/icon_plus"
             app:tint="@color/passio_white"
             tools:ignore="ContentDescription" />

@@ -29,7 +29,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/rc_10_white">
 
-                <android.inputmethodservice.ExtractEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,21 +38,28 @@
                     android:background="@null"
                     android:drawableStart="@drawable/icon_search"
                     android:drawablePadding="4dp"
+                    android:hint="@string/type_in_food_name"
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:paddingHorizontal="4dp"
-                    android:paddingVertical="6dp"
-                    android:textColor="@color/passio_black"
-                    android:textSize="18sp"
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="@dimen/_11ssp"
                     tools:ignore="Autofill" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/clearText"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
-                    android:padding="4dp"
+                    android:minWidth="24dp"
+                    android:minHeight="24dp"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="6dp"
                     android:scaleType="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/ripple_effect"
                     android:tint="@color/passio_primary"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_close"
@@ -67,12 +74,45 @@
                 android:layout_gravity="center_vertical"
                 android:padding="8dp"
                 android:text="@string/cancel"
-                android:textColor="@color/passio_black"
-                android:textSize="16sp" />
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
+                android:textColor="@color/passio_gray900"
+                android:textSize="@dimen/_10ssp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/viewProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/viewKeepTyping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/rc_6_white"
+        android:drawablePadding="8dp"
+        android:elevation="4dp"
+        android:fontFamily="@font/inter_semi_bold"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="10dp"
+        android:text="@string/keep_typing"
+        android:textColor="@color/passio_gray900"
+        android:textSize="@dimen/_10ssp"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_keep_typing"
+        tools:visibility="visible" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchSuggestionRecycler"
@@ -94,18 +134,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/lblMyFoods"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/my_foods"
-                android:textSize="16sp"
-                android:visibility="gone"
-                tools:visibility="visible"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="16dp"
+                android:text="@string/my_foods"
                 android:textColor="@color/passio_gray900"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/inter_semi_bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMyFoods"
@@ -121,14 +162,14 @@
                 android:id="@+id/lblPassioFoods"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/search_results"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:textSize="16sp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="16dp"
+                android:text="@string/search_results"
                 android:textColor="@color/passio_gray900"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/inter_semi_bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPassioFoods"

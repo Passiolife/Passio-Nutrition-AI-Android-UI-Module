@@ -114,6 +114,9 @@ class FoodSearchViewModel : BaseViewModel() {
     fun navigateToEditIngredient() {
         navigate(FoodSearchFragmentDirections.searchToEditIngredient())
     }
+    fun navigateBackToEditRecipe() {
+        navigate(FoodSearchFragmentDirections.backToEditRecipe())
+    }
 
     fun navigateToEdit() {
         navigate(FoodSearchFragmentDirections.searchToEdit())

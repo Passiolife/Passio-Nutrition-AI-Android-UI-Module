@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
@@ -76,29 +77,27 @@ open class FoodRecord() {
                 Milliliters.symbol,
                 true
             )
-        ) Milliliters.symbol else Grams.unitName
+        ) Milliliters.symbol else Grams.symbol
 //        iconId = foodItem.iconId
 
-        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
-                Grams.symbol,
-                true
-            ) || servingUnit.equals(Milliliters.symbol, true))
-        ) {
-            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
-            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
-        }
+        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+
+        servingSizes.clear()
+        servingUnits.clear()
 
         servingSizes.add(PassioServingSize(servingWeight, servingUnit))
-
-
         servingUnits.add(
             PassioServingUnit(
                 servingUnit,
                 UnitMass(Grams, weightInGrams / servingWeight)
             )
         )
-        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
-        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        if (!servingUnit.isGram()) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
         ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
     }
 
@@ -126,29 +125,28 @@ open class FoodRecord() {
                 Milliliters.symbol,
                 true
             )
-        ) Milliliters.symbol else Grams.unitName
+        ) Milliliters.symbol else Grams.symbol
 //        iconId = foodItem.iconId
 
-        if (!(servingUnit.equals(Grams.unitName, true) || servingUnit.equals(
-                Grams.symbol,
-                true
-            ) || servingUnit.equals(Milliliters.symbol, true))
-        ) {
-            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
-            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
-        }
+
+        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+
+        servingSizes.clear()
+        servingUnits.clear()
 
         servingSizes.add(PassioServingSize(servingWeight, servingUnit))
-
-
         servingUnits.add(
             PassioServingUnit(
                 servingUnit,
                 UnitMass(Grams, weightInGrams / servingWeight)
             )
         )
-        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
-        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        if (!servingUnit.isGram()) {
+            servingSizes.add(PassioServingSize(weightInGrams, gramUnitName)) //g or ml
+            servingUnits.add(PassioServingUnit(gramUnitName, UnitMass(gramUnit, 1.0)))
+        }
+
         ingredients = mutableListOf(FoodRecordIngredient(this, passioNutrients))
         return this
     }
@@ -208,9 +206,6 @@ open class FoodRecord() {
     }
 
     fun addIngredient(record: FoodRecord, index: Int? = null) {
-        if (ingredients.size == 1) {
-            name = "Recipe with ${ingredients.first().name}"
-        }
         if (record.ingredients.size == 1) {
             ingredients.add(index ?: ingredients.size, FoodRecordIngredient(record))
 //            ingredients.add(index ?: ingredients.size, record.ingredients.first())
@@ -220,7 +215,7 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && iconId.isValid()) {
+        if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
             passioIDEntityType = record.passioIDEntityType
         }
@@ -232,8 +227,23 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && iconId.isValid()) {
+        if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
+            passioIDEntityType = PassioIDEntityType.item.value
+        }
+//        ingredients.add(index ?: ingredients.size, record)
+        setUnitToServing()
+    }
+
+    fun addIngredients(records: List<FoodRecordIngredient>, index: Int? = null) {
+        if (records.isEmpty()) return
+
+        ingredients.addAll(index ?: ingredients.size, records)
+        if (!name.isValid()) {
+            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
+        }
+        if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
+            iconId = records.first().iconId
             passioIDEntityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
@@ -293,6 +303,7 @@ open class FoodRecord() {
         addIngredient(newIngredient, index)
         return true
     }
+
     fun replaceIngredient(newIngredient: FoodRecordIngredient, index: Int): Boolean {
         if (index >= ingredients.size) {
             return false
@@ -337,11 +348,7 @@ open class FoodRecord() {
 
         selectedUnit = unit
 
-        selectedQuantity = if (selectedUnit.equals(Grams.unitName, true) || selectedUnit.equals(
-                Milliliters.symbol,
-                true
-            )
-        ) {
+        selectedQuantity = if (selectedUnit.isGram()) {
             100.0
         } else {
             1.0
@@ -415,7 +422,9 @@ open class FoodRecord() {
 fun List<FoodRecord>.meals(mealLabel: MealLabel): List<FoodRecord> {
     return this.filter {
         val mealLabelTemp =
-            it.mealLabel ?: MealLabel.dateToMealLabel(it.createdAtTime() ?: System.currentTimeMillis())
+            it.mealLabel ?: MealLabel.dateToMealLabel(
+                it.createdAtTime() ?: System.currentTimeMillis()
+            )
         mealLabelTemp == mealLabel
     }
 }

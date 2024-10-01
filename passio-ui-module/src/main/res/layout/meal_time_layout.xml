@@ -3,74 +3,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rc_8_border_gray300"
     android:orientation="horizontal"
     android:padding="1dp"
-    android:background="@drawable/rc_8_border_gray300"
     tools:parentTag="android.widget.LinearLayout">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/breakfast"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/rc_8_primary_left"
+        android:fontFamily="@font/inter_medium"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_effect"
+        android:gravity="center"
+        android:paddingVertical="10dp"
         android:text="@string/breakfast"
         android:textColor="@color/passio_white"
-        android:gravity="center"
-        android:textSize="14sp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:background="@drawable/rc_8_primary_left"
-        android:layout_weight="1" />
+        android:textSize="@dimen/_10ssp" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/passio_gray300" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/lunch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/inter_medium"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_effect"
+        android:gravity="center"
+        android:paddingVertical="10dp"
         android:text="@string/lunch"
         android:textColor="@color/passio_gray500"
-        android:textSize="14sp"
-        android:paddingTop="16dp"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:layout_weight="1" />
+        android:textSize="@dimen/_10ssp" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/passio_gray300" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/dinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/inter_medium"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_effect"
+        android:gravity="center"
+        android:paddingVertical="10dp"
         android:text="@string/dinner"
         android:textColor="@color/passio_gray500"
-        android:textSize="14sp"
-        android:paddingTop="16dp"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:layout_weight="1" />
+        android:textSize="@dimen/_10ssp" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/passio_gray300" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/snack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/rc_8_white_right"
+        android:fontFamily="@font/inter_medium"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/ripple_effect"
+        android:gravity="center"
+        android:paddingVertical="10dp"
         android:text="@string/snack"
         android:textColor="@color/passio_gray500"
-        android:textSize="14sp"
-        android:paddingTop="16dp"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:background="@drawable/rc_8_white_right"
-        android:layout_weight="1" />
+        android:textSize="@dimen/_10ssp" />
 
 </merge>

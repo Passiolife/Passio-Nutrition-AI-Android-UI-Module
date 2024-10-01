@@ -42,6 +42,9 @@ class EditFoodViewModel : BaseViewModel() {
         SingleLiveEvent<Pair<FoodRecord?, Boolean>>() //custom food, is log update
     val customFoodInfo: LiveData<Pair<FoodRecord?, Boolean>> get() = _customFoodInfo
 
+    private val _showLoading = SingleLiveEvent<Boolean>()
+    val showLoading: LiveData<Boolean> = _showLoading
+
     private lateinit var foodRecord: FoodRecord
 
     fun setEditLogMode(isEditMode: Boolean) {
@@ -56,9 +59,11 @@ class EditFoodViewModel : BaseViewModel() {
 
     fun getFoodRecord(searchResult: PassioFoodDataInfo) {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             val fr = useCase.getFoodRecord(searchResult)
             val model = EditFoodModel(fr, true)
             _editFoodModelLD.postValue(model)
+            _showLoading.postValue(false)
             if (fr != null) {
                 foodRecord = fr
             }
@@ -86,35 +91,43 @@ class EditFoodViewModel : BaseViewModel() {
 
     fun deleteCurrentRecord() {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             _deleteLogFood.postValue(useCase.deleteRecord(foodRecord.uuid))
+            _showLoading.postValue(false)
         }
     }
     fun logCurrentRecord() {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             if (useCase.logFoodRecord(foodRecord, isEditLogMode)) {
                 _resultLogFood.postValue(ResultWrapper.Success(foodRecord))
             } else {
                 _resultLogFood.postValue(ResultWrapper.Error("Failed to log food. Please try again"))
             }
+            _showLoading.postValue(false)
         }
     }
 
     fun editRecipeFromLoggedFood(isUpdateLog: Boolean) {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             val recipe = recipeUseCase.getRecipe(foodRecord.id)
             _recipeInfo.postValue(recipe to isUpdateLog)
+            _showLoading.postValue(false)
         }
     }
     fun editCustomFromLoggedFood(isUpdateLog: Boolean) {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             val customFood = customFoodUseCase.fetchCustomFood(foodRecord.id)
             _customFoodInfo.postValue(customFood to isUpdateLog)
+            _showLoading.postValue(false)
         }
     }
 
-    fun navigateToDiary(createdAtTime: Long?) {
+    fun navigateToDiary() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(EditFoodFragmentDirections.editToDiary(currentDate = createdAtTime ?: 0))
+            navigate(EditFoodFragmentDirections.editToDiary())
         }
 
     }

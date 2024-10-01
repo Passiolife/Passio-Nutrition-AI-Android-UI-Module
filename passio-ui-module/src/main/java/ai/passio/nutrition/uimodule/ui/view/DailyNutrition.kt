@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -28,7 +29,8 @@ class DailyNutrition @JvmOverloads constructor(
     private var carbsColor: Int = ContextCompat.getColor(context, R.color.passio_carbs)
     private var proteinColor: Int = ContextCompat.getColor(context, R.color.passio_protein)
     private var fatColor: Int = ContextCompat.getColor(context, R.color.passio_fat)
-    private var caloriesOverColor: Int = ContextCompat.getColor(context, R.color.passio_calories_over)
+    private var caloriesOverColor: Int =
+        ContextCompat.getColor(context, R.color.passio_calories_over)
     private var carbsOverColor: Int = ContextCompat.getColor(context, R.color.passio_carbs_over)
     private var proteinOverColor: Int = ContextCompat.getColor(context, R.color.passio_protein_over)
     private var fatOverColor: Int = ContextCompat.getColor(context, R.color.passio_fat_over)
@@ -53,7 +55,14 @@ class DailyNutrition @JvmOverloads constructor(
             setupChart(proteinChart)
             setupChart(fatChart)
         }
+
+        setup(0, 0, 0, 0, 0, 0, 0, 0)
     }
+
+    fun setLoading(isLoading: Boolean) {
+        binding.progressDailyNutrition.isVisible = isLoading
+    }
+
 
     fun invokeProgressReport(onclick: () -> Unit) {
         binding.progressReport.setOnClickListener {

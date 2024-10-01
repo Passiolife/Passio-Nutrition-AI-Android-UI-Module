@@ -38,8 +38,8 @@
             android:drawablePadding="2dp"
             android:padding="8dp"
             android:textColor="@color/passio_gray900"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="@font/inter_semi_bold"
             app:drawableStartCompat="@drawable/ic_mealplan"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -98,7 +98,7 @@
                 android:textSize="14sp"
                 android:visibility="gone"
                 app:drawableBottomCompat="@drawable/ic_retry"
-                tools:visibility="visible" />
+                tools:visibility="gone" />
 
             <ai.passio.nutrition.uimodule.ui.mealplan.MealPlanCategory
                 android:id="@+id/breakfastCategory"
@@ -148,7 +148,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/daysContainer"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"

@@ -215,6 +215,9 @@
     <string name="edit_recipe_">Edit recipe</string>
     <string name="no_records_found">No records found.</string>
     <string name="search_results">Search Results</string>
+    <string name="keep_typing">Keep typing</string>
+    <string name="type_in_food_name">Type in food name</string>
+    <string name="alternative_s">Alternative(s)</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

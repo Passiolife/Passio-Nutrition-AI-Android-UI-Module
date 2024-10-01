@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentSearchBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.os.Bundle
@@ -40,7 +41,10 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
             )
         }
 
-        sharedViewModel.isAddIngredientLD.observe(viewLifecycleOwner) { isAddIngredient ->
+        sharedViewModel.isAddIngredientFromSearchLD.observe(viewLifecycleOwner) { isAddIngredient ->
+            viewModel.setIsAddIngredient(isAddIngredient)
+        }
+        sharedViewModel.isAddIngredientFromScanningLD.observe(viewLifecycleOwner) { isAddIngredient ->
             viewModel.setIsAddIngredient(isAddIngredient)
         }
         viewModel.showLoading.observe(viewLifecycleOwner) {
@@ -65,7 +69,7 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
                 sharedViewModel.addFoodIngredients(resultWrapper.value)
 //                sharedViewModel.addFoodIngredient(resultWrapper.value)
 //                viewModel.navigateToEditIngredient()
-                viewModel.navigateBack()
+                viewModel.navigateBackToEditRecipe()
             }
 
             is ResultWrapper.Error -> {
@@ -80,9 +84,9 @@ class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
                 val foodRecord = resultWrapper.value
                 if (foodRecord.ingredients.size > 1) {
                     sharedViewModel.addFoodIngredients(resultWrapper.value)
-                    viewModel.navigateBack()
+                    viewModel.navigateBackToEditRecipe()
                 } else {
-                    sharedViewModel.addFoodIngredients(resultWrapper.value)
+                    sharedViewModel.editIngredient(FoodRecordIngredient(resultWrapper.value))
                     viewModel.navigateToEditIngredient()
                 }
             }

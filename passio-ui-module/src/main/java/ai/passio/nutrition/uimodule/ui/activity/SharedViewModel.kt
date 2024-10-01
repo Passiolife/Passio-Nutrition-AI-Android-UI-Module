@@ -16,11 +16,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.util.Date
 
 object UserCache {
     private lateinit var userProfile: UserProfile
     fun getProfile(): UserProfile {
-        return userProfile
+        return if (::userProfile.isInitialized) {
+            userProfile
+        } else {
+            UserProfile()
+        }
     }
 
     fun setProfile(userProfile: UserProfile) {
@@ -29,6 +34,10 @@ object UserCache {
 }
 
 class SharedViewModel : ViewModel() {
+
+    private val _diaryCurrentDate = SingleLiveEvent<Date>()
+    val diaryCurrentDate: LiveData<Date> get() = _diaryCurrentDate
+
     private val _nutritionFactsPair = SingleLiveEvent<Pair<PassioNutritionFacts, String>>()
     val nutritionFactsPair: LiveData<Pair<PassioNutritionFacts, String>> get() = _nutritionFactsPair
 
@@ -61,8 +70,17 @@ class SharedViewModel : ViewModel() {
     private val _addFoodIngredientsLD = SingleLiveEvent<FoodRecord>()
     val addFoodIngredientsLD: LiveData<FoodRecord> get() = _addFoodIngredientsLD
 
-    private val _isAddIngredientLD = SingleLiveEvent<Boolean>()
-    val isAddIngredientLD: LiveData<Boolean> get() = _isAddIngredientLD
+    private val _addMultipleIngredientsLD = SingleLiveEvent<List<FoodRecordIngredient>>()
+    val addMultipleIngredientsLD: LiveData<List<FoodRecordIngredient>> get() = _addMultipleIngredientsLD
+
+    private val _isAddIngredientFromSearchLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientFromSearchLD: LiveData<Boolean> get() = _isAddIngredientFromSearchLD
+
+    private val _isAddIngredientFromScanningLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientFromScanningLD: LiveData<Boolean> get() = _isAddIngredientFromScanningLD
+
+    private val _isAddIngredientFromVoiceLD = SingleLiveEvent<Boolean>()
+    val isAddIngredientFromVoiceLD: LiveData<Boolean> get() = _isAddIngredientFromVoiceLD
 
     private val _editSearchResultLD = SingleLiveEvent<PassioFoodDataInfo>()
     val editSearchResultLD: LiveData<PassioFoodDataInfo> get() = _editSearchResultLD
@@ -116,6 +134,7 @@ class SharedViewModel : ViewModel() {
     fun editRecipeUpdateLog(foodRecord: FoodRecord) {
         _editRecipeUpdateLog.postValue(foodRecord)
     }
+
     fun editFoodUpdateLog(foodRecord: FoodRecord) {
         _editFoodUpdateLog.postValue(foodRecord)
     }
@@ -137,6 +156,10 @@ class SharedViewModel : ViewModel() {
         _editIngredientLD.postValue(ingredient to ingredientIndex)
     }
 
+    fun editIngredient(ingredient: FoodRecordIngredient) {
+        _editIngredientLD.postValue(ingredient to -1)
+    }
+
     fun detailsFoodRecord(foodRecord: FoodRecord) {
         _detailsFoodRecordLD.postValue(foodRecord)
     }
@@ -146,7 +169,7 @@ class SharedViewModel : ViewModel() {
         _addFoodIngredientLD.postValue(foodRecordIngredient)
     }
 
-    fun updateFoodIngredientToRecipe(ingredient: FoodRecordIngredient?,index: Int) {
+    fun updateFoodIngredientToRecipe(ingredient: FoodRecordIngredient?, index: Int) {
         _editIngredientToRecipeLD.postValue(ingredient to index)
     }
 
@@ -155,8 +178,21 @@ class SharedViewModel : ViewModel() {
         _addFoodIngredientsLD.postValue(foodRecord)
     }
 
-    fun setIsAddIngredient(isAddIngredient: Boolean) {
-        _isAddIngredientLD.postValue(isAddIngredient)
+    //    send more then one ingredients to recipe screen to add to recipe
+    fun addFoodIngredients(ingredients: List<FoodRecordIngredient>) {
+        _addMultipleIngredientsLD.postValue(ingredients)
+    }
+
+    fun setIsAddIngredientFromSearch(isAddIngredient: Boolean) {
+        _isAddIngredientFromSearchLD.postValue(isAddIngredient)
+    }
+
+    fun setIsAddIngredientFromScanning(isAddIngredient: Boolean) {
+        _isAddIngredientFromScanningLD.postValue(isAddIngredient)
+    }
+
+    fun setIsAddIngredientUsingVoice(isAddIngredient: Boolean) {
+        _isAddIngredientFromVoiceLD.postValue(isAddIngredient)
     }
 
     fun addEditWeight(weightRecord: WeightRecord) {
@@ -169,6 +205,10 @@ class SharedViewModel : ViewModel() {
 
     fun addPhotoFoodResult(uris: List<Bitmap>) {
         _photoFoodResultLD.postValue(uris)
+    }
+
+    fun setDiaryDate(currentDate: Date) {
+        _diaryCurrentDate.postValue(currentDate)
     }
 
 }

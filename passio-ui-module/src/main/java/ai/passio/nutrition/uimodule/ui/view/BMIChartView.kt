@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 
@@ -166,7 +167,7 @@ class BMIChartView @JvmOverloads constructor(
     }
     private fun drawIndicator(canvas: Canvas) {
         // Calculate indicator position
-        val indicatorX = width * currentProgress
+        var indicatorX = width * currentProgress
         val indicatorY = 0f // Place indicator at the top of the view
 
         // Determine color based on progress
@@ -176,9 +177,14 @@ class BMIChartView @JvmOverloads constructor(
 //        val text = (currentProgress * 100).toInt().toString()
         val text = currentBmiLevel.toFixed(1)
         val textBgWidth = 50f * resources.displayMetrics.density
+        if (indicatorX < textBgWidth/2) {
+            indicatorX = textBgWidth/2
+        }
         val textBgHeight = indicatorHeight / 2
+
         val textBgLeft = indicatorX - textBgWidth / 2
         val textBgRight = indicatorX + textBgWidth / 2
+        Log.d("kkkkkk", "indicatorX:$indicatorX , textBgWidth: $textBgWidth,  textBgLeft: $textBgLeft,  textBgRight: $textBgRight")
         val textBgTop = indicatorY
         val textBgBottom = indicatorY + textBgHeight
         rect.set(textBgLeft, textBgTop, textBgRight, textBgBottom)

@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.databinding.FoodSearchLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.showKeyboard
 import ai.passio.nutrition.uimodule.ui.view.VerticalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.content.Context
@@ -35,7 +36,8 @@ class FoodSearchView @JvmOverloads constructor(
         fun onTextCleared()
         fun onViewDismissed()
     }
-    private val foodSearchAdapterListener = object : FoodSearchAdapterListener{
+
+    private val foodSearchAdapterListener = object : FoodSearchAdapterListener {
         override fun onFoodClicked(searchResult: PassioFoodDataInfo) {
             listener?.onFoodItemSelected(searchResult)
         }
@@ -61,7 +63,6 @@ class FoodSearchView @JvmOverloads constructor(
     private val suggestionAdapter = FoodSuggestionsAdapter(::onSuggestion)
 
     private var searchTerm = ""
-
 
 
     init {
@@ -101,6 +102,7 @@ class FoodSearchView @JvmOverloads constructor(
         myFoods: List<FoodRecord>
     ) {
         if (this.isAttachedToWindow && this.context != null && query == searchTerm) {
+            binding?.viewProgress?.isVisible = false
             binding?.lblMyFoods?.isVisible = myFoods.isNotEmpty()
             binding?.lblPassioFoods?.isVisible = results.isNotEmpty()
             myFoodSearchAdapter.updateMyItems(myFoods)
@@ -142,6 +144,8 @@ class FoodSearchView @JvmOverloads constructor(
                 }
             })
 
+            searchEditText.showKeyboard()
+
             //            searchClear.setOnClickListener {
             //                searchEditText.text.clear()
             //                listener.onTextCleared()
@@ -151,15 +155,21 @@ class FoodSearchView @JvmOverloads constructor(
 
     private val inputFinishCheck = Runnable {
         val currentQuery = searchTerm
+        binding?.viewKeepTyping?.isVisible =
+            currentQuery.isNotEmpty() && currentQuery.trim().length < 3
+
         if (currentQuery.isEmpty() || currentQuery.length < 3) {
             myFoodSearchAdapter.updateItems(listOf())
             searchAdapter.updateItems(listOf())
             suggestionAdapter.updateSuggestions(listOf())
             binding?.lblMyFoods?.isVisible = false
             binding?.lblPassioFoods?.isVisible = false
+            binding?.viewProgress?.isVisible = false
             return@Runnable
         }
 
+
+        binding?.viewProgress?.isVisible = true
         listener?.onQueryChange(currentQuery)
     }
 
@@ -172,6 +182,8 @@ class FoodSearchView @JvmOverloads constructor(
         searchAdapter.updateItems(listOf())
         suggestionAdapter.updateSuggestions(listOf())
         binding?.let {
+            binding?.lblMyFoods?.isVisible = false
+            binding?.lblPassioFoods?.isVisible = false
             it.searchEditText.setText(suggestion)
             it.searchEditText.setSelection(suggestion.length)
         }

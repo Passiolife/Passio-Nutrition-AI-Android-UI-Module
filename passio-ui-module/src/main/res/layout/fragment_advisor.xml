@@ -64,8 +64,8 @@
         android:paddingHorizontal="20dp"
         android:text="@string/send"
         android:textColor="@color/passio_white"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_10ssp"
+        android:fontFamily="@font/inter_semi_bold"
         app:layout_constraintBottom_toBottomOf="@id/message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/message" />
@@ -84,7 +84,7 @@
         android:minHeight="46dp"
         android:textColor="@color/passio_gray900"
         android:textColorHint="@color/passio_gray500"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toTopOf="@id/bottomSpace"
         app:layout_constraintEnd_toStartOf="@id/send"
         app:layout_constraintStart_toEndOf="@id/addPhoto" />
@@ -140,7 +140,7 @@
             android:padding="30dp"
             android:text="@string/failed_to_init_ai_advisor"
             android:textColor="@color/passio_red800"
-            android:textSize="14sp"
+            android:textSize="@dimen/_10ssp"
             app:drawableBottomCompat="@drawable/ic_retry" />
 
     </FrameLayout>

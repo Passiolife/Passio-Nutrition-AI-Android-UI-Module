@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="passio_primary">#4F46E5</color>
+        <color name="passio_primary">#4F46E5</color>
     <color name="passio_primary40p">#664F46E5</color>
     <color name="passio_background">#F9FAFB</color>
     <color name="passio_bottom_navigation_background">#FFFFFF</color>
     <color name="passio_bottom_navigation_selected">@color/passio_primary</color>
     <color name="passio_bottom_navigation_deselected">@color/passio_gray300</color>
     <color name="passio_toolbar_background">#FFFFFF</color>
-    <color name="passio_toolbar_title">#000000</color>
+    <color name="passio_toolbar_title">@color/passio_gray900</color>
 
     <color name="passio_white">#FFFFFF</color>
     <color name="passio_white_search">#F2F5FB</color>

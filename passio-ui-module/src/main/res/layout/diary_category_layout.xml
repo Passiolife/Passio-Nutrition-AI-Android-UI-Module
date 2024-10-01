@@ -8,25 +8,28 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/categoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="@drawable/ripple_effect"
+        android:clickable="true"
+        android:focusable="true"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:layout_weight="1"
-            android:textColor="@color/passio_black"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="@font/inter_semi_bold"
             tools:text="Breakfast" />
 
         <ImageView
@@ -34,11 +37,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:src="@drawable/icon_chevron"
             tools:ignore="ContentDescription" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="@color/passio_background"/>
 
     <com.yanzhenjie.recyclerview.SwipeRecyclerView
         android:id="@+id/logList"

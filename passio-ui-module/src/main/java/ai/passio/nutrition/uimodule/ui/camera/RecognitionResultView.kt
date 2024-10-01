@@ -10,10 +10,8 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.DetectedCandidate
-import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
@@ -26,7 +24,8 @@ import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,7 +36,7 @@ class RecognitionResultView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : CoordinatorLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var _binding: RecognitionResultViewBinding? = null
     private val binding: RecognitionResultViewBinding get() = _binding!!
@@ -56,7 +55,11 @@ class RecognitionResultView @JvmOverloads constructor(
         _binding = RecognitionResultViewBinding.inflate(LayoutInflater.from(context), this)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.peekHeight = DesignUtils.dp2px(172f)
+//        bottomSheetBehavior.peekHeight = DesignUtils.dp2px(172f)
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.visualResultCard)
+        constraintSet.constrainMaxHeight(binding.dragSheet.id, (DesignUtils.screenHeight(context) * 0.6f).toInt())
 
         formatSearchManuallyText()
 
@@ -65,11 +68,13 @@ class RecognitionResultView @JvmOverloads constructor(
     private fun enableDrag() {
         binding.bottomView.post {
             val sizeTotal =
-                binding.bottomView.height + binding.foodResultCard.height + DesignUtils.dp2px(32f)
+                /*binding.bottomView.height +*/ binding.foodResultCard.height + DesignUtils.dp2px(32f)
+//            val sizeTotal = binding.bottomView.height + DesignUtils.dp2px(32f)
             bottomSheetBehavior.peekHeight = sizeTotal
-            binding.bottomSheet.setPadding(0, 0, 0, sizeTotal)
+//            binding.bottomSheet.setPadding(0, 0, 0, sizeTotal)
         }
-        (binding.bottomSheet.layoutParams as LayoutParams).behavior = bottomSheetBehavior
+
+//        (binding.bottomSheet.layoutParams as LayoutParams).behavior = bottomSheetBehavior
         binding.root.isEnabled = true
 
         binding.bottomSheet.isEnabled = true
@@ -163,7 +168,7 @@ class RecognitionResultView @JvmOverloads constructor(
     }
 
 
-    fun showVisualResult(result: RecognitionResult.VisualRecognition) {
+    fun showVisualResult(result: RecognitionResult.VisualRecognition, saveTxt: String) {
         if (shownId == result.visualCandidate.passioID) {
             return
         }
@@ -172,7 +177,7 @@ class RecognitionResultView @JvmOverloads constructor(
             it.nutritionFactsResultCard.isVisible = false
             it.barcodeResultCard.isVisible = false
             it.visualResultCard.isVisible = true
-            it.bottomSheet.isVisible = true
+            it.topView.isVisible = true
             it.searchManually.isVisible = true
             shownId = result.visualCandidate.passioID
             it.viewDragUp.isVisible = true
@@ -210,7 +215,7 @@ class RecognitionResultView @JvmOverloads constructor(
                     ::editVisualCandidate
                 )
 
-            it.foodLog.text = resources.getString(R.string.log)
+            it.foodLog.text = saveTxt
             it.foodEdit.text = resources.getString(R.string.edit)
             it.foodLog.setOnClickListener {
                 logVisualCandidate(result.visualCandidate)
@@ -225,7 +230,7 @@ class RecognitionResultView @JvmOverloads constructor(
     }
 
     @SuppressLint("SetTextI18n")
-    fun showFoodRecordRecognition(result: RecognitionResult.FoodRecordRecognition) {
+    fun showFoodRecordRecognition(result: RecognitionResult.FoodRecordRecognition, saveTxt: String) {
         if (shownId == result.foodItem.id) {
             return
         }
@@ -236,7 +241,7 @@ class RecognitionResultView @JvmOverloads constructor(
             it.nutritionFactsResultCard.isVisible = false
             it.barcodeResultCard.isVisible = true
             it.visualResultCard.isVisible = false
-            it.bottomSheet.isVisible = false
+            it.topView.isVisible = false
             it.searchManually.isVisible = false
 
             shownId = result.foodItem.id
@@ -255,7 +260,7 @@ class RecognitionResultView @JvmOverloads constructor(
 //            bottomSheetBehavior.state = STATE_COLLAPSED
             it.rvAlternatives.adapter = null
 
-            it.foodLog.text = resources.getString(R.string.log)
+            it.foodLog.text = saveTxt
             it.foodEdit.text = resources.getString(R.string.edit)
             it.foodLog.setOnClickListener {
                 recognitionResultListener?.onLog(result)
@@ -320,48 +325,46 @@ class RecognitionResultView @JvmOverloads constructor(
             it.nutritionFactsResultCard.isVisible = true
             it.barcodeResultCard.isVisible = false
             it.visualResultCard.isVisible = false
-            it.bottomSheet.isVisible = false
+            it.topView.isVisible = false
             it.searchManually.isVisible = false
 
             shownId = result.nutritionFactsPair.second
 
             val nutritionFacts = result.nutritionFactsPair.first
-            if (nutritionFacts != null) {
 
-                it.tvCalories.text = getLblValueFormat(
-                    context.resources.getString(R.string.calories),
-                    nutritionFacts.calories,
-                    ""
-                )
-                it.tvCarbs.text = getLblValueFormat(
-                    context.resources.getString(R.string.carbs),
-                    nutritionFacts.carbs,
-                    nutritionFacts.servingSizeUnitName ?: "g"
-                )
-                it.tvProtein.text = getLblValueFormat(
-                    context.resources.getString(R.string.protein),
-                    nutritionFacts.protein,
-                    nutritionFacts.servingSizeUnitName ?: "g"
-                )
-                it.tvFat.text = getLblValueFormat(
-                    context.resources.getString(R.string.fat),
-                    nutritionFacts.fat,
-                    nutritionFacts.servingSizeUnitName ?: "g"
-                )
+            it.tvCalories.text = getLblValueFormat(
+                context.resources.getString(R.string.calories),
+                nutritionFacts.calories,
+                ""
+            )
+            it.tvCarbs.text = getLblValueFormat(
+                context.resources.getString(R.string.carbs),
+                nutritionFacts.carbs,
+                nutritionFacts.servingSizeUnitName ?: "g"
+            )
+            it.tvProtein.text = getLblValueFormat(
+                context.resources.getString(R.string.protein),
+                nutritionFacts.protein,
+                nutritionFacts.servingSizeUnitName ?: "g"
+            )
+            it.tvFat.text = getLblValueFormat(
+                context.resources.getString(R.string.fat),
+                nutritionFacts.fat,
+                nutritionFacts.servingSizeUnitName ?: "g"
+            )
 
 
-                it.foodLog.text = resources.getString(R.string.next_str)
-                it.foodEdit.text = resources.getString(R.string.cancel)
-                it.foodLog.setOnClickListener {
-                recognitionResultListener?.onEdit(result)
-                }
-                it.foodEdit.setOnClickListener {
-                recognitionResultListener?.onCancelled()
-                }
+            it.foodLog.text = resources.getString(R.string.next_str)
+            it.foodEdit.text = resources.getString(R.string.cancel)
+            it.foodLog.setOnClickListener {
+            recognitionResultListener?.onEdit(result)
+            }
+            it.foodEdit.setOnClickListener {
+            recognitionResultListener?.onCancelled()
+            }
 
-                it.viewTopCandidate.setOnClickListener {
+            it.viewTopCandidate.setOnClickListener {
 //                recognitionResultListener?.onEditProduct(result)
-                }
             }
             disableDrag()
 //            bottomSheetBehavior.state = STATE_COLLAPSED

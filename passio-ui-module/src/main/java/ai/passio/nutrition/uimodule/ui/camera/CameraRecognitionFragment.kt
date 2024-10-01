@@ -7,6 +7,7 @@ import ai.passio.nutrition.uimodule.domain.camera.RecognitionResult
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.ProgressDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
@@ -56,15 +57,8 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initObserver()
         binding.recognitionResult.visibility = View.GONE
-        viewModel.recognitionResults.observe(viewLifecycleOwner, ::onRecognitionResult)
-        viewModel.scanModeEvent.observe(viewLifecycleOwner, ::scanModeUpdated)
-        viewModel.foodItemResult.observe(viewLifecycleOwner, ::editFoodItem)
-        viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
-        viewModel.cameraZoomLevelRangeEvent.observe(viewLifecycleOwner, ::setupCameraZoomMode)
-        viewModel.cameraFlashToggleEvent.observe(viewLifecycleOwner) { isON ->
-            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else R.drawable.ic_camera_flash_off)
-        }
         viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
@@ -76,8 +70,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         setupToolbar()
         initOnClickCallback()
 
-        binding.recognitionResult.layoutParams.height =
-            (resources.displayMetrics.heightPixels * 0.6).toInt()
+//        binding.recognitionResult.layoutParams.height = (resources.displayMetrics.heightPixels * 0.6).toInt()
         binding.recognitionResult.addBottomSheetCallback(bottomSheetCallback)
         binding.recognitionResult.setRecognitionResultListener(recognitionResultListener)
 
@@ -111,6 +104,26 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
         }
 
+    }
+
+    private fun initObserver() {
+        sharedViewModel.isAddIngredientFromSearchLD.observe(viewLifecycleOwner) { isAddIngredient ->
+            viewModel.setIsAddIngredient(isAddIngredient)
+        }
+
+        viewModel.recognitionResults.observe(viewLifecycleOwner, ::onRecognitionResult)
+        viewModel.scanModeEvent.observe(viewLifecycleOwner, ::scanModeUpdated)
+        viewModel.foodItemResult.observe(viewLifecycleOwner, ::editFoodItem)
+        viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.cameraZoomLevelRangeEvent.observe(viewLifecycleOwner, ::setupCameraZoomMode)
+        viewModel.cameraFlashToggleEvent.observe(viewLifecycleOwner) { isON ->
+            binding.cameraFlash.setImageResource(if (isON) R.drawable.ic_camera_flash_on else R.drawable.ic_camera_flash_off)
+        }
+        viewModel.addIngredientEvent.observe(viewLifecycleOwner) { foodRecord ->
+            sharedViewModel.addFoodIngredient(FoodRecordIngredient(foodRecord))
+            viewModel.navigateBackToEditRecipe()
+
+        }
     }
 
     private fun setupCameraZoomMode(zoomLevel: Triple<Float, Float?, Float?>) {
@@ -175,8 +188,14 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     }
 
     private fun editFoodRecord(foodRecord: FoodRecord) {
-        sharedViewModel.detailsFoodRecord(foodRecord)
-        viewModel.navigateToEdit()
+
+        if (viewModel.getIsAddIngredient()) {
+            sharedViewModel.editIngredient(FoodRecordIngredient(foodRecord))
+            viewModel.navigateToEditIngredient()
+        } else {
+            sharedViewModel.detailsFoodRecord(foodRecord)
+            viewModel.navigateToEdit()
+        }
     }
 
     private val recognitionResultListener = object :
@@ -230,13 +249,13 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         }
 
         override fun onSearchTapped() {
+            sharedViewModel.setIsAddIngredientFromScanning(viewModel.getIsAddIngredient())
             viewModel.navigateToSearch()
         }
     }
 
     private val bottomSheetCallback = object : BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            Log.d("MMMM", "NEW STATE: $newState")
             if (newState == STATE_COLLAPSED) {
                 viewModel.startOrUpdateDetection()
             } else {
@@ -380,6 +399,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     private fun onRecognitionResult(result: RecognitionResult) {
         binding.let {
+            val isIngredient = viewModel.getIsAddIngredient()
             when (result) {
                 RecognitionResult.NoProductRecognition -> {
                     it.viewAddedToDiary.visibility = View.GONE
@@ -400,7 +420,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.recognitionResult.visibility = View.VISIBLE
                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showFoodRecordRecognition(result)
+                    it.recognitionResult.showFoodRecordRecognition(
+                        result,
+                        if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
+                            R.string.log
+                        )
+                    )
                 }
 
                 is RecognitionResult.VisualRecognition -> {
@@ -408,7 +433,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
                     it.recognitionResult.visibility = View.VISIBLE
                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showVisualResult(result)
+                    it.recognitionResult.showVisualResult(
+                        result,
+                        if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
+                            R.string.log
+                        )
+                    )
                 }
 
                 is RecognitionResult.NutritionFactRecognition -> {

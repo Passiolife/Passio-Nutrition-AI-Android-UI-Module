@@ -35,12 +35,15 @@ class MyProfileViewModel : BaseViewModel() {
     val calorieDeficits: List<CalorieDeficit> get() = _calorieDeficits
     private val _passioMealPlans = arrayListOf<PassioMealPlan>()
     val passioMealPlans: List<PassioMealPlan> get() = _passioMealPlans
+    private val _showLoading = SingleLiveEvent<Boolean>()
+    val showLoading: LiveData<Boolean> get() = _showLoading
 
     init {
         getUser()
     }
 
     private fun getUser() {
+        _showLoading.postValue(true)
         PassioSDK.instance.fetchMealPlans {
             _passioMealPlans.clear()
             _passioMealPlans.addAll(it)
@@ -52,18 +55,21 @@ class MyProfileViewModel : BaseViewModel() {
                             ?: _passioMealPlans.firstOrNull()
                 }
                 _userProfileEvent.postValue(userProfile!!)
+                _showLoading.postValue(false)
             }
         }
     }
 
     fun updateUser() {
         viewModelScope.launch {
+            _showLoading.postValue(true)
             if (userProfile != null && useCase.updateUserProfile(userProfile!!)) {
                 _updateProfileEvent.postValue(ResultWrapper.Success(userProfile!!))
                 updateNutritionTarget()
             } else {
                 _updateProfileEvent.postValue(ResultWrapper.Error("Failed to update profile. Please try again"))
             }
+            _showLoading.postValue(false)
         }
     }
 

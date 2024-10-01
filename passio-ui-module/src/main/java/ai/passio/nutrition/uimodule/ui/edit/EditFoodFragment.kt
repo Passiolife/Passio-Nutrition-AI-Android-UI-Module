@@ -17,6 +17,7 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.dateToFormat
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
+import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -35,7 +36,6 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.warkiz.tickseekbar.OnSeekChangeListener
 import com.warkiz.tickseekbar.SeekParams
 import com.warkiz.tickseekbar.TickSeekBar
@@ -135,6 +135,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             }
         }
 
+        initObserver()
+
+
+    }
+
+    private fun initObserver() {
         sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
             viewModel.setFoodRecord(foodRecord)
         }
@@ -164,7 +170,13 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 }
 
                 is ResultWrapper.Success -> {
-                    viewModel.navigateToDiary(result.value.createdAtTime())
+
+                    sharedViewModel.setDiaryDate(
+                        DateTime(
+                            result.value.createdAtTime() ?: DateTime.now()
+                        ).toDate()
+                    )
+                    viewModel.navigateToDiary()
                 }
             }
         }
@@ -248,7 +260,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         }
 
-
+        viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.viewLoader.isVisible = isLoading
+        }
     }
 
     private fun setupToolbar() {
@@ -536,7 +550,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         with(binding) {
             val weightGrams = foodRecord.servingWeight().gramsValue().singleDecimal()
-            servingSizeValue.text = " $weightGrams g"
+            servingSizeValue.text = " ($weightGrams g)"
 
             if (origin != UpdateOrigin.QUANTITY) {
                 if (foodRecord.getSelectedQuantity() == FoodRecord.ZERO_QUANTITY) {
@@ -654,20 +668,13 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             dateToFormat(localDate.toLocalDate(), DAY_FORMAT_FULL) //localDate.format(dateFormatter)
         viewModel.updateCreatedAt(localDate.millis)
         binding.date.setOnClickListener {
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(getString(R.string.select_meal_date))
-                .setSelection(creationDate)
-                .build()
-            datePicker.addOnPositiveButtonClickListener { dateTime ->
-                val newDate = DateTime(dateTime)
-//                val newLocalDate = newDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            showDatePickerDialog(requireContext(), DateTime(viewModel.getFoodRecord().createdAtTime() ?: DateTime.now().millis)) { selectedDate ->
                 binding.date.text = dateToFormat(
-                    newDate.toLocalDate(),
+                    selectedDate.toLocalDate(),
                     DAY_FORMAT_FULL
-                ) //newLocalDate.format(dateFormatter)
-                viewModel.updateCreatedAt(dateTime)
+                )
+                viewModel.updateCreatedAt(selectedDate.millis)
             }
-            datePicker.show(requireActivity().supportFragmentManager, "DATE")
         }
     }
 

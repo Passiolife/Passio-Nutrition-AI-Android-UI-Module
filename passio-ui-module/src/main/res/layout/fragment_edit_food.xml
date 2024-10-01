@@ -15,447 +15,499 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/passio_gray50">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/foodImage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="4dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/foodName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="2"
-                    android:textColor="@color/passio_black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/infoName"
-                    app:layout_constraintEnd_toStartOf="@id/favorite"
-                    app:layout_constraintStart_toEndOf="@id/foodImage"
-                    app:layout_constraintTop_toTopOf="@id/foodImage"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    tools:text="Food 2 as/šdla šp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/infoName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:maxLines="1"
-                    android:textColor="@color/passio_gray500"
-                    android:textSize="14sp"
-                    app:autoSizeTextType="uniform"
-                    app:layout_constraintEnd_toStartOf="@id/favorite"
-                    app:layout_constraintStart_toEndOf="@id/foodImage"
-                    app:layout_constraintTop_toBottomOf="@id/foodName"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    tools:text="Kellogs" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/favorite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/icon_favorite"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/halfGuideline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.5" />
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/macrosChart"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintEnd_toStartOf="@id/halfGuideline"
-                    app:layout_constraintTop_toBottomOf="@id/foodImage" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/caloriesValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/passio_calories"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/caloriesLabel"
-                    app:layout_constraintEnd_toEndOf="@id/macrosChart"
-                    app:layout_constraintStart_toStartOf="@id/macrosChart"
-                    app:layout_constraintTop_toTopOf="@id/macrosChart"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    tools:text="150" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/caloriesLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/calories"
-                    android:textColor="@color/passio_black"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@id/macrosChart"
-                    app:layout_constraintEnd_toEndOf="@id/macrosChart"
-                    app:layout_constraintStart_toStartOf="@id/macrosChart"
-                    app:layout_constraintTop_toBottomOf="@id/caloriesValue" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/carbsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/edit_carbs"
-                    android:textColor="@color/passio_black"
-                    app:layout_constraintBottom_toTopOf="@id/proteinLabel"
-                    app:layout_constraintEnd_toEndOf="@id/proteinLabel"
-                    app:layout_constraintTop_toTopOf="@id/macrosChart"
-                    app:layout_constraintVertical_chainStyle="packed" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/proteinLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/edit_protein"
-                    android:textColor="@color/passio_black"
-                    app:layout_constraintBottom_toTopOf="@id/fatLabel"
-                    app:layout_constraintStart_toEndOf="@id/halfGuideline"
-                    app:layout_constraintTop_toBottomOf="@id/carbsLabel" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/fatLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/edit_fat"
-                    android:textColor="@color/passio_black"
-                    app:layout_constraintBottom_toBottomOf="@id/macrosChart"
-                    app:layout_constraintEnd_toEndOf="@id/proteinLabel"
-                    app:layout_constraintTop_toBottomOf="@id/proteinLabel" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/carbsValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/passio_gray500"
-                    app:layout_constraintBaseline_toBaselineOf="@id/carbsLabel"
-                    app:layout_constraintStart_toEndOf="@id/carbsLabel"
-                    tools:text="19g (50%)" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/proteinValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/passio_gray500"
-                    app:layout_constraintBaseline_toBaselineOf="@id/proteinLabel"
-                    app:layout_constraintStart_toEndOf="@id/proteinLabel"
-                    tools:text="19g (50%)" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/fatValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/passio_gray500"
-                    app:layout_constraintBaseline_toBaselineOf="@id/fatLabel"
-                    app:layout_constraintStart_toEndOf="@id/fatLabel"
-                    tools:text="19g (50%)" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/openFoodFacts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/open_food_facts"
-                    android:textColor="@color/passio_primary"
-                    android:textSize="14sp"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/macrosChart"
-                    tools:visibility="visible" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/moreDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="@string/more_details"
-                    android:textColor="@color/passio_primary"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/macrosChart" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp"
-                android:padding="16dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/servingSizeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/serving_size"
-                    android:textColor="@color/passio_black"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/servingSizeValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/passio_black"
-                    app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text=" (123 g)" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/servingQuantity"
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rc_6_border_gray300"
-                    android:gravity="center"
-                    android:imeOptions="actionDone"
-                    android:inputType="numberDecimal"
-                    android:paddingTop="9dp"
-                    android:paddingBottom="9dp"
-                    android:textColor="@color/passio_black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
-                    tools:ignore="Autofill,LabelFor"
-                    tools:text="45" />
-
-                <Spinner
-                    android:id="@+id/servingUnit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/rc_6_border_gray300"
-                    android:clipToPadding="false"
-                    android:padding="2dp"
-                    android:spinnerMode="dropdown"
-                    app:layout_constraintBottom_toBottomOf="@id/servingQuantity"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/servingQuantity"
-                    app:layout_constraintTop_toTopOf="@id/servingQuantity" />
-
-                <com.warkiz.tickseekbar.TickSeekBar
-                    android:id="@+id/servingQuantitySeekBar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/servingQuantity"
-                    app:tsb_progress_value_float="true"
-                    app:tsb_thumb_color="@color/passio_primary"
-                    app:tsb_thumb_size="24dp"
-                    app:tsb_track_background_color="@color/passio_indigo50"
-                    app:tsb_track_background_size="8dp"
-                    app:tsb_track_progress_color="@color/passio_primary"
-                    app:tsb_track_progress_size="8dp" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:id="@+id/mealTimeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meal_time"
-                    android:textColor="@color/passio_black"
-                    android:textStyle="bold" />
-
-                <ai.passio.nutrition.uimodule.ui.edit.MealTimePicker
-                    android:id="@+id/mealTimePicker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/dateLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:textColor="@color/passio_black"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rc_6_border_gray300"
-                    android:paddingStart="13dp"
-                    android:paddingTop="9dp"
-                    android:paddingEnd="13dp"
-                    android:paddingBottom="9dp"
-                    android:textColor="@color/passio_black"
-                    android:textSize="16sp"
-                    tools:text="Tuesday, February 14, 2024" />
-
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/addIngredientLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rc_8_white"
-                android:elevation="4dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/addIngredientLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/ingredients"
-                    android:textColor="@color/passio_black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/addEditRecipe"
-                    app:layout_constraintEnd_toStartOf="@id/addEditRecipe"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/addEditRecipe" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/addEditRecipe"
-                    style="@style/btn_positive_action"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:text="@string/make_custom_recipe"
-                    android:textSize="14sp"
-                    android:textStyle="normal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.yanzhenjie.recyclerview.SwipeRecyclerView
-                    android:id="@+id/ingredientList"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/addIngredientLabel"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/ingredient_layout"
-                    tools:visibility="visible" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/cancel"
-                    style="@style/btn_negative_action"
-                    android:layout_width="0dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="@string/cancel" />
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/delete"
-                    style="@style/btn_delete_action"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    android:text="@string/delete" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/foodImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:elevation="4dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/log"
-                    style="@style/btn_positive_action"
-                    android:layout_width="0dp"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/foodName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:gravity="center_vertical"
+                        android:maxLines="2"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_11ssp"
+                        app:layout_constraintBottom_toTopOf="@id/infoName"
+                        app:layout_constraintEnd_toStartOf="@id/favorite"
+                        app:layout_constraintStart_toEndOf="@id/foodImage"
+                        app:layout_constraintTop_toTopOf="@id/foodImage"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        tools:text="Food 2 as/šdla šp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/infoName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:maxLines="1"
+                        android:textColor="@color/passio_gray500"
+                        android:textSize="@dimen/_10ssp"
+                        app:autoSizeTextType="uniform"
+                        app:layout_constraintEnd_toStartOf="@id/favorite"
+                        app:layout_constraintStart_toEndOf="@id/foodImage"
+                        app:layout_constraintTop_toBottomOf="@id/foodName"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        tools:text="Kellogs" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/favorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_effect"
+                        android:padding="8dp"
+                        android:src="@drawable/icon_favorite"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/halfGuideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/macrosChart"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/halfGuideline"
+                        app:layout_constraintTop_toBottomOf="@id/foodImage" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/caloriesValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:textColor="@color/passio_calories"
+                        android:textSize="@dimen/_16ssp"
+                        app:layout_constraintBottom_toTopOf="@id/caloriesLabel"
+                        app:layout_constraintEnd_toEndOf="@id/macrosChart"
+                        app:layout_constraintStart_toStartOf="@id/macrosChart"
+                        app:layout_constraintTop_toTopOf="@id/macrosChart"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        tools:text="150" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/caloriesLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:text="@string/calories"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/macrosChart"
+                        app:layout_constraintEnd_toEndOf="@id/macrosChart"
+                        app:layout_constraintStart_toStartOf="@id/macrosChart"
+                        app:layout_constraintTop_toBottomOf="@id/caloriesValue" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/carbsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/inter_medium"
+                        android:text="@string/edit_carbs"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBottom_toTopOf="@id/proteinLabel"
+                        app:layout_constraintEnd_toEndOf="@id/proteinLabel"
+                        app:layout_constraintTop_toTopOf="@id/macrosChart"
+                        app:layout_constraintVertical_chainStyle="packed" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/proteinLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:fontFamily="@font/inter_medium"
+                        android:text="@string/edit_protein"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBottom_toTopOf="@id/fatLabel"
+                        app:layout_constraintStart_toEndOf="@id/halfGuideline"
+                        app:layout_constraintTop_toBottomOf="@id/carbsLabel" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/fatLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/inter_medium"
+                        android:text="@string/edit_fat"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/macrosChart"
+                        app:layout_constraintEnd_toEndOf="@id/proteinLabel"
+                        app:layout_constraintTop_toBottomOf="@id/proteinLabel" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/carbsValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/passio_gray500"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBaseline_toBaselineOf="@id/carbsLabel"
+                        app:layout_constraintStart_toEndOf="@id/carbsLabel"
+                        tools:text="19g (50%)" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/proteinValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/passio_gray500"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBaseline_toBaselineOf="@id/proteinLabel"
+                        app:layout_constraintStart_toEndOf="@id/proteinLabel"
+                        tools:text="19g (50%)" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/fatValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/passio_gray500"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBaseline_toBaselineOf="@id/fatLabel"
+                        app:layout_constraintStart_toEndOf="@id/fatLabel"
+                        tools:text="19g (50%)" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/openFoodFacts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_effect"
+                        android:padding="16dp"
+                        android:text="@string/open_food_facts"
+                        android:textColor="@color/passio_primary"
+                        android:textSize="@dimen/_10ssp"
+                        android:fontFamily="@font/inter_medium"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/macrosChart"
+                        tools:visibility="visible" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/moreDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_effect"
+                        android:padding="16dp"
+                        android:fontFamily="@font/inter_medium"
+                        android:text="@string/more_details"
+                        android:textColor="@color/passio_primary"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/macrosChart" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="@string/log" />
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:padding="16dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/servingSizeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:text="@string/serving_size"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/servingSizeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_11ssp"
+                        app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
+                        app:layout_constraintTop_toTopOf="@id/servingSizeLabel"
+                        app:layout_constraintBottom_toBottomOf="@id/servingSizeLabel"
+                        tools:text=" (123 g)" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/servingQuantity"
+                        android:layout_width="64dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:gravity="center"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:paddingTop="9dp"
+                        android:paddingBottom="9dp"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
+                        tools:ignore="Autofill,LabelFor"
+                        tools:text="45" />
+
+                    <Spinner
+                        android:id="@+id/servingUnit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:clipToPadding="false"
+                        android:padding="2dp"
+                        android:spinnerMode="dropdown"
+                        app:layout_constraintBottom_toBottomOf="@id/servingQuantity"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/servingQuantity"
+                        app:layout_constraintTop_toTopOf="@id/servingQuantity" />
+
+                    <com.warkiz.tickseekbar.TickSeekBar
+                        android:id="@+id/servingQuantitySeekBar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/servingQuantity"
+                        app:tsb_progress_value_float="true"
+                        app:tsb_thumb_color="@color/passio_primary"
+                        app:tsb_thumb_size="24dp"
+                        app:tsb_track_background_color="@color/passio_indigo50"
+                        app:tsb_track_background_size="8dp"
+                        app:tsb_track_progress_color="@color/passio_primary"
+                        app:tsb_track_progress_size="8dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/mealTimeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:text="@string/meal_time"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <ai.passio.nutrition.uimodule.ui.edit.MealTimePicker
+                        android:id="@+id/mealTimePicker"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dateLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:text="@string/date"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="@drawable/ripple_effect"
+                        android:background="@drawable/rc_6_border_gray300"
+                        android:paddingStart="13dp"
+                        android:paddingTop="9dp"
+                        android:paddingEnd="13dp"
+                        android:paddingBottom="9dp"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_11ssp"
+                        tools:text="Tuesday, February 14, 2024" />
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/addIngredientLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/addIngredientLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/inter_semi_bold"
+                        android:text="@string/ingredients"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/addEditRecipe"
+                        app:layout_constraintEnd_toStartOf="@id/addEditRecipe"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/addEditRecipe" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/addEditRecipe"
+                        style="@style/btn_positive_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
+                        android:text="@string/make_custom_recipe"
+                        android:textSize="@dimen/_10ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+                        android:id="@+id/ingredientList"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/addIngredientLabel"
+                        tools:itemCount="3"
+                        tools:listitem="@layout/ingredient_layout"
+                        tools:visibility="visible" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/cancel"
+                        style="@style/btn_negative_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/cancel" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/delete"
+                        style="@style/btn_delete_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/delete"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/log"
+                        style="@style/btn_positive_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/log" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
 
-    </androidx.core.widget.NestedScrollView>
+        <FrameLayout
+            android:id="@+id/viewLoader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/passio_white40p"
+            android:clickable="true"
+            android:translationZ="4dp"
+            android:visibility="gone"
+            tools:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/passio_primary" />
+
+        </FrameLayout>
+    </FrameLayout>
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>

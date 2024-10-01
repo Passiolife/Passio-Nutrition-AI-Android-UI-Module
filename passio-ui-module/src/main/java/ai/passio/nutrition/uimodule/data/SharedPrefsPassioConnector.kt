@@ -9,6 +9,7 @@ import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
 import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.delay
 import org.joda.time.DateTime
 import java.util.Calendar
 import java.util.Date
@@ -60,7 +61,13 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     }
 
+    suspend fun tempDelay()
+    {
+//        delay(1000)
+    }
+
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
+        tempDelay()
         /* var indexToRemove = -1
 
          run breaking@ {
@@ -87,6 +94,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
+        tempDelay()
         foodRecords.forEach { foodRecord ->
             val indexToRemove = records.indexOfFirst { it.uuid == foodRecord.uuid }
             if (indexToRemove != -1) {
@@ -102,6 +110,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun deleteRecord(uuid: String): Boolean {
+        tempDelay()
         val recordToDelete = records.find { it.uuid == uuid } ?: return false
         records.remove(recordToDelete)
         sharedPreferences.saveRecords(records.map { gson.toJson(it) })
@@ -109,6 +118,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchDayRecords(day: Date): List<FoodRecord> {
+        tempDelay()
         val dayString = DateFormat.format(dateFormat, day)
         val dayRecords = records.filter { foodRecord ->
             if (foodRecord.createdAtTime() == null) {
@@ -131,6 +141,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
      }*/
 
     override suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord> {
+        tempDelay()
         val fromDate = DateTime(startDate.time).millis
         val toDate = DateTime(endDate.time).millis
         return records.filter { it.createdAtTime() in fromDate..toDate }
@@ -155,6 +166,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
      }*/
 
     override suspend fun updateFavorite(foodRecord: FoodRecord) {
+        tempDelay()
         val currentFavorite = favorites.find { it.uuid == foodRecord.uuid }
         if (currentFavorite != null) {
             favorites.remove(currentFavorite)
@@ -164,14 +176,19 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun deleteFavorite(foodRecord: FoodRecord) {
+        tempDelay()
         val favoriteToDelete = favorites.find { it.uuid == foodRecord.uuid } ?: return
         favorites.remove(favoriteToDelete)
         sharedPreferences.saveFavorites(favorites.map { gson.toJson(it) })
     }
 
-    override suspend fun fetchFavorites(): List<FoodRecord> = favorites
+    override suspend fun fetchFavorites(): List<FoodRecord>  {
+        tempDelay()
+        return favorites
+    }
 
     override suspend fun fetchAdherence(): List<Long> {
+        tempDelay()
         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
         // Iterate through each record and add the date component to the HashSet
 
@@ -196,16 +213,19 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {
+        tempDelay()
         this.userProfile = userProfile
         sharedPreferences.saveUserProfile(gson.toJson(userProfile))
         return true
     }
 
     override suspend fun fetchUserProfile(): UserProfile {
+        tempDelay()
         return userProfile
     }
 
     override suspend fun updateWeightRecord(weightRecord: WeightRecord): Boolean {
+        tempDelay()
         val indexToRemove = weightRecords.indexOfFirst { it.uuid == weightRecord.uuid }
         if (indexToRemove != -1) {
             weightRecords.removeAt(indexToRemove)
@@ -219,6 +239,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
+        tempDelay()
         val indexToRemove = weightRecords.indexOfFirst { it.uuid == weightRecord.uuid }
         if (indexToRemove != -1) {
             weightRecords.removeAt(indexToRemove)
@@ -229,6 +250,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord> {
+        tempDelay()
         val startOfWeek = startDate.time
         val endOfWeek = endDate.time
 
@@ -237,10 +259,12 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchLatestWeightRecord(): WeightRecord? {
+        tempDelay()
         return weightRecords.maxByOrNull { it.dateTime }
     }
 
     override suspend fun updateWaterRecord(waterRecord: WaterRecord): Boolean {
+        tempDelay()
         val indexToRemove = waterRecords.indexOfFirst { it.uuid == waterRecord.uuid }
         if (indexToRemove != -1) {
             waterRecords.removeAt(indexToRemove)
@@ -254,6 +278,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
+        tempDelay()
         val indexToRemove = waterRecords.indexOfFirst { it.uuid == waterRecord.uuid }
         if (indexToRemove != -1) {
             waterRecords.removeAt(indexToRemove)
@@ -264,6 +289,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchWaterRecords(startDate: Date, endDate: Date): List<WaterRecord> {
+        tempDelay()
         val startOfWeek = startDate.time
         val endOfWeek = endDate.time
 
@@ -272,6 +298,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
+        tempDelay()
         val indexToRemove = customFoods.indexOfFirst { it.uuid == foodRecord.uuid }
         if (indexToRemove != -1) {
             customFoods.removeAt(indexToRemove)
@@ -285,10 +312,12 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchCustomFoods(): List<FoodRecord> {
+        tempDelay()
         return customFoods
     }
 
     override suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
+        tempDelay()
         return customFoods.filter {
             it.name.trim().replace(" ", "").lowercase()
                 .contains(searchQuery.trim().replace(" ", "").lowercase())
@@ -296,10 +325,12 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchCustomFood(uuid: String): FoodRecord? {
+        tempDelay()
         return customFoods.find { it.uuid == uuid }
     }
 
     override suspend fun deleteCustomFood(uuid: String): Boolean {
+        tempDelay()
         val indexToRemove = customFoods.indexOfFirst { it.uuid == uuid }
         if (indexToRemove != -1) {
             customFoods.removeAt(indexToRemove)
@@ -310,10 +341,12 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
+        tempDelay()
         return customFoods.find { it.barcode == barcode }
     }
 
     override suspend fun saveRecipe(foodRecord: FoodRecord): Boolean {
+        tempDelay()
         val indexToRemove = recipes.indexOfFirst { it.uuid == foodRecord.uuid }
         if (indexToRemove != -1) {
             recipes.removeAt(indexToRemove)
@@ -327,6 +360,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchRecipes(searchQuery: String): List<FoodRecord> {
+        tempDelay()
         return recipes.filter {
             it.name.trim().replace(" ", "").lowercase()
                 .contains(searchQuery.trim().replace(" ", "").lowercase())
@@ -334,14 +368,17 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
     }
 
     override suspend fun fetchRecipes(): List<FoodRecord> {
+        tempDelay()
         return recipes
     }
 
     override suspend fun fetchRecipe(uuid: String): FoodRecord? {
+        tempDelay()
         return recipes.find { it.uuid == uuid }
     }
 
     override suspend fun deleteRecipe(uuid: String): Boolean {
+        tempDelay()
         val indexToRemove = recipes.indexOfFirst { it.uuid == uuid }
         if (indexToRemove != -1) {
             recipes.removeAt(indexToRemove)

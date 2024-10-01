@@ -10,35 +10,31 @@ import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.meals
+import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.gson.GsonBuilder
-import java.util.Calendar
-import java.util.Date
+import org.joda.time.DateTime
 
 /**
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
 class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
-    BaseToolbar.ToolbarListener,
-    DatePickerDialog.OnDateSetListener {
+    BaseToolbar.ToolbarListener{
 
     private var _binding: FragmentDiaryBinding? = null
     private val binding: FragmentDiaryBinding get() = _binding!!
 
     private lateinit var dateFormat: java.text.DateFormat
-    private val calendar = Calendar.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,13 +50,13 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
         initObserver()
 
-        var currentDate = Date()
+        /*var currentDate = Date()
         if (arguments?.containsKey("currentDate") == true) {
             arguments?.getLong("currentDate")?.let {
                 currentDate = Date(it)
             }
         }
-        viewModel.setDate(currentDate)
+        viewModel.setDate(currentDate)*/
 
         with(binding) {
             toolbar.setup(getString(R.string.my_diary), this@DiaryFragment)
@@ -77,20 +73,14 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
                 viewModel.setNextDay()
             }
             toolbarCalendar.setOnClickListener {
-                calendar.time = viewModel.getCurrentDate()
-                val year = calendar.get(Calendar.YEAR)
-                val month = calendar.get(Calendar.MONTH)
-                val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-                DatePickerDialog(
-                    requireContext(),
-                    this@DiaryFragment,
-                    year,
-                    month,
-                    dayOfMonth
-                ).show()
+                showDatePickerDialog(requireContext(), DateTime(viewModel.getCurrentDate().time)) { selectedDate ->
+                    viewModel.setDate(selectedDate.toDate())
+                }
             }
             dailyNutrition.invokeProgressReport(::navigateToProgressReport)
             quickSuggestions.setup(quickSuggestionListener)
+
+            viewModel.fetchLogsForCurrentDay()
         }
     }
 
@@ -112,6 +102,10 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     }
 
     private fun initObserver() {
+        sharedViewModel.diaryCurrentDate.observe(viewLifecycleOwner) { currentDate ->
+            viewModel.setDate(currentDate)
+            binding.toolbarCalendar.text = dateFormat.format(viewModel.getCurrentDate())
+        }
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
         viewModel.quickSuggestions.observe(viewLifecycleOwner, ::setupQuickSuggestions)
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
@@ -147,9 +141,11 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
         val userProfile = data.first
         val records = data.second
-        val breakfastLogs = records.meals(MealLabel.Breakfast) //filter { it.mealLabel == MealLabel.Breakfast }
+        val breakfastLogs =
+            records.meals(MealLabel.Breakfast) //filter { it.mealLabel == MealLabel.Breakfast }
         val lunchLogs = records.meals(MealLabel.Lunch) //filter { it.mealLabel == MealLabel.Lunch }
-        val dinnerLogs = records.meals(MealLabel.Dinner) //filter { it.mealLabel == MealLabel.Dinner }
+        val dinnerLogs =
+            records.meals(MealLabel.Dinner) //filter { it.mealLabel == MealLabel.Dinner }
         val snackLogs = records.meals(MealLabel.Snack) //filter { it.mealLabel == MealLabel.Snack }
 
         with(binding) {
@@ -205,12 +201,5 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
 
     override fun onRightIconClicked() {
         showPopupMenu(binding.toolbar.findViewById(R.id.toolbarMenu))
-    }
-
-    override fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        viewModel.setDate(calendar.time)
     }
 }

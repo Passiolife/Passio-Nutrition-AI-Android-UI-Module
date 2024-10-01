@@ -1,9 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.menu
 
-import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.AddFoodItemBinding
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,7 +16,8 @@ class AddFoodAdapter(
     private val onItemClicked: (id: Int) -> Unit
 ) : RecyclerView.Adapter<AddFoodAdapter.AddFoodViewHolder>() {
 
-    inner class AddFoodViewHolder(private val binding: AddFoodItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AddFoodViewHolder(private val binding: AddFoodItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(option: AddFoodOption) {
             binding.addFoodIcon.setImageResource(option.iconId)
             binding.addFoodName.setText(option.textId)
@@ -40,4 +39,5 @@ class AddFoodAdapter(
     override fun getItemCount(): Int {
         return items.size
     }
+
 }

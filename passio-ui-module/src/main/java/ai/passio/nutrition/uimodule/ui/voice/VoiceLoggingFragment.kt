@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.databinding.FragmentVoiceLoggingBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
 import ai.passio.nutrition.uimodule.ui.util.toast
@@ -89,6 +91,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
                 (rvResult.adapter as SpeechRecognitionAdapter).clearSelection()
             }
             searchManually.setOnClickListener {
+                sharedViewModel.setIsAddIngredientFromSearch(viewModel.getIsAddIngredient())
                 viewModel.navigateToSearch()
             }
             formatSearchManuallyText()
@@ -255,7 +258,20 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
         return data[0]
     }
 
+    private fun setIngredientMode(isOn: Boolean) {
+        if (isOn) {
+            binding.log.text = getString(R.string.add_ingredient)
+            binding.toolbar.hideRightIcon()
+        }
+    }
+
     private fun initObserver() {
+        setIngredientMode(viewModel.getIsAddIngredient())
+        sharedViewModel.isAddIngredientFromVoiceLD.observe(viewLifecycleOwner) { isAddIngredient ->
+            viewModel.setIsAddIngredient(isAddIngredient)
+            setIngredientMode(isAddIngredient)
+
+        }
         viewModel.voiceLoggingStateEvent.observe(viewLifecycleOwner, ::showCurrentState)
         viewModel.voiceQueryEvent.observe(viewLifecycleOwner) { query ->
             binding.voiceQuery.text = query
@@ -265,6 +281,13 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
         }
         viewModel.resultFoodInfo.observe(viewLifecycleOwner, ::showVoiceResult)
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.addIngredientEvent.observe(viewLifecycleOwner, ::addIngredients)
+    }
+
+    private fun addIngredients(foodRecords: List<FoodRecordIngredient>)
+    {
+        sharedViewModel.addFoodIngredients(foodRecords)
+        viewModel.navigateBackToRecipe()
     }
 
     private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
