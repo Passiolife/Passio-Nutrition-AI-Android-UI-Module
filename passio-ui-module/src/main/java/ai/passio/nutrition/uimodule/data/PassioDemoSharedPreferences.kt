@@ -5,8 +5,10 @@ import android.content.SharedPreferences
 class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferences) {
 
     companion object Key {
-        const val PREF_NAME = "PassioDemoPrefs"
+        const val PREF_NAME = "PassioUIPrefs"
         private const val PREF_FOOD_RECORDS = "foodRecords"
+        private const val PREF_CUSTOM_FOODS = "customFoods"
+        private const val PREF_RECIPES = "recipes"
         private const val PREF_WEIGHT_RECORDS = "weightRecords"
         private const val PREF_WATER_RECORDS = "waterRecords"
         private const val PREF_FOOD_FAVORITES = "foodFavorites"
@@ -19,6 +21,21 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
 
     fun getRecords(): Set<String> {
         return sharedPreferences.getStringSet(PREF_FOOD_RECORDS, hashSetOf())!!
+    }
+
+    fun saveCustomFoods(customFoods: List<String>) {
+        sharedPreferences.edit().putStringSet(PREF_CUSTOM_FOODS, customFoods.toSet()).apply()
+    }
+
+    fun getCustomFoods(): Set<String> {
+        return sharedPreferences.getStringSet(PREF_CUSTOM_FOODS, hashSetOf())!!
+    }
+    fun saveRecipes(recipes: List<String>) {
+        sharedPreferences.edit().putStringSet(PREF_RECIPES, recipes.toSet()).apply()
+    }
+
+    fun getRecipes(): Set<String> {
+        return sharedPreferences.getStringSet(PREF_RECIPES, hashSetOf())!!
     }
     fun getWeightRecords(): Set<String> {
         return sharedPreferences.getStringSet(PREF_WEIGHT_RECORDS, hashSetOf())!!

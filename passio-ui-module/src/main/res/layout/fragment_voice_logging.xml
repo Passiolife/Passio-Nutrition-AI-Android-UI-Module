@@ -43,7 +43,7 @@
         android:text="@string/start_listening"
         android:textColor="@color/passio_white"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:drawableStartCompat="@drawable/ic_start_listening"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,7 +92,7 @@
         android:text="@string/stop_listening"
         android:textColor="@color/passio_white"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/inter_semi_bold"
         app:drawableStartCompat="@drawable/ic_stop_listening"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +118,7 @@
             android:gravity="start"
             android:padding="16dp"
             android:textColor="@color/gray"
-            android:textSize="14sp"
+            android:textSize="@dimen/_10ssp"
             tools:text="I had scrambled egg whites, turkey bacon, whole grain toast, and a black coffee for breakfast" />
     </FrameLayout>
 
@@ -184,7 +184,9 @@
                 android:paddingTop="12dp"
                 android:text="@string/clear_selected"
                 android:textColor="@color/passio_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -194,8 +196,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/your_result"
                 android:textColor="@color/passio_gray900"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="@dimen/_14ssp"
+                android:fontFamily="@font/inter_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/clearSelected" />
@@ -206,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/select_the_foods_you_would_like_to_log"
                 android:textColor="@color/passio_gray900"
-                android:textSize="14sp"
+                android:textSize="@dimen/_10ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -246,7 +248,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:text="@string/not_what_you_re_looking_for_search_manually"
-                android:textColor="@color/passio_black"
+                android:textColor="@color/passio_gray900"
                 app:layout_constraintBottom_toTopOf="@id/actionContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -276,7 +278,7 @@
                     android:text="@string/try_again"
                     android:textColor="@color/passio_primary"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_semi_bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/log"
@@ -291,7 +293,7 @@
                     android:text="@string/log_selected"
                     android:textColor="@color/passio_white"
                     android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/inter_semi_bold" />
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -301,6 +303,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

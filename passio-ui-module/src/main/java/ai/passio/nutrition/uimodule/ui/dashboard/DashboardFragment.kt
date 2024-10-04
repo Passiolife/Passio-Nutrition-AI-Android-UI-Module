@@ -13,12 +13,14 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.util.StringKT.setSpannableBold
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.sentEnable
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.annotation.SuppressLint
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import org.joda.time.DateTime
@@ -116,6 +118,21 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         viewModel.adherents.observe(viewLifecycleOwner, ::updateAdherence)
         viewModel.waterSummary.observe(viewLifecycleOwner, ::showWaterSummary)
         viewModel.weightSummary.observe(viewLifecycleOwner, ::showWeightSummary)
+
+        viewModel.isLogsLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.dailyNutrition.setLoading(isLoading)
+        }
+        viewModel.isAdherentsLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressAdherence.isVisible = isLoading
+        }
+        viewModel.isWaterLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.viewWater.sentEnable(!isLoading)
+            binding.progressWater.isVisible = isLoading
+        }
+        viewModel.isWeightLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.viewWeight.sentEnable(!isLoading)
+            binding.progressWeight.isVisible = isLoading
+        }
     }
 
     private fun navigateToProgressReport() {
@@ -219,7 +236,16 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
     private fun updateLogs(data: Pair<UserProfile, List<FoodRecord>>) {
 
         with(binding) {
+
             val userProfile = data.first
+
+            var title = getString(R.string.welcome)
+            if (userProfile.userName.isNotEmpty()) {
+                title += " " + userProfile.userName
+            }
+            title += "!"
+            toolbar.setup(title, baseToolbarListener)
+
             val records = data.second
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()

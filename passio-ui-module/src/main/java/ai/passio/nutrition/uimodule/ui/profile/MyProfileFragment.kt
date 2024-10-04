@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.profile.DailyNutritionTargetDialog.DailyN
 import ai.passio.nutrition.uimodule.ui.settings.HeightPickerDialog
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import android.graphics.Color
 import android.os.Bundle
@@ -23,9 +24,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -103,6 +104,9 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
             viewLifecycleOwner,
             ::showDailyNutritionTargetPicker
         )
+        viewModel.showLoading.observe(viewLifecycleOwner){ isLoading ->
+            binding.viewLoader.isVisible = isLoading
+        }
     }
 
     override fun onDestroyView() {
@@ -113,12 +117,12 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
     private fun showUpdateUserResult(resultWrapper: ResultWrapper<UserProfile>) {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
-                Toast.makeText(requireContext(), "User Profile Saved!", Toast.LENGTH_SHORT).show()
+                requireContext().toast("User Profile Saved!")
 //                viewModel.navigateBack()
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(requireContext(), resultWrapper.error, Toast.LENGTH_SHORT).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
 
@@ -156,7 +160,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
             description.isEnabled = false
             legend.isEnabled = false
             setDrawEntryLabels(false)
-            setDrawSliceText(false)
+//            setDrawSliceText(false)
             setDrawMarkers(false)
             setTouchEnabled(false)
         }

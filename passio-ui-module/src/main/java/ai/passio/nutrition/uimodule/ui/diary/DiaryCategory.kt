@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.databinding.DiaryCategoryLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.sentEnable
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
 class DiaryCategory @JvmOverloads constructor(
@@ -50,7 +52,7 @@ class DiaryCategory @JvmOverloads constructor(
 
             logList.setSwipeMenuCreator { _, rightMenu, position ->
                 val editItem = SwipeMenuItem(context).apply {
-                    text = context.getString(R.string.edit)
+                    text = context.getString(R.string.details)
                     setTextColor(Color.WHITE)
                     setBackgroundColor(ContextCompat.getColor(context, R.color.passio_primary))
                     width = DesignUtils.dp2px(80f)
@@ -94,6 +96,8 @@ class DiaryCategory @JvmOverloads constructor(
             expanded = true
             post { invalidateState() }
         }
+
+        binding.categoryLayout.sentEnable(records.isNotEmpty())
         adapter.updateLogs(records)
     }
 
@@ -104,10 +108,12 @@ class DiaryCategory @JvmOverloads constructor(
     private fun invalidateState() {
         with(binding) {
             if (!expanded) {
+                divider.isVisible = false
                 chevron.rotationX = 0f
                 logList.visibility = View.GONE
                 setPadding(0, 0, 0, 0)
             } else {
+                divider.isVisible = true
                 chevron.rotationX = 180f
                 logList.visibility = View.VISIBLE
                 if (adapter.itemCount > 0) {

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="details">Details</string>
+    <string name="food_details">Food Details</string>
+    <string name="edit_ingredient">Edit Ingredient</string>
     <string name="edit">Edit</string>
+    <string name="edit_recipe">Edit Recipe</string>
     <string name="save">Save</string>
     <string name="log">Log</string>
     <string name="scan_info_title">Ways To Scan</string>
@@ -72,6 +76,7 @@
     <string name="meal_plan">Meal Plan</string>
     <string name="progress">Progress</string>
     <string name="my_progress">My Progress</string>
+    <string name="food_creator">Food Creator</string>
     <string name="weight_tracking">Weight Tracking</string>
     <string name="water_tracking">Water Tracking</string>
     <string name="nutrition_information">Nutrition Information</string>
@@ -170,6 +175,49 @@
     <string name="type_your_message_here">Type your message here…</string>
     <string name="failed_to_init_ai_advisor">Failed to initialize AI Advisor session.\nTap here to retry.</string>
     <string name="find_foods">Find Foods</string>
+    <string name="scan_description">Scan Description</string>
+    <string name="brand">Brand</string>
+    <string name="enter_brand">Enter brand</string>
+    <string name="enter_name">Enter name</string>
+    <string name="barcode">Barcode</string>
+    <string name="scan_a_barcode">Scan a barcode</string>
+    <string name="enter_serving_size">Enter serving size</string>
+    <string name="required_nutrition_facts">Required Nutrition Facts</string>
+    <string name="enter_unit_name">Enter unit name</string>
+    <string name="units">Units</string>
+    <string name="weight">Weight</string>
+    <string name="enter_calories">Enter calories</string>
+    <string name="enter_carbs">Enter carbs</string>
+    <string name="enter_weight_lower">Enter weight</string>
+    <string name="value_txt">Value</string>
+    <string name="custom_foods">Custom Foods</string>
+    <string name="recipes">Recipes</string>
+    <string name="edit_image"><u>Edit Image</u></string>
+    <string name="scanning_barcode">Scanning…\nPlace your barcode within the frame</string>
+    <string name="barcode_in_system">Barcode In System</string>
+    <string name="barcode_in_system_info">This barcode matches an existing item in our database. You can use the data from the database, or continue with creating a custom food.</string>
+    <string name="view_existing_item">View Existing Item</string>
+    <string name="create_custom_food_anyway">Create Custom Food Anyway</string>
+    <string name="custom_food_already_exists">Custom Food Already Exists</string>
+    <string name="custom_food_already_exists_info">This barcode matches an existing item in your custom food list. You can use the existing item, or create a new food without the barcode.</string>
+    <string name="create_custom_food_without_barcode">Create Custom Food Without Barcode</string>
+    <string name="other_nutrition_facts">Other Nutrition Facts</string>
+    <string name="create_new_food">Create New Food</string>
+    <string name="create_new_recipe">Create New Recipe</string>
+    <string name="create_user_food">Create User Food?</string>
+    <string name="create_a_user_food_from_this_food">You are about to create a user food from this food</string>
+    <string name="create">Create</string>
+    <string name="update_log_upon_creating">Update log upon creating?</string>
+    <string name="recipe_details">Recipe Details</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="make_custom_recipe">Make custom recipe</string>
+    <string name="edit_recipe_">Edit recipe</string>
+    <string name="no_records_found">No records found.</string>
+    <string name="search_results">Search Results</string>
+    <string name="keep_typing">Keep typing</string>
+    <string name="type_in_food_name">Type in food name</string>
+    <string name="alternative_s">Alternative(s)</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

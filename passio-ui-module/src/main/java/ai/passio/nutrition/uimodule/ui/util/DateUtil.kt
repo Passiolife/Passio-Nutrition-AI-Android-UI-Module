@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.util
 
+import ai.passio.nutrition.uimodule.R
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -63,14 +64,14 @@ fun getMonthName(date: DateTime): String {
     return dateFormat.format(date.toDate())
 }
 
-fun showDatePickerDialog(context: Context, onDateSelected: (selectedDateTime: DateTime) -> Unit) {
-    val now = DateTime.now()
+fun showDatePickerDialog(context: Context,now: DateTime = DateTime.now(), onDateSelected: (selectedDateTime: DateTime) -> Unit) {
+//    val now = DateTime.now()
     val year = now.year
     val month = now.monthOfYear - 1 // DatePickerDialog uses 0-based month
     val day = now.dayOfMonth
 
     val datePickerDialog = DatePickerDialog(
-        context,
+        context, R.style.DatePickerTheme,
         { _, selectedYear, selectedMonth, selectedDay ->
             // Format the selected date
             val selectedDate = DateTime(selectedYear, selectedMonth + 1, selectedDay, 0, 0)
@@ -79,6 +80,16 @@ fun showDatePickerDialog(context: Context, onDateSelected: (selectedDateTime: Da
         year, month, day
     )
     datePickerDialog.show()
+
+   /* val datePicker = MaterialDatePicker.Builder.datePicker()
+//        .setTitleText(context.getString(R.string.select_meal_date))
+        .setSelection(now.millis)
+        .build()
+    datePicker.addOnPositiveButtonClickListener { dateTime ->
+        val newDate = DateTime(dateTime)
+        onDateSelected.invoke(newDate)
+    }
+    datePicker.show(requireActivity().supportFragmentManager, "DATE")*/
 }
 
 fun showTimePickerDialog(context: Context, onTimeSelected: (selectedDateTime: DateTime) -> Unit) {
@@ -120,6 +131,7 @@ fun dateToTimestamp(dateString: String, dateFormat: String): Long {
 }
 
 const val DAY_FORMAT = "EE"
+const val DAY_FORMAT_FULL = "EEEE, MMMM dd, yyyy"
 fun dateToFormat(localDate: LocalDate, format: String): String {
     // Define the formatter for the desired pattern
     val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.ENGLISH)

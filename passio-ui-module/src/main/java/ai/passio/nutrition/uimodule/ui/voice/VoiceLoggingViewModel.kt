@@ -3,6 +3,8 @@ package ai.passio.nutrition.uimodule.ui.voice
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioSpeechRecognitionModel
@@ -30,10 +32,22 @@ class VoiceLoggingViewModel : BaseViewModel() {
     val showLoading: LiveData<Boolean> get() = _showLoading
     private val _logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
     val logFoodEvent: LiveData<ResultWrapper<Boolean>> = _logFoodEvent
+    private val _addIngredientEvent = SingleLiveEvent<List<FoodRecordIngredient>>()
+    val addIngredientEvent: LiveData<List<FoodRecordIngredient>> = _addIngredientEvent
 
 
     init {
         updateVoiceLoggingState(VoiceLoggingFragment.VoiceLoggingState.START_LISTENING)
+    }
+
+    private var isAddIngredient = false
+
+    fun setIsAddIngredient(isAddIngredient: Boolean) {
+        this.isAddIngredient = isAddIngredient
+    }
+
+    fun getIsAddIngredient(): Boolean {
+        return isAddIngredient
     }
 
     fun updateVoiceLoggingState(state: VoiceLoggingFragment.VoiceLoggingState) {
@@ -69,7 +83,17 @@ class VoiceLoggingViewModel : BaseViewModel() {
                 if (it.isEmpty()) {
                     _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items!"))
                 } else {
-                    _logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecords(it)))
+                    if (isAddIngredient) {
+                        _addIngredientEvent.postValue(it.map { fr -> FoodRecordIngredient(fr) })
+                    } else {
+                        _logFoodEvent.postValue(
+                            ResultWrapper.Success(
+                                mealPlanUseCase.logFoodRecords(
+                                    it
+                                )
+                            )
+                        )
+                    }
                 }
             }
             _showLoading.postValue(false)
@@ -86,6 +110,12 @@ class VoiceLoggingViewModel : BaseViewModel() {
     fun navigateToSearch() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(VoiceLoggingFragmentDirections.voiceLoggingToSearch())
+        }
+    }
+
+    fun navigateBackToRecipe() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(VoiceLoggingFragmentDirections.backToEditRecipe())
         }
     }
 

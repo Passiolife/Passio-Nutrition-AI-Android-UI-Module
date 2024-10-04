@@ -17,7 +17,6 @@ import ai.passio.nutrition.uimodule.ui.util.showTimePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Toast
 
 class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
 
@@ -95,20 +94,12 @@ class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
                     requireContext().toast("Water record saved!")
                     viewModel.navigateBack()
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Could not record water. Please try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    requireContext().toast("Could not record water. Please try again.")
                 }
             }
 
             is ResultWrapper.Error -> {
-                Toast.makeText(
-                    requireContext(),
-                    resultWrapper.error,
-                    Toast.LENGTH_SHORT
-                ).show()
+                requireContext().toast(resultWrapper.error)
             }
         }
     }

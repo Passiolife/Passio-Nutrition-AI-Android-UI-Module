@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rc_40_white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/create_user_food"
+        android:textColor="@color/passio_gray900"
+        android:textColorLink="@color/passio_gray900"
+        android:textSize="@dimen/_12ssp"
+        android:fontFamily="@font/inter_bold" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="8dp"
+        android:text="@string/create_a_user_food_from_this_food"
+        android:textColor="@color/passio_gray900"
+        android:textColorLink="@color/passio_gray900"
+        android:textSize="@dimen/_10ssp" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cancel"
+            style="@style/btn_negative_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/cancel" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/edit"
+            style="@style/btn_positive_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/edit" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/create"
+            style="@style/btn_positive_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/create" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/updateLog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/update_log_upon_creating"
+        android:textColor="@color/passio_gray500"
+        android:textSize="@dimen/_10ssp"
+        app:thumbTint="@color/passio_white"
+        app:trackTint="@color/passio_gray300" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

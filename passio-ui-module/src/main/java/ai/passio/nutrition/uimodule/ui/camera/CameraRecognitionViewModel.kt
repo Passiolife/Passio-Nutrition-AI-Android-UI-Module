@@ -7,9 +7,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
-import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.FoodDetectionConfiguration
-import ai.passio.passiosdk.passiofood.PackagedFoodCode
 import ai.passio.passiosdk.passiofood.PassioID
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
@@ -30,14 +28,30 @@ class CameraRecognitionViewModel : BaseViewModel() {
     private var scanMode: ScanMode = ScanMode.VISUAL
     val scanModeEvent = MutableLiveData<ScanMode>()
 
-    private var cameraZoomLevel: Float = 1f
+    private var cameraZoomLevel: Float = 0f
     private var cameraZoomLevelMin: Float? = null
     private var cameraZoomLevelMax: Float? = null
     val cameraZoomLevelRangeEvent = SingleLiveEvent<Triple<Float, Float?, Float?>>()
     private var isCameraFlashOn = false
     val cameraFlashToggleEvent = SingleLiveEvent<Boolean>()
+    val editIngredientEvent = SingleLiveEvent<FoodRecord>()
+    val addIngredientEvent = SingleLiveEvent<FoodRecord>()
+
+    private var isAddIngredient = false
+
+    fun setIsAddIngredient(isAddIngredient: Boolean) {
+        this.isAddIngredient = isAddIngredient
+    }
+
+    fun getIsAddIngredient(): Boolean {
+        return isAddIngredient
+    }
 
     fun setFoodScanMode(scanMode: ScanMode) {
+        if (this.scanMode == ScanMode.BARCODE && scanMode != ScanMode.BARCODE)
+        {
+            setCameraZoomLevel(cameraZoomLevelMin ?: 0f)
+        }
         this.scanMode = scanMode
         scanModeEvent.postValue(scanMode)
         startOrUpdateDetection()
@@ -145,14 +159,26 @@ class CameraRecognitionViewModel : BaseViewModel() {
         PassioSDK.instance.stopCamera()
     }
 
+    fun editIngredient(foodRecord: FoodRecord) {
+        editIngredientEvent.postValue(foodRecord)
+    }
+
+    fun addIngredient(foodRecord: FoodRecord) {
+        addIngredientEvent.postValue(foodRecord)
+    }
+
     fun logFoodRecord(foodRecord: FoodRecord) {
         viewModelScope.launch {
             showLoading.postValue(true)
-            logFoodEvent.postValue(
-                ResultWrapper.Success(
-                    cameraUseCase.logFoodRecord(foodRecord)
+            if (isAddIngredient) {
+                addIngredient(foodRecord)
+            } else {
+                logFoodEvent.postValue(
+                    ResultWrapper.Success(
+                        cameraUseCase.logFoodRecord(foodRecord)
+                    )
                 )
-            )
+            }
             showLoading.postValue(false)
         }
     }
@@ -184,6 +210,17 @@ class CameraRecognitionViewModel : BaseViewModel() {
         }
     }
 
+    fun navigateBackToEditRecipe() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.backToEditRecipe())
+        }
+    }
+    fun navigateToEditIngredient() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.cameraToEditIngredient())
+        }
+    }
+
     fun navigateToEdit() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(CameraRecognitionFragmentDirections.cameraToEdit())
@@ -199,6 +236,12 @@ class CameraRecognitionViewModel : BaseViewModel() {
     fun navigateToSearch() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(CameraRecognitionFragmentDirections.cameraToSearch())
+        }
+    }
+
+    fun navigateToFoodCreator() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(CameraRecognitionFragmentDirections.cameraToFoodCreator())
         }
     }
 }

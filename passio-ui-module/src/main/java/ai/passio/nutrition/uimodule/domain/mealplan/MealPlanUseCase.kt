@@ -80,12 +80,18 @@ object MealPlanUseCase {
 
     suspend fun logFoodRecord(record: FoodRecord): Boolean {
         record.create(record.createdAtTime() ?: Date().time)
+        if (record.mealLabel == null) {
+            record.mealLabel = MealLabel.dateToMealLabel(record.createdAtTime()!!)
+        }
         return repository.logFoodRecord(record)
     }
 
     suspend fun logFoodRecords(records: List<FoodRecord>): Boolean {
         records.forEach { record ->
             record.create(record.createdAtTime() ?: Date().time)
+            if (record.mealLabel == null) {
+                record.mealLabel = MealLabel.dateToMealLabel(record.createdAtTime()!!)
+            }
         }
 
         return repository.logFoodRecords(records)

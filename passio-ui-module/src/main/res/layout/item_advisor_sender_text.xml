@@ -13,7 +13,7 @@
         android:background="@drawable/bg_advisor_sender"
         android:padding="8dp"
         android:textColor="@color/passio_gray900"
-        android:textSize="14sp"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/meal_time" />

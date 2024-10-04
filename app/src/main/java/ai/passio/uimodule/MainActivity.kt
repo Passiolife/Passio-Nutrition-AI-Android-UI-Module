@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
         ).apply {
             sdkDownloadsModels = true
             debugMode = -333
+            remoteOnly = true
         }
 
         PassioSDK.instance.configure(passioConfiguration) { passioStatus ->

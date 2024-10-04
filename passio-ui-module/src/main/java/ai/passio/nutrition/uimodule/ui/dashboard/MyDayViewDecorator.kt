@@ -1,12 +1,12 @@
 package ai.passio.nutrition.uimodule.ui.dashboard
 
 import ai.passio.nutrition.uimodule.R
-import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import androidx.core.content.ContextCompat
@@ -18,13 +18,35 @@ import org.joda.time.DateTime
 
 private val styleSpan = StyleSpan(Typeface.BOLD)
 private fun createCircularDrawable(solidColor: Int, strokeColor: Int): Drawable {
-    val shape = GradientDrawable()
+    // Create the innermost shape with blue solid background
+    val backgroundShape = GradientDrawable().apply {
+        shape = GradientDrawable.OVAL
+        setColor(solidColor) // Set solid color to blue
+    }
 
-    shape.shape = GradientDrawable.OVAL
-    shape.setSize(DesignUtils.dp2px(10f), DesignUtils.dp2px(10f))
-    shape.setColor(solidColor)
-    shape.setStroke(DesignUtils.dp2px(1.0f), strokeColor) // Convert dp to pixels
-    return shape
+    // Create the first border (red) with 1px width
+    val borderShape = GradientDrawable().apply {
+        shape = GradientDrawable.OVAL
+        setColor(strokeColor) // Transparent inside
+        setStroke(1, Color.TRANSPARENT) // Red border with 1px width
+    }
+
+    // Create the second border (transparent padding area) with 3px width
+    val paddingShape = GradientDrawable().apply {
+        shape = GradientDrawable.OVAL
+        setColor(Color.TRANSPARENT) // Fully transparent padding shape
+        setStroke(3, Color.TRANSPARENT) // Green border with 3px width
+    }
+
+    // Layer the paddingShape, borderShape, and backgroundShape
+    val layers = arrayOf(paddingShape, borderShape, backgroundShape)
+    val layerDrawable = LayerDrawable(layers)
+
+    // Set padding between the layers to ensure borders appear correctly
+    layerDrawable.setLayerInset(1, 1, 1, 1, 1) // Padding for the borderShape layer (1px inset)
+    layerDrawable.setLayerInset(2, 4, 4, 4, 4) // Padding for the backgroundShape (3px inset from the paddingShape)
+
+    return layerDrawable
 }
 
 

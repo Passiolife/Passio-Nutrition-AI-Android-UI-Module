@@ -20,7 +20,7 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
             AddFoodOption(3, R.string.ai_advisor, R.drawable.ic_advisor),
             AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice),
 //            AddFoodOption(5, R.string.favorites, R.drawable.ic_favorites),
-//            AddFoodOption(0, R.string.my_foods, R.drawable.ic_my_foods),
+            AddFoodOption(6, R.string.my_foods, R.drawable.ic_my_foods),
         ),
         ::onOptionSelected
     )
@@ -58,6 +58,7 @@ class AddFoodFragment : BaseFragment<BaseViewModel>() {
             2 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToPhoto())
             3 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToAdvisor())
             4 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToVoiceLogging())
+            6 -> viewModel.navigate(AddFoodFragmentDirections.addFoodToMyFoods())
         }
     }
 }

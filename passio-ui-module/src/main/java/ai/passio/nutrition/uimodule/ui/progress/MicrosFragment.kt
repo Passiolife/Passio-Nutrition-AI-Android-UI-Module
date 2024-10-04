@@ -86,6 +86,9 @@ class MicrosFragment : BaseFragment<MicrosViewModel>() {
     private fun initObserver() {
         viewModel.currentDateEvent.observe(viewLifecycleOwner, ::updateDate)
         viewModel.logsLD.observe(viewLifecycleOwner, ::updateLogs)
+        viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.loading.isVisible = isLoading
+        }
     }
 
 

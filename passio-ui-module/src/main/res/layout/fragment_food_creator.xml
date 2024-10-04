@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/passio_background"
+    android:orientation="vertical"
+    tools:context=".ui.profile.MyProfileFragment">
+
+    <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/passio_white"
+        android:elevation="4dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:padding="8dp">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblPersonalInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/scan_description"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp"
+                        android:fontFamily="@font/inter_semi_bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivThumb"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintBottom_toTopOf="@id/barcode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo"
+                        app:srcCompat="@drawable/thumb_nutrition_facts" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblThumb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:padding="0dp"
+                        android:text="@string/edit_image"
+                        android:textColor="@color/passio_primary"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@id/ivThumb"
+                        app:layout_constraintStart_toStartOf="@id/ivThumb"
+                        app:layout_constraintTop_toBottomOf="@id/ivThumb" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblName"
+                        style="@style/TextProfile"
+                        android:layout_marginStart="12dp"
+                        android:padding="0dp"
+                        android:text="@string/name"
+                        app:layout_constraintStart_toEndOf="@id/ivThumb"
+                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/name"
+                        style="@style/EditTextMyFood"
+                        android:hint="@string/enter_name"
+                        android:inputType="textCapWords"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/lblName"
+                        app:layout_constraintTop_toBottomOf="@id/lblName" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblBrand"
+                        style="@style/TextProfile"
+                        android:padding="0dp"
+                        android:text="@string/brand"
+                        app:layout_constraintStart_toStartOf="@id/lblName"
+                        app:layout_constraintTop_toBottomOf="@id/name" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/brand"
+                        style="@style/EditTextMyFood"
+                        android:layout_width="0dp"
+                        android:hint="@string/enter_brand"
+                        android:inputType="textCapWords"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/lblName"
+                        app:layout_constraintTop_toBottomOf="@id/lblBrand" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblBarcode"
+                        style="@style/TextProfile"
+                        android:padding="0dp"
+                        android:text="@string/barcode"
+                        app:layout_constraintStart_toStartOf="@id/lblName"
+                        app:layout_constraintTop_toBottomOf="@id/brand" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/barcode"
+                        style="@style/TextMyFoodEditClone"
+                        android:text="@string/scan_a_barcode"
+                        android:textColor="@color/passio_gray500"
+                        app:drawableEndCompat="@drawable/ic_scan_barcode"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/lblName"
+                        app:layout_constraintTop_toBottomOf="@id/lblBarcode" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:padding="8dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblPersonalInfo2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/required_nutrition_facts"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp"
+                        android:fontFamily="@font/inter_semi_bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblServingSize"
+                        style="@style/TextProfile"
+                        android:text="@string/serving_size"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo2" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/servingSize"
+                        style="@style/EditTextProfile"
+                        android:hint="@string/value_txt"
+                        android:inputType="numberDecimal"
+                        android:maxLength="5"
+                        app:layout_constraintBottom_toBottomOf="@id/lblServingSize"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/lblServingSize" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblUnits"
+                        style="@style/TextProfile"
+                        android:text="@string/units"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/servingSize" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/units"
+                        style="@style/SpinnerTextProfile"
+                        app:drawableEndCompat="@drawable/ic_arrow_down"
+                        app:layout_constraintBottom_toBottomOf="@id/lblUnits"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/lblUnits" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblWeight"
+                        style="@style/TextProfile"
+                        android:text="@string/weight"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/units" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/weight"
+                        style="@style/EditTextProfile"
+                        android:hint="@string/value_txt"
+                        android:inputType="numberDecimal"
+                        android:maxLength="5"
+                        app:layout_constraintBottom_toBottomOf="@id/lblWeight"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/lblWeight" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/weightUnit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:minHeight="24dp"
+                        android:padding="12dp"
+                        app:drawableEndCompat="@drawable/ic_arrow_down"
+                        app:layout_constraintBottom_toBottomOf="@id/weight"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/weight" />
+
+                    <androidx.constraintlayout.widget.Group
+                        android:id="@+id/weightGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="weight,weightUnit,lblWeight"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRequiredNutritionFacts"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/weight"
+                        tools:itemCount="4"
+                        tools:listitem="@layout/item_nutrition_facts" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rc_8_white"
+                    android:elevation="4dp"
+                    android:padding="8dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/lblPersonalInfo3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@string/other_nutrition_facts"
+                        android:textColor="@color/passio_gray900"
+                        android:textSize="@dimen/_12ssp"
+                        android:fontFamily="@font/inter_semi_bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvOtherNutritionFacts"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lblPersonalInfo3"
+                        tools:itemCount="4"
+                        tools:listitem="@layout/item_nutrition_facts" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinnerNutritionFacts"
+                        style="@style/SpinnerTextProfile"
+                        android:layout_marginTop="16dp"
+                        app:drawableEndCompat="@drawable/ic_arrow_down"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rvOtherNutritionFacts"
+                        app:layout_constraintWidth_percent="1.0" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/cancel"
+                        style="@style/btn_negative_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/cancel" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/delete"
+                        style="@style/btn_delete_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:text="@string/delete" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/save"
+                        style="@style/btn_positive_action"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/save" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <FrameLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/passio_white40p">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/passio_primary" />
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

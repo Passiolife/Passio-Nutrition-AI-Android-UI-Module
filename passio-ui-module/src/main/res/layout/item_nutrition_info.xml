@@ -13,10 +13,10 @@
         android:id="@+id/label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semi_bold"
         android:gravity="start"
         android:textColor="@color/passio_gray900"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,9 +36,9 @@
             android:id="@+id/weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semi_bold"
             android:textColor="@color/passio_primary"
-            android:textSize="30sp"
-            android:textStyle="bold"
+            android:textSize="@dimen/_20sdp"
             tools:text="90" />
 
         <androidx.legacy.widget.Space
@@ -49,9 +49,9 @@
             android:id="@+id/weightUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_medium"
             android:textColor="@color/passio_gray500"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="@dimen/_12ssp"
             tools:text="g" />
 
 

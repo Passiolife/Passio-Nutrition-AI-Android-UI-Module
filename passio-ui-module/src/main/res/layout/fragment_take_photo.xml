@@ -73,18 +73,15 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cancel"
+            style="@style/btn_negative_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
-            android:background="@drawable/rc_4_passio_primary"
             android:gravity="center"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:text="@string/cancel"
-            android:textColor="@color/passio_primary"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:text="@string/cancel" />
 
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -99,18 +96,15 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/next"
+            style="@style/btn_positive_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
-            android:background="@drawable/rc_8_purple"
             android:gravity="center"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:text="@string/next_only"
-            android:textColor="@color/passio_white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:text="@string/next_only" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

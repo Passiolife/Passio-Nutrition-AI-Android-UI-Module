@@ -8,6 +8,7 @@ import ai.passio.passiosdk.passiofood.data.measurement.Kilograms
 import ai.passio.passiosdk.passiofood.data.measurement.Micrograms
 import ai.passio.passiosdk.passiofood.data.measurement.Milligrams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
+import ai.passio.passiosdk.passiofood.data.measurement.Ounce
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -42,6 +43,7 @@ class UnitMassSerializer : JsonSerializer<UnitMass>, JsonDeserializer<UnitMass> 
             "mg" -> Milligrams
             "ug" -> Micrograms
             "ml" -> Milliliters
+            "oz" -> Ounce
             else -> throw IllegalArgumentException("No known unit of mass: $unitString")
         }
         return UnitMass(unit, jsonObject["value"].asDouble)

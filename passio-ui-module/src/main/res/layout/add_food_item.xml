@@ -4,6 +4,7 @@
     android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
+    android:gravity="center_vertical|start"
     android:background="@drawable/rc_50_white"
     android:elevation="4dp"
     android:orientation="horizontal"
@@ -12,20 +13,22 @@
     android:paddingEnd="16dp"
     android:paddingBottom="12dp">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/addFoodIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleType="center"
         android:src="@drawable/ic_food_scanner"
         tools:ignore="ContentDescription" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/addFoodName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:gravity="center"
         android:text="@string/food_scanner"
-        android:textColor="@color/passio_black"
-        android:textSize="16sp" />
+        android:textColor="@color/passio_gray900"
+        android:textSize="@dimen/_11ssp" />
 
 </LinearLayout>

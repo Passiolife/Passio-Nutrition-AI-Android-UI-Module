@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/passio_black"
+    android:background="@color/passio_gray900"
     tools:parentTag="androidx.coordinatorlayout.widget.CoordinatorLayout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_drag_tray_up" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/lblQuickSuggestions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,13 +35,13 @@
             android:gravity="center"
             android:text="@string/quick_suggestions"
             android:textColor="@color/passio_gray900"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:textSize="@dimen/_14ssp"
+            android:fontFamily="@font/inter_bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewDragUp" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/lblDragInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -49,8 +49,8 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="@string/drag_tray_up_to_view_suggestions_to_log"
-            android:textColor="@color/passio_black"
-            android:textSize="14sp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_10ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblQuickSuggestions" />

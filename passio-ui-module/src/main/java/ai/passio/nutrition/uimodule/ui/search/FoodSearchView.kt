@@ -2,7 +2,10 @@ package ai.passio.nutrition.uimodule.ui.search
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FoodSearchLayoutBinding
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.showKeyboard
 import ai.passio.nutrition.uimodule.ui.view.VerticalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import android.content.Context
@@ -10,9 +13,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -28,16 +31,39 @@ class FoodSearchView @JvmOverloads constructor(
         fun onQueryChange(query: String)
         fun onFoodItemSelected(searchItem: PassioFoodDataInfo)
         fun onFoodItemLog(searchItem: PassioFoodDataInfo)
+        fun onFoodItemSelected(searchItem: FoodRecord)
+        fun onFoodItemLog(searchItem: FoodRecord)
         fun onTextCleared()
         fun onViewDismissed()
     }
 
+    private val foodSearchAdapterListener = object : FoodSearchAdapterListener {
+        override fun onFoodClicked(searchResult: PassioFoodDataInfo) {
+            listener?.onFoodItemSelected(searchResult)
+        }
+
+        override fun onFoodClicked(searchResult: FoodRecord) {
+            listener?.onFoodItemSelected(searchResult)
+        }
+
+        override fun onFoodAdd(searchResult: PassioFoodDataInfo) {
+            listener?.onFoodItemLog(searchResult)
+        }
+
+        override fun onFoodAdd(searchResult: FoodRecord) {
+            listener?.onFoodItemLog(searchResult)
+        }
+
+    }
+
     private var binding: FoodSearchLayoutBinding? = null
     private var listener: PassioSearchListener? = null
-    private val searchAdapter = FoodItemSearchAdapter(::onSearchItemClicked, ::onSearchItemAdded)
+    private val searchAdapter = FoodItemSearchAdapter(foodSearchAdapterListener)
+    private val myFoodSearchAdapter = FoodItemSearchAdapter(foodSearchAdapterListener)
     private val suggestionAdapter = FoodSuggestionsAdapter(::onSuggestion)
 
     private var searchTerm = ""
+
 
     init {
         binding = FoodSearchLayoutBinding.inflate(LayoutInflater.from(context), this)
@@ -52,10 +78,12 @@ class FoodSearchView @JvmOverloads constructor(
         }
         setupSearchBar()
         with(binding!!) {
-            searchRecyclerView.layoutManager = LinearLayoutManager(context)
-            searchRecyclerView.addItemDecoration(VerticalSpaceItemDecoration(DesignUtils.dp2px(8f)))
-            searchRecyclerView.adapter = searchAdapter
-            searchSuggestionRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            rvPassioFoods.addItemDecoration(VerticalSpaceItemDecoration(DesignUtils.dp2px(8f)))
+            rvPassioFoods.adapter = searchAdapter
+            rvMyFoods.addItemDecoration(VerticalSpaceItemDecoration(DesignUtils.dp2px(8f)))
+            rvMyFoods.adapter = myFoodSearchAdapter
+            searchSuggestionRecycler.layoutManager =
+                LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             searchSuggestionRecycler.adapter = suggestionAdapter
         }
     }
@@ -70,9 +98,14 @@ class FoodSearchView @JvmOverloads constructor(
     fun updateSearchResult(
         query: String,
         results: List<PassioFoodDataInfo>,
-        suggestions: List<String>
+        suggestions: List<String>,
+        myFoods: List<FoodRecord>
     ) {
         if (this.isAttachedToWindow && this.context != null && query == searchTerm) {
+            binding?.viewProgress?.isVisible = false
+            binding?.lblMyFoods?.isVisible = myFoods.isNotEmpty()
+            binding?.lblPassioFoods?.isVisible = results.isNotEmpty()
+            myFoodSearchAdapter.updateMyItems(myFoods)
             searchAdapter.updateItems(results)
             suggestionAdapter.updateSuggestions(suggestions)
         }
@@ -81,6 +114,9 @@ class FoodSearchView @JvmOverloads constructor(
     private fun setupSearchBar() {
         if (binding == null) return
         with(binding!!) {
+            clearText.setOnClickListener {
+                searchEditText.setText(StringBuilder().toString())
+            }
             searchEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {
                     //                    if (s.isEmpty()) {
@@ -91,6 +127,7 @@ class FoodSearchView @JvmOverloads constructor(
 
                     searchTerm = s.toString()
                     handler.postDelayed(inputFinishCheck, INPUT_DELAY)
+                    clearText.isVisible = searchTerm.isValid()
                 }
 
                 override fun beforeTextChanged(
@@ -107,6 +144,8 @@ class FoodSearchView @JvmOverloads constructor(
                 }
             })
 
+            searchEditText.showKeyboard()
+
             //            searchClear.setOnClickListener {
             //                searchEditText.text.clear()
             //                listener.onTextCleared()
@@ -116,12 +155,21 @@ class FoodSearchView @JvmOverloads constructor(
 
     private val inputFinishCheck = Runnable {
         val currentQuery = searchTerm
+        binding?.viewKeepTyping?.isVisible =
+            currentQuery.isNotEmpty() && currentQuery.trim().length < 3
+
         if (currentQuery.isEmpty() || currentQuery.length < 3) {
+            myFoodSearchAdapter.updateItems(listOf())
             searchAdapter.updateItems(listOf())
             suggestionAdapter.updateSuggestions(listOf())
+            binding?.lblMyFoods?.isVisible = false
+            binding?.lblPassioFoods?.isVisible = false
+            binding?.viewProgress?.isVisible = false
             return@Runnable
         }
 
+
+        binding?.viewProgress?.isVisible = true
         listener?.onQueryChange(currentQuery)
     }
 
@@ -129,18 +177,13 @@ class FoodSearchView @JvmOverloads constructor(
         handler.removeCallbacks(inputFinishCheck)
     }
 
-    private fun onSearchItemClicked(searchResult: PassioFoodDataInfo) {
-        listener?.onFoodItemSelected(searchResult)
-    }
-
-    private fun onSearchItemAdded(searchResult: PassioFoodDataInfo) {
-        listener?.onFoodItemLog(searchResult)
-    }
-
     private fun onSuggestion(suggestion: String) {
+        myFoodSearchAdapter.updateItems(listOf())
         searchAdapter.updateItems(listOf())
         suggestionAdapter.updateSuggestions(listOf())
         binding?.let {
+            binding?.lblMyFoods?.isVisible = false
+            binding?.lblPassioFoods?.isVisible = false
             it.searchEditText.setText(suggestion)
             it.searchEditText.setSelection(suggestion.length)
         }

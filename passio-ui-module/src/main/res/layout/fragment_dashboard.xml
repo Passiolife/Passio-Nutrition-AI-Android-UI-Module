@@ -42,6 +42,9 @@
                 android:id="@+id/movePrevious"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
                 android:padding="8dp"
                 app:srcCompat="@drawable/ic_move_previous" />
 
@@ -55,12 +58,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:clickable="true"
                     android:drawablePadding="4dp"
+                    android:focusable="true"
+                    android:fontFamily="@font/inter_semi_bold"
+                    android:foreground="@drawable/ripple_effect"
+                    android:textSize="@dimen/_10ssp"
                     android:gravity="center"
                     android:padding="8dp"
                     android:textColor="@color/passio_gray900"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
                     app:drawableStartCompat="@drawable/icon_calendar"
                     tools:text="@string/today" />
             </FrameLayout>
@@ -69,6 +75,9 @@
                 android:id="@+id/moveNext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/ripple_effect"
                 android:padding="8dp"
                 app:srcCompat="@drawable/ic_move_next" />
 
@@ -110,6 +119,9 @@
                     android:id="@+id/toggleWeekMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/ripple_effect"
                     android:padding="16dp"
                     android:rotation="0"
                     app:layout_constraintBottom_toBottomOf="@id/labelAdherence"
@@ -122,13 +134,27 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
+                    android:fontFamily="@font/inter_semi_bold"
                     android:text="@string/weekly_adherence"
-                    android:textColor="@color/passio_black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="@dimen/_12ssp"
                     app:drawableStartCompat="@drawable/ic_adherence"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/progressAdherence"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:indeterminateTint="@color/passio_primary"
+                    android:translationZ="4dp"
+                    app:layout_constraintBottom_toBottomOf="@id/labelAdherence"
+                    app:layout_constraintStart_toEndOf="@id/labelAdherence"
+                    app:layout_constraintTop_toTopOf="@id/labelAdherence" />
+
 
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                     android:id="@+id/calendarView"
@@ -148,6 +174,7 @@
                     app:mcv_weekDayTextAppearance="@style/CustomWeekDayTextAppearance"
                     tools:layout_height="200dp" />
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -166,7 +193,10 @@
                     android:layout_marginBottom="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/rc_8_white"
+                    android:clickable="true"
                     android:elevation="4dp"
+                    android:focusable="true"
+                    android:foreground="@drawable/ripple_effect"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="16dp">
 
@@ -176,10 +206,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="8dp"
                         android:drawablePadding="4dp"
+                        android:fontFamily="@font/inter_semi_bold"
                         android:text="@string/water"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/_12ssp"
                         app:drawableEndCompat="@drawable/ic_add_food"
                         app:drawableStartCompat="@drawable/ic_water_record"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -201,9 +231,9 @@
                             android:id="@+id/waterValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_extra_bold"
                             android:textColor="@color/passio_primary"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/_17ssp"
                             tools:text="45" />
 
                         <androidx.legacy.widget.Space
@@ -215,8 +245,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/passio_gray500"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/_12ssp"
                             tools:text="oz" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -228,11 +257,24 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/_8ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/viewWater"
                         tools:text="@string/remain_to_daily_goal" />
+
+                    <ProgressBar
+                        android:id="@+id/progressWater"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/passio_primary"
+                        android:translationZ="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -246,7 +288,10 @@
                     android:layout_marginBottom="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/rc_8_white"
+                    android:clickable="true"
                     android:elevation="4dp"
+                    android:focusable="true"
+                    android:foreground="@drawable/ripple_effect"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="16dp">
 
@@ -255,11 +300,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:drawablePadding="4dp"
+                        android:fontFamily="@font/inter_semi_bold"
                         android:paddingHorizontal="8dp"
                         android:text="@string/weight_txt"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
+                        android:textSize="@dimen/_12ssp"
                         app:drawableEndCompat="@drawable/ic_add_food"
                         app:drawableStartCompat="@drawable/ic_weight_record"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -281,9 +326,9 @@
                             android:id="@+id/weightValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_extra_bold"
                             android:textColor="@color/passio_primary"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/_17ssp"
                             tools:text="160" />
 
                         <androidx.legacy.widget.Space
@@ -295,8 +340,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/passio_gray500"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/_12ssp"
                             tools:text="lbs" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -308,11 +352,24 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="11sp"
+                        android:textSize="@dimen/_8ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/viewWeight"
                         tools:text="@string/remain_to_daily_goal" />
+
+                    <ProgressBar
+                        android:id="@+id/progressWeight"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/passio_primary"
+                        android:translationZ="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.LinearLayoutCompat>
