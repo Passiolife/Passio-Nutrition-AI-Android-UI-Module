@@ -110,13 +110,13 @@ enum class ActivityLevel(val label: String, val valueDiff: Double) {
 
 enum class CalorieDeficit(val lblImperial: String, val lblMetric: String, val calorieValue: Int) {
     /// Lose 0.5 lbs per week.
-    Lose1("Lose 0.5", "Lose 0.2", -250),
+    Lose1("Lose 0.5", "Lose 0.25", -250),
     Lose2("Lose 1.0", "Lose 0.5", -500),
-    Lose3("Lose 1.5", "Lose 0.7", -750),
-    Lose4("Lose 2.0", "Lose 0.9", -1000),
-    Gain1("Gain 0.5", "Gain 0.2", 250),
+    Lose3("Lose 1.5", "Lose 0.75", -750),
+    Lose4("Lose 2.0", "Lose 1.0", -1000),
+    Gain1("Gain 0.5", "Gain 0.25", 250),
     Gain2("Gain 1.0", "Gain 0.5", 500),
-    Gain3("Gain 1.5", "Gain 0.7", 750),
-    Gain4("Gain 2.0", "Gain 0.8", 1000),
+    Gain3("Gain 1.5", "Gain 0.75", 750),
+    Gain4("Gain 2.0", "Gain 1.00", 1000),
     Maintain("Maintain Weight", "Maintain Weight", 0)
 }

@@ -62,7 +62,7 @@
                         android:textColor="@color/passio_gray900"
                         android:textSize="@dimen/_11ssp"
                         app:layout_constraintBottom_toTopOf="@id/infoName"
-                        app:layout_constraintEnd_toStartOf="@id/favorite"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/foodImage"
                         app:layout_constraintTop_toTopOf="@id/foodImage"
                         app:layout_constraintVertical_chainStyle="packed"
@@ -76,26 +76,13 @@
                         android:layout_marginEnd="8dp"
                         android:maxLines="1"
                         android:textColor="@color/passio_gray500"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:autoSizeTextType="uniform"
-                        app:layout_constraintEnd_toStartOf="@id/favorite"
+                        app:layout_constraintEnd_toEndOf="@id/foodName"
                         app:layout_constraintStart_toEndOf="@id/foodImage"
                         app:layout_constraintTop_toBottomOf="@id/foodName"
                         app:layout_constraintVertical_chainStyle="packed"
                         tools:text="Kellogs" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/favorite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="@drawable/ripple_effect"
-                        android:padding="8dp"
-                        android:src="@drawable/icon_favorite"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:ignore="ContentDescription" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/halfGuideline"
@@ -111,7 +98,6 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/halfGuideline"
                         app:layout_constraintTop_toBottomOf="@id/foodImage" />
 
@@ -136,7 +122,7 @@
                         android:fontFamily="@font/inter_semi_bold"
                         android:text="@string/calories"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBottom_toBottomOf="@id/macrosChart"
                         app:layout_constraintEnd_toEndOf="@id/macrosChart"
                         app:layout_constraintStart_toStartOf="@id/macrosChart"
@@ -150,7 +136,7 @@
                         android:fontFamily="@font/inter_medium"
                         android:text="@string/edit_carbs"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBottom_toTopOf="@id/proteinLabel"
                         app:layout_constraintEnd_toEndOf="@id/proteinLabel"
                         app:layout_constraintTop_toTopOf="@id/macrosChart"
@@ -165,7 +151,7 @@
                         android:fontFamily="@font/inter_medium"
                         android:text="@string/edit_protein"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBottom_toTopOf="@id/fatLabel"
                         app:layout_constraintStart_toEndOf="@id/halfGuideline"
                         app:layout_constraintTop_toBottomOf="@id/carbsLabel" />
@@ -178,7 +164,7 @@
                         android:fontFamily="@font/inter_medium"
                         android:text="@string/edit_fat"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBottom_toBottomOf="@id/macrosChart"
                         app:layout_constraintEnd_toEndOf="@id/proteinLabel"
                         app:layout_constraintTop_toBottomOf="@id/proteinLabel" />
@@ -188,7 +174,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/passio_gray500"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBaseline_toBaselineOf="@id/carbsLabel"
                         app:layout_constraintStart_toEndOf="@id/carbsLabel"
                         tools:text="19g (50%)" />
@@ -198,7 +184,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/passio_gray500"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBaseline_toBaselineOf="@id/proteinLabel"
                         app:layout_constraintStart_toEndOf="@id/proteinLabel"
                         tools:text="19g (50%)" />
@@ -208,7 +194,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/passio_gray500"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:layout_constraintBaseline_toBaselineOf="@id/fatLabel"
                         app:layout_constraintStart_toEndOf="@id/fatLabel"
                         tools:text="19g (50%)" />
@@ -217,15 +203,17 @@
                         android:id="@+id/openFoodFacts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:fontFamily="@font/inter_medium"
                         android:foreground="@drawable/ripple_effect"
-                        android:padding="16dp"
+                        android:padding="8dp"
                         android:text="@string/open_food_facts"
                         android:textColor="@color/passio_primary"
                         android:textSize="@dimen/_10ssp"
-                        android:fontFamily="@font/inter_medium"
                         android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/macrosChart"
                         tools:visibility="visible" />
@@ -234,14 +222,17 @@
                         android:id="@+id/moreDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:clickable="true"
                         android:focusable="true"
-                        android:foreground="@drawable/ripple_effect"
-                        android:padding="16dp"
                         android:fontFamily="@font/inter_medium"
+                        android:foreground="@drawable/ripple_effect"
+                        android:padding="8dp"
                         android:text="@string/more_details"
                         android:textColor="@color/passio_primary"
                         android:textSize="@dimen/_10ssp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/macrosChart" />
 
@@ -271,10 +262,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_11ssp"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/servingSizeLabel"
                         app:layout_constraintStart_toEndOf="@id/servingSizeLabel"
                         app:layout_constraintTop_toTopOf="@id/servingSizeLabel"
-                        app:layout_constraintBottom_toBottomOf="@id/servingSizeLabel"
                         tools:text=" (123 g)" />
 
                     <androidx.appcompat.widget.AppCompatEditText
@@ -289,7 +280,7 @@
                         android:paddingTop="9dp"
                         android:paddingBottom="9dp"
                         android:textColor="@color/passio_gray900"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_13ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/servingSizeLabel"
                         tools:ignore="Autofill,LabelFor"
@@ -376,10 +367,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:background="@drawable/rc_6_border_gray300"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="@drawable/ripple_effect"
-                        android:background="@drawable/rc_6_border_gray300"
                         android:paddingStart="13dp"
                         android:paddingTop="9dp"
                         android:paddingEnd="13dp"
@@ -508,6 +499,5 @@
 
         </FrameLayout>
     </FrameLayout>
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>
