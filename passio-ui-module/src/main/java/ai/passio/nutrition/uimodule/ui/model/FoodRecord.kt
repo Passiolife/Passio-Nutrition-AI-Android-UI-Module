@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
@@ -14,7 +15,6 @@ import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import android.util.Log
-import com.google.gson.GsonBuilder
 import java.util.Locale
 import java.util.UUID
 
@@ -446,8 +446,7 @@ fun List<FoodRecord>.fatSum(): Double {
 }
 
 fun FoodRecord.copy(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             id = if (uuid.isValid()) uuid else UUID.randomUUID().toString().uppercase(Locale.ROOT)
             uuid = if (isCustomFood()) {
@@ -461,13 +460,11 @@ fun FoodRecord.copy(): FoodRecord {
 }
 
 fun FoodRecord.clone(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
 }
 
 fun FoodRecord.copyAsCustomFood(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
 //            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
@@ -475,8 +472,7 @@ fun FoodRecord.copyAsCustomFood(): FoodRecord {
 }
 
 fun FoodRecord.copyAsRecipe(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
 //            if (!id.isValid()) {
