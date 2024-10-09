@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.diary
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.databinding.FragmentDiaryBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
@@ -21,7 +22,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
 
 /**
@@ -29,7 +29,7 @@ import org.joda.time.DateTime
  * create an instance of this fragment.
  */
 class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
-    BaseToolbar.ToolbarListener{
+    BaseToolbar.ToolbarListener {
 
     private var _binding: FragmentDiaryBinding? = null
     private val binding: FragmentDiaryBinding get() = _binding!!
@@ -73,7 +73,10 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
                 viewModel.setNextDay()
             }
             toolbarCalendar.setOnClickListener {
-                showDatePickerDialog(requireContext(), DateTime(viewModel.getCurrentDate().time)) { selectedDate ->
+                showDatePickerDialog(
+                    requireContext(),
+                    DateTime(viewModel.getCurrentDate().time)
+                ) { selectedDate ->
                     viewModel.setDate(selectedDate.toDate())
                 }
             }
@@ -184,8 +187,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     }
 
     override fun onLogEdit(foodRecord: FoodRecord) {
-        val gson = GsonBuilder().create()
-
+        val gson = passioGson
         val foodRecordCopy = gson.fromJson(gson.toJson(foodRecord), FoodRecord::class.java)
         sharedViewModel.detailsFoodRecord(foodRecordCopy)
         viewModel.navigateToEdit()

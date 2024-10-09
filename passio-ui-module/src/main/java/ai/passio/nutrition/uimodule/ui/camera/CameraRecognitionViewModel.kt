@@ -15,7 +15,6 @@ import androidx.camera.core.CameraSelector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CameraRecognitionViewModel : BaseViewModel() {
@@ -48,8 +47,7 @@ class CameraRecognitionViewModel : BaseViewModel() {
     }
 
     fun setFoodScanMode(scanMode: ScanMode) {
-        if (this.scanMode == ScanMode.BARCODE && scanMode != ScanMode.BARCODE)
-        {
+        if (this.scanMode == ScanMode.BARCODE && scanMode != ScanMode.BARCODE) {
             setCameraZoomLevel(cameraZoomLevelMin ?: 0f)
         }
         this.scanMode = scanMode
@@ -132,16 +130,16 @@ class CameraRecognitionViewModel : BaseViewModel() {
                 cameraViewProvider,
                 displayRotation = 0,
                 cameraFacing = CameraSelector.LENS_FACING_BACK,
-                tapToFocus = true
+                tapToFocus = true,
+                onCameraReady = { cameraData ->
+                    cameraZoomLevelMin = cameraData.minZoom
+                    cameraZoomLevelMax = cameraData.maxZoom
+                    setCameraZoomLevel(cameraZoomLevel)
+                }
             )
             isCameraFlashOn = false
             startOrUpdateDetection()
             cameraFlashToggleEvent.postValue(isCameraFlashOn)
-            delay(1000)
-            cameraZoomLevelMin = PassioSDK.instance.getMinMaxCameraZoomLevel().first
-            cameraZoomLevelMax = PassioSDK.instance.getMinMaxCameraZoomLevel().second
-
-            setCameraZoomLevel(cameraZoomLevel)
         }
     }
 
@@ -215,6 +213,7 @@ class CameraRecognitionViewModel : BaseViewModel() {
             navigate(CameraRecognitionFragmentDirections.backToEditRecipe())
         }
     }
+
     fun navigateToEditIngredient() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(CameraRecognitionFragmentDirections.cameraToEditIngredient())
