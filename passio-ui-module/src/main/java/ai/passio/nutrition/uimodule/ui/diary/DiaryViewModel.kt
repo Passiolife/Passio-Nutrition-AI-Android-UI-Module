@@ -49,7 +49,7 @@ class DiaryViewModel : BaseViewModel() {
             val records = useCase.getLogsForDay(currentDate)
             _logsLD.postValue(Pair(userProfile, records))
             showLoading.postValue(false)
-//            getQuickSuggestions()
+            getQuickSuggestions()
         }
     }
 
