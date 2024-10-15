@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.ItemImageFoodResultBinding
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
@@ -67,29 +68,35 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(foodInfo: PassioAdvisorFoodInfo) {
-            val advisorInfo = foodInfo.foodDataInfo!!
-            val nutritionPreview = foodInfo.foodDataInfo!!.nutritionPreview
+            val packagedFoodItem = foodInfo.packagedFoodItem
+            val advisorInfo = foodInfo.foodDataInfo
 
             with(binding) {
-                image.loadPassioIcon(advisorInfo.iconID)
-                name.text = advisorInfo.foodName.capitalized()
 
-                val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
-                val caloriesVal = ratio * foodInfo.weightGrams
+                if (packagedFoodItem != null) {
+                    val foodRecord = FoodRecord(packagedFoodItem)
+                    image.loadPassioIcon(foodRecord.iconId)
+                    name.text = foodRecord.name.capitalized()
+                    val cal = foodRecord.nutrients().calories()?.value ?: 0.0
+                    calories.text = "${cal.singleDecimal()} Cal"
+                    servingSize.text =
+                        "${
+                            foodRecord.nutrients().weight.gramsValue().roundToInt()
+                        } ${Grams.unitName}"
+                } else if (advisorInfo != null) {
+                    val nutritionPreview = advisorInfo.nutritionPreview
 
-//                val cal = foodRecord.nutritionPreview.calories
-//                calories.text = "$cal Cal"
-                calories.text = "${caloriesVal.singleDecimal()} Cal"
-                servingSize.text =
-                    "${foodInfo.weightGrams.roundToInt()} ${Grams.unitName}"
+                    image.loadPassioIcon(advisorInfo.iconID)
+                    name.text = advisorInfo.foodName.capitalized()
 
-                /* val quantity = foodRecord.nutritionPreview.servingQuantity
-                 val selectedUnit = foodRecord.nutritionPreview.servingUnit
-                 val weight = foodRecord.nutritionPreview.weightQuantity
-                 val weightUnit = foodRecord.nutritionPreview.weightUnit
-                 servingSize.text =
-                     "$quantity ${selectedUnit.capitalized()} (${weight.roundToInt()} $weightUnit)"
- */
+                    val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
+                    val caloriesVal = ratio * foodInfo.weightGrams
+
+                    calories.text = "${caloriesVal.singleDecimal()} Cal"
+                    servingSize.text =
+                        "${foodInfo.weightGrams.roundToInt()} ${Grams.unitName}"
+                }
+
                 foodSelect.isEnabled = true
                 if (isLogged) {
                     foodSelect.isEnabled = false
@@ -103,13 +110,6 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
                 } else {
                     foodSelect.setImageResource(R.drawable.radio_off)
                 }
-
-
-                /*if (selectedItems.contains(foodRecord.resultId)) {
-                    foodSelect.setImageResource(R.drawable.radio_on)
-                } else {
-                    foodSelect.setImageResource(R.drawable.radio_off)
-                }*/
 
 
                 root.setOnClickListener {

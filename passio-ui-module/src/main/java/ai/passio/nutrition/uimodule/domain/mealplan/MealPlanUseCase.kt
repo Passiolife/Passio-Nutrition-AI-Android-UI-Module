@@ -55,11 +55,17 @@ object MealPlanUseCase {
         passioMealTime: PassioMealTime
     ): List<FoodRecord> {
         return passioMealPlanItems.mapNotNull { passioMealPlanItem ->
-            getFoodRecord(
-                passioMealPlanItem.foodDataInfo!!,
-                passioMealTime,
-                passioMealPlanItem.weightGrams
-            )
+            if (passioMealPlanItem.packagedFoodItem != null) {
+                FoodRecord(passioMealPlanItem.packagedFoodItem!!)
+            } else if (passioMealPlanItem.foodDataInfo != null) {
+                getFoodRecord(
+                    passioMealPlanItem.foodDataInfo!!,
+                    passioMealTime,
+                    passioMealPlanItem.weightGrams
+                )
+            } else {
+                null
+            }
         }
     }
 

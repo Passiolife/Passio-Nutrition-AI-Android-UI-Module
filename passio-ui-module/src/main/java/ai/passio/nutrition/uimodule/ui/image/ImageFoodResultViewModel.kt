@@ -7,10 +7,8 @@ import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -45,32 +43,22 @@ class ImageFoodResultViewModel : BaseViewModel() {
         viewModelScope.launch {
             _isProcessing.postValue(true)
             resultFoodInfoList.clear()
-            val startTime = System.currentTimeMillis()
-            Log.d("food result", "start == ${currentBitmaps.size} ")
             var currentCount = 0
             currentBitmaps.forEach { bitmap ->
-                currentCount += 1
-                Log.d("food result", "started == ${currentBitmaps.size}/$currentCount ")
+//                currentCount += 1
                 PassioSDK.instance.recognizeImageRemote(bitmap) { result ->
-                    Log.d(
-                        "food result",
-                        "on result == result count: ${result.size} and current count:$currentCount "
-                    )
-                    result.forEach {
-                        Log.d("resultFoodInfoList", Gson().toJson(it))
-                    }
+                    currentCount += 1
                     resultFoodInfoList.addAll(result)
-                    if (resultFoodInfoList.isNotEmpty()) {
+                    //enable comment to get continues result for each images
+                    /*if (resultFoodInfoList.isNotEmpty()) {
                         _resultFoodInfo.postValue(resultFoodInfoList)
-                    }
+                    }*/
                     if (currentCount == currentBitmaps.size) {
-                        val endTime = System.currentTimeMillis()
-                        Log.d("food result", "duration: ${(endTime - startTime) / 1000f}")
-                        Log.d("food result", "done")
                         _isProcessing.postValue(false)
-                        if (resultFoodInfoList.isEmpty()) {
+                        _resultFoodInfo.postValue(resultFoodInfoList)
+                        /*if (resultFoodInfoList.isEmpty()) {
                             _resultFoodInfo.postValue(resultFoodInfoList)
-                        }
+                        }*/
                     }
                 }
             }
