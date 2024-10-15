@@ -29,18 +29,17 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         context.getSharedPreferences(PassioDemoSharedPreferences.PREF_NAME, 0)
     )
     private val dateFormat = "yyyyMMdd"
-    private lateinit var records: MutableList<FoodRecord>
-    private lateinit var favorites: MutableList<FoodRecord>
+//    private lateinit var records: MutableList<FoodRecord>
     private lateinit var weightRecords: MutableList<WeightRecord>
     private lateinit var waterRecords: MutableList<WaterRecord>
-    private var userProfile: UserProfile = UserProfile()
+//    private var userProfile: UserProfile = UserProfile()
     private lateinit var customFoods: MutableList<FoodRecord>
     private lateinit var recipes: MutableList<FoodRecord>
 
     override fun initialize() {
-        records = sharedPreferences.getRecords().map {
-            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
-        }.toMutableList()
+//        records = sharedPreferences.getRecords().map {
+//            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
+//        }.toMutableList()
         customFoods = sharedPreferences.getCustomFoods().map {
             passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
@@ -56,14 +55,18 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
             passioGson.fromJson(it, WaterRecord::class.java) as WaterRecord
         }.toMutableList()
 
-        favorites = sharedPreferences.getFavorites().map {
+//        passioGson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)?.let {
+//            userProfile = it
+//        }
+
+    }
+
+    fun getRecords(): MutableList<FoodRecord>
+    {
+        val records = sharedPreferences.getRecords().map {
             passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
-
-        passioGson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)?.let {
-            userProfile = it
-        }
-
+        return records
     }
 
     suspend fun tempDelay()
@@ -73,17 +76,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
         tempDelay()
-        /* var indexToRemove = -1
-
-         run breaking@ {
-             records.forEachIndexed { index, fr ->
-                 if (fr.uuid == foodRecord.uuid) {
-                     indexToRemove = index
-                     return@breaking
-                 }
-             }
-         }*/
-//        records.removeIf { it.uuid == foodRecord.uuid }
+        val records = getRecords()
         val indexToRemove = records.indexOfFirst { it.uuid == foodRecord.uuid }
         if (indexToRemove != -1) {
             records.removeAt(indexToRemove)
@@ -100,6 +93,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
         tempDelay()
+        val records = getRecords()
         foodRecords.forEach { foodRecord ->
             val indexToRemove = records.indexOfFirst { it.uuid == foodRecord.uuid }
             if (indexToRemove != -1) {
@@ -116,6 +110,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun deleteRecord(uuid: String): Boolean {
         tempDelay()
+        val records = getRecords()
         val recordToDelete = records.find { it.uuid == uuid } ?: return false
         records.remove(recordToDelete)
         sharedPreferences.saveRecords(records.map { passioGson.toJson(it) })
@@ -124,6 +119,7 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun fetchDayRecords(day: Date): List<FoodRecord> {
         tempDelay()
+        val records = getRecords()
         val dayString = DateFormat.format(dateFormat, day)
         val dayRecords = records.filter { foodRecord ->
             if (foodRecord.createdAtTime() == null) {
@@ -136,64 +132,17 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return dayRecords
     }
 
-
-    /* override suspend fun getLogsForLast30Days(): List<FoodRecord> {
-         val today = DateTime()
-         val todayDay = today.millis
-         val before30Days = getBefore30Days(today).millis
-
-         return records.filter { it.createdAtTime() in before30Days..todayDay }
-     }*/
-
     override suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord> {
         tempDelay()
+        val records = getRecords()
         val fromDate = DateTime(startDate.time).millis
         val toDate = DateTime(endDate.time).millis
         return records.filter { it.createdAtTime() in fromDate..toDate }
     }
 
-
-    /*override suspend fun fetchMonthRecords(day: Date): List<FoodRecord> {
-        val today = DateTime(day.time)
-        val startOfMonth = getStartOfMonth(today).millis
-        val endOfMonth = getEndOfMonth(today).millis
-
-        return records.filter { it.createdAtTime() in startOfMonth..endOfMonth }
-    }*/
-
-    /* override suspend fun fetchWeekRecords(day: Date): List<FoodRecord> {
-
-         val today = DateTime(day.time)
-         val startOfWeek = getStartOfWeek(today).millis
-         val endOfWeek = getEndOfWeek(today).millis
-
-         return records.filter { it.createdAtTime() in startOfWeek..endOfWeek }
-     }*/
-
-    override suspend fun updateFavorite(foodRecord: FoodRecord) {
-        tempDelay()
-        val currentFavorite = favorites.find { it.uuid == foodRecord.uuid }
-        if (currentFavorite != null) {
-            favorites.remove(currentFavorite)
-        }
-        favorites.add(foodRecord)
-        sharedPreferences.saveFavorites(favorites.map { passioGson.toJson(it) })
-    }
-
-    override suspend fun deleteFavorite(foodRecord: FoodRecord) {
-        tempDelay()
-        val favoriteToDelete = favorites.find { it.uuid == foodRecord.uuid } ?: return
-        favorites.remove(favoriteToDelete)
-        sharedPreferences.saveFavorites(favorites.map { passioGson.toJson(it) })
-    }
-
-    override suspend fun fetchFavorites(): List<FoodRecord>  {
-        tempDelay()
-        return favorites
-    }
-
     override suspend fun fetchAdherence(): List<Long> {
         tempDelay()
+        val records = getRecords()
         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
         // Iterate through each record and add the date component to the HashSet
 
@@ -219,13 +168,14 @@ class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {
         tempDelay()
-        this.userProfile = userProfile
+//        this.userProfile = userProfile
         sharedPreferences.saveUserProfile(passioGson.toJson(userProfile))
         return true
     }
 
     override suspend fun fetchUserProfile(): UserProfile {
         tempDelay()
+        val userProfile = passioGson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)?: UserProfile()
         return userProfile
     }
 

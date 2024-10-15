@@ -22,6 +22,11 @@ private const val TIMESTAMP_1970 = 978300000
 private const val CUSTOM_FOOD_PREFIX = "custom_food_"
 private const val FOOD_RECIPE_PREFIX = "food_recipe_"
 
+internal fun getDBTimestamp(time: Long): Long {
+    val createdAt = time / 1000L - TIMESTAMP_1970
+    return createdAt
+}
+
 open class FoodRecord() {
     var id: String = ""
     var name: String = ""
@@ -32,8 +37,8 @@ open class FoodRecord() {
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
 
-    private var selectedUnit: String = ""
-    private var selectedQuantity: Double = 0.0
+    internal var selectedUnit: String = ""
+    internal var selectedQuantity: Double = 0.0
     val servingSizes = mutableListOf<PassioServingSize>()
     val servingUnits = mutableListOf<PassioServingUnit>()
 
@@ -397,12 +402,16 @@ open class FoodRecord() {
 
     fun servingWeight(): UnitMass {
         val selectedUnit =
-            servingUnits.firstOrNull { it.unitName == selectedUnit } ?: return UnitMass(Grams, 0.0)
+            servingUnits.firstOrNull { it.unitName == selectedUnit } ?: return UnitMass(
+                Grams,
+                0.0001
+            )
         return selectedUnit.weight * selectedQuantity
     }
 
     fun nutrientsSelectedSize(): PassioNutrients {
         val currentWeight = servingWeight()
+
         val ingredientNutrients = ingredients.map { ingredient ->
             Pair(ingredient.referenceNutrients, ingredient.servingWeight() / currentWeight)
         }

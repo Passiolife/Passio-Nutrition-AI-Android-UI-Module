@@ -20,12 +20,6 @@ interface PassioConnector {
 
     suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord>
 
-    suspend fun updateFavorite(foodRecord: FoodRecord)
-
-    suspend fun deleteFavorite(foodRecord: FoodRecord)
-
-    suspend fun fetchFavorites(): List<FoodRecord>
-
     suspend fun fetchAdherence(): List<Long>
 
     suspend fun fetchUserProfile(): UserProfile

@@ -3,7 +3,7 @@ package ai.passio.nutrition.uimodule.ui.activity
 import ai.passio.nutrition.uimodule.NutritionUIModule
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.Repository
-import ai.passio.nutrition.uimodule.data.SharedPrefsPassioConnector
+import ai.passio.nutrition.uimodule.data.RoomDbPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import ai.passio.nutrition.uimodule.ui.menu.MainMenuDialog
 import android.os.Bundle
@@ -31,7 +31,8 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val connector =
-            NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
+            NutritionUIModule.getConnector() ?: RoomDbPassioConnector(applicationContext)
+//            NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
         Repository.create(applicationContext, connector)
 
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
