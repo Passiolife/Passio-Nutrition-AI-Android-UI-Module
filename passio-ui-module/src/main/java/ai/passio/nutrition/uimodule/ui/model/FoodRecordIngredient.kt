@@ -21,6 +21,29 @@ class FoodRecordIngredient {
 
     var openFoodLicense: String? = null
 
+    constructor(
+        id: String,
+        name: String,
+        additionalData: String,
+        iconId: String,
+        selectedUnit: String,
+        selectedQuantity: Double,
+        servingSizes: List<PassioServingSize>,
+        servingUnits: List<PassioServingUnit>,
+        referenceNutrients: PassioNutrients
+    ) {
+        this.id = id
+        this.name = name
+        this.additionalData = additionalData
+        this.iconId = iconId
+        this.selectedUnit = selectedUnit
+        this.selectedQuantity = selectedQuantity
+        this.servingSizes = servingSizes
+        this.servingUnits = servingUnits
+        this.referenceNutrients = referenceNutrients
+
+    }
+
     //custom food
     constructor(foodRecord: FoodRecord, passioNutrients: PassioNutrients) {
         id = foodRecord.id
@@ -36,6 +59,7 @@ class FoodRecordIngredient {
         referenceNutrients = passioNutrients
         openFoodLicense = foodRecord.openFoodLicense
     }
+
     constructor(foodRecord: FoodRecord) {
         id = foodRecord.id
         name = foodRecord.name
@@ -64,6 +88,7 @@ class FoodRecordIngredient {
             ingredient.metadata.foodOrigins?.firstOrNull { it.source == "openfood" }?.licenseCopy
     }
 
+
     fun servingWeight(): UnitMass {
         val unitWeight = servingUnits.first { it.unitName == selectedUnit }.weight
         return unitWeight * selectedQuantity
@@ -73,5 +98,5 @@ class FoodRecordIngredient {
         return PassioNutrients(referenceNutrients, servingWeight())
     }
 
-    fun nutrientsReference(): PassioNutrients = referenceNutrients
+//    fun nutrientsReference(): PassioNutrients = referenceNutrients
 }

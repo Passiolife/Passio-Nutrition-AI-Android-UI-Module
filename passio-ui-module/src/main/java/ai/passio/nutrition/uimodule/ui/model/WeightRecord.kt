@@ -10,7 +10,7 @@ import java.util.Locale
 import java.util.UUID
 
 class WeightRecord {
-    val uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+    var uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
     var weight: Double = 0.0 ////kg
     var dateTime: Long = 0
 
