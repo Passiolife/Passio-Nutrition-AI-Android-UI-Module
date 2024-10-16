@@ -145,9 +145,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
 
     override suspend fun fetchWaterRecords(startDate: Date, endDate: Date): List<WaterRecord> {
         val list = db.waterRecordDao().getWaterRecords(
-            getStartTimestamps(DateTime(startDate)), getEndTimestamps(
-                DateTime(endDate)
-            )
+            getStartTimestamps(DateTime(startDate)), getEndTimestamps(DateTime(endDate))
         )
         return list.map { it.toWaterRecord() }
     }
