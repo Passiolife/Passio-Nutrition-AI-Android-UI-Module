@@ -26,6 +26,7 @@ data class FoodLogEntity(
     var packagedFoodCode: String? = null,
 
     @TypeConverters(FoodLogTypeConverters::class)
+//    @Ignore
     var ingredients: MutableList<FoodLogIngredientEntity> = mutableListOf(),
 
     @TypeConverters(FoodLogTypeConverters::class)
