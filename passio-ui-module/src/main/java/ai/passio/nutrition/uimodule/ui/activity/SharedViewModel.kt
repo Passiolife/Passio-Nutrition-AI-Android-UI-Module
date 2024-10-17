@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.activity
 
+import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
@@ -15,6 +16,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -106,9 +108,19 @@ class SharedViewModel : ViewModel() {
 
 
     init {
-        preCacheUserProfile()
+//        preCacheUserProfile()
+        checkAndMigrateDataFromOldDB()
     }
 
+    private fun checkAndMigrateDataFromOldDB() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val repository = Repository.getInstance()
+            val isDone = repository.migrateDataFromOldSharedPrefsPassioConnector()
+            if (isDone) {
+                preCacheUserProfile()
+            }
+        }
+    }
 
     private fun preCacheUserProfile() {
         viewModelScope.launch {

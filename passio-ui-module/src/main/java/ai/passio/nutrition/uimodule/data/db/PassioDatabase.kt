@@ -9,7 +9,6 @@ import ai.passio.nutrition.uimodule.data.db.dao.WeightRecordDao
 import ai.passio.nutrition.uimodule.data.db.entity.CustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.entity.CustomRecipeEntity
 import ai.passio.nutrition.uimodule.data.db.entity.FoodLogEntity
-import ai.passio.nutrition.uimodule.data.db.entity.FoodLogIngredientEntity
 import ai.passio.nutrition.uimodule.data.db.entity.UserEntity
 import ai.passio.nutrition.uimodule.data.db.entity.WaterRecordEntity
 import ai.passio.nutrition.uimodule.data.db.entity.WeightRecordEntity
@@ -21,7 +20,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [FoodLogEntity::class, FoodLogIngredientEntity::class, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class],
+    entities = [FoodLogEntity::class/*, FoodLogIngredientEntity::class*/, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -32,7 +31,7 @@ import androidx.room.TypeConverters
 )
 abstract class PassioDatabase : RoomDatabase() {
     internal companion object {
-        const val DATABASE_NAME = "passio_database"
+        const val DATABASE_NAME = "passio_ui_module_db"
     }
 
     abstract fun foodLogDao(): FoodLogDao
