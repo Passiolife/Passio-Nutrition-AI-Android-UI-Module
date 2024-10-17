@@ -38,23 +38,24 @@ internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
             ingredient.toFoodLogIngredientEntity()
         }.toMutableList(), // Map FoodRecordIngredient to FoodLogIngredientEntity
 
-        servingSizes = foodRecord.servingSizes.toMutableList(), // Assuming PassioServingSize can be directly mapped
-        servingUnits = foodRecord.servingUnits.toMutableList()  // Assuming PassioServingUnit can be directly mapped
+        servingSizes = foodRecord.servingSizes.toMutableList(),
+        servingUnits = foodRecord.servingUnits.toMutableList()
     )
 }
 
 internal fun FoodRecordIngredient.toFoodLogIngredientEntity(): FoodLogIngredientEntity {
     val ingredient = this
     return FoodLogIngredientEntity(
+//        foodUUID = currentFoodUUID,
         id = ingredient.id,
         name = ingredient.name,
         additionalData = ingredient.additionalData,
         iconId = ingredient.iconId,
         selectedUnit = ingredient.selectedUnit,
         selectedQuantity = ingredient.selectedQuantity,
-        servingSizes = ingredient.servingSizes, // Assuming PassioServingSize can be directly mapped
-        servingUnits = ingredient.servingUnits, // Assuming PassioServingUnit can be directly mapped
-        referenceNutrients = ingredient.referenceNutrients // Assuming PassioNutrients can be directly mapped
+        servingSizes = ingredient.servingSizes,
+        servingUnits = ingredient.servingUnits,
+        referenceNutrients = ingredient.referenceNutrients
     )
 }
 
@@ -98,8 +99,8 @@ internal fun FoodLogIngredientEntity.toFoodRecordIngredient(): FoodRecordIngredi
         iconId = ingredientEntity.iconId,
         selectedUnit = ingredientEntity.selectedUnit,
         selectedQuantity = ingredientEntity.selectedQuantity,
-        servingSizes = ingredientEntity.servingSizes, // Assuming PassioServingSize can be directly mapped
-        servingUnits = ingredientEntity.servingUnits, // Assuming PassioServingUnit can be directly mapped
-        referenceNutrients = ingredientEntity.referenceNutrients // Assuming PassioNutrients can be directly mapped
+        servingSizes = ingredientEntity.servingSizes,
+        servingUnits = ingredientEntity.servingUnits,
+        referenceNutrients = ingredientEntity.referenceNutrients
     )
 }

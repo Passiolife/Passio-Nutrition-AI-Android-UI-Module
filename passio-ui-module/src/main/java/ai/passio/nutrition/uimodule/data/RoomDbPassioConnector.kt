@@ -41,12 +41,12 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
-        foodLogDao.insertFoodRecord(foodRecord.toFoodLogEntity())
+        foodLogDao.insertFoodLog(foodRecord.toFoodLogEntity())
         return true
     }
 
     override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
-        foodLogDao.insertFoodRecords(foodRecords.toFoodLogEntities())
+        foodLogDao.insertFoodLogs(foodRecords.toFoodLogEntities())
         return true
     }
 
@@ -60,7 +60,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     override suspend fun fetchDayRecords(day: Date): List<FoodRecord> {
         val startDate = getDBTimestamp(getStartTimestamps(DateTime(day)))
         val endDate = getDBTimestamp(getEndTimestamps(DateTime(day)))
-        val result = foodLogDao.getFoodLogsForDate(startDate, endDate).map { it.toFoodRecord() }
+        val result = foodLogDao.getFoodLogsForDate(startDate, endDate).toFoodRecords()
         return result
     }
 

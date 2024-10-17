@@ -31,8 +31,8 @@ internal fun FoodRecord.toCustomRecipeEntity(): CustomRecipeEntity {
             ingredient.toFoodLogIngredientEntity()
         }.toMutableList(), // Map FoodRecordIngredient to FoodLogIngredientEntity
 
-        servingSizes = foodRecord.servingSizes.toMutableList(), // Assuming PassioServingSize can be directly mapped
-        servingUnits = foodRecord.servingUnits.toMutableList()  // Assuming PassioServingUnit can be directly mapped
+        servingSizes = foodRecord.servingSizes.toMutableList(),
+        servingUnits = foodRecord.servingUnits.toMutableList()
     )
 }
 

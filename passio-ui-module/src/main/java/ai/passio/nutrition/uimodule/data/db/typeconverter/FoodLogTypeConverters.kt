@@ -47,7 +47,6 @@ class FoodLogTypeConverters {
         return gson.toJson(ingredients)
     }
 
-    // Convert JSON string to List<FoodLogIngredientEntity>
     @TypeConverter
     fun toIngredientList(ingredientsJson: String?): List<FoodLogIngredientEntity>? {
         val listType = object : TypeToken<List<FoodLogIngredientEntity>>() {}.type

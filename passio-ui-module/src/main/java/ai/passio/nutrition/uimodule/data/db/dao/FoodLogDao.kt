@@ -9,11 +9,12 @@ import androidx.room.Query
 
 @Dao
 interface FoodLogDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFoodRecord(foodRecord: FoodLogEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFoodRecords(foodRecords: List<FoodLogEntity>)
+    suspend fun insertFoodLog(foodLog: FoodLogEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFoodLogs(foodRecords: List<FoodLogEntity>)
 
     @Query("SELECT * FROM foodlog WHERE uuid = :uuid")
     suspend fun getFoodRecord(uuid: String): FoodLogEntity?
