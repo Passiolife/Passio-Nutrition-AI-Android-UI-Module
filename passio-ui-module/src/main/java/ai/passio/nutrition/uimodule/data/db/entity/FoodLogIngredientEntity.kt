@@ -4,7 +4,6 @@ import ai.passio.nutrition.uimodule.data.db.typeconverter.FoodLogTypeConverters
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
-import androidx.room.Entity
 import androidx.room.TypeConverters
 
 /*
@@ -19,7 +18,7 @@ import androidx.room.TypeConverters
     indices = [Index("foodUUID")]
 )*/
 
-@Entity(tableName = "FoodLogIngredient")
+//@Entity(tableName = "FoodLogIngredient")
 data class FoodLogIngredientEntity(
 //    @PrimaryKey(autoGenerate = true) val ingredientId: Long = 0,
 //    var foodUUID: String, // Foreign key to reference FoodLogEntity

@@ -47,6 +47,7 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
     {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        navHostFragment.navController.graph = navHostFragment.navController.navInflater.inflate(R.navigation.main_nav_graph)
         val navController = navHostFragment.navController
 
         setupWithNavController(binding.bottomNavigation, navController)
@@ -60,6 +61,7 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
                 binding.buttonAdd.visibility = View.GONE
             }
         }
+//        navController.navigate(R.id.dashboard)
         binding.viewLoading.isVisible = false
         binding.buttonAdd.setOnClickListener {
 //            navController.navigate(R.id.add_food)
