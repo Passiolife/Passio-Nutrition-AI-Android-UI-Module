@@ -106,13 +106,7 @@ class SharedViewModel : ViewModel() {
     private val _userProfileCacheEvent = SingleLiveEvent<ResultWrapper<UserProfile>>()
     val userProfileCacheEvent: LiveData<ResultWrapper<UserProfile>> get() = _userProfileCacheEvent
 
-
-    init {
-//        preCacheUserProfile()
-        checkAndMigrateDataFromOldDB()
-    }
-
-    private fun checkAndMigrateDataFromOldDB() {
+    fun checkAndMigrateDataFromOldDB() {
         viewModelScope.launch(Dispatchers.IO) {
             val repository = Repository.getInstance()
             val isDone = repository.migrateDataFromOldSharedPrefsPassioConnector()

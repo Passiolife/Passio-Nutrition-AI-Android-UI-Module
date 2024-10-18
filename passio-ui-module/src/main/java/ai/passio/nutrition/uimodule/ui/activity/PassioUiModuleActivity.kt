@@ -38,16 +38,18 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedViewModel.userProfileCacheEvent.observe(this){
+        sharedViewModel.userProfileCacheEvent.observe(this) {
             setupNav()
         }
+
+        sharedViewModel.checkAndMigrateDataFromOldDB()
     }
 
-    private fun setupNav()
-    {
+    private fun setupNav() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
-        navHostFragment.navController.graph = navHostFragment.navController.navInflater.inflate(R.navigation.main_nav_graph)
+        navHostFragment.navController.graph =
+            navHostFragment.navController.navInflater.inflate(R.navigation.main_nav_graph)
         val navController = navHostFragment.navController
 
         setupWithNavController(binding.bottomNavigation, navController)
