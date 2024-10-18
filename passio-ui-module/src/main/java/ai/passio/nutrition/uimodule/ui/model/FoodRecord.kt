@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
@@ -14,13 +15,17 @@ import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import android.util.Log
-import com.google.gson.GsonBuilder
 import java.util.Locale
 import java.util.UUID
 
 private const val TIMESTAMP_1970 = 978300000
 private const val CUSTOM_FOOD_PREFIX = "custom_food_"
 private const val FOOD_RECIPE_PREFIX = "food_recipe_"
+
+internal fun getDBTimestamp(time: Long): Long {
+    val createdAt = time / 1000L - TIMESTAMP_1970
+    return createdAt
+}
 
 open class FoodRecord() {
     var id: String = ""
@@ -32,8 +37,8 @@ open class FoodRecord() {
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
 
-    private var selectedUnit: String = ""
-    private var selectedQuantity: Double = 0.0
+    internal var selectedUnit: String = ""
+    internal var selectedQuantity: Double = 0.0
     val servingSizes = mutableListOf<PassioServingSize>()
     val servingUnits = mutableListOf<PassioServingUnit>()
 
@@ -397,12 +402,16 @@ open class FoodRecord() {
 
     fun servingWeight(): UnitMass {
         val selectedUnit =
-            servingUnits.firstOrNull { it.unitName == selectedUnit } ?: return UnitMass(Grams, 0.0)
+            servingUnits.firstOrNull { it.unitName == selectedUnit } ?: return UnitMass(
+                Grams,
+                0.0001
+            )
         return selectedUnit.weight * selectedQuantity
     }
 
     fun nutrientsSelectedSize(): PassioNutrients {
         val currentWeight = servingWeight()
+
         val ingredientNutrients = ingredients.map { ingredient ->
             Pair(ingredient.referenceNutrients, ingredient.servingWeight() / currentWeight)
         }
@@ -446,8 +455,7 @@ fun List<FoodRecord>.fatSum(): Double {
 }
 
 fun FoodRecord.copy(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             id = if (uuid.isValid()) uuid else UUID.randomUUID().toString().uppercase(Locale.ROOT)
             uuid = if (isCustomFood()) {
@@ -461,13 +469,11 @@ fun FoodRecord.copy(): FoodRecord {
 }
 
 fun FoodRecord.clone(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
 }
 
 fun FoodRecord.copyAsCustomFood(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
 //            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
@@ -475,8 +481,7 @@ fun FoodRecord.copyAsCustomFood(): FoodRecord {
 }
 
 fun FoodRecord.copyAsRecipe(): FoodRecord {
-    val gson = GsonBuilder().create()
-    return gson.fromJson(gson.toJson(this), FoodRecord::class.java)
+    return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
 //            if (!id.isValid()) {

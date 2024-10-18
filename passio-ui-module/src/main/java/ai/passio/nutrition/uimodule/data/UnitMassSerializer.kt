@@ -14,8 +14,6 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
-import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
@@ -47,6 +45,36 @@ class UnitMassSerializer : JsonSerializer<UnitMass>, JsonDeserializer<UnitMass> 
             else -> throw IllegalArgumentException("No known unit of mass: $unitString")
         }
         return UnitMass(unit, jsonObject["value"].asDouble)
-    }
+            /*val jsonObject = json.asJsonObject
 
+            // Deserialize the 'unit' field manually
+            val unitJson = jsonObject.get("unit")
+            val unit: ai.passio.passiosdk.passiofood.data.measurement.Unit = context.deserialize(unitJson, ai.passio.passiosdk.passiofood.data.measurement.Unit::class.java)
+
+            // Deserialize the 'value' field
+            val value = jsonObject.get("value").asDouble
+
+            return UnitMass(unit, value)*/
+        }
+
+
+}
+
+
+// Custom deserializer for Unit
+class UnitDeserializer : JsonDeserializer<ai.passio.passiosdk.passiofood.data.measurement.Unit> {
+
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): ai.passio.passiosdk.passiofood.data.measurement.Unit {
+        val jsonObject = json.asJsonObject
+        val symbol = jsonObject.get("symbol").asString
+
+        // You can handle the Converter part if needed
+        // Example for converter: val converter = context.deserialize(jsonObject.get("converter"), Converter::class.java)
+
+        return ai.passio.passiosdk.passiofood.data.measurement.Unit(symbol = symbol) // Adjust if you need to handle Converter as well
+    }
 }

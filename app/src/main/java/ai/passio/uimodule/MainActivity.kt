@@ -1,8 +1,6 @@
 package ai.passio.uimodule
 
 import ai.passio.nutrition.uimodule.NutritionUIModule
-import ai.passio.nutrition.uimodule.data.PassioConnector
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.passiosdk.core.config.PassioConfiguration
 import ai.passio.passiosdk.core.config.PassioMode
 import ai.passio.passiosdk.passiofood.PassioSDK
@@ -10,7 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import java.util.Date
 
 class MainActivity : ComponentActivity() {
 

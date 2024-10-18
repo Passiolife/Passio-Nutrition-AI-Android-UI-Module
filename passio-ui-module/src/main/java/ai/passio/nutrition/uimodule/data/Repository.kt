@@ -22,6 +22,7 @@ import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,7 @@ import kotlin.coroutines.suspendCoroutine
 class Repository private constructor() {
 
     companion object {
+        private lateinit var sharedPrefsPassioConnector: SharedPrefsPassioConnector
 
         @Volatile
         private var instance: Repository? = null
@@ -43,6 +45,7 @@ class Repository private constructor() {
             }
 
         fun create(context: Context, connector: PassioConnector) {
+            sharedPrefsPassioConnector = SharedPrefsPassioConnector(context)
             SharedPrefUtils.init(context)
             getInstance().connector = connector
             connector.initialize()
@@ -50,6 +53,50 @@ class Repository private constructor() {
     }
 
     private lateinit var connector: PassioConnector
+
+
+    suspend fun migrateDataFromOldSharedPrefsPassioConnector(): Boolean {
+
+        if (sharedPrefsPassioConnector.isMigrationNeeded()) {
+            sharedPrefsPassioConnector.initialize()
+            //migrate user profile
+            updateUser(sharedPrefsPassioConnector.fetchUserProfile())
+            Log.d("DATA MIGRATION", "Done migrating user profile")
+
+            //migrate records
+            logFoodRecords(sharedPrefsPassioConnector.getRecords())
+            Log.d("DATA MIGRATION", "Done migrating food logs records")
+
+            //migrate custom foods
+            sharedPrefsPassioConnector.fetchCustomFoods().forEach {
+                saveCustomFood(it)
+            }
+            Log.d("DATA MIGRATION", "Done migrating custom foods")
+
+            //migrate recipes
+            sharedPrefsPassioConnector.fetchRecipes().forEach {
+                saveRecipe(it)
+            }
+            Log.d("DATA MIGRATION", "Done migrating recipes")
+
+            //migrate water records
+            sharedPrefsPassioConnector.fetchAllWaterRecords().forEach {
+                updateWater(it)
+            }
+            Log.d("DATA MIGRATION", "Done migrating water records")
+
+            //migrate weight records
+            sharedPrefsPassioConnector.fetchAllWeightRecords().forEach {
+                updateWeight(it)
+            }
+            Log.d("DATA MIGRATION", "Done migrating weight records")
+
+            sharedPrefsPassioConnector.markDoneMigration()
+            Log.d("DATA MIGRATION", "Done migrating all data")
+        }
+        return true
+
+    }
 
     suspend fun fetchPassioFoodItem(
         searchResult: PassioFoodDataInfo,
@@ -182,13 +229,6 @@ class Repository private constructor() {
 
     suspend fun fetchLatestWeightRecord(): WeightRecord? {
         return connector.fetchLatestWeightRecord()
-    }
-
-    suspend fun fetchWeightRecords(currentDate: Date): List<WeightRecord> {
-        val forDate = DateTime(currentDate.time)
-        val startDate: DateTime = forDate.withTimeAtStartOfDay()
-        val endDate: DateTime = forDate.withTime(23, 59, 59, 999)
-        return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
     }
 
     suspend fun fetchWeightRecords(currentDate: Date, timePeriod: TimePeriod): List<WeightRecord> {

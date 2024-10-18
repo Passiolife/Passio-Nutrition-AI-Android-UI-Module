@@ -1,11 +1,9 @@
 package ai.passio.nutrition.uimodule.ui.foodcreator
 
 import ai.passio.passiosdk.passiofood.data.measurement.Converter
-import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
-import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 
 data class NutritionFactsItem(
     val id: String,
@@ -14,9 +12,6 @@ data class NutritionFactsItem(
     var value: Double = 0.0,
     var isAdded: Boolean = false
 ) {
-
-
-    fun getUnitMass() = UnitMass(Grams, value)
 
     internal companion object {
         const val REF_CALORIES_ID = "refCalories"

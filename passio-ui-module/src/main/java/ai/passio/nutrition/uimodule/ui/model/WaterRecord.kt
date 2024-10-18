@@ -1,17 +1,17 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
 import ai.passio.nutrition.uimodule.ui.profile.mlToOz
 import android.util.Log
-import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.Locale
 import java.util.UUID
 
 class WaterRecord {
-    val uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+    var uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
     var weight: Double = 0.0 ////kg, ml
     var dateTime: Long = 0
 
@@ -54,7 +54,6 @@ class WaterRecord {
     }
 
     fun copy(): WaterRecord {
-        val gson = GsonBuilder().create()
-        return gson.fromJson(gson.toJson(this), WaterRecord::class.java)
+        return passioGson.fromJson(passioGson.toJson(this), WaterRecord::class.java)
     }
 }

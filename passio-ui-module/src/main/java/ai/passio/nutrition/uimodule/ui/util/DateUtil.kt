@@ -64,7 +64,11 @@ fun getMonthName(date: DateTime): String {
     return dateFormat.format(date.toDate())
 }
 
-fun showDatePickerDialog(context: Context,now: DateTime = DateTime.now(), onDateSelected: (selectedDateTime: DateTime) -> Unit) {
+fun showDatePickerDialog(
+    context: Context,
+    now: DateTime = DateTime.now(),
+    onDateSelected: (selectedDateTime: DateTime) -> Unit
+) {
 //    val now = DateTime.now()
     val year = now.year
     val month = now.monthOfYear - 1 // DatePickerDialog uses 0-based month
@@ -81,15 +85,15 @@ fun showDatePickerDialog(context: Context,now: DateTime = DateTime.now(), onDate
     )
     datePickerDialog.show()
 
-   /* val datePicker = MaterialDatePicker.Builder.datePicker()
-//        .setTitleText(context.getString(R.string.select_meal_date))
-        .setSelection(now.millis)
-        .build()
-    datePicker.addOnPositiveButtonClickListener { dateTime ->
-        val newDate = DateTime(dateTime)
-        onDateSelected.invoke(newDate)
-    }
-    datePicker.show(requireActivity().supportFragmentManager, "DATE")*/
+    /* val datePicker = MaterialDatePicker.Builder.datePicker()
+ //        .setTitleText(context.getString(R.string.select_meal_date))
+         .setSelection(now.millis)
+         .build()
+     datePicker.addOnPositiveButtonClickListener { dateTime ->
+         val newDate = DateTime(dateTime)
+         onDateSelected.invoke(newDate)
+     }
+     datePicker.show(requireActivity().supportFragmentManager, "DATE")*/
 }
 
 fun showTimePickerDialog(context: Context, onTimeSelected: (selectedDateTime: DateTime) -> Unit) {
@@ -139,4 +143,12 @@ fun dateToFormat(localDate: LocalDate, format: String): String {
     // Format the date to the desired pattern
     val formattedDate = localDate.toString(formatter)
     return formattedDate
+}
+
+fun getStartTimestamps(date: DateTime): Long {
+    return date.withTimeAtStartOfDay().millis
+}
+
+fun getEndTimestamps(date: DateTime): Long {
+    return date.withTime(23, 59, 59, 999).millis
 }
