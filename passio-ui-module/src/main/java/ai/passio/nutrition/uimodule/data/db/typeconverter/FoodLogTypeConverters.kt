@@ -1,16 +1,16 @@
 package ai.passio.nutrition.uimodule.data.db.typeconverter
 
 import ai.passio.nutrition.uimodule.data.db.entity.FoodLogIngredientEntity
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import androidx.room.TypeConverter
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
 class FoodLogTypeConverters {
 
-    private val gson = GsonBuilder().create()
+    private val gson = passioGson
 
     @TypeConverter
     fun fromPassioServingSizeList(value: MutableList<PassioServingSize>?): String? {

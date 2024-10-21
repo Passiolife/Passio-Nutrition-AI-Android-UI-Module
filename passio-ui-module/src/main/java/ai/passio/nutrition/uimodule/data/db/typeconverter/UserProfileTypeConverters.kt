@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.data.db.typeconverter
 
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
 import ai.passio.nutrition.uimodule.ui.model.UserReminder
 import ai.passio.nutrition.uimodule.ui.profile.ActivityLevel
@@ -7,10 +8,9 @@ import ai.passio.nutrition.uimodule.ui.profile.CalorieDeficit
 import ai.passio.nutrition.uimodule.ui.profile.Gender
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import androidx.room.TypeConverter
-import com.google.gson.GsonBuilder
 
 class UserProfileTypeConverters {
-    private val gson = GsonBuilder().create()
+    private val gson = passioGson
 
     // Gender converter
     @TypeConverter
