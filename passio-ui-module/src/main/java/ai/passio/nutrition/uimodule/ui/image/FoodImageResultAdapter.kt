@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.ItemImageFoodResultBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
@@ -76,7 +77,8 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
                 if (packagedFoodItem != null) {
                     val foodRecord = FoodRecord(packagedFoodItem)
                     image.loadPassioIcon(foodRecord.iconId)
-                    name.text = foodRecord.name.capitalized()
+                    name.text =
+                        if (foodRecord.name.isValid()) foodRecord.name.capitalized() else "Nutrition Facts Label"
                     val cal = foodRecord.nutrients().calories()?.value ?: 0.0
                     calories.text = "${cal.singleDecimal()} Cal"
                     servingSize.text =
