@@ -2,11 +2,6 @@ package ai.passio.nutrition.uimodule.ui.view.tickseekbar;
 
 import android.content.Context;
 import android.util.TypedValue;
-
-/**
- * created by zhuangguangquan on 2018/6/6
- */
-
 public class SizeUtils {
     public static int dp2px(Context context, float dpValue) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());

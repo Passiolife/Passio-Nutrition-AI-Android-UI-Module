@@ -1,7 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.view.tickseekbar;
 
 /**
- * created by zhuangguangquan on 2018/6/6
  */
 
 public interface TextPosition {

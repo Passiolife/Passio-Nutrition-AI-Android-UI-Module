@@ -12,10 +12,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
-/**
- * created by zhuangguangquan on 2018/6/6
- */
-
 public class Builder {
     final Context context;
     //seek bar

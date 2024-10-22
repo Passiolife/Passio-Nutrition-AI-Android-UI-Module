@@ -15,8 +15,10 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -28,10 +30,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 import ai.passio.nutrition.uimodule.R;
-
-/**
- * created by zhuangguangquan on 2018/6/6
- */
 
 public class TickSeekBar extends View {
     private static final int THUMB_MAX_WIDTH = 30;

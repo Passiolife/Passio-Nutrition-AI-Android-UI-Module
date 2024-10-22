@@ -1,8 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.view.tickseekbar;
 
 /**
- * created by zhuangguangquan on  2018/6/3
- * <p>
  * A callback that notifies clients when the progress level has been
  * changed. This includes changes that were initiated by the user through a
  * touch track or thumb as well as changes that were initiated programmatically.
