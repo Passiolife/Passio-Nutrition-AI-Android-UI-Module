@@ -111,7 +111,7 @@
         app:layout_constraintTop_toBottomOf="@id/viewfinder"
         tools:background="@color/gray">
 
-        <com.warkiz.tickseekbar.TickSeekBar
+        <ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
             android:id="@+id/cameraZoomLevel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
