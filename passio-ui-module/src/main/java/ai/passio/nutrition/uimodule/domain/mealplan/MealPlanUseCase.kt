@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.domain.mealplan
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.dateToTimestamp
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioMealTime
@@ -55,11 +56,21 @@ object MealPlanUseCase {
         passioMealTime: PassioMealTime
     ): List<FoodRecord> {
         return passioMealPlanItems.mapNotNull { passioMealPlanItem ->
-            getFoodRecord(
-                passioMealPlanItem.foodDataInfo!!,
-                passioMealTime,
-                passioMealPlanItem.weightGrams
-            )
+            if (passioMealPlanItem.packagedFoodItem != null) {
+                FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
+                    if (!name.isValid()) {
+                        name = "Nutrition Facts Label"
+                    }
+                }
+            } else if (passioMealPlanItem.foodDataInfo != null) {
+                getFoodRecord(
+                    passioMealPlanItem.foodDataInfo!!,
+                    passioMealTime,
+                    passioMealPlanItem.weightGrams
+                )
+            } else {
+                null
+            }
         }
     }
 
