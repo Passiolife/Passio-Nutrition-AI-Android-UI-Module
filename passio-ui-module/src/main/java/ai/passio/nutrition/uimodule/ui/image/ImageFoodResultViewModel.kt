@@ -45,17 +45,20 @@ class ImageFoodResultViewModel : BaseViewModel() {
             resultFoodInfoList.clear()
             var currentCount = 0
             currentBitmaps.forEach { bitmap ->
-                currentCount += 1
+//                currentCount += 1
                 PassioSDK.instance.recognizeImageRemote(bitmap) { result ->
+                    currentCount += 1
                     resultFoodInfoList.addAll(result)
-                    if (resultFoodInfoList.isNotEmpty()) {
+                    //enable comment to get continues result for each images
+                    /*if (resultFoodInfoList.isNotEmpty()) {
                         _resultFoodInfo.postValue(resultFoodInfoList)
-                    }
+                    }*/
                     if (currentCount == currentBitmaps.size) {
                         _isProcessing.postValue(false)
-                        if (resultFoodInfoList.isEmpty()) {
+                        _resultFoodInfo.postValue(resultFoodInfoList)
+                        /*if (resultFoodInfoList.isEmpty()) {
                             _resultFoodInfo.postValue(resultFoodInfoList)
-                        }
+                        }*/
                     }
                 }
             }
