@@ -1,16 +1,16 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
 import ai.passio.nutrition.uimodule.ui.profile.kgToLbs
-import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.Locale
 import java.util.UUID
 
 class WeightRecord {
-    val uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+    var uuid: String = UUID.randomUUID().toString().uppercase(Locale.ROOT)
     var weight: Double = 0.0 ////kg
     var dateTime: Long = 0
 
@@ -45,7 +45,6 @@ class WeightRecord {
     }
 
     fun copy(): WeightRecord {
-        val gson = GsonBuilder().create()
-        return gson.fromJson(gson.toJson(this), WeightRecord::class.java)
+        return passioGson.fromJson(passioGson.toJson(this), WeightRecord::class.java)
     }
 }

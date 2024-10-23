@@ -19,6 +19,7 @@ import ai.passio.nutrition.uimodule.ui.util.dateToFormat
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
@@ -36,9 +37,8 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.warkiz.tickseekbar.OnSeekChangeListener
-import com.warkiz.tickseekbar.SeekParams
-import com.warkiz.tickseekbar.TickSeekBar
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
 import org.joda.time.DateTime
 import java.util.Date
 import kotlin.math.roundToInt

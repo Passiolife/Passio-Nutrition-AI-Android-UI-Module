@@ -40,9 +40,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.warkiz.tickseekbar.OnSeekChangeListener
-import com.warkiz.tickseekbar.SeekParams
-import com.warkiz.tickseekbar.TickSeekBar
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
 class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {

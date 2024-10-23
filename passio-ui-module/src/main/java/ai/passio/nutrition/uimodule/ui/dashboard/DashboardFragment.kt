@@ -18,8 +18,6 @@ import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.annotation.SuppressLint
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
@@ -83,15 +81,6 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     private fun setupCalendarView() {
         with(binding) {
-            // Change the month name text color
-            val titleTextView =
-                calendarView.findViewById<TextView>(R.id.month_name)//getChildAt(0) as TextView
-            titleTextView.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.passio_gray900
-                )
-            )
 //            calendarView.currentDate = CalendarDay.today()
             val aa = DateTime.now()//.plusDays(2)
             calendarView.selectedDate = CalendarDay.from(aa.year, aa.monthOfYear, aa.dayOfMonth)

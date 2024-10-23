@@ -246,4 +246,8 @@
         <item name="colorSwitchThumbNormal">@color/passio_indigo50</item>
     </style>
 
+    <style name="CustomMonthTitleTextAppearance" parent="TextAppearance.MaterialCalendarWidget.Header">
+        <item name="android:textColor">@color/passio_gray900</item>
+    </style>
+
 </resources>

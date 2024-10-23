@@ -160,6 +160,7 @@
                     android:id="@+id/calendarView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:mcv_headerTextAppearance="@style/CustomMonthTitleTextAppearance"
                     android:layout_marginTop="6dp"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
