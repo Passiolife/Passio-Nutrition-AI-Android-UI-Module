@@ -11,6 +11,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 
@@ -68,6 +69,38 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         binding.buttonAdd.setOnClickListener {
 //            navController.navigate(R.id.add_food)
             MainMenuDialog(this@PassioUiModuleActivity).show()
+        }
+
+        val navOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .setRestoreState(true)
+            .setPopUpTo(navController.graph.startDestinationId, false)
+            .build()
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.dashboard -> {
+                    navController.navigate(R.id.dashboard, null, navOptions)
+                    true
+                }
+
+                R.id.diary -> {
+                    navController.navigate(R.id.diary, null, navOptions)
+                    true
+                }
+
+                R.id.mealplan -> {
+                    navController.navigate(R.id.mealplan, null, navOptions)
+                    true
+                }
+
+                R.id.progress -> {
+                    navController.navigate(R.id.progress, null, navOptions)
+                    true
+                }
+
+                else -> false
+
+            }
         }
     }
 
