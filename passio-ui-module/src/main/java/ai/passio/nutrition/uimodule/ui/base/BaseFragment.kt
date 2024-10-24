@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.base
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.ui.activity.SharedViewModel
 import ai.passio.nutrition.uimodule.ui.navigation.NavigationCommand
-import ai.passio.nutrition.uimodule.ui.util.toast
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -73,11 +72,11 @@ abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false
                     true
                 }
 
-                R.id.log_out -> {
+               /* R.id.log_out -> {
                     requireContext().toast("Logout successfully!")
                     requireActivity().finish()
                     true
-                }
+                }*/
 
                 else -> false
             }
