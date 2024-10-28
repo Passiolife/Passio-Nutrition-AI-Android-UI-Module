@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.data
 
+import ai.passio.nutrition.uimodule.PassioNutrientsExclusionStrategy
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
@@ -20,6 +21,7 @@ internal val passioGson: Gson by lazy {
         .registerTypeAdapter(UnitMass::class.java, UnitMassSerializer())
         .registerTypeAdapter(Unit::class.java, UnitDeserializer())
         .registerTypeAdapter(UnitEnergy::class.java, UnitEnergySerializer())
+        .setExclusionStrategies(PassioNutrientsExclusionStrategy())
         .create()
 }
 
