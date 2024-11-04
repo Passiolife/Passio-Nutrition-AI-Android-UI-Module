@@ -272,28 +272,30 @@ class FoodCreatorViewModel : BaseViewModel() {
             setPhotoPath(it)
         }
 
+//        foodRecord.servingWeight()
+        val ratio = 100 / foodRecord.servingWeight().gramsValue()
         val nutritionFacts = foodRecord.nutrientsReference()
-        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs()?.value ?: 0.0)
-        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories()?.value ?: 0.0)
-        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein()?.value ?: 0.0)
-        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat()?.value ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs()?.value?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories()?.value?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein()?.value?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat()?.value?.div(ratio) ?: 0.0)
 
-        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.satFat()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.satFat()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars()?.value?.div(ratio) ?: 0.0)
         otherNutritionFacts.setValue(
             REF_SUGARS_ADDED_ID,
-            nutritionFacts.sugarsAdded()?.value ?: 0.0
+            nutritionFacts.sugarsAdded()?.value?.div(ratio) ?: 0.0
         )
 
-        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium()?.value?.div(ratio) ?: 0.0)
 
         customFoodRecord = foodRecord
         _isEditCustomFood.postValue(true)
@@ -311,7 +313,9 @@ class FoodCreatorViewModel : BaseViewModel() {
             setServingSize(pair.first)
             setServingUnit(pair.second)
         }
+        var ratio = 1.0
         nutritionFacts.servingSizeQuantity?.let {
+            ratio = 100 / it
             setWeightGram(it)
         }
 
@@ -320,17 +324,17 @@ class FoodCreatorViewModel : BaseViewModel() {
 //        nutritionFacts.servingSize
 //        nutritionFacts.sugarAlcohol
 
-        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs ?: 0.0)
-        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories ?: 0.0)
-        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein ?: 0.0)
-        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat?.div(ratio) ?: 0.0)
 
-        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.saturatedFat ?: 0.0)
-        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol ?: 0.0)
+        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.saturatedFat?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol?.div(ratio) ?: 0.0)
 //        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium ?: 0.0)
 //        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers ?: 0.0)
-        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat ?: 0.0)
-        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars ?: 0.0)
+        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars?.div(ratio) ?: 0.0)
 //        otherNutritionFacts.setValue(REF_SUGARS_ADDED_ID, nutritionFacts.sugarsAdded ?: 0.0)
 
 //        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron ?: 0.0)
@@ -507,7 +511,8 @@ class FoodCreatorViewModel : BaseViewModel() {
             } */else {
                 _showLoading.postValue(true)
 
-                val passioNutrientsTemp = PassioNutrients(
+                val passioNutrients = PassioNutrients(
+                    weight = UnitMass(Grams, weightGram),
                     carbs = requiredNutritionFacts.unitMassOf(REF_CARBS_ID),
                     calories = requiredNutritionFacts.unitEnergyOf(REF_CALORIES_ID),
                     proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID),
@@ -536,12 +541,12 @@ class FoodCreatorViewModel : BaseViewModel() {
                     magnesium = null,
                     phosphorus = null,
                     sugarAlcohol = null,
-                    vitaminA = null
+                    vitaminA = null,
                 )
-                val passioNutrients = PassioNutrients(
+                /*val passioNutrients = PassioNutrients(
                     passioNutrientsTemp,
-                    UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
-                )
+                    UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, 100.0)
+                )*/
 
                 val customFood =
                     if (customFoodRecord != null) {

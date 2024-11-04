@@ -22,6 +22,7 @@ import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.MenuItem
 import android.widget.AdapterView
@@ -228,6 +229,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showPrefilledData(customFood: FoodRecord) {
         with(binding)
         {
