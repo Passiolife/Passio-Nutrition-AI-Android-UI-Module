@@ -154,5 +154,10 @@ class DashboardViewModel : BaseViewModel() {
             navigate(DashboardFragmentDirections.dashboardToWaterTracking(currentDate = currentDate.time))
         }
     }
+    fun navigateToDiary() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(DashboardFragmentDirections.dashboardToDiary())
+        }
+    }
 
 }
