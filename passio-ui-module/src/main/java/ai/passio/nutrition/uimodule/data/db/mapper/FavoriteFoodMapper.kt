@@ -1,17 +1,17 @@
 package ai.passio.nutrition.uimodule.data.db.mapper
 
-import ai.passio.nutrition.uimodule.data.db.entity.CustomRecipeEntity
+import ai.passio.nutrition.uimodule.data.db.entity.FavoriteFoodEntity
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 
-internal fun List<CustomRecipeEntity>.toFoodRecords(): List<FoodRecord> {
+internal fun List<FavoriteFoodEntity>.toFoodRecords(): List<FoodRecord> {
     val foodLogEntities = this
     return foodLogEntities.map { foodLogEntity -> foodLogEntity.toFoodRecord() }
 }
 
-internal fun FoodRecord.toCustomRecipeEntity(): CustomRecipeEntity {
+internal fun FoodRecord.toFavoriteEntity(): FavoriteFoodEntity {
     val foodRecord = this
-    return CustomRecipeEntity(
+    return FavoriteFoodEntity(
         uuid = foodRecord.uuid,
         id = foodRecord.id,
         name = foodRecord.name,
@@ -26,17 +26,18 @@ internal fun FoodRecord.toCustomRecipeEntity(): CustomRecipeEntity {
         openFoodLicense = foodRecord.openFoodLicense,
         barcode = foodRecord.barcode, // Convert barcode to String (handle this conversion properly)
         packagedFoodCode = foodRecord.packagedFoodCode, // Convert packaged food code to String
-        refCode = foodRecord.refCode,
+        refCode = foodRecord.refCode ?: "",
+
         ingredients = foodRecord.ingredients.map { ingredient ->
             ingredient.toFoodLogIngredientEntity()
         }.toMutableList(), // Map FoodRecordIngredient to FoodLogIngredientEntity
 
-        servingSizes = foodRecord.servingSizes.toMutableList(),
-        servingUnits = foodRecord.servingUnits.toMutableList()
+        servingSizes = foodRecord.servingSizes.toMutableList(), // Assuming PassioServingSize can be directly mapped
+        servingUnits = foodRecord.servingUnits.toMutableList()  // Assuming PassioServingUnit can be directly mapped
     )
 }
 
-internal fun CustomRecipeEntity.toFoodRecord(): FoodRecord {
+internal fun FavoriteFoodEntity.toFoodRecord(): FoodRecord {
     val foodLogEntity = this
     return FoodRecord().apply {
         uuid = foodLogEntity.uuid

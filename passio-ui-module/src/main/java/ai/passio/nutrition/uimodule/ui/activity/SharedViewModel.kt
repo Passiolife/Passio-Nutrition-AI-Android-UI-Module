@@ -57,8 +57,8 @@ class SharedViewModel : ViewModel() {
     private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
     val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
 
-    private val _detailsFoodRecordLD = SingleLiveEvent<FoodRecord>()
-    val detailsFoodRecordLD: LiveData<FoodRecord> get() = _detailsFoodRecordLD
+    private val _detailsFoodRecordLD = SingleLiveEvent<Pair<FoodRecord, Boolean>>()
+    val detailsFoodRecordLD: LiveData<Pair<FoodRecord, Boolean>> get() = _detailsFoodRecordLD
 
     private val _editIngredientLD = SingleLiveEvent<Pair<FoodRecordIngredient, Int>>()
     val editIngredientLD: LiveData<Pair<FoodRecordIngredient, Int>> get() = _editIngredientLD
@@ -166,8 +166,8 @@ class SharedViewModel : ViewModel() {
         _editIngredientLD.postValue(ingredient to -1)
     }
 
-    fun detailsFoodRecord(foodRecord: FoodRecord) {
-        _detailsFoodRecordLD.postValue(foodRecord)
+    fun detailsFoodRecord(foodRecord: FoodRecord, isEditFav: Boolean = false) {
+        _detailsFoodRecordLD.postValue(foodRecord to isEditFav)
     }
 
     //to add ingredient from EditIngredient screen to Recipe screen. send ingredient to recipe screen

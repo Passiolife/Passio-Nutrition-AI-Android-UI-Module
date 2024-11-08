@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.data.db.PassioDatabase
 import ai.passio.nutrition.uimodule.data.db.entity.USER_ID
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomRecipeEntity
+import ai.passio.nutrition.uimodule.data.db.mapper.toFavoriteEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toFoodRecord
 import ai.passio.nutrition.uimodule.data.db.mapper.toFoodLogEntities
 import ai.passio.nutrition.uimodule.data.db.mapper.toFoodLogEntity
@@ -200,5 +201,27 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
             db.customRecipeDao().delete(it)
         }
         return true
+    }
+
+    override suspend fun markFavorite(foodRecord: FoodRecord): Boolean {
+        db.favoriteDao().insert(foodRecord.toFavoriteEntity())
+        return true
+    }
+
+    override suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean {
+        foodRecord.refCode?.let {
+            db.favoriteDao().get(it)?.let { tempFav ->
+                db.favoriteDao().delete(tempFav)
+            }
+        }
+        return true
+    }
+
+    override suspend fun getFavorites(): List<FoodRecord> {
+        return db.favoriteDao().getAll().toFoodRecords()
+    }
+
+    override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
+        return db.favoriteDao().get(foodRecord.refCode ?: "") != null
     }
 }

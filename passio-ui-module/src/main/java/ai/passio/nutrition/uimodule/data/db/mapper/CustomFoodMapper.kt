@@ -26,6 +26,7 @@ internal fun FoodRecord.toCustomFoodEntity(): CustomFoodEntity {
         openFoodLicense = foodRecord.openFoodLicense,
         barcode = foodRecord.barcode, // Convert barcode to String (handle this conversion properly)
         packagedFoodCode = foodRecord.packagedFoodCode, // Convert packaged food code to String
+        refCode = foodRecord.refCode,
 
         ingredients = foodRecord.ingredients.map { ingredient ->
             ingredient.toFoodLogIngredientEntity()
@@ -55,6 +56,7 @@ internal fun CustomFoodEntity.toFoodRecord(): FoodRecord {
         openFoodLicense = foodLogEntity.openFoodLicense
         barcode = foodLogEntity.barcode
         packagedFoodCode = foodLogEntity.packagedFoodCode
+        refCode = foodLogEntity.refCode
 
         ingredients = foodLogEntity.ingredients.map { ingredientEntity ->
             ingredientEntity.toFoodRecordIngredient()

@@ -2,12 +2,14 @@ package ai.passio.nutrition.uimodule.data.db
 
 import ai.passio.nutrition.uimodule.data.db.dao.CustomFoodDao
 import ai.passio.nutrition.uimodule.data.db.dao.CustomRecipeDao
+import ai.passio.nutrition.uimodule.data.db.dao.FavoriteDao
 import ai.passio.nutrition.uimodule.data.db.dao.FoodLogDao
 import ai.passio.nutrition.uimodule.data.db.dao.UserDao
 import ai.passio.nutrition.uimodule.data.db.dao.WaterRecordDao
 import ai.passio.nutrition.uimodule.data.db.dao.WeightRecordDao
 import ai.passio.nutrition.uimodule.data.db.entity.CustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.entity.CustomRecipeEntity
+import ai.passio.nutrition.uimodule.data.db.entity.FavoriteFoodEntity
 import ai.passio.nutrition.uimodule.data.db.entity.FoodLogEntity
 import ai.passio.nutrition.uimodule.data.db.entity.UserEntity
 import ai.passio.nutrition.uimodule.data.db.entity.WaterRecordEntity
@@ -15,14 +17,18 @@ import ai.passio.nutrition.uimodule.data.db.entity.WeightRecordEntity
 import ai.passio.nutrition.uimodule.data.db.typeconverter.FoodLogTypeConverters
 import ai.passio.nutrition.uimodule.data.db.typeconverter.MealLabelConverter
 import ai.passio.nutrition.uimodule.data.db.typeconverter.UserProfileTypeConverters
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [FoodLogEntity::class/*, FoodLogIngredientEntity::class*/, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class],
-    version = 1,
-    exportSchema = false
+    entities = [FoodLogEntity::class/*, FoodLogIngredientEntity::class*/, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class, FavoriteFoodEntity::class],
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration (from = 1, to = 2)
+    ]
 )
 @TypeConverters(
     FoodLogTypeConverters::class,
@@ -31,7 +37,7 @@ import androidx.room.TypeConverters
 )
 abstract class PassioDatabase : RoomDatabase() {
     internal companion object {
-        const val DATABASE_NAME = "passio_ui_module_db"
+        const val DATABASE_NAME = "passio_ui_module_db1"
     }
 
     abstract fun foodLogDao(): FoodLogDao
@@ -40,4 +46,5 @@ abstract class PassioDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun customFoodDao(): CustomFoodDao
     abstract fun customRecipeDao(): CustomRecipeDao
+    abstract fun favoriteDao(): FavoriteDao
 }

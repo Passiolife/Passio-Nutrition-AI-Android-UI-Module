@@ -49,6 +49,7 @@ open class FoodRecord() {
     var openFoodLicense: String? = null
     var barcode: Barcode? = null
     var packagedFoodCode: PackagedFoodCode? = null
+    var refCode: String ?= null
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
@@ -70,6 +71,10 @@ open class FoodRecord() {
 
 //        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
         this.uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        if (!refCode.isValid())
+        {
+            refCode = uuid
+        }
         this.name = productName
         this.additionalData = brandName
         this.barcode = barcode
@@ -161,6 +166,7 @@ open class FoodRecord() {
         ingredient: FoodRecordIngredient,
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
     ) : this() {
+
         id = ingredient.id
         name = ingredient.name
         iconId = ingredient.iconId
@@ -172,6 +178,11 @@ open class FoodRecord() {
         ingredients = mutableListOf()
         ingredients.add(ingredient)
         openFoodLicense = ingredient.openFoodLicense
+//        refCode = ingredient.refCode
+        if (!refCode.isValid())
+        {
+            refCode = id
+        }
     }
 
     constructor(
@@ -179,6 +190,11 @@ open class FoodRecord() {
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
     ) : this() {
         id = foodItem.id
+        refCode = foodItem.refCode
+        if (!refCode.isValid())
+        {
+            refCode = id
+        }
         name = foodItem.name
         additionalData = foodItem.details
         iconId = foodItem.iconId
@@ -465,6 +481,10 @@ fun FoodRecord.copy(): FoodRecord {
             } else {
                 UUID.randomUUID().toString().uppercase(Locale.ROOT)
             }
+            if (!refCode.isValid())
+            {
+                refCode = id
+            }
         }
 }
 
@@ -476,7 +496,11 @@ fun FoodRecord.copyAsCustomFood(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-//            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+
+            if (!refCode.isValid())
+            {
+                refCode = uuid
+            }
         }
 }
 
@@ -484,8 +508,9 @@ fun FoodRecord.copyAsRecipe(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-//            if (!id.isValid()) {
-//                id = uuid
-//            }
+            if (!refCode.isValid())
+            {
+                refCode = uuid
+            }
         }
 }

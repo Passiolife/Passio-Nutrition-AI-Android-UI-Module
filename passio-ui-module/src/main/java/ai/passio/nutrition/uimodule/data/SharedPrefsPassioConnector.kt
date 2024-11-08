@@ -333,4 +333,20 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         sharedPreferences.saveRecipes(json)
         return true
     }
+
+    override suspend fun markFavorite(foodRecord: FoodRecord): Boolean {
+        return false
+    }
+
+    override suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean {
+        return false
+    }
+
+    override suspend fun getFavorites(): List<FoodRecord> {
+        return listOf()
+    }
+
+    override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
+        return false
+    }
 }

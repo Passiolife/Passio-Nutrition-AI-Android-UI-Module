@@ -24,6 +24,7 @@ data class FoodLogEntity(
     var openFoodLicense: String? = null,
     var barcode: String? = null, // Convert Barcode to JSON
     var packagedFoodCode: String? = null,
+    var refCode: String? = null,
 
     @TypeConverters(FoodLogTypeConverters::class)
     var ingredients: MutableList<FoodLogIngredientEntity> = mutableListOf(),

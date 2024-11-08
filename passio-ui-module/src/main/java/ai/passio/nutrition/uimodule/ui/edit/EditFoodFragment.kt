@@ -39,6 +39,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
+import coil.load
 import org.joda.time.DateTime
 import java.util.Date
 import kotlin.math.roundToInt
@@ -121,6 +122,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             log.setOnClickListener {
                 viewModel.logCurrentRecord()
             }
+            ivFavorite.setOnClickListener {
+                viewModel.toggleFavorite()
+            }
 
             setupRecipeAddEditMode()
 
@@ -133,6 +137,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 sharedViewModel.passToNutritionInfo(foodRecord)
 
             }
+            saveFav.setOnClickListener {
+                viewModel.saveFavorite()
+            }
         }
 
         initObserver()
@@ -141,8 +148,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun initObserver() {
-        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
-            viewModel.setFoodRecord(foodRecord)
+        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { pair ->
+            viewModel.setFoodRecord(pair.first, pair.second)
         }
 
         sharedViewModel.editSearchResultLD.observe(viewLifecycleOwner) { searchResult ->
@@ -262,6 +269,23 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.viewLoader.isVisible = isLoading
+        }
+        viewModel.isFavEvent.observe(viewLifecycleOwner) { isFav ->
+            if (isFav) {
+                binding.ivFavorite.load(R.drawable.ic_favorites)
+            } else {
+                binding.ivFavorite.load(R.drawable.icon_favorite)
+            }
+        }
+        viewModel.isEditFavEvent.observe(viewLifecycleOwner) { isEditFav ->
+            with(binding)
+            {
+                mealTimeLayout.isVisible = !isEditFav
+                dateLayout.isVisible = !isEditFav
+                saveFav.isVisible = isEditFav
+                delete.isVisible = !isEditFav
+                log.isVisible = !isEditFav
+            }
         }
     }
 
@@ -475,6 +499,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         renderIngredients(foodRecord)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderNutrients(foodRecord: FoodRecord) {
         if (_binding == null) return
 
@@ -668,7 +693,10 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             dateToFormat(localDate.toLocalDate(), DAY_FORMAT_FULL) //localDate.format(dateFormatter)
         viewModel.updateCreatedAt(localDate.millis)
         binding.date.setOnClickListener {
-            showDatePickerDialog(requireContext(), DateTime(viewModel.getFoodRecord().createdAtTime() ?: DateTime.now().millis)) { selectedDate ->
+            showDatePickerDialog(
+                requireContext(),
+                DateTime(viewModel.getFoodRecord().createdAtTime() ?: DateTime.now().millis)
+            ) { selectedDate ->
                 binding.date.text = dateToFormat(
                     selectedDate.toLocalDate(),
                     DAY_FORMAT_FULL

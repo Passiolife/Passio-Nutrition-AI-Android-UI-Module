@@ -327,4 +327,19 @@ class Repository private constructor() {
         return connector.deleteRecipe(uuid)
     }
 
+    suspend fun markFavorite(foodRecord: FoodRecord): Boolean {
+        return connector.markFavorite(foodRecord)
+    }
+
+    suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean {
+        return connector.markUnfavorite(foodRecord)
+    }
+
+    suspend fun getFavorites(): List<FoodRecord> {
+        return connector.getFavorites()
+    }
+    suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
+        return connector.isFavorite(foodRecord)
+    }
+
 }

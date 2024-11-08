@@ -27,7 +27,7 @@ internal class MainMenuDialog(
             AddFoodOption(2, R.string.use_image, R.drawable.ic_image),
             AddFoodOption(3, R.string.ai_advisor, R.drawable.ic_advisor),
             AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice),
-//            AddFoodOption(5, R.string.favorites, R.drawable.ic_favorites),
+            AddFoodOption(5, R.string.favorites, R.drawable.ic_favorites),
             AddFoodOption(6, R.string.my_foods, R.drawable.ic_my_foods),
         ),
         ::onOptionSelected
@@ -68,7 +68,8 @@ internal class MainMenuDialog(
 
         val animatorSet = AnimatorSet()
         val rotation = ObjectAnimator.ofFloat(binding.buttonClose, "rotation", 0f, 45f)
-        val translation = ObjectAnimator.ofFloat(binding.addFoodList, "translationY", 300f, -200f, 0f)
+        val translation =
+            ObjectAnimator.ofFloat(binding.addFoodList, "translationY", 300f, -200f, 0f)
         val alpha = ObjectAnimator.ofFloat(binding.addFoodList, "alpha", 0f, 1f)
         animatorSet.duration = 500
         animatorSet.playTogether(rotation, translation, alpha)
@@ -95,6 +96,7 @@ internal class MainMenuDialog(
 
         animator.start()
     }
+
     private fun onOptionSelected(id: Int) {
         dismiss()
         when (id) {
@@ -103,6 +105,7 @@ internal class MainMenuDialog(
             2 -> navController.navigate(R.id.take_select_photo) //viewModel.navigate(AddFoodFragmentDirections.addFoodToPhoto())
             3 -> navController.navigate(R.id.advisor) //viewModel.navigate(AddFoodFragmentDirections.addFoodToAdvisor())
             4 -> navController.navigate(R.id.voice_logging) //viewModel.navigate(AddFoodFragmentDirections.addFoodToVoiceLogging())
+            5 -> navController.navigate(R.id.favorite)
             6 -> navController.navigate(R.id.my_foods) //viewModel.navigate(AddFoodFragmentDirections.addFoodToMyFoods())
         }
     }

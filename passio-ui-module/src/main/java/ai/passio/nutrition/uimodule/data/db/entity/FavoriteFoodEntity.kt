@@ -8,9 +8,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 
-@Entity(tableName = "CustomFood")
-data class CustomFoodEntity(
-    @PrimaryKey val uuid: String,
+const val FavTblName = "FavoriteFood"
+@Entity(tableName = FavTblName)
+data class FavoriteFoodEntity(
+//    @PrimaryKey
+    val uuid: String,
     var id: String = "",
     var name: String = "",
     var additionalData: String = "",
@@ -24,7 +26,8 @@ data class CustomFoodEntity(
     var openFoodLicense: String? = null,
     var barcode: String? = null, // Convert Barcode to JSON
     var packagedFoodCode: String? = null,
-    var refCode: String? = null,
+    @PrimaryKey
+    val refCode: String,
 
     @TypeConverters(FoodLogTypeConverters::class)
     var ingredients: MutableList<FoodLogIngredientEntity> = mutableListOf(),

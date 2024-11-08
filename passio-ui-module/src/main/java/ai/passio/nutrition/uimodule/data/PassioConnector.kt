@@ -60,4 +60,8 @@ interface PassioConnector {
     suspend fun fetchRecipes(searchQuery: String): List<FoodRecord>
 
     suspend fun deleteRecipe(uuid: String): Boolean
+    suspend fun markFavorite(foodRecord: FoodRecord): Boolean
+    suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean
+    suspend fun getFavorites(): List<FoodRecord>
+    suspend fun isFavorite(foodRecord: FoodRecord): Boolean
 }
