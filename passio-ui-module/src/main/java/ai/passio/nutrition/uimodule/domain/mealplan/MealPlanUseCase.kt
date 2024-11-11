@@ -22,11 +22,26 @@ object MealPlanUseCase {
         passioMealTime: PassioMealTime,
         weighGrams: Double? = null
     ): FoodRecord? {
-        val foodItem = repository.fetchPassioFoodItem(passioFoodDataInfo, weighGrams) ?: return null
+
+//        val foodItem = repository.fetchPassioFoodItem(passioFoodDataInfo, weighGrams) ?: return null
+        val foodItem = repository.fetchPassioFoodItem(
+            dataInfo = passioFoodDataInfo,
+            servingUnit = passioFoodDataInfo.nutritionPreview.servingUnit,
+            servingQuantity = passioFoodDataInfo.nutritionPreview.servingQuantity
+        ) ?: return null
 
         val nutritionPreview = passioFoodDataInfo.nutritionPreview
         val foodRecord = FoodRecord(foodItem)
         foodRecord.mealLabel = MealLabel.stringToMealLabel(passioMealTime.mealName)
+        /*Log.d(
+            "nutritionPreview===", "" +
+                    "weightQuantity: ${nutritionPreview.weightQuantity}\n" +
+                    "weightUnit: ${nutritionPreview.weightUnit}\n" +
+                    "servingUnit: ${nutritionPreview.servingUnit}\n" +
+                    "servingQuantity: ${nutritionPreview.servingQuantity}\n" +
+                    "weighGrams: ${weighGrams}\n" +
+                    ""
+        )*/
         if (weighGrams == null || weighGrams == 0.0) {
             if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
                 val quantity = nutritionPreview.servingQuantity

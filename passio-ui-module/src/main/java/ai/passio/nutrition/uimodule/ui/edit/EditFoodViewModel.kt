@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.ui.edit
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.domain.favorite.FavoriteUseCase
+import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.domain.recipe.RecipeUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
@@ -21,6 +22,7 @@ class EditFoodViewModel : BaseViewModel() {
 
     private val favoriteUseCase = FavoriteUseCase
     private val useCase = EditFoodUseCase
+    private val mealPlanUseCase = MealPlanUseCase
     private val recipeUseCase = RecipeUseCase
     private val customFoodUseCase = CustomFoodUseCase
 
@@ -74,7 +76,7 @@ class EditFoodViewModel : BaseViewModel() {
     fun getFoodRecord(searchResult: PassioFoodDataInfo) {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            val fr = useCase.getFoodRecord(searchResult)
+            val fr = mealPlanUseCase.getFoodRecord(searchResult, passioMealTimeNow())
             val model = EditFoodModel(fr, true)
             _editFoodModelLD.postValue(model)
             _showLoading.postValue(false)

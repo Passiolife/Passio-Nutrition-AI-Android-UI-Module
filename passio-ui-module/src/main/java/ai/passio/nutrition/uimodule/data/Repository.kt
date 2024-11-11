@@ -99,10 +99,15 @@ class Repository private constructor() {
     }
 
     suspend fun fetchPassioFoodItem(
-        searchResult: PassioFoodDataInfo,
-        weighGrams: Double? = null
+        dataInfo: PassioFoodDataInfo,
+        servingQuantity: Double? = null,
+        servingUnit: String? = null,
     ): PassioFoodItem? = suspendCoroutine { cont ->
-        PassioSDK.instance.fetchFoodItemForDataInfo(searchResult, weighGrams) { foodItem ->
+        PassioSDK.instance.fetchFoodItemForDataInfo(
+            dataInfo = dataInfo,
+            servingQuantity = servingQuantity,
+            servingUnit = servingUnit
+        ) { foodItem ->
             cont.resumeWith(Result.success(foodItem))
         }
     }
@@ -338,6 +343,7 @@ class Repository private constructor() {
     suspend fun getFavorites(): List<FoodRecord> {
         return connector.getFavorites()
     }
+
     suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
         return connector.isFavorite(foodRecord)
     }

@@ -4,7 +4,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
-import java.util.*
+import java.util.Date
 
 interface PassioConnector {
 
@@ -60,8 +60,12 @@ interface PassioConnector {
     suspend fun fetchRecipes(searchQuery: String): List<FoodRecord>
 
     suspend fun deleteRecipe(uuid: String): Boolean
+
     suspend fun markFavorite(foodRecord: FoodRecord): Boolean
+
     suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean
+
     suspend fun getFavorites(): List<FoodRecord>
+
     suspend fun isFavorite(foodRecord: FoodRecord): Boolean
 }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.FragmentMealPlanBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
@@ -56,11 +57,35 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
             retry.setOnClickListener {
                 viewModel.getMealPlans()
             }
+
+            showInfo.setOnClickListener {
+                SharedPrefUtils.put("mealPlanInfoNoteShown", false)
+                showMealPlanNote()
+            }
+            showMealPlanNote()
         }
 
         initObserver()
 //        viewModel.getMealPlans()
 
+    }
+
+    private fun showMealPlanNote() {
+        if (SharedPrefUtils.get("mealPlanInfoNoteShown", Boolean::class.java)) {
+            binding.close.isVisible = false
+            binding.mealPlanNote.isVisible = false
+            binding.showInfo.isVisible = true
+        } else {
+            binding.close.isVisible = true
+            binding.mealPlanNote.isVisible = true
+            binding.showInfo.isVisible = false
+        }
+        binding.close.setOnClickListener {
+            SharedPrefUtils.put("mealPlanInfoNoteShown", true)
+            binding.close.isVisible = false
+            binding.mealPlanNote.isVisible = false
+            binding.showInfo.isVisible = true
+        }
     }
 
     private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
