@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.databinding.FragmentEditFoodBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
@@ -156,6 +157,11 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             viewModel.getFoodRecord(searchResult)
         }
 
+        sharedViewModel.editIngredientToRecipeLD.observe(
+            viewLifecycleOwner,
+            ::editDeleteFoodIngredients
+        )
+
         viewModel.editFoodModelLD.observe(viewLifecycleOwner) { editFoodModel ->
             if (editFoodModel.foodRecord == null) {
                 renderError()
@@ -283,10 +289,14 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 mealTimeLayout.isVisible = !isEditFav
                 dateLayout.isVisible = !isEditFav
                 saveFav.isVisible = isEditFav
-                delete.isVisible = !isEditFav
+//                delete.isVisible = !isEditFav && !viewModel.isEditLogMode()
                 log.isVisible = !isEditFav
             }
         }
+    }
+
+    private fun editDeleteFoodIngredients(ingredient: Pair<FoodRecordIngredient?, Int>) {
+        viewModel.editIngredient(ingredient)
     }
 
     private fun setupToolbar() {
@@ -716,7 +726,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun onIngredientSelected(index: Int) {
-//        val ingredient = viewModel.getIngredient(index)
-//        sharedViewModel.editIngredient(ingredient, index)
+        val ingredient = viewModel.getIngredient(index)
+        sharedViewModel.editIngredient(ingredient, index)
+        viewModel.navigateToEditIngredient()
     }
 }

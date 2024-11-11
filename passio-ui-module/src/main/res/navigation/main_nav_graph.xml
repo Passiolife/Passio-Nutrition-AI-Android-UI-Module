@@ -157,6 +157,10 @@
             app:destination="@id/edit_recipe" />
 
         <action
+            android:id="@+id/edit_to_edit_ingredient"
+            app:destination="@id/edit_ingredient" />
+
+        <action
             android:id="@+id/edit_to_search"
             app:destination="@id/search"
             app:launchSingleTop="true"

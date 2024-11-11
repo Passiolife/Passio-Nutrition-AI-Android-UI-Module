@@ -24,11 +24,11 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [FoodLogEntity::class/*, FoodLogIngredientEntity::class*/, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class, FavoriteFoodEntity::class],
-    version = 2,
+    version = 1,
     exportSchema = true,
-    autoMigrations = [
-        AutoMigration (from = 1, to = 2)
-    ]
+//    autoMigrations = [
+//        AutoMigration (from = 1, to = 2)
+//    ]
 )
 @TypeConverters(
     FoodLogTypeConverters::class,

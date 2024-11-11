@@ -66,19 +66,19 @@ class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                 }
                 rightMenu.addMenuItem(editItem)
-                val detailsItem = SwipeMenuItem(requireContext()).apply {
-                    text = getString(R.string.details)
+                val deleteItem = SwipeMenuItem(requireContext()).apply {
+                    text = getString(R.string.delete)
                     setTextColor(Color.WHITE)
                     setBackgroundColor(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.passio_primary
+                            R.color.passio_red800
                         )
                     )
                     width = DesignUtils.dp2px(80f)
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                 }
-//                rightMenu.addMenuItem(detailsItem)
+                rightMenu.addMenuItem(deleteItem)
             }
             rvFoods.setOnItemMenuClickListener { menuBridge, adapterPosition ->
                 menuBridge.closeMenu()
@@ -89,8 +89,7 @@ class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
                     }
 
                     1 -> {
-                        //delete
-//                        viewModel.deleteCustomFood(customFoodsAdapter.getItem(adapterPosition).uuid)
+                        viewModel.markAsUnFavorite(customFoodsAdapter.getItem(adapterPosition))
                     }
                 }
             }

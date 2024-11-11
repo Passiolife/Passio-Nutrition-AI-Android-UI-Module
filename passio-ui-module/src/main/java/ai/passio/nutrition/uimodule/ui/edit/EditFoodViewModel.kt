@@ -7,6 +7,7 @@ import ai.passio.nutrition.uimodule.domain.recipe.RecipeUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
@@ -49,9 +50,9 @@ class EditFoodViewModel : BaseViewModel() {
 
 
     private var isFav = false
-    private val _isFavEvent = SingleLiveEvent<Boolean>()
+    private val _isFavEvent = MutableLiveData<Boolean>()
     val isFavEvent: LiveData<Boolean> = _isFavEvent
-    private val _isEditFavEvent = SingleLiveEvent<Boolean>()
+    private val _isEditFavEvent = MutableLiveData<Boolean>()
     val isEditFavEvent: LiveData<Boolean> = _isEditFavEvent
     private var isEditFav = false
 
@@ -168,6 +169,13 @@ class EditFoodViewModel : BaseViewModel() {
         }
     }
 
+    fun navigateToEditIngredient() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(EditFoodFragmentDirections.editToEditIngredient())
+        }
+
+    }
+
 
     fun isEditLogMode(): Boolean {
         return isEditLogMode
@@ -177,6 +185,20 @@ class EditFoodViewModel : BaseViewModel() {
         return foodRecord
     }
 
+    fun getIngredient(index: Int) = foodRecord.ingredients[index]
+
+    fun editIngredient(ingredient: Pair<FoodRecordIngredient?, Int>) {
+        val editIngredient = ingredient.first
+        val indexToEdit = ingredient.second
+        if (editIngredient == null && indexToEdit != -1) {
+            this.foodRecord.removeIngredient(indexToEdit)
+        } else if (editIngredient != null && indexToEdit != -1) {
+            this.foodRecord.replaceIngredient(editIngredient, indexToEdit)
+        } else if (editIngredient != null) {
+            this.foodRecord.addIngredient(editIngredient)
+        }
+        _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+    }
 
     private fun checkFavStatus() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -189,7 +211,7 @@ class EditFoodViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = if (!isFav) {
                 favoriteUseCase.markFavorite(foodRecord)
-            } else{
+            } else {
                 favoriteUseCase.markUnfavorite(foodRecord)
             }
             if (result) {
@@ -198,13 +220,19 @@ class EditFoodViewModel : BaseViewModel() {
             }
         }
     }
+
     fun saveFavorite() {
         viewModelScope.launch(Dispatchers.IO) {
+            _showLoading.postValue(true)
             val result = favoriteUseCase.markFavorite(foodRecord)
             if (result) {
                 isFav = !isFav
                 _isFavEvent.postValue(isFav)
+                navigateBack()
             }
+            _showLoading.postValue(false)
         }
     }
+
+
 }

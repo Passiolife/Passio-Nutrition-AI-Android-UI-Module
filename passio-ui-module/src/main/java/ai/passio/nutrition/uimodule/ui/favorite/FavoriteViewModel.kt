@@ -40,17 +40,30 @@ class FavoriteViewModel : BaseViewModel() {
     fun logFood(foodRecord: FoodRecord) {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
-            _logFoodEvent.postValue(ResultWrapper.Success(editFoodUseCase.logFoodRecord(foodRecord, false)))
+            _logFoodEvent.postValue(
+                ResultWrapper.Success(
+                    editFoodUseCase.logFoodRecord(
+                        foodRecord,
+                        false
+                    )
+                )
+            )
+            _showLoading.postValue(false)
+        }
+    }
+
+    fun markAsUnFavorite(foodRecord: FoodRecord) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _showLoading.postValue(true)
+            if (useCase.markUnfavorite(foodRecord)) {
+                getFavoriteFoods()
+            }
             _showLoading.postValue(false)
         }
     }
 
     fun navigateToDetails() {
         navigate(FavoriteFragmentDirections.favoriteToEdit())
-    }
-
-    fun navigateToEditFood() {
-        navigate(MyFoodsFragmentDirections.myFoodsToEdit())
     }
 
     fun navigateToDiary() {
