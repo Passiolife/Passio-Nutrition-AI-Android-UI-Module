@@ -17,7 +17,6 @@ import ai.passio.nutrition.uimodule.data.db.entity.WeightRecordEntity
 import ai.passio.nutrition.uimodule.data.db.typeconverter.FoodLogTypeConverters
 import ai.passio.nutrition.uimodule.data.db.typeconverter.MealLabelConverter
 import ai.passio.nutrition.uimodule.data.db.typeconverter.UserProfileTypeConverters
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
