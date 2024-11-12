@@ -52,9 +52,9 @@ class CustomFoodsAdapter(
 
                 image.loadFoodImage(customFood)
 
-                if (customFood.additionalData.isNotEmpty()) {
+                if (customFood.details.isNotEmpty()) {
                     servingSize.visibility = View.VISIBLE
-                    servingSize.text = customFood.additionalData
+                    servingSize.text = customFood.details
                 } else {
                     servingSize.visibility = View.GONE
                 }

@@ -35,10 +35,10 @@ class CustomFoodsViewModel : BaseViewModel() {
         }
     }
 
-    fun deleteCustomFood(uuid: String) {
+    fun deleteCustomFood(foodRecord: FoodRecord) {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            useCase.deleteCustomFood(uuid)
+            useCase.deleteCustomFood(foodRecord)
             getCustomFoods()
             _showLoading.postValue(false)
         }

@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
                 PassioMode.IS_READY_FOR_DETECTION -> onSDKReady()
                 PassioMode.IS_BEING_CONFIGURED -> {
                 }
+
                 PassioMode.IS_DOWNLOADING_MODELS -> {}
             }
         }
@@ -45,7 +46,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onSDKReady() {
-        NutritionUIModule.launch(this)
+//        NutritionUIModule.launch(context = this, connector = MyPassioConnector(this))
+        NutritionUIModule.launch(context = this)
         finish()
     }
 }

@@ -68,7 +68,7 @@ class Repository private constructor() {
             Log.d("DATA MIGRATION", "Done migrating food logs records")
 
             //migrate custom foods
-            sharedPrefsPassioConnector.fetchCustomFoods().forEach {
+            sharedPrefsPassioConnector.fetchAllUserFoods().forEach {
                 saveCustomFood(it)
             }
             Log.d("DATA MIGRATION", "Done migrating custom foods")
@@ -174,11 +174,19 @@ class Repository private constructor() {
     }
 
     suspend fun logFoodRecords(records: List<FoodRecord>): Boolean {
-        return connector.updateRecords(records)
+//        return connector.updateRecords(records)
+        var isDone = true
+        records.forEach { record ->
+            val result = connector.updateRecord(record)
+            if (!result) {
+                isDone = false
+            }
+        }
+        return isDone
     }
 
-    suspend fun deleteFoodRecord(uuid: String): Boolean {
-        return connector.deleteRecord(uuid)
+    suspend fun deleteFoodRecord(foodRecord: FoodRecord): Boolean {
+        return connector.deleteRecord(foodRecord)
     }
 
     suspend fun getLogsForDay(day: Date): List<FoodRecord> {
@@ -189,7 +197,7 @@ class Repository private constructor() {
         val today = DateTime(day.time)
         val startOfWeek = getStartOfWeek(today)//.millis
         val endOfWeek = getEndOfWeek(today)//.millis
-        return connector.fetchLogsRecords(startOfWeek.toDate(), endOfWeek.toDate())
+        return connector.fetchDayLogFor(startOfWeek.toDate(), endOfWeek.toDate())
     }
 
     suspend fun getLogsForMonth(day: Date): List<FoodRecord> {
@@ -198,14 +206,14 @@ class Repository private constructor() {
         val startOfMonth = getStartOfMonth(today)//.millis
         val endOfMonth = getEndOfMonth(today)//.millis
 
-        return connector.fetchLogsRecords(startOfMonth.toDate(), endOfMonth.toDate())
+        return connector.fetchDayLogFor(startOfMonth.toDate(), endOfMonth.toDate())
     }
 
 
     suspend fun getLogsForLast30Days(): List<FoodRecord> {
         val today = DateTime()
         val before30Days = getBefore30Days(today)
-        return connector.fetchLogsRecords(before30Days.toDate(), today.toDate())
+        return connector.fetchDayLogFor(before30Days.toDate(), today.toDate())
     }
 
     suspend fun fetchAdherence(): List<Long> {
@@ -229,7 +237,7 @@ class Repository private constructor() {
     }
 
     suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
-        return connector.removeWeightRecord(weightRecord)
+        return connector.deleteWeightRecord(weightRecord)
     }
 
     suspend fun fetchLatestWeightRecord(): WeightRecord? {
@@ -255,7 +263,7 @@ class Repository private constructor() {
     }
 
     suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
-        return connector.removeWaterRecord(waterRecord)
+        return connector.deleteWaterRecord(waterRecord)
     }
 
     suspend fun fetchWaterRecords(currentDate: Date): List<WaterRecord> {
@@ -280,36 +288,36 @@ class Repository private constructor() {
     }
 
     suspend fun saveCustomFood(record: FoodRecord): Boolean {
-        return connector.saveCustomFood(record)
+        return connector.updateUserFood(record)
     }
 
     suspend fun fetchCustomFoods(): List<FoodRecord> {
-        return connector.fetchCustomFoods()
+        return connector.fetchAllUserFoods()
     }
 
     suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
         return if (!searchQuery.isValid()) {
             emptyList()
         } else {
-            connector.fetchCustomFoods(searchQuery)
+            connector.fetchAllUserFoodsMatching(searchQuery)
         }
     }
 
     suspend fun fetchCustomFood(uuid: String): FoodRecord? {
-        return connector.fetchCustomFood(uuid)
+        return connector.fetchUserFood(uuid)
     }
 
-    suspend fun deleteCustomFood(uuid: String): Boolean {
-        return connector.deleteCustomFood(uuid)
+    suspend fun deleteCustomFood(foodRecord: FoodRecord): Boolean {
+        return connector.deleteUserFood(foodRecord)
     }
 
     suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
-        return connector.getCustomFoodUsingBarcode(barcode)
+        return connector.fetchUserFoodsForBarcode(barcode)
     }
 
 
     suspend fun saveRecipe(record: FoodRecord): Boolean {
-        return connector.saveRecipe(record)
+        return connector.updateRecipe(record)
     }
 
     suspend fun fetchRecipes(): List<FoodRecord> {
@@ -328,20 +336,20 @@ class Repository private constructor() {
         return connector.fetchRecipe(id)
     }
 
-    suspend fun deleteRecipe(uuid: String): Boolean {
-        return connector.deleteRecipe(uuid)
+    suspend fun deleteRecipe(foodRecord: FoodRecord): Boolean {
+        return connector.deleteRecipe(foodRecord)
     }
 
     suspend fun markFavorite(foodRecord: FoodRecord): Boolean {
-        return connector.markFavorite(foodRecord)
+        return connector.updateFavorite(foodRecord)
     }
 
     suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean {
-        return connector.markUnfavorite(foodRecord)
+        return connector.deleteFavorite(foodRecord)
     }
 
     suspend fun getFavorites(): List<FoodRecord> {
-        return connector.getFavorites()
+        return connector.fetchFavorites()
     }
 
     suspend fun isFavorite(foodRecord: FoodRecord): Boolean {

@@ -15,7 +15,6 @@ import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
-import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.nutrition.uimodule.ui.view.BottomSpaceItemDecoration
 import androidx.core.view.isVisible
 
@@ -99,7 +98,7 @@ class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
                 } else if (foodRecord.packagedFoodCode.isValid()) {
                     "UPC:${foodRecord.packagedFoodCode}"
                 } else {
-                    foodRecord.additionalData
+                    foodRecord.details
                 }
 
         }

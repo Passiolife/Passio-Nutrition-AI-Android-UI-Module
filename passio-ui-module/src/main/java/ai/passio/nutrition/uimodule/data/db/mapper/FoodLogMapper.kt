@@ -5,11 +5,11 @@ import ai.passio.nutrition.uimodule.data.db.entity.FoodLogIngredientEntity
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
-
+/*
 internal fun List<FoodRecord>.toFoodLogEntities(): List<FoodLogEntity> {
     val foodRecords = this
     return foodRecords.map { foodRecord -> foodRecord.toFoodLogEntity() }
-}
+}*/
 
 internal fun List<FoodLogEntity>.toFoodRecords(): List<FoodRecord> {
     val foodLogEntities = this
@@ -22,10 +22,10 @@ internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
         uuid = foodRecord.uuid,
         id = foodRecord.id,
         name = foodRecord.name,
-        additionalData = foodRecord.additionalData,
+        additionalData = foodRecord.details,
         iconId = foodRecord.iconId,
         foodImagePath = foodRecord.foodImagePath,
-        passioIDEntityType = foodRecord.passioIDEntityType,
+        passioIDEntityType = foodRecord.entityType,
         selectedUnit = foodRecord.getSelectedUnit(),
         selectedQuantity = foodRecord.getSelectedQuantity(),
         mealLabel = foodRecord.mealLabel?.value, // Convert MealLabel enum to its string value
@@ -49,8 +49,9 @@ internal fun FoodRecordIngredient.toFoodLogIngredientEntity(): FoodLogIngredient
     return FoodLogIngredientEntity(
 //        foodUUID = currentFoodUUID,
         id = ingredient.id,
+        refCode = ingredient.refCode,
         name = ingredient.name,
-        additionalData = ingredient.additionalData,
+        additionalData = ingredient.details,
         iconId = ingredient.iconId,
         selectedUnit = ingredient.selectedUnit,
         selectedQuantity = ingredient.selectedQuantity,
@@ -66,10 +67,10 @@ internal fun FoodLogEntity.toFoodRecord(): FoodRecord {
         uuid = foodLogEntity.uuid
         id = foodLogEntity.id
         name = foodLogEntity.name
-        additionalData = foodLogEntity.additionalData
+        details = foodLogEntity.additionalData
         iconId = foodLogEntity.iconId
         foodImagePath = foodLogEntity.foodImagePath
-        passioIDEntityType = foodLogEntity.passioIDEntityType
+        entityType = foodLogEntity.passioIDEntityType
         selectedUnit = foodLogEntity.selectedUnit
         selectedQuantity = foodLogEntity.selectedQuantity
         mealLabel = foodLogEntity.mealLabel?.let { label ->
@@ -96,6 +97,7 @@ internal fun FoodLogIngredientEntity.toFoodRecordIngredient(): FoodRecordIngredi
     val ingredientEntity = this
     return FoodRecordIngredient(
         id = ingredientEntity.id,
+        refCode = ingredientEntity.refCode,
         name = ingredientEntity.name,
         additionalData = ingredientEntity.additionalData,
         iconId = ingredientEntity.iconId,

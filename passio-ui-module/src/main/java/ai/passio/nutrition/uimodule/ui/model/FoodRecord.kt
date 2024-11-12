@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.model
 import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
-import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
@@ -30,10 +29,10 @@ internal fun getDBTimestamp(time: Long): Long {
 open class FoodRecord() {
     var id: String = ""
     var name: String = ""
-    var additionalData: String = ""
+    var details: String = ""
     var iconId: String = ""
     var foodImagePath: String? = null
-    var passioIDEntityType = PassioIDEntityType.item.value
+    var entityType = PassioIDEntityType.item.value
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
 
@@ -47,7 +46,7 @@ open class FoodRecord() {
     var createdAt: Long? = null
 
     var openFoodLicense: String? = null
-    var barcode: Barcode? = null
+    var barcode: String? = ""
     var packagedFoodCode: PackagedFoodCode? = null
     var refCode: String ?= null
 
@@ -76,9 +75,9 @@ open class FoodRecord() {
             refCode = uuid
         }
         this.name = productName
-        this.additionalData = brandName
+        this.details = brandName
         this.barcode = barcode
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
         this.foodImagePath = foodImagePath
 
         val gramUnit =
@@ -124,9 +123,9 @@ open class FoodRecord() {
         foodImagePath: String? = null
     ): FoodRecord {
         this.name = productName
-        this.additionalData = brandName
+        this.details = brandName
         this.barcode = barcode
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
         this.foodImagePath = foodImagePath
 
         val gramUnit =
@@ -170,7 +169,7 @@ open class FoodRecord() {
         id = ingredient.id
         name = ingredient.name
         iconId = ingredient.iconId
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
         servingSizes.addAll(ingredient.servingSizes)
         servingUnits.addAll(ingredient.servingUnits)
         selectedUnit = ingredient.selectedUnit
@@ -178,11 +177,11 @@ open class FoodRecord() {
         ingredients = mutableListOf()
         ingredients.add(ingredient)
         openFoodLicense = ingredient.openFoodLicense
-//        refCode = ingredient.refCode
-        if (!refCode.isValid())
-        {
-            refCode = id
-        }
+        refCode = ingredient.refCode
+//        if (!refCode.isValid())
+//        {
+//            refCode = id
+//        }
     }
 
     constructor(
@@ -191,14 +190,14 @@ open class FoodRecord() {
     ) : this() {
         id = foodItem.id
         refCode = foodItem.refCode
-        if (!refCode.isValid())
-        {
-            refCode = id
-        }
+//        if (!refCode.isValid())
+//        {
+//            refCode = id
+//        }
         name = foodItem.name
-        additionalData = foodItem.details
+        details = foodItem.details
         iconId = foodItem.iconId
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
         servingSizes.addAll(foodItem.amount.servingSizes)
         servingUnits.addAll(foodItem.amount.servingUnits)
         selectedUnit = foodItem.amount.selectedUnit
@@ -238,7 +237,7 @@ open class FoodRecord() {
         }
         if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
-            passioIDEntityType = record.passioIDEntityType
+            entityType = record.entityType
         }
         setUnitToServing()
     }
@@ -250,7 +249,7 @@ open class FoodRecord() {
         }
         if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
-            passioIDEntityType = PassioIDEntityType.item.value
+            entityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
@@ -265,7 +264,7 @@ open class FoodRecord() {
         }
         if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
             iconId = records.first().iconId
-            passioIDEntityType = PassioIDEntityType.item.value
+            entityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
@@ -306,7 +305,7 @@ open class FoodRecord() {
             selectedUnit = ingredients[0].selectedUnit
             selectedQuantity = ingredients[0].selectedQuantity
             name = ingredients[0].name
-            additionalData = ingredients[0].additionalData
+            details = ingredients[0].details
             iconId = ingredients[0].iconId
             calculateQuantity()
         } else {

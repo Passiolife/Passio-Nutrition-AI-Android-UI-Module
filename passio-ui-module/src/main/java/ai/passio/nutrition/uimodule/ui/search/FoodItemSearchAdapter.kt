@@ -115,9 +115,9 @@ class FoodItemSearchAdapter(private val foodSearchListener: FoodSearchAdapterLis
 
                 image.loadFoodImage(searchResult)
 
-                if (searchResult.additionalData.isNotEmpty()) {
+                if (searchResult.details.isNotEmpty()) {
                     servingSize.visibility = View.VISIBLE
-                    servingSize.text = searchResult.additionalData
+                    servingSize.text = searchResult.details
                 } else {
                     servingSize.visibility = View.GONE
                 }

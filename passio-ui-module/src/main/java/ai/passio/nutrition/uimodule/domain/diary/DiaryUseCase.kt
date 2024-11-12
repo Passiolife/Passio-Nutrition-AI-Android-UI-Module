@@ -24,7 +24,7 @@ object DiaryUseCase {
     }
 
     suspend fun deleteRecord(foodRecord: FoodRecord): Boolean {
-        return repository.deleteFoodRecord(foodRecord.uuid)
+        return repository.deleteFoodRecord(foodRecord)
     }
 
     suspend fun fetchAdherence(): List<Long> {

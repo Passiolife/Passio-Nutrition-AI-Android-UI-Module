@@ -109,7 +109,7 @@ class EditFoodViewModel : BaseViewModel() {
     fun deleteCurrentRecord() {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            _deleteLogFood.postValue(useCase.deleteRecord(foodRecord.uuid))
+            _deleteLogFood.postValue(useCase.deleteRecord(foodRecord))
             _showLoading.postValue(false)
         }
     }

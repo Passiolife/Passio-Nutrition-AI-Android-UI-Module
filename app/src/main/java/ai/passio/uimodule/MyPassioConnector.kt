@@ -1,6 +1,10 @@
-package ai.passio.nutrition.uimodule.data
+package ai.passio.uimodule
 
 import ai.passio.nutrition.uimodule.PassioNutrientsExclusionStrategy
+import ai.passio.nutrition.uimodule.data.PassioConnector
+import ai.passio.nutrition.uimodule.data.UnitDeserializer
+import ai.passio.nutrition.uimodule.data.UnitEnergySerializer
+import ai.passio.nutrition.uimodule.data.UnitMassSerializer
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
@@ -12,11 +16,10 @@ import android.content.Context
 import android.text.format.DateFormat
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import org.joda.time.DateTime
 import java.util.Calendar
 import java.util.Date
 
-internal val passioGson: Gson by lazy {
+internal val myGson: Gson by lazy {
     GsonBuilder()
         .registerTypeAdapter(UnitMass::class.java, UnitMassSerializer())
         .registerTypeAdapter(Unit::class.java, UnitDeserializer())
@@ -25,63 +28,42 @@ internal val passioGson: Gson by lazy {
         .create()
 }
 
-internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
+internal class MyPassioConnector(context: Context) : PassioConnector {
 
-    private val sharedPreferences = PassioDemoSharedPreferences(
-        context.getSharedPreferences(PassioDemoSharedPreferences.PREF_NAME, 0)
+    private val sharedPreferences = DemoSharedPreferences(
+        context.getSharedPreferences(DemoSharedPreferences.PREF_NAME, 0)
     )
     private val dateFormat = "yyyyMMdd"
-//    private lateinit var records: MutableList<FoodRecord>
     private lateinit var weightRecords: MutableList<WeightRecord>
     private lateinit var waterRecords: MutableList<WaterRecord>
-//    private var userProfile: UserProfile = UserProfile()
     private lateinit var customFoods: MutableList<FoodRecord>
     private lateinit var recipes: MutableList<FoodRecord>
     private lateinit var favorites: MutableList<FoodRecord>
 
     override fun initialize() {
-//        records = sharedPreferences.getRecords().map {
-//            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
-//        }.toMutableList()
         customFoods = sharedPreferences.getCustomFoods().map {
-            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
+            myGson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
         recipes = sharedPreferences.getRecipes().map {
-            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
+            myGson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
 
         weightRecords = sharedPreferences.getWeightRecords().map {
-            passioGson.fromJson(it, WeightRecord::class.java) as WeightRecord
+            myGson.fromJson(it, WeightRecord::class.java) as WeightRecord
         }.toMutableList()
 
         waterRecords = sharedPreferences.getWaterRecords().map {
-            passioGson.fromJson(it, WaterRecord::class.java) as WaterRecord
+            myGson.fromJson(it, WaterRecord::class.java) as WaterRecord
         }.toMutableList()
-
         favorites = sharedPreferences.getFavorites().map {
-            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
+            myGson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
 
-//        passioGson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)?.let {
-//            userProfile = it
-//        }
-
     }
 
-    fun isMigrationNeeded(): Boolean
-    {
-        return sharedPreferences.isMigrationNeeded()
-    }
-
-    fun markDoneMigration()
-    {
-        sharedPreferences.clear()
-    }
-
-    fun getRecords(): MutableList<FoodRecord>
-    {
+    private fun getRecords(): MutableList<FoodRecord> {
         val records = sharedPreferences.getRecords().map {
-            passioGson.fromJson(it, FoodRecord::class.java) as FoodRecord
+            myGson.fromJson(it, FoodRecord::class.java) as FoodRecord
         }.toMutableList()
         return records
     }
@@ -97,12 +79,12 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         }
 //        records.add(foodRecord)
 
-        val json = records.map { passioGson.toJson(it) }
+        val json = records.map { myGson.toJson(it) }
         sharedPreferences.saveRecords(json)
         return true
     }
 
-   /* override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
+    /*override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
         val records = getRecords()
         foodRecords.forEach { foodRecord ->
             val indexToRemove = records.indexOfFirst { it.uuid == foodRecord.uuid }
@@ -113,7 +95,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
                 records.add(foodRecord)
             }
         }
-        val json = records.map { passioGson.toJson(it) }
+        val json = records.map { myGson.toJson(it) }
         sharedPreferences.saveRecords(json)
         return true
     }*/
@@ -122,7 +104,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         val records = getRecords()
         val recordToDelete = records.find { it.uuid == foodRecord.uuid } ?: return false
         records.remove(recordToDelete)
-        sharedPreferences.saveRecords(records.map { passioGson.toJson(it) })
+        sharedPreferences.saveRecords(records.map { myGson.toJson(it) })
         return true
     }
 
@@ -142,8 +124,9 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun fetchDayLogFor(startDate: Date, endDate: Date): List<FoodRecord> {
         val records = getRecords()
-        val fromDate = DateTime(startDate.time).millis
-        val toDate = DateTime(endDate.time).millis
+
+        val fromDate = startDate.time
+        val toDate = endDate.time
         return records.filter { it.createdAtTime() in fromDate..toDate }
     }
 
@@ -174,12 +157,14 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {
 //        this.userProfile = userProfile
-        sharedPreferences.saveUserProfile(passioGson.toJson(userProfile))
+        sharedPreferences.saveUserProfile(myGson.toJson(userProfile))
         return true
     }
 
     override suspend fun fetchUserProfile(): UserProfile {
-        val userProfile = passioGson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)?: UserProfile()
+        val userProfile =
+            myGson.fromJson(sharedPreferences.getUserProfile(), UserProfile::class.java)
+                ?: UserProfile()
         return userProfile
     }
 
@@ -191,7 +176,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         } else {
             weightRecords.add(weightRecord)
         }
-        val json = weightRecords.map { passioGson.toJson(it) }
+        val json = weightRecords.map { myGson.toJson(it) }
         sharedPreferences.saveWeightRecords(json)
         return true
     }
@@ -201,14 +186,9 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         if (indexToRemove != -1) {
             weightRecords.removeAt(indexToRemove)
         }
-        val json = weightRecords.map { passioGson.toJson(it) }
+        val json = weightRecords.map { myGson.toJson(it) }
         sharedPreferences.saveWeightRecords(json)
         return true
-    }
-
-    fun fetchAllWeightRecords(): List<WeightRecord>
-    {
-        return weightRecords
     }
 
     override suspend fun fetchWeightRecords(startDate: Date, endDate: Date): List<WeightRecord> {
@@ -231,7 +211,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         } else {
             waterRecords.add(waterRecord)
         }
-        val json = waterRecords.map { passioGson.toJson(it) }
+        val json = waterRecords.map { myGson.toJson(it) }
         sharedPreferences.saveWaterRecords(json)
         return true
     }
@@ -241,14 +221,9 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         if (indexToRemove != -1) {
             waterRecords.removeAt(indexToRemove)
         }
-        val json = waterRecords.map { passioGson.toJson(it) }
+        val json = waterRecords.map { myGson.toJson(it) }
         sharedPreferences.saveWaterRecords(json)
         return true
-    }
-
-    fun fetchAllWaterRecords(): List<WaterRecord>
-    {
-        return waterRecords
     }
 
     override suspend fun fetchWaterRecords(startDate: Date, endDate: Date): List<WaterRecord> {
@@ -267,7 +242,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         } else {
             customFoods.add(foodRecord)
         }
-        val json = customFoods.map { passioGson.toJson(it) }
+        val json = customFoods.map { myGson.toJson(it) }
         sharedPreferences.saveCustomFoods(json)
         return true
     }
@@ -292,7 +267,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         if (indexToRemove != -1) {
             customFoods.removeAt(indexToRemove)
         }
-        val json = customFoods.map { passioGson.toJson(it) }
+        val json = customFoods.map { myGson.toJson(it) }
         sharedPreferences.saveCustomFoods(json)
         return true
     }
@@ -309,7 +284,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         } else {
             recipes.add(foodRecord)
         }
-        val json = recipes.map { passioGson.toJson(it) }
+        val json = recipes.map { myGson.toJson(it) }
         sharedPreferences.saveRecipes(json)
         return true
     }
@@ -334,7 +309,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         if (indexToRemove != -1) {
             recipes.removeAt(indexToRemove)
         }
-        val json = recipes.map { passioGson.toJson(it) }
+        val json = recipes.map { myGson.toJson(it) }
         sharedPreferences.saveRecipes(json)
         return true
     }
@@ -344,7 +319,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
             favorites.remove(it)
         }
         favorites.add(foodRecord)
-        val json = favorites.map { passioGson.toJson(it) }
+        val json = favorites.map { myGson.toJson(it) }
         sharedPreferences.saveFavorites(json)
         return true
     }
@@ -353,7 +328,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         favorites.find { it.refCode == foodRecord.refCode }?.let {
             favorites.remove(it)
         }
-        val json = favorites.map { passioGson.toJson(it) }
+        val json = favorites.map { myGson.toJson(it) }
         sharedPreferences.saveFavorites(json)
         return true
     }

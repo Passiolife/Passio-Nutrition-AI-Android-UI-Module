@@ -49,7 +49,7 @@ object EditFoodUseCase {
         return repository.logFoodRecord(foodRecord)
     }
 
-    suspend fun deleteRecord(uuid: String): Boolean {
-        return repository.deleteFoodRecord(uuid)
+    suspend fun deleteRecord(foodRecord: FoodRecord): Boolean {
+        return repository.deleteFoodRecord(foodRecord)
     }
 }

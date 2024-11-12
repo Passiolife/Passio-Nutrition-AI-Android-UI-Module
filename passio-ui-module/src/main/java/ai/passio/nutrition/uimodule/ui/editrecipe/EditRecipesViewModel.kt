@@ -51,7 +51,7 @@ class EditRecipesViewModel : BaseViewModel() {
     private val defaultUnitGram = PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0))
 
     init {
-        foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
+        foodRecord.entityType = PassioIDEntityType.recipe.value
         foodRecord.servingSizes.add(defaultSizeGram)
         foodRecord.servingUnits.add(defaultUnitGram)
         foodRecord.setSelectedUnit(Grams.unitName)
@@ -72,7 +72,7 @@ class EditRecipesViewModel : BaseViewModel() {
         viewModelScope.launch {
             _showLoading.postValue(true)
             foodRecord = editRecipe.clone()
-            foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
+            foodRecord.entityType = PassioIDEntityType.recipe.value
             if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
                 isEditRecipe = true
             }
@@ -163,7 +163,7 @@ class EditRecipesViewModel : BaseViewModel() {
                             this.foodImagePath = foodRecord.foodImagePath
                             this.iconId = foodRecord.iconId
                             this.id = foodRecord.uuid
-                            this.passioIDEntityType = foodRecord.passioIDEntityType
+                            this.entityType = foodRecord.entityType
                             this.servingSizes.clear()
                             this.servingSizes.addAll(foodRecord.servingSizes)
                             this.servingUnits.clear()
@@ -185,7 +185,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun deleteRecipe() {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            if (useCase.deleteRecipe(foodRecord.uuid)) {
+            if (useCase.deleteRecipe(foodRecord)) {
                 _showMessageEvent.postValue("Recipe deleted!")
             } else {
                 _showMessageEvent.postValue("Could not delete recipe, Please try again.")

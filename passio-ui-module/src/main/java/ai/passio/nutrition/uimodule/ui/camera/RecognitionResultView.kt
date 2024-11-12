@@ -253,7 +253,7 @@ class RecognitionResultView @JvmOverloads constructor(
             } else if (foodRecord.packagedFoodCode.isValid()) {
                 "UPC:${foodRecord.packagedFoodCode}"
             } else {
-                foodRecord.additionalData
+                foodRecord.details
             }
             it.barcodeImage.loadFoodImage(result.foodItem)
             disableDrag()

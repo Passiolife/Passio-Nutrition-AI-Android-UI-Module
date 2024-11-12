@@ -20,7 +20,7 @@ internal fun ImageView.loadFoodImage(
         }
         return
     }
-    loadPassioIcon(foodRecord.iconId, PassioIDEntityType.fromString(foodRecord.passioIDEntityType))
+    loadPassioIcon(foodRecord.iconId, PassioIDEntityType.fromString(foodRecord.entityType))
 }
 
 internal fun ImageView.loadPassioIcon(
