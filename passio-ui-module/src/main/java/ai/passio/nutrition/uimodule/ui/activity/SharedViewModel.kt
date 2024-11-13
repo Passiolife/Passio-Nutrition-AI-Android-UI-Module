@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
+import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
@@ -100,6 +101,9 @@ class SharedViewModel : ViewModel() {
 
     private val _photoFoodResultLD = SingleLiveEvent<List<Bitmap>>()
     val photoFoodResultLD: LiveData<List<Bitmap>> get() = _photoFoodResultLD
+
+    private val _reelDataLD = SingleLiveEvent<Pair<Bitmap, List<PassioAdvisorFoodInfo>>>()
+    val reelDataLD: LiveData<Pair<Bitmap, List<PassioAdvisorFoodInfo>>> get() = _reelDataLD
 
     private val userProfileCase = UserProfileUseCase
 
@@ -215,6 +219,10 @@ class SharedViewModel : ViewModel() {
 
     fun setDiaryDate(currentDate: Date) {
         _diaryCurrentDate.postValue(currentDate)
+    }
+
+    fun setReelData(bitmap: Bitmap, results: List<PassioAdvisorFoodInfo>) {
+        _reelDataLD.postValue(bitmap to results)
     }
 
 }

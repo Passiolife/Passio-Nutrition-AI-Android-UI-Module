@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
     <application>
         <activity
@@ -13,6 +16,11 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
+
+        <service
+            android:name=".service.RecordService"
+            android:foregroundServiceType="mediaProjection"
+            android:process=":recordServiceProcess" />
     </application>
 
 </manifest>

@@ -532,7 +532,6 @@
             android:id="@+id/take_photo_to_image_food_result"
             app:destination="@id/image_food_result" />
 
-
     </fragment>
 
     <fragment
@@ -546,6 +545,18 @@
             app:destination="@id/diary"
             app:launchSingleTop="true"
             app:popUpTo="@id/dashboard" />
+
+        <action
+            android:id="@+id/image_food_result_to_image_reel"
+            app:destination="@id/image_reel" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/image_reel"
+        android:name="ai.passio.nutrition.uimodule.ui.reel.ImageReelFragment"
+        android:label="Image Reel"
+        tools:layout="@layout/fragment_image_reel">
 
     </fragment>
 

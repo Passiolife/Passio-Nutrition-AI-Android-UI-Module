@@ -39,6 +39,10 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
+    fun getFirstBitmap(): Bitmap {
+        return currentBitmaps.first()
+    }
+
     private fun fetchResult() {
         viewModelScope.launch {
             _isProcessing.postValue(true)
@@ -84,6 +88,12 @@ class ImageFoodResultViewModel : BaseViewModel() {
             navigate(ImageFoodResultFragmentDirections.imageFoodResultToDiary())
         }
 
+    }
+
+    fun navigateToReel() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(ImageFoodResultFragmentDirections.imageFoodResultToImageReel())
+        }
     }
 
 }

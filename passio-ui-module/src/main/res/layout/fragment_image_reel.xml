@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/reel_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/reelImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/macrosLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:alpha="0"
+            android:background="@drawable/rc_16_white"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            tools:alpha="1">
+
+            <FrameLayout
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/macrosChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/halfGuideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/caloriesValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:textColor="@color/passio_calories"
+                    android:textSize="@dimen/_14ssp"
+                    tools:text="150" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/caloriesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="44dp"
+                    android:fontFamily="@font/inter_semi_bold"
+                    android:text="@string/calories"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="@dimen/_10ssp" />
+
+            </FrameLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="4dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/carbsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/edit_carbs"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="@dimen/_11ssp"
+                    app:layout_constraintBottom_toTopOf="@id/proteinLabel"
+                    app:layout_constraintEnd_toEndOf="@id/proteinLabel"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/proteinLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/edit_protein"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="@dimen/_11ssp"
+                    app:layout_constraintBottom_toTopOf="@id/fatLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/carbsLabel" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fatLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="@string/edit_fat"
+                    android:textColor="@color/passio_gray900"
+                    android:textSize="@dimen/_11ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/proteinLabel"
+                    app:layout_constraintTop_toBottomOf="@id/proteinLabel" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/carbsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="@dimen/_11ssp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/carbsLabel"
+                    app:layout_constraintStart_toEndOf="@id/carbsLabel"
+                    tools:text="19g (50%)" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/proteinValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="@dimen/_11ssp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/proteinLabel"
+                    app:layout_constraintStart_toEndOf="@id/proteinLabel"
+                    tools:text="19g (50%)" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fatValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/passio_gray500"
+                    android:textSize="@dimen/_11ssp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/fatLabel"
+                    app:layout_constraintStart_toEndOf="@id/fatLabel"
+                    tools:text="19g (50%)" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/reelGridContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:columnCount="2">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+        </GridLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

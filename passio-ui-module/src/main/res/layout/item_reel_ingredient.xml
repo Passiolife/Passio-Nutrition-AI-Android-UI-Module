@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:background="@drawable/reel_item_background"
+    android:padding="2dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/_20sdp"
+
+        android:orientation="vertical"
+        android:paddingStart="@dimen/_24sdp"
+        android:paddingEnd="@dimen/_4sdp"
+        app:layout_constraintBottom_toBottomOf="@id/reelItemImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/reelItemImage">
+
+        <TextView
+            android:id="@+id/reelItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/passio_black"
+            android:textSize="@dimen/_10ssp"
+            tools:text="Blueberries, 1 cup" />
+
+        <TextView
+            android:id="@+id/reelItemWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="@dimen/_10ssp"
+            tools:text="1 cup (205g)" />
+
+        <TextView
+            android:id="@+id/reelItemMacros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textSize="@dimen/_10ssp"
+            tools:text="150 2.5 4.1 3.5" />
+
+    </LinearLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/reelItemImage"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_food_sample" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
