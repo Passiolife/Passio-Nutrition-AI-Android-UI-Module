@@ -15,7 +15,7 @@ data class FoodLogEntity(
     var name: String = "",
     var additionalData: String = "",
     var iconId: String = "",
-    var foodImagePath: String? = null,
+//    var foodImagePath: String? = null,
     var passioIDEntityType: String = PassioIDEntityType.item.value,
     var selectedUnit: String = "",
     var selectedQuantity: Double = 0.0,
@@ -24,6 +24,7 @@ data class FoodLogEntity(
     var openFoodLicense: String? = null,
     var barcode: String? = null, // Convert Barcode to JSON
     var packagedFoodCode: String? = null,
+    var refCode: String? = null,
 
     @TypeConverters(FoodLogTypeConverters::class)
     var ingredients: MutableList<FoodLogIngredientEntity> = mutableListOf(),

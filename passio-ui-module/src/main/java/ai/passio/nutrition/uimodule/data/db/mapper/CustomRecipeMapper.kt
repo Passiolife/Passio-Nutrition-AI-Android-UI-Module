@@ -17,7 +17,7 @@ internal fun FoodRecord.toCustomRecipeEntity(): CustomRecipeEntity {
         name = foodRecord.name,
         additionalData = foodRecord.additionalData,
         iconId = foodRecord.iconId,
-        foodImagePath = foodRecord.foodImagePath,
+//        foodImagePath = foodRecord.foodImagePath,
         passioIDEntityType = foodRecord.passioIDEntityType,
         selectedUnit = foodRecord.getSelectedUnit(),
         selectedQuantity = foodRecord.getSelectedQuantity(),
@@ -26,7 +26,7 @@ internal fun FoodRecord.toCustomRecipeEntity(): CustomRecipeEntity {
         openFoodLicense = foodRecord.openFoodLicense,
         barcode = foodRecord.barcode, // Convert barcode to String (handle this conversion properly)
         packagedFoodCode = foodRecord.packagedFoodCode, // Convert packaged food code to String
-
+        refCode = foodRecord.refCode,
         ingredients = foodRecord.ingredients.map { ingredient ->
             ingredient.toFoodLogIngredientEntity()
         }.toMutableList(), // Map FoodRecordIngredient to FoodLogIngredientEntity
@@ -44,7 +44,7 @@ internal fun CustomRecipeEntity.toFoodRecord(): FoodRecord {
         name = foodLogEntity.name
         additionalData = foodLogEntity.additionalData
         iconId = foodLogEntity.iconId
-        foodImagePath = foodLogEntity.foodImagePath
+//        foodImagePath = foodLogEntity.foodImagePath
         passioIDEntityType = foodLogEntity.passioIDEntityType
         selectedUnit = foodLogEntity.selectedUnit
         selectedQuantity = foodLogEntity.selectedQuantity
@@ -55,6 +55,7 @@ internal fun CustomRecipeEntity.toFoodRecord(): FoodRecord {
         openFoodLicense = foodLogEntity.openFoodLicense
         barcode = foodLogEntity.barcode
         packagedFoodCode = foodLogEntity.packagedFoodCode
+        refCode = foodLogEntity.refCode
 
         ingredients = foodLogEntity.ingredients.map { ingredientEntity ->
             ingredientEntity.toFoodRecordIngredient()

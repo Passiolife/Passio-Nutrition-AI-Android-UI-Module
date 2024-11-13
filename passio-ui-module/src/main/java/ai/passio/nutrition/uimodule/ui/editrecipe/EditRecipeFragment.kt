@@ -24,7 +24,6 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
-import ai.passio.nutrition.uimodule.ui.util.saveBitmapToStorage
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
@@ -38,8 +37,6 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import coil.load
-import coil.transform.CircleCropTransformation
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
@@ -216,9 +213,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
         }
         sharedViewModel.photoFoodResultLD.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                saveBitmapToStorage(requireContext(), it[0])?.let { path ->
-                    viewModel.setPhotoPath(path)
-                }
+                viewModel.setPhotoBitmap(it[0])
             }
         }
         sharedViewModel.editRecipe.observe(viewLifecycleOwner) { editRecipe ->
@@ -234,11 +229,9 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             viewLifecycleOwner,
             ::editDeleteFoodIngredients
         )
-        viewModel.photoPathEvent.observe(viewLifecycleOwner) { photoPath ->
-            if (photoPath.isValid()) {
-                binding.ivThumb.load(photoPath) {
-                    transformations(CircleCropTransformation())
-                }
+        viewModel.iconIdEvent.observe(viewLifecycleOwner) { iconId ->
+            if (iconId.isValid()) {
+                binding.ivThumb.loadPassioIcon(iconId)
             } else {
                 binding.ivThumb.loadPassioIcon("", PassioIDEntityType.recipe)
             }
@@ -443,11 +436,9 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
     private val photoPickerListener = object : PhotoPickerListener {
         override fun onImagePicked(uris: List<Uri>) {
             if (uris.isNotEmpty()) {
-                val bitmap = uriToBitmap(requireContext(), uris[0])
+                val bitmap = uriToBitmap(uris[0])
                 if (bitmap != null) {
-                    saveBitmapToStorage(requireContext(), bitmap)?.let { path ->
-                        viewModel.setPhotoPath(path)
-                    }
+                    viewModel.setPhotoBitmap(bitmap)
                 }
             }
         }

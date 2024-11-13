@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.RoomDbPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import ai.passio.nutrition.uimodule.ui.menu.MainMenuDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -27,6 +28,19 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         R.id.mealplan,
         R.id.progress
     )
+
+    companion object{
+
+        private lateinit var context: Context
+        internal fun getContext() : Context{
+            return context
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        context = applicationContext
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

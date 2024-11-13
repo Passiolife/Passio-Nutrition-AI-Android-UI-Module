@@ -85,7 +85,7 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
 
                     1 -> {
                         //delete
-                        viewModel.deleteCustomFood(customFoodsAdapter.getItem(adapterPosition).uuid)
+                        viewModel.deleteCustomFood(customFoodsAdapter.getItem(adapterPosition))
                     }
                 }
             }

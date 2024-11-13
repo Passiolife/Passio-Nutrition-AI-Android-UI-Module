@@ -5,11 +5,11 @@ import ai.passio.nutrition.uimodule.data.db.entity.FoodLogIngredientEntity
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
-
+/*
 internal fun List<FoodRecord>.toFoodLogEntities(): List<FoodLogEntity> {
     val foodRecords = this
     return foodRecords.map { foodRecord -> foodRecord.toFoodLogEntity() }
-}
+}*/
 
 internal fun List<FoodLogEntity>.toFoodRecords(): List<FoodRecord> {
     val foodLogEntities = this
@@ -24,7 +24,7 @@ internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
         name = foodRecord.name,
         additionalData = foodRecord.additionalData,
         iconId = foodRecord.iconId,
-        foodImagePath = foodRecord.foodImagePath,
+//        foodImagePath = foodRecord.foodImagePath,
         passioIDEntityType = foodRecord.passioIDEntityType,
         selectedUnit = foodRecord.getSelectedUnit(),
         selectedQuantity = foodRecord.getSelectedQuantity(),
@@ -33,6 +33,7 @@ internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
         openFoodLicense = foodRecord.openFoodLicense,
         barcode = foodRecord.barcode, // Convert barcode to String (handle this conversion properly)
         packagedFoodCode = foodRecord.packagedFoodCode, // Convert packaged food code to String
+        refCode = foodRecord.refCode,
 
         ingredients = foodRecord.ingredients.map { ingredient ->
             ingredient.toFoodLogIngredientEntity()
@@ -48,6 +49,7 @@ internal fun FoodRecordIngredient.toFoodLogIngredientEntity(): FoodLogIngredient
     return FoodLogIngredientEntity(
 //        foodUUID = currentFoodUUID,
         id = ingredient.id,
+        refCode = ingredient.refCode,
         name = ingredient.name,
         additionalData = ingredient.additionalData,
         iconId = ingredient.iconId,
@@ -67,7 +69,7 @@ internal fun FoodLogEntity.toFoodRecord(): FoodRecord {
         name = foodLogEntity.name
         additionalData = foodLogEntity.additionalData
         iconId = foodLogEntity.iconId
-        foodImagePath = foodLogEntity.foodImagePath
+//        foodImagePath = foodLogEntity.foodImagePath
         passioIDEntityType = foodLogEntity.passioIDEntityType
         selectedUnit = foodLogEntity.selectedUnit
         selectedQuantity = foodLogEntity.selectedQuantity
@@ -78,6 +80,7 @@ internal fun FoodLogEntity.toFoodRecord(): FoodRecord {
         openFoodLicense = foodLogEntity.openFoodLicense
         barcode = foodLogEntity.barcode
         packagedFoodCode = foodLogEntity.packagedFoodCode
+        refCode = foodLogEntity.refCode
 
         ingredients = foodLogEntity.ingredients.map { ingredientEntity ->
             ingredientEntity.toFoodRecordIngredient()
@@ -94,6 +97,7 @@ internal fun FoodLogIngredientEntity.toFoodRecordIngredient(): FoodRecordIngredi
     val ingredientEntity = this
     return FoodRecordIngredient(
         id = ingredientEntity.id,
+        refCode = ingredientEntity.refCode,
         name = ingredientEntity.name,
         additionalData = ingredientEntity.additionalData,
         iconId = ingredientEntity.iconId,

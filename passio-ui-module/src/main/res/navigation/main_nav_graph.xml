@@ -49,6 +49,11 @@
         <action
             android:id="@+id/dashboard_to_settings"
             app:destination="@id/settings" />
+        <action
+            android:id="@+id/dashboard_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
 
     </fragment>
 
@@ -150,6 +155,10 @@
         <action
             android:id="@+id/edit_to_edit_recipe"
             app:destination="@id/edit_recipe" />
+
+        <action
+            android:id="@+id/edit_to_edit_ingredient"
+            app:destination="@id/edit_ingredient" />
 
         <action
             android:id="@+id/edit_to_search"
@@ -482,6 +491,18 @@
                 android:defaultValue="false"
                 app:argType="boolean" />
         </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/favorite"
+        android:name="ai.passio.nutrition.uimodule.ui.favorite.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/fragment_favorite">
+
+        <action
+            android:id="@+id/favorite_to_edit"
+            app:destination="@id/edit" />
+
     </fragment>
 
     <fragment

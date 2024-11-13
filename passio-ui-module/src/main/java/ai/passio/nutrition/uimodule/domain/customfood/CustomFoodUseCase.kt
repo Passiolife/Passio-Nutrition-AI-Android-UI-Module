@@ -43,8 +43,8 @@ object CustomFoodUseCase {
 
     }
 
-    suspend fun deleteCustomFood(uuid: String): Boolean {
-        return repository.deleteCustomFood(uuid)
+    suspend fun deleteCustomFood(foodRecord: FoodRecord): Boolean {
+        return repository.deleteCustomFood(foodRecord)
 
     }
 

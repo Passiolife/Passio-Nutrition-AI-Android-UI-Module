@@ -23,6 +23,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -81,11 +82,32 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     private fun setupCalendarView() {
         with(binding) {
-//            calendarView.currentDate = CalendarDay.today()
-            val aa = DateTime.now()//.plusDays(2)
-            calendarView.selectedDate = CalendarDay.from(aa.year, aa.monthOfYear, aa.dayOfMonth)
+            val todayDate = DateTime.now()//.plusDays(2)
+            calendarView.selectedDate =
+                CalendarDay.from(todayDate.year, todayDate.monthOfYear, todayDate.dayOfMonth)
 
             viewModel.fetchAdherence()
+
+            calendarView.setOnDateChangedListener { _, date, _ ->
+                sharedViewModel.setDiaryDate(
+                    DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        0,
+                        0
+                    ).toDate()
+                )
+                viewModel.navigateToDiary()
+            }
+
+            calendarView.setOnMonthChangedListener { _, date ->
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.YEAR, date.year)
+                calendar.set(Calendar.MONTH, date.month - 1)
+                calendar.set(Calendar.DAY_OF_MONTH, date.day)
+                viewModel.setAdherenceDate(calendar.time)
+            }
         }
     }
 
@@ -201,6 +223,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             calendarView.invalidateDecorators()
             viewModel.fetchLogsForCurrentDay()
 
+
         }
     }
 
@@ -218,6 +241,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
                 SelectedDayDecorator(requireContext(), calendarView),
                 DisableDateSelectionDecorator()
             )
+
         }
 
     }

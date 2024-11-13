@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.editrecipe
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.domain.foodimage.FoodImageUseCase
 import ai.passio.nutrition.uimodule.domain.recipe.RecipeUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
@@ -11,24 +12,24 @@ import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.nutrition.uimodule.ui.util.generateImageID
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class EditRecipesViewModel : BaseViewModel() {
 
     private val useCase = RecipeUseCase
     private val editFoodUseCase = EditFoodUseCase
-
-    private var photoPath: String? = null
-    private val _photoPathEvent = MutableLiveData<String>()
-    val photoPathEvent: LiveData<String> = _photoPathEvent
+    private val foodImageUseCase = FoodImageUseCase
 
     private val _internalUpdate = SingleLiveEvent<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>>()
     val internalUpdate: LiveData<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>> get() = _internalUpdate
@@ -45,6 +46,10 @@ class EditRecipesViewModel : BaseViewModel() {
     private var foodRecord = FoodRecord()
     private var loggedRecord: FoodRecord? = null
     private var isEditRecipe = false
+
+    private var iconId: String? = null
+    private val _iconIdEvent = MutableLiveData<String>()
+    val iconIdEvent: LiveData<String> = _iconIdEvent
 
 
     private val defaultSizeGram = PassioServingSize(1.0, Grams.unitName) //g or ml
@@ -87,10 +92,20 @@ class EditRecipesViewModel : BaseViewModel() {
         return isEditRecipe
     }
 
-    fun setPhotoPath(path: String) {
-        this.photoPath = path
-        foodRecord.foodImagePath = path
-        _photoPathEvent.postValue(path)
+    fun setPhotoBitmap(bitmap: Bitmap) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val imgId = generateImageID()
+            val result = foodImageUseCase.updateUserFoodImage(imgId, bitmap)
+            if (result) {
+                setIconId(imgId)
+            }
+        }
+    }
+    private fun setIconId(iconId: String)
+    {
+        this.iconId = iconId
+        foodRecord.iconId = iconId
+        _iconIdEvent.postValue(iconId)
     }
 
     fun setRecipeName(recipeName: String) {
@@ -160,7 +175,7 @@ class EditRecipesViewModel : BaseViewModel() {
                         loggedRecord?.apply {
                             this.name = foodRecord.name
                             this.ingredients = foodRecord.ingredients
-                            this.foodImagePath = foodRecord.foodImagePath
+//                            this.foodImagePath = foodRecord.foodImagePath
                             this.iconId = foodRecord.iconId
                             this.id = foodRecord.uuid
                             this.passioIDEntityType = foodRecord.passioIDEntityType
@@ -185,7 +200,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun deleteRecipe() {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            if (useCase.deleteRecipe(foodRecord.uuid)) {
+            if (useCase.deleteRecipe(foodRecord)) {
                 _showMessageEvent.postValue("Recipe deleted!")
             } else {
                 _showMessageEvent.postValue("Could not delete recipe, Please try again.")

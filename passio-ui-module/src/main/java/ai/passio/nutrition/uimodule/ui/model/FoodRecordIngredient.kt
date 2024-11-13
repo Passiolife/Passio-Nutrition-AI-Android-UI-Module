@@ -9,6 +9,7 @@ import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 class FoodRecordIngredient {
 
     var id: String = ""
+    var refCode: String ?= ""
     var name: String = ""
     var additionalData: String = ""
     var iconId: String = ""
@@ -23,6 +24,7 @@ class FoodRecordIngredient {
 
     constructor(
         id: String,
+        refCode: String?,
         name: String,
         additionalData: String,
         iconId: String,
@@ -33,6 +35,7 @@ class FoodRecordIngredient {
         referenceNutrients: PassioNutrients
     ) {
         this.id = id
+        this.refCode = refCode
         this.name = name
         this.additionalData = additionalData
         this.iconId = iconId
@@ -47,6 +50,7 @@ class FoodRecordIngredient {
     //custom food
     constructor(foodRecord: FoodRecord, passioNutrients: PassioNutrients) {
         id = foodRecord.id
+        refCode = foodRecord.refCode
         name = foodRecord.name
         additionalData = foodRecord.additionalData
         iconId = foodRecord.iconId
@@ -62,6 +66,7 @@ class FoodRecordIngredient {
 
     constructor(foodRecord: FoodRecord) {
         id = foodRecord.id
+        refCode = foodRecord.refCode
         name = foodRecord.name
         additionalData = foodRecord.additionalData
         iconId = foodRecord.iconId
@@ -77,6 +82,7 @@ class FoodRecordIngredient {
 
     constructor(ingredient: PassioIngredient) {
         id = ingredient.id
+        refCode = ingredient.refCode
         name = ingredient.name
         iconId = ingredient.iconId
         servingSizes = ingredient.amount.servingSizes

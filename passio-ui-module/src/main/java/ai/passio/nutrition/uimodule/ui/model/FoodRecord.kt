@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.model
 import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
-import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
@@ -32,7 +31,7 @@ open class FoodRecord() {
     var name: String = ""
     var additionalData: String = ""
     var iconId: String = ""
-    var foodImagePath: String? = null
+//    var foodImagePath: String? = null
     var passioIDEntityType = PassioIDEntityType.item.value
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
@@ -47,8 +46,9 @@ open class FoodRecord() {
     var createdAt: Long? = null
 
     var openFoodLicense: String? = null
-    var barcode: Barcode? = null
+    var barcode: String? = ""
     var packagedFoodCode: PackagedFoodCode? = null
+    var refCode: String ?= null
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
@@ -56,6 +56,7 @@ open class FoodRecord() {
 
     //custom food
     constructor(
+        iconId: String,
         productName: String,
         brandName: String,
         barcode: String?,
@@ -64,17 +65,22 @@ open class FoodRecord() {
         weightInGrams: Double,
         weightInGramsUnit: String,
         passioNutrients: PassioNutrients,
-        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
-        foodImagePath: String? = null
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
+//        foodImagePath: String? = null
     ) : this() {
 
 //        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
         this.uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        if (!refCode.isValid())
+        {
+            refCode = uuid
+        }
         this.name = productName
         this.additionalData = brandName
         this.barcode = barcode
         this.passioIDEntityType = passioIDEntityType.value
-        this.foodImagePath = foodImagePath
+//        this.foodImagePath = foodImagePath
+        this.iconId = iconId
 
         val gramUnit =
             if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
@@ -116,13 +122,15 @@ open class FoodRecord() {
         weightInGramsUnit: String,
         passioNutrients: PassioNutrients,
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
-        foodImagePath: String? = null
+//        foodImagePath: String? = null,
+        iconId: String
     ): FoodRecord {
         this.name = productName
         this.additionalData = brandName
         this.barcode = barcode
         this.passioIDEntityType = passioIDEntityType.value
-        this.foodImagePath = foodImagePath
+//        this.foodImagePath = foodImagePath
+        this.iconId = iconId
 
         val gramUnit =
             if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
@@ -161,6 +169,7 @@ open class FoodRecord() {
         ingredient: FoodRecordIngredient,
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
     ) : this() {
+
         id = ingredient.id
         name = ingredient.name
         iconId = ingredient.iconId
@@ -172,6 +181,11 @@ open class FoodRecord() {
         ingredients = mutableListOf()
         ingredients.add(ingredient)
         openFoodLicense = ingredient.openFoodLicense
+        refCode = ingredient.refCode
+//        if (!refCode.isValid())
+//        {
+//            refCode = id
+//        }
     }
 
     constructor(
@@ -179,6 +193,11 @@ open class FoodRecord() {
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
     ) : this() {
         id = foodItem.id
+        refCode = foodItem.refCode
+//        if (!refCode.isValid())
+//        {
+//            refCode = id
+//        }
         name = foodItem.name
         additionalData = foodItem.details
         iconId = foodItem.iconId
@@ -220,7 +239,11 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && record.iconId.isValid()) {
+        /*if (!foodImagePath.isValid() && record.iconId.isValid()) {
+            iconId = record.iconId
+            passioIDEntityType = record.passioIDEntityType
+        }*/
+        if (record.iconId.isValid()) {
             iconId = record.iconId
             passioIDEntityType = record.passioIDEntityType
         }
@@ -232,7 +255,11 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && record.iconId.isValid()) {
+        /*if (!foodImagePath.isValid() && record.iconId.isValid()) {
+            iconId = record.iconId
+            passioIDEntityType = PassioIDEntityType.item.value
+        }*/
+        if (record.iconId.isValid()) {
             iconId = record.iconId
             passioIDEntityType = PassioIDEntityType.item.value
         }
@@ -247,7 +274,11 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
+        /*if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
+            iconId = records.first().iconId
+            passioIDEntityType = PassioIDEntityType.item.value
+        }*/
+        if (records.first().iconId.isValid()) {
             iconId = records.first().iconId
             passioIDEntityType = PassioIDEntityType.item.value
         }
@@ -465,6 +496,10 @@ fun FoodRecord.copy(): FoodRecord {
             } else {
                 UUID.randomUUID().toString().uppercase(Locale.ROOT)
             }
+            if (!refCode.isValid())
+            {
+                refCode = id
+            }
         }
 }
 
@@ -476,7 +511,11 @@ fun FoodRecord.copyAsCustomFood(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-//            id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+
+            if (!refCode.isValid())
+            {
+                refCode = uuid
+            }
         }
 }
 
@@ -484,8 +523,9 @@ fun FoodRecord.copyAsRecipe(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-//            if (!id.isValid()) {
-//                id = uuid
-//            }
+            if (!refCode.isValid())
+            {
+                refCode = uuid
+            }
         }
 }

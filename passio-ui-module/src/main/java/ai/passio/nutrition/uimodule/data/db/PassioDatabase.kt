@@ -2,12 +2,14 @@ package ai.passio.nutrition.uimodule.data.db
 
 import ai.passio.nutrition.uimodule.data.db.dao.CustomFoodDao
 import ai.passio.nutrition.uimodule.data.db.dao.CustomRecipeDao
+import ai.passio.nutrition.uimodule.data.db.dao.FavoriteDao
 import ai.passio.nutrition.uimodule.data.db.dao.FoodLogDao
 import ai.passio.nutrition.uimodule.data.db.dao.UserDao
 import ai.passio.nutrition.uimodule.data.db.dao.WaterRecordDao
 import ai.passio.nutrition.uimodule.data.db.dao.WeightRecordDao
 import ai.passio.nutrition.uimodule.data.db.entity.CustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.entity.CustomRecipeEntity
+import ai.passio.nutrition.uimodule.data.db.entity.FavoriteFoodEntity
 import ai.passio.nutrition.uimodule.data.db.entity.FoodLogEntity
 import ai.passio.nutrition.uimodule.data.db.entity.UserEntity
 import ai.passio.nutrition.uimodule.data.db.entity.WaterRecordEntity
@@ -20,9 +22,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [FoodLogEntity::class/*, FoodLogIngredientEntity::class*/, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class],
+    entities = [FoodLogEntity::class/*, FoodLogIngredientEntity::class*/, WaterRecordEntity::class, WeightRecordEntity::class, UserEntity::class, CustomFoodEntity::class, CustomRecipeEntity::class, FavoriteFoodEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = true,
+//    autoMigrations = [
+//        AutoMigration (from = 1, to = 2)
+//    ]
 )
 @TypeConverters(
     FoodLogTypeConverters::class,
@@ -31,7 +36,7 @@ import androidx.room.TypeConverters
 )
 abstract class PassioDatabase : RoomDatabase() {
     internal companion object {
-        const val DATABASE_NAME = "passio_ui_module_db"
+        const val DATABASE_NAME = "db_passio_ui_module"
     }
 
     abstract fun foodLogDao(): FoodLogDao
@@ -40,4 +45,5 @@ abstract class PassioDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun customFoodDao(): CustomFoodDao
     abstract fun customRecipeDao(): CustomRecipeDao
+    abstract fun favoriteDao(): FavoriteDao
 }

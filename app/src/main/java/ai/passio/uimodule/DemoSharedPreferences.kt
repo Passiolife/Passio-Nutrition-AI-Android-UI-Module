@@ -1,11 +1,11 @@
-package ai.passio.nutrition.uimodule.data
+package ai.passio.uimodule
 
 import android.content.SharedPreferences
 
-class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferences) {
+class DemoSharedPreferences(private val sharedPreferences: SharedPreferences) {
 
     companion object Key {
-        const val PREF_NAME = "PassioUIPrefs"
+        const val PREF_NAME = "DemoPrefs"
         private const val PREF_FOOD_RECORDS = "foodRecords"
         private const val PREF_CUSTOM_FOODS = "customFoods"
         private const val PREF_RECIPES = "recipes"
@@ -13,15 +13,6 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
         private const val PREF_WATER_RECORDS = "waterRecords"
         private const val PREF_PASSIO_USER = "userProfile"
         private const val PREF_PASSIO_FAVOURITE = "favourites"
-    }
-
-    fun clear() {
-        sharedPreferences.edit().clear().apply()
-    }
-
-    fun isMigrationNeeded(): Boolean
-    {
-        return !sharedPreferences.all.isNullOrEmpty()
     }
 
     fun saveRecords(foodRecords: List<String>) {
@@ -58,7 +49,6 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
     fun saveWaterRecords(weightRecords: List<String>) {
         sharedPreferences.edit().putStringSet(PREF_WATER_RECORDS, weightRecords.toSet()).apply()
     }
-
     fun getFavorites(): Set<String> {
         return sharedPreferences.getStringSet(PREF_PASSIO_FAVOURITE, hashSetOf())!!
     }

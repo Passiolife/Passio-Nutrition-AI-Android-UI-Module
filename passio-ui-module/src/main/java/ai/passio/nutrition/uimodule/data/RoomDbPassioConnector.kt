@@ -4,8 +4,8 @@ import ai.passio.nutrition.uimodule.data.db.PassioDatabase
 import ai.passio.nutrition.uimodule.data.db.entity.USER_ID
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomRecipeEntity
+import ai.passio.nutrition.uimodule.data.db.mapper.toFavoriteEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toFoodRecord
-import ai.passio.nutrition.uimodule.data.db.mapper.toFoodLogEntities
 import ai.passio.nutrition.uimodule.data.db.mapper.toFoodLogEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toFoodRecords
 import ai.passio.nutrition.uimodule.data.db.mapper.toUserEntity
@@ -19,12 +19,15 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.model.getDBTimestamp
+import ai.passio.nutrition.uimodule.ui.util.deleteImageFromStorage
+import ai.passio.nutrition.uimodule.ui.util.getBitmapFromStorage
 import ai.passio.nutrition.uimodule.ui.util.getEndTimestamps
 import ai.passio.nutrition.uimodule.ui.util.getStartTimestamps
+import ai.passio.nutrition.uimodule.ui.util.saveBitmapToStorage
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.room.Room
 import org.joda.time.DateTime
-import java.util.Calendar
 import java.util.Date
 
 class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
@@ -45,13 +48,13 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return true
     }
 
-    override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
+    /*override suspend fun updateRecords(foodRecords: List<FoodRecord>): Boolean {
         foodLogDao.insertFoodLogs(foodRecords.toFoodLogEntities())
         return true
-    }
+    }*/
 
-    override suspend fun deleteRecord(uuid: String): Boolean {
-        foodLogDao.getFoodRecord(uuid)?.let {
+    override suspend fun deleteRecord(foodRecord: FoodRecord): Boolean {
+        foodLogDao.getFoodRecord(foodRecord.uuid)?.let {
             foodLogDao.deleteFoodRecord(it)
         }
         return true
@@ -64,14 +67,14 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return result
     }
 
-    override suspend fun fetchLogsRecords(startDate: Date, endDate: Date): List<FoodRecord> {
+    override suspend fun fetchDayLogFor(startDate: Date, endDate: Date): List<FoodRecord> {
         val startDateTime = getDBTimestamp(getStartTimestamps(DateTime(startDate)))
         val endDateTime = getDBTimestamp(getEndTimestamps(DateTime(endDate)))
         val result = foodLogDao.getFoodLogsForDate(startDateTime, endDateTime).toFoodRecords()
         return result
     }
 
-    override suspend fun fetchAdherence(): List<Long> {
+   /* override suspend fun fetchAdherence(): List<Long> {
         val records = foodLogDao.getAllFoodLogs().toFoodRecords()
 
         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
@@ -96,7 +99,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         }
         val result = uniqueDates.toList()
         return result
-    }
+    }*/
 
     override suspend fun fetchUserProfile(): UserProfile {
         return db.userDao().getUserEntityById(USER_ID)?.toUserProfile() ?: UserProfile()
@@ -112,7 +115,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return true
     }
 
-    override suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
+    override suspend fun deleteWeightRecord(weightRecord: WeightRecord): Boolean {
         db.weightRecordDao().deleteWeightRecord(weightRecord.toWeightRecordEntity())
         return true
     }
@@ -138,7 +141,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return true
     }
 
-    override suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
+    override suspend fun deleteWaterRecord(waterRecord: WaterRecord): Boolean {
         db.waterRecordDao().deleteWaterRecord(waterRecord.toWaterRecordEntity())
         return true
     }
@@ -150,35 +153,35 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return list.map { it.toWaterRecord() }
     }
 
-    override suspend fun saveCustomFood(foodRecord: FoodRecord): Boolean {
+    override suspend fun updateUserFood(foodRecord: FoodRecord): Boolean {
         db.customFoodDao().insert(foodRecord.toCustomFoodEntity())
         return true
     }
 
-    override suspend fun fetchCustomFoods(): List<FoodRecord> {
+    override suspend fun fetchAllUserFoods(): List<FoodRecord> {
         return db.customFoodDao().getAll().toFoodRecords()
     }
 
-    override suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
+    override suspend fun fetchAllUserFoodsMatching(searchQuery: String): List<FoodRecord> {
         return db.customFoodDao().filterCustomFoods(searchQuery.trim()).toFoodRecords()
     }
 
-    override suspend fun fetchCustomFood(uuid: String): FoodRecord? {
+    override suspend fun fetchUserFood(uuid: String): FoodRecord? {
         return db.customFoodDao().get(uuid)?.toFoodRecord()
     }
 
-    override suspend fun deleteCustomFood(uuid: String): Boolean {
-        db.customFoodDao().get(uuid)?.let {
+    override suspend fun deleteUserFood(foodRecord: FoodRecord): Boolean {
+        db.customFoodDao().get(foodRecord.uuid)?.let {
             db.customFoodDao().delete(it)
         }
         return true
     }
 
-    override suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
+    override suspend fun fetchUserFoodsForBarcode(barcode: String): FoodRecord? {
         return db.customFoodDao().getByBarcode(barcode)?.toFoodRecord()
     }
 
-    override suspend fun saveRecipe(foodRecord: FoodRecord): Boolean {
+    override suspend fun updateRecipe(foodRecord: FoodRecord): Boolean {
         db.customRecipeDao().insert(foodRecord.toCustomRecipeEntity())
         return true
     }
@@ -195,10 +198,44 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return db.customRecipeDao().filterCustomRecipes(searchQuery.trim()).toFoodRecords()
     }
 
-    override suspend fun deleteRecipe(uuid: String): Boolean {
-        db.customRecipeDao().get(uuid)?.let {
+    override suspend fun deleteRecipe(foodRecord: FoodRecord): Boolean {
+        db.customRecipeDao().get(foodRecord.uuid)?.let {
             db.customRecipeDao().delete(it)
         }
         return true
+    }
+
+    override suspend fun updateFavorite(foodRecord: FoodRecord): Boolean {
+        db.favoriteDao().insert(foodRecord.toFavoriteEntity())
+        return true
+    }
+
+    override suspend fun deleteFavorite(foodRecord: FoodRecord): Boolean {
+        foodRecord.refCode?.let {
+            db.favoriteDao().get(it)?.let { tempFav ->
+                db.favoriteDao().delete(tempFav)
+            }
+        }
+        return true
+    }
+
+    override suspend fun fetchFavorites(): List<FoodRecord> {
+        return db.favoriteDao().getAll().toFoodRecords()
+    }
+
+    override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
+        return db.favoriteDao().get(foodRecord.refCode ?: "") != null
+    }
+
+    override suspend fun updateUserFoodImage(iconId: String, bitmap: Bitmap): Boolean {
+        saveBitmapToStorage(bitmap, iconId) ?: return false
+        return true
+    }
+
+    override suspend fun fetchUserFoodImage(iconId: String): Bitmap? {
+        return getBitmapFromStorage(iconId)
+    }
+    override suspend fun deleteUserFoodImage(iconId: String): Boolean {
+        return deleteImageFromStorage(iconId)
     }
 }

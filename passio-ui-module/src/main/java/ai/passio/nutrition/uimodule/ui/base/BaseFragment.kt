@@ -11,8 +11,11 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
@@ -48,9 +51,11 @@ abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false
     }
 
     private fun handleNavigation(navCommand: NavigationCommand) {
-        when (navCommand) {
-            is NavigationCommand.ToDirection -> findNavController().navigate(navCommand.directions)
-            is NavigationCommand.Back -> findNavController().navigateUp()
+        lifecycleScope.launch(Dispatchers.Main) {
+            when (navCommand) {
+                is NavigationCommand.ToDirection -> findNavController().navigate(navCommand.directions)
+                is NavigationCommand.Back -> findNavController().navigateUp()
+            }
         }
     }
 

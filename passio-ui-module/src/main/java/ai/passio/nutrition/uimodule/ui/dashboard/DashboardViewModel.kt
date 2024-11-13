@@ -14,8 +14,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
+import java.util.Calendar
 import java.util.Date
 
 class DashboardViewModel : BaseViewModel() {
@@ -27,6 +29,7 @@ class DashboardViewModel : BaseViewModel() {
 
 
     private var currentDate = Date()
+    private var adherenceDate = Date()
     private val _currentDateEvent = MutableLiveData<Date>()
     val currentDateEvent: LiveData<Date> get() = _currentDateEvent
 
@@ -98,12 +101,68 @@ class DashboardViewModel : BaseViewModel() {
     }
 
 
+    private var adherenceScope : Job?= null
     fun fetchAdherence() {
+        adherenceScope?.cancel()
+        adherenceScope = viewModelScope.launch {
+            val records = useCase.getLogsForMonth(adherenceDate)
+            val uniqueDates = HashSet<Long>() // HashSet to store unique dates
+            // Iterate through each record and add the date component to the HashSet
+            fun timestampOnlyDate(timestamp: Long): Long {
+                // Convert millis to a date with only date part (ignoring time)
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = timestamp
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                return calendar.timeInMillis
+            }
+
+            records.forEach { record ->
+                record.createdAtTime()?.let { timestamp ->
+                    val date = timestampOnlyDate(timestamp)
+                    uniqueDates.add(date)
+                }
+            }
+            val result = uniqueDates.toList()
+            _adherents.postValue(result)
+            _isAdherentsLoading.postValue(false)
+        }
+    }
+
+    /*fun fetchAdherence() {
         viewModelScope.launch {
             _isAdherentsLoading.postValue(true)
+            useCase.getLogsForMonth(adherenceDate)
             val adherents = useCase.fetchAdherence()
             _adherents.postValue(adherents)
             _isAdherentsLoading.postValue(false)
+        }
+    }*/
+
+    private fun areDatesSame(date1: Date, date2: Date): Boolean {
+        val calendar1 = Calendar.getInstance()
+        val calendar2 = Calendar.getInstance()
+
+        calendar1.time = date1
+        calendar2.time = date2
+
+        return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR) &&
+                calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH) &&
+                calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH)
+    }
+    fun setAdherenceDate(date: Date) {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+
+        val calendarTemp = Calendar.getInstance()
+        calendarTemp.time = adherenceDate
+
+        if (!areDatesSame(calendar.time, calendarTemp.time)) {
+            adherenceDate = calendar.time
+            fetchAdherence()
         }
     }
 
@@ -152,6 +211,11 @@ class DashboardViewModel : BaseViewModel() {
     fun navigateToWaterTracking() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(DashboardFragmentDirections.dashboardToWaterTracking(currentDate = currentDate.time))
+        }
+    }
+    fun navigateToDiary() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navigate(DashboardFragmentDirections.dashboardToDiary())
         }
     }
 

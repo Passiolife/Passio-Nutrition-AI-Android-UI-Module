@@ -8,7 +8,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
-import ai.passio.nutrition.uimodule.ui.model.copy
+import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.isToday
@@ -146,7 +146,7 @@ class DiaryViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun improveQuickSuggestions() {
+    private fun improveQuickSuggestions() {
         viewModelScope.launch {
             getQuickAdds {
                 _quickSuggestions.postValue(it)
@@ -154,7 +154,7 @@ class DiaryViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
+    private fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
 
         viewModelScope.launch {
 
@@ -186,7 +186,7 @@ class DiaryViewModel : BaseViewModel() {
 
                 if (finalFoodRecords.isNotEmpty()) {
                     val lowerCasedFoodRecords = finalFoodRecords.map {
-                        it.copy().apply {
+                        it.clone().apply {
                             name = name.lowercase()
                             createdAt = null
                         }

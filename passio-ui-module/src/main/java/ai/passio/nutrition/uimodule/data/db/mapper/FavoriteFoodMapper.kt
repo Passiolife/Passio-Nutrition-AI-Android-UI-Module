@@ -1,17 +1,17 @@
 package ai.passio.nutrition.uimodule.data.db.mapper
 
-import ai.passio.nutrition.uimodule.data.db.entity.CustomFoodEntity
+import ai.passio.nutrition.uimodule.data.db.entity.FavoriteFoodEntity
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 
-internal fun List<CustomFoodEntity>.toFoodRecords(): List<FoodRecord> {
+internal fun List<FavoriteFoodEntity>.toFoodRecords(): List<FoodRecord> {
     val foodLogEntities = this
     return foodLogEntities.map { foodLogEntity -> foodLogEntity.toFoodRecord() }
 }
 
-internal fun FoodRecord.toCustomFoodEntity(): CustomFoodEntity {
+internal fun FoodRecord.toFavoriteEntity(): FavoriteFoodEntity {
     val foodRecord = this
-    return CustomFoodEntity(
+    return FavoriteFoodEntity(
         uuid = foodRecord.uuid,
         id = foodRecord.id,
         name = foodRecord.name,
@@ -26,7 +26,7 @@ internal fun FoodRecord.toCustomFoodEntity(): CustomFoodEntity {
         openFoodLicense = foodRecord.openFoodLicense,
         barcode = foodRecord.barcode, // Convert barcode to String (handle this conversion properly)
         packagedFoodCode = foodRecord.packagedFoodCode, // Convert packaged food code to String
-        refCode = foodRecord.refCode,
+        refCode = foodRecord.refCode ?: "",
 
         ingredients = foodRecord.ingredients.map { ingredient ->
             ingredient.toFoodLogIngredientEntity()
@@ -37,7 +37,7 @@ internal fun FoodRecord.toCustomFoodEntity(): CustomFoodEntity {
     )
 }
 
-internal fun CustomFoodEntity.toFoodRecord(): FoodRecord {
+internal fun FavoriteFoodEntity.toFoodRecord(): FoodRecord {
     val foodLogEntity = this
     return FoodRecord().apply {
         uuid = foodLogEntity.uuid

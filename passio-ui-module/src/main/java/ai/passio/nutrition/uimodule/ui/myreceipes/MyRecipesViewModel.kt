@@ -35,10 +35,10 @@ class MyRecipesViewModel : BaseViewModel() {
         }
     }
 
-    fun deleteRecipe(uuid: String) {
+    fun deleteRecipe(foodRecord: FoodRecord) {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            useCase.deleteRecipe(uuid)
+            useCase.deleteRecipe(foodRecord)
             getRecipes()
             _showLoading.postValue(false)
         }

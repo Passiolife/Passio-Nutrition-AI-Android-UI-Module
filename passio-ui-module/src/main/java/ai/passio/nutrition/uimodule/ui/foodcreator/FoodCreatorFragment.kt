@@ -16,20 +16,19 @@ import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
-import ai.passio.nutrition.uimodule.ui.util.saveBitmapToStorage
+import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
-import coil.load
-import coil.transform.CircleCropTransformation
 
 class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
 
@@ -228,6 +227,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showPrefilledData(customFood: FoodRecord) {
         with(binding)
         {
@@ -276,9 +276,10 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
     private fun initObserver() {
         sharedViewModel.photoFoodResultLD.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                saveBitmapToStorage(requireContext(), it[0])?.let { path ->
+                viewModel.setPhotoBitmap(it[0])
+                /*saveBitmapToStorage(it[0])?.let { path ->
                     viewModel.setPhotoPath(path)
-                }
+                }*/
             }
         }
         sharedViewModel.nutritionFactsPair.observe(viewLifecycleOwner) {
@@ -297,10 +298,13 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         viewModel.barcodeEvent.observe(viewLifecycleOwner) { barcode ->
             binding.barcode.text = barcode
         }
-        viewModel.photoPathEvent.observe(viewLifecycleOwner) { photoPath ->
+       /* viewModel.photoPathEvent.observe(viewLifecycleOwner) { photoPath ->
             binding.ivThumb.load(photoPath) {
                 transformations(CircleCropTransformation())
             }
+        }*/
+        viewModel.iconIdEvent.observe(viewLifecycleOwner) { iconId ->
+            binding.ivThumb.loadPassioIcon(iconId)
         }
         viewModel.servingUnitEvent.observe(viewLifecycleOwner) { servingUnit ->
             binding.weightGroup.isVisible =
@@ -326,11 +330,12 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
     private val photoPickerListener = object : PhotoPickerListener {
         override fun onImagePicked(uris: List<Uri>) {
             if (uris.isNotEmpty()) {
-                val bitmap = uriToBitmap(requireContext(), uris[0])
+                val bitmap = uriToBitmap(uris[0])
                 if (bitmap != null) {
-                    saveBitmapToStorage(requireContext(), bitmap)?.let { path ->
+                    viewModel.setPhotoBitmap(bitmap)
+                   /* saveBitmapToStorage(bitmap)?.let { path ->
                         viewModel.setPhotoPath(path)
-                    }
+                    }*/
                 }
             }
         }

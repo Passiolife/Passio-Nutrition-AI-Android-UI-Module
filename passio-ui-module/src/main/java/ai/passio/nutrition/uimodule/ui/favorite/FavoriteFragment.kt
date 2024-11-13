@@ -1,14 +1,14 @@
-package ai.passio.nutrition.uimodule.ui.myreceipes
+package ai.passio.nutrition.uimodule.ui.favorite
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
-import ai.passio.nutrition.uimodule.databinding.FragmentCustomFoodsBinding
+import ai.passio.nutrition.uimodule.databinding.FragmentFavoriteBinding
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
-import ai.passio.nutrition.uimodule.ui.customfoods.CustomFoodsAdapter
+import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.toast
@@ -17,17 +17,27 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
-class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
+class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
 
-    private var _binding: FragmentCustomFoodsBinding? = null
-    private val binding: FragmentCustomFoodsBinding get() = _binding!!
-    private lateinit var customFoodsAdapter: CustomFoodsAdapter
+    private var _binding: FragmentFavoriteBinding? = null
+    private val binding: FragmentFavoriteBinding get() = _binding!!
+    private lateinit var customFoodsAdapter: FavoriteAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCustomFoodsBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentFavoriteBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
+        override fun onBack() {
+            viewModel.navigateBack()
+        }
+
+        override fun onRightIconClicked() {
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,13 +46,10 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
         initObserver()
         with(binding)
         {
-            createFood.text = getString(R.string.create_new_recipe)
+            toolbar.setup(getString(R.string.favorites), baseToolbarListener)
+            toolbar.hideRightIcon()
 
-            createFood.setOnClickListener {
-                viewModel.navigateToEditRecipe()
-            }
-
-            customFoodsAdapter = CustomFoodsAdapter(::onRecipeDetails, ::onLog)
+            customFoodsAdapter = FavoriteAdapter(::onDetails, ::onLog)
             rvFoods.adapter = null
 
             rvFoods.setSwipeMenuCreator { leftMenu, rightMenu, position ->
@@ -65,7 +72,7 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
                     setBackgroundColor(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.passio_red500
+                            R.color.passio_red800
                         )
                     )
                     width = DesignUtils.dp2px(80f)
@@ -77,24 +84,18 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
                 menuBridge.closeMenu()
                 when (menuBridge.position) {
                     0 -> {
-                        sharedViewModel.editRecipe(
-                            customFoodsAdapter.getItem(
-                                adapterPosition
-                            )
-                        )
-                        viewModel.navigateToEditRecipe()
+                        sharedViewModel.detailsFoodRecord(customFoodsAdapter.getItem(adapterPosition), true)
+                        viewModel.navigateToDetails()
                     }
 
                     1 -> {
-                        //delete
-                        viewModel.deleteRecipe(customFoodsAdapter.getItem(adapterPosition))
+                        viewModel.markAsUnFavorite(customFoodsAdapter.getItem(adapterPosition))
                     }
                 }
             }
-
             rvFoods.adapter = customFoodsAdapter
         }
-        viewModel.getRecipes()
+        viewModel.getFavoriteFoods()
 
     }
 
@@ -102,29 +103,29 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
         viewModel.showLoading.observe(viewLifecycleOwner) {
             binding.loading.isVisible = it
         }
-        viewModel.recipeListEvent.observe(viewLifecycleOwner) {
+        viewModel.favoriteListEvent.observe(viewLifecycleOwner) {
             binding.noDataFound.isVisible = it.isEmpty()
             customFoodsAdapter.updateItems(it)
         }
-        viewModel.logRecipeEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
     }
 
-    private fun onRecipeDetails(customFood: FoodRecord) {
-        sharedViewModel.detailsFoodRecord(customFood)
+    private fun onDetails(foodRecord: FoodRecord) {
+        sharedViewModel.detailsFoodRecord(foodRecord)
         viewModel.navigateToDetails()
     }
 
-    private fun onLog(customFood: FoodRecord) {
-        viewModel.logRecipe(customFood)
+    private fun onLog(foodRecord: FoodRecord) {
+        viewModel.logFood(foodRecord)
     }
 
     private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
-                    requireContext().toast("Logged recipe successfully.")
+                    requireContext().toast("Logged food successfully.")
                 } else {
-                    requireContext().toast("Could not log recipe. please try again.")
+                    requireContext().toast("Could not log food item.")
                 }
             }
 

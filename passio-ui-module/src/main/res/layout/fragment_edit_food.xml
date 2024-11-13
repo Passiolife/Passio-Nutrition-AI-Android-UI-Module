@@ -49,6 +49,15 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivFavorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/icon_favorite"/>
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/foodName"
                         android:layout_width="0dp"
@@ -62,7 +71,7 @@
                         android:textColor="@color/passio_gray900"
                         android:textSize="@dimen/_11ssp"
                         app:layout_constraintBottom_toTopOf="@id/infoName"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/ivFavorite"
                         app:layout_constraintStart_toEndOf="@id/foodImage"
                         app:layout_constraintTop_toTopOf="@id/foodImage"
                         app:layout_constraintVertical_chainStyle="packed"
@@ -474,6 +483,19 @@
                         android:paddingTop="12dp"
                         android:paddingBottom="12dp"
                         android:text="@string/log" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/saveFav"
+                        style="@style/btn_positive_action"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/save" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
