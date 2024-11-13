@@ -19,12 +19,15 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.model.getDBTimestamp
+import ai.passio.nutrition.uimodule.ui.util.deleteImageFromStorage
+import ai.passio.nutrition.uimodule.ui.util.getBitmapFromStorage
 import ai.passio.nutrition.uimodule.ui.util.getEndTimestamps
 import ai.passio.nutrition.uimodule.ui.util.getStartTimestamps
+import ai.passio.nutrition.uimodule.ui.util.saveBitmapToStorage
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.room.Room
 import org.joda.time.DateTime
-import java.util.Calendar
 import java.util.Date
 
 class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
@@ -71,7 +74,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return result
     }
 
-    override suspend fun fetchAdherence(): List<Long> {
+   /* override suspend fun fetchAdherence(): List<Long> {
         val records = foodLogDao.getAllFoodLogs().toFoodRecords()
 
         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
@@ -96,7 +99,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         }
         val result = uniqueDates.toList()
         return result
-    }
+    }*/
 
     override suspend fun fetchUserProfile(): UserProfile {
         return db.userDao().getUserEntityById(USER_ID)?.toUserProfile() ?: UserProfile()
@@ -222,5 +225,17 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
 
     override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
         return db.favoriteDao().get(foodRecord.refCode ?: "") != null
+    }
+
+    override suspend fun updateUserFoodImage(iconId: String, bitmap: Bitmap): Boolean {
+        saveBitmapToStorage(bitmap, iconId) ?: return false
+        return true
+    }
+
+    override suspend fun fetchUserFoodImage(iconId: String): Bitmap? {
+        return getBitmapFromStorage(iconId)
+    }
+    override suspend fun deleteUserFoodImage(iconId: String): Boolean {
+        return deleteImageFromStorage(iconId)
     }
 }

@@ -98,7 +98,7 @@ class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
                 } else if (foodRecord.packagedFoodCode.isValid()) {
                     "UPC:${foodRecord.packagedFoodCode}"
                 } else {
-                    foodRecord.details
+                    foodRecord.additionalData
                 }
 
         }

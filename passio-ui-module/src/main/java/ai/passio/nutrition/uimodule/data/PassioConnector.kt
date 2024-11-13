@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import android.graphics.Bitmap
 import java.util.Date
 
 interface PassioConnector {
@@ -20,7 +21,7 @@ interface PassioConnector {
 
     suspend fun fetchDayLogFor(startDate: Date, endDate: Date): List<FoodRecord>
 
-    suspend fun fetchAdherence(): List<Long>
+//    suspend fun fetchAdherence(): List<Long>
 
     suspend fun fetchUserProfile(): UserProfile
 
@@ -70,7 +71,8 @@ interface PassioConnector {
 
     suspend fun isFavorite(foodRecord: FoodRecord): Boolean
 
-//    suspend fun updateUserFoodImage(id: String, bitmap: Bitmap): Boolean
-//    suspend fun fetchUserFoodImage(id: String): Bitmap?
-//    suspend fun deleteUserFoodImage(id: String): Boolean
+    suspend fun updateUserFoodImage(iconId: String, bitmap: Bitmap): Boolean
+    suspend fun fetchUserFoodImage(iconId: String): Bitmap?
+//    suspend fun fetchUserFoodImage(id: String, onBitmapFetched: (bitmap: Bitmap?) -> Unit)
+    suspend fun deleteUserFoodImage(iconId: String): Boolean
 }

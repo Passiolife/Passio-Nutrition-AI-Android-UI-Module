@@ -17,7 +17,7 @@ data class FavoriteFoodEntity(
     var name: String = "",
     var additionalData: String = "",
     var iconId: String = "",
-    var foodImagePath: String? = null,
+//    var foodImagePath: String? = null,
     var passioIDEntityType: String = PassioIDEntityType.item.value,
     var selectedUnit: String = "",
     var selectedQuantity: Double = 0.0,

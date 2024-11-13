@@ -211,8 +211,8 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
         with(binding) {
             foodImage.loadFoodImage(foodRecord)
             foodName.text = foodRecord.name.capitalized()
-            if (!foodRecord.name.equals(foodRecord.details, true)) {
-                infoName.text = foodRecord.details.capitalized()
+            if (!foodRecord.name.equals(foodRecord.additionalData, true)) {
+                infoName.text = foodRecord.additionalData.capitalized()
             }
 
             servingUnit.adapter = servingUnitAdapter

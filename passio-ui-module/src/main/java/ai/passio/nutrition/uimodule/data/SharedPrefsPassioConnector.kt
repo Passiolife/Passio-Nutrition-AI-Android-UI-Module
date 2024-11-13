@@ -9,11 +9,11 @@ import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
+import android.graphics.Bitmap
 import android.text.format.DateFormat
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
-import java.util.Calendar
 import java.util.Date
 
 internal val passioGson: Gson by lazy {
@@ -147,7 +147,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return records.filter { it.createdAtTime() in fromDate..toDate }
     }
 
-    override suspend fun fetchAdherence(): List<Long> {
+    /*override suspend fun fetchAdherence(): List<Long> {
         val records = getRecords()
         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
         // Iterate through each record and add the date component to the HashSet
@@ -170,7 +170,7 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
             }
         }
         return uniqueDates.toList()
-    }
+    }*/
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {
 //        this.userProfile = userProfile
@@ -364,5 +364,16 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
 
     override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
         return favorites.find { it.refCode == foodRecord.refCode } != null
+    }
+
+    override suspend fun updateUserFoodImage(id: String, bitmap: Bitmap): Boolean {
+        return true
+    }
+    override suspend fun fetchUserFoodImage(id: String): Bitmap? {
+        return null
+    }
+
+    override suspend fun deleteUserFoodImage(id: String): Boolean {
+        return true
     }
 }

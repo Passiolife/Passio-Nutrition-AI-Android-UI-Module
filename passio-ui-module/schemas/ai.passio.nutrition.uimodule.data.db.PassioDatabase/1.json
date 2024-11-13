@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1d532eea3f31b21452c124828f13412a",
+    "identityHash": "afd892c4d69485b152c76dddaff3600d",
     "entities": [
       {
         "tableName": "FoodLog",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `foodImagePath` TEXT, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -37,12 +37,6 @@
             "columnName": "iconId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "foodImagePath",
-            "columnName": "foodImagePath",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "passioIDEntityType",
@@ -308,7 +302,7 @@
       },
       {
         "tableName": "CustomFood",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `foodImagePath` TEXT, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -339,12 +333,6 @@
             "columnName": "iconId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "foodImagePath",
-            "columnName": "foodImagePath",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "passioIDEntityType",
@@ -430,7 +418,7 @@
       },
       {
         "tableName": "CustomRecipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `foodImagePath` TEXT, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -461,12 +449,6 @@
             "columnName": "iconId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "foodImagePath",
-            "columnName": "foodImagePath",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "passioIDEntityType",
@@ -552,7 +534,7 @@
       },
       {
         "tableName": "FavoriteFood",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `foodImagePath` TEXT, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT NOT NULL, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`refCode`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT NOT NULL, `iconId` TEXT NOT NULL, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT NOT NULL, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`refCode`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -583,12 +565,6 @@
             "columnName": "iconId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "foodImagePath",
-            "columnName": "foodImagePath",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "passioIDEntityType",
@@ -676,7 +652,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1d532eea3f31b21452c124828f13412a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'afd892c4d69485b152c76dddaff3600d')"
     ]
   }
 }

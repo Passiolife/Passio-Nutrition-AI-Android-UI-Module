@@ -206,6 +206,7 @@ class Repository private constructor() {
         val startOfMonth = getStartOfMonth(today)//.millis
         val endOfMonth = getEndOfMonth(today)//.millis
 
+        Log.d("getLogsForMonth==", "day: $day , startOfMonth: $startOfMonth , endOfMonth: $endOfMonth, today: $today")
         return connector.fetchDayLogFor(startOfMonth.toDate(), endOfMonth.toDate())
     }
 
@@ -216,10 +217,10 @@ class Repository private constructor() {
         return connector.fetchDayLogFor(before30Days.toDate(), today.toDate())
     }
 
-    suspend fun fetchAdherence(): List<Long> {
+  /*  suspend fun fetchAdherence(): List<Long> {
         return connector.fetchAdherence()
     }
-
+*/
     suspend fun updateUser(userProfile: UserProfile): Boolean {
         UserCache.setProfile(userProfile)
         return connector.updateUserProfile(userProfile)
@@ -354,6 +355,24 @@ class Repository private constructor() {
 
     suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
         return connector.isFavorite(foodRecord)
+    }
+
+    suspend fun updateUserFoodImage(id: String, bitmap: Bitmap): Boolean {
+        return connector.updateUserFoodImage(id, bitmap)
+    }
+
+    suspend fun fetchUserFoodImage(id: String): Bitmap? {
+        return connector.fetchUserFoodImage(id)
+    }
+    /*fun fetchUserFoodImage(
+        id: String,
+        onBitmapFetched: (bitmap: Bitmap?) -> Unit
+    ) {
+        connector.fetchUserFoodImage(id, onBitmapFetched)
+    }*/
+
+    suspend fun deleteUserFoodImage(id: String): Boolean {
+        return connector.deleteUserFoodImage(id)
     }
 
 }

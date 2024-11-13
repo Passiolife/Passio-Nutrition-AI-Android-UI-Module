@@ -29,10 +29,10 @@ internal fun getDBTimestamp(time: Long): Long {
 open class FoodRecord() {
     var id: String = ""
     var name: String = ""
-    var details: String = ""
+    var additionalData: String = ""
     var iconId: String = ""
-    var foodImagePath: String? = null
-    var entityType = PassioIDEntityType.item.value
+//    var foodImagePath: String? = null
+    var passioIDEntityType = PassioIDEntityType.item.value
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
 
@@ -56,6 +56,7 @@ open class FoodRecord() {
 
     //custom food
     constructor(
+        iconId: String,
         productName: String,
         brandName: String,
         barcode: String?,
@@ -64,8 +65,8 @@ open class FoodRecord() {
         weightInGrams: Double,
         weightInGramsUnit: String,
         passioNutrients: PassioNutrients,
-        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
-        foodImagePath: String? = null
+        passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item
+//        foodImagePath: String? = null
     ) : this() {
 
 //        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
@@ -75,10 +76,11 @@ open class FoodRecord() {
             refCode = uuid
         }
         this.name = productName
-        this.details = brandName
+        this.additionalData = brandName
         this.barcode = barcode
-        this.entityType = passioIDEntityType.value
-        this.foodImagePath = foodImagePath
+        this.passioIDEntityType = passioIDEntityType.value
+//        this.foodImagePath = foodImagePath
+        this.iconId = iconId
 
         val gramUnit =
             if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
@@ -120,13 +122,15 @@ open class FoodRecord() {
         weightInGramsUnit: String,
         passioNutrients: PassioNutrients,
         passioIDEntityType: PassioIDEntityType = PassioIDEntityType.item,
-        foodImagePath: String? = null
+//        foodImagePath: String? = null,
+        iconId: String
     ): FoodRecord {
         this.name = productName
-        this.details = brandName
+        this.additionalData = brandName
         this.barcode = barcode
-        this.entityType = passioIDEntityType.value
-        this.foodImagePath = foodImagePath
+        this.passioIDEntityType = passioIDEntityType.value
+//        this.foodImagePath = foodImagePath
+        this.iconId = iconId
 
         val gramUnit =
             if (weightInGramsUnit.equals(Milliliters.symbol, true)) Milliliters else Grams
@@ -169,7 +173,7 @@ open class FoodRecord() {
         id = ingredient.id
         name = ingredient.name
         iconId = ingredient.iconId
-        this.entityType = passioIDEntityType.value
+        this.passioIDEntityType = passioIDEntityType.value
         servingSizes.addAll(ingredient.servingSizes)
         servingUnits.addAll(ingredient.servingUnits)
         selectedUnit = ingredient.selectedUnit
@@ -195,9 +199,9 @@ open class FoodRecord() {
 //            refCode = id
 //        }
         name = foodItem.name
-        details = foodItem.details
+        additionalData = foodItem.details
         iconId = foodItem.iconId
-        this.entityType = passioIDEntityType.value
+        this.passioIDEntityType = passioIDEntityType.value
         servingSizes.addAll(foodItem.amount.servingSizes)
         servingUnits.addAll(foodItem.amount.servingUnits)
         selectedUnit = foodItem.amount.selectedUnit
@@ -235,9 +239,13 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && record.iconId.isValid()) {
+        /*if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
-            entityType = record.entityType
+            passioIDEntityType = record.passioIDEntityType
+        }*/
+        if (record.iconId.isValid()) {
+            iconId = record.iconId
+            passioIDEntityType = record.passioIDEntityType
         }
         setUnitToServing()
     }
@@ -247,9 +255,13 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && record.iconId.isValid()) {
+        /*if (!foodImagePath.isValid() && record.iconId.isValid()) {
             iconId = record.iconId
-            entityType = PassioIDEntityType.item.value
+            passioIDEntityType = PassioIDEntityType.item.value
+        }*/
+        if (record.iconId.isValid()) {
+            iconId = record.iconId
+            passioIDEntityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
@@ -262,9 +274,13 @@ open class FoodRecord() {
         if (!name.isValid()) {
             name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
+        /*if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
             iconId = records.first().iconId
-            entityType = PassioIDEntityType.item.value
+            passioIDEntityType = PassioIDEntityType.item.value
+        }*/
+        if (records.first().iconId.isValid()) {
+            iconId = records.first().iconId
+            passioIDEntityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
@@ -305,7 +321,7 @@ open class FoodRecord() {
             selectedUnit = ingredients[0].selectedUnit
             selectedQuantity = ingredients[0].selectedQuantity
             name = ingredients[0].name
-            details = ingredients[0].details
+            additionalData = ingredients[0].additionalData
             iconId = ingredients[0].iconId
             calculateQuantity()
         } else {

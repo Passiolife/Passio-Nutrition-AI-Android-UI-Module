@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.foodcreator
 
 import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
+import ai.passio.nutrition.uimodule.domain.foodimage.FoodImageUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALCIUM_ID
@@ -27,6 +28,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.nutrition.uimodule.ui.util.generateImageID
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.KiloCalories
 import ai.passio.passiosdk.passiofood.data.measurement.Micrograms
@@ -37,6 +39,7 @@ import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,6 +51,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 
     private val useCase = CustomFoodUseCase
     private val editFoodUseCase = EditFoodUseCase
+    private val foodImageUseCase = FoodImageUseCase
     val unitList = mutableListOf(
         "serving",
         "piece",
@@ -93,9 +97,12 @@ class FoodCreatorViewModel : BaseViewModel() {
     val prefillFoodData: LiveData<FoodRecord> = _prefillFoodData
 
 
-    private var photoPath: String? = null
-    private val _photoPathEvent = MutableLiveData<String>()
-    val photoPathEvent: LiveData<String> = _photoPathEvent
+    //    private var photoPath: String? = null
+//    private val _photoPathEvent = MutableLiveData<String>()
+//    val photoPathEvent: LiveData<String> = _photoPathEvent
+    private var iconId: String? = null
+    private val _iconIdEvent = MutableLiveData<String>()
+    val iconIdEvent: LiveData<String> = _iconIdEvent
 
     private var loggedRecord: FoodRecord? = null
 
@@ -236,10 +243,26 @@ class FoodCreatorViewModel : BaseViewModel() {
     }
 
 
-    fun setPhotoPath(path: String) {
+    fun setPhotoBitmap(bitmap: Bitmap) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val imgId = generateImageID()
+            val result = foodImageUseCase.updateUserFoodImage(imgId, bitmap)
+            if (result) {
+                setIconId(imgId)
+            }
+        }
+    }
+
+    private fun setIconId(iconId: String) {
+        this.iconId = iconId
+//        customFoodRecord?.iconId = iconId
+        _iconIdEvent.postValue(iconId)
+    }
+
+    /*fun setPhotoPath(path: String) {
         this.photoPath = path
         _photoPathEvent.postValue(path)
-    }
+    }*/
 
     fun setToUpdateLog(loggedRecord: FoodRecord) {
         this.loggedRecord = loggedRecord
@@ -247,7 +270,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 
     fun setDataToEdit(foodRecord: FoodRecord) {
 //        val nutritionFacts = nutritionFactsPair.first
-        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType)
+        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.passioIDEntityType)
 
 //        Log.d("nutritionFacts====", Gson().toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
@@ -268,9 +291,11 @@ class FoodCreatorViewModel : BaseViewModel() {
 //        nutritionFacts.servingSize
 //        nutritionFacts.sugarAlcohol
 
-        foodRecord.foodImagePath?.let {
+        /*foodRecord.foodImagePath?.let {
             setPhotoPath(it)
-        }
+        }*/
+
+        setIconId(foodRecord.iconId)
 
         val nutritionFacts = foodRecord.nutrientsReference()
         requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs()?.value ?: 0.0)
@@ -376,6 +401,7 @@ class FoodCreatorViewModel : BaseViewModel() {
         )
 
         val customFood = FoodRecord(
+
             productName = productName,
             brandName = brandName,
             barcode = barcode,
@@ -385,7 +411,8 @@ class FoodCreatorViewModel : BaseViewModel() {
             weightInGramsUnit = weightGramUnit,
             passioNutrients = passioNutrients,
             passioIDEntityType = passioIDEntityType,
-            foodImagePath = photoPath
+//            foodImagePath = ""photoPath,
+            iconId = iconId ?: ""
         )
         customFoodRecord = customFood
         _isEditCustomFood.postValue(false)
@@ -504,7 +531,7 @@ class FoodCreatorViewModel : BaseViewModel() {
                 _showMessageEvent.postValue("Please add valid information of required nutrients.")
             }/* else if (!isAddedOtherNutritionFacts()) {
                 _showMessageEvent.postValue("Please add valid information of other nutrients.")
-            } */else {
+            } */ else {
                 _showLoading.postValue(true)
 
                 val passioNutrientsTemp = PassioNutrients(
@@ -555,7 +582,8 @@ class FoodCreatorViewModel : BaseViewModel() {
                             weightInGramsUnit = weightGramUnit,
                             passioNutrients = passioNutrients,
                             passioIDEntityType = passioIDEntityType,
-                            foodImagePath = photoPath
+//                            foodImagePath = ""photoPath,
+                            iconId = iconId ?: ""
                         )
                     } else {
                         FoodRecord(
@@ -568,7 +596,8 @@ class FoodCreatorViewModel : BaseViewModel() {
                             weightInGramsUnit = weightGramUnit,
                             passioNutrients = passioNutrients,
                             passioIDEntityType = passioIDEntityType,
-                            foodImagePath = photoPath
+//                            foodImagePath = ""photoPath,
+                            iconId = iconId ?: ""
                         )
                     }
 
@@ -582,10 +611,10 @@ class FoodCreatorViewModel : BaseViewModel() {
                         loggedRecord?.apply {
                             this.name = customFoodNew.name
                             this.ingredients = customFoodNew.ingredients
-                            this.foodImagePath = customFoodNew.foodImagePath
+//                            this.foodImagePath = customFoodNew.foodImagePath
                             this.iconId = customFoodNew.iconId
                             this.id = customFoodNew.uuid
-                            this.entityType = customFoodNew.entityType
+                            this.passioIDEntityType = customFoodNew.passioIDEntityType
                             this.servingSizes.clear()
                             this.servingSizes.addAll(customFoodNew.servingSizes)
                             this.servingUnits.clear()

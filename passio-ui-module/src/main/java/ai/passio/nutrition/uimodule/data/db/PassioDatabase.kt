@@ -36,7 +36,7 @@ import androidx.room.TypeConverters
 )
 abstract class PassioDatabase : RoomDatabase() {
     internal companion object {
-        const val DATABASE_NAME = "passio_ui_module_db1"
+        const val DATABASE_NAME = "db_passio_ui_module"
     }
 
     abstract fun foodLogDao(): FoodLogDao

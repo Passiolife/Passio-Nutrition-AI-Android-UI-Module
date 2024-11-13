@@ -13,10 +13,10 @@ import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
+import android.graphics.Bitmap
 import android.text.format.DateFormat
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import java.util.Calendar
 import java.util.Date
 
 internal val myGson: Gson by lazy {
@@ -128,31 +128,6 @@ internal class MyPassioConnector(context: Context) : PassioConnector {
         val fromDate = startDate.time
         val toDate = endDate.time
         return records.filter { it.createdAtTime() in fromDate..toDate }
-    }
-
-    override suspend fun fetchAdherence(): List<Long> {
-        val records = getRecords()
-        val uniqueDates = HashSet<Long>() // HashSet to store unique dates
-        // Iterate through each record and add the date component to the HashSet
-
-        fun timestampOnlyDate(timestamp: Long): Long {
-            // Convert millis to a date with only date part (ignoring time)
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = timestamp
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return calendar.timeInMillis
-        }
-
-        records.forEach { record ->
-            record.createdAtTime()?.let { timestamp ->
-                val date = timestampOnlyDate(timestamp)
-                uniqueDates.add(date)
-            }
-        }
-        return uniqueDates.toList()
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {
@@ -340,4 +315,16 @@ internal class MyPassioConnector(context: Context) : PassioConnector {
     override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
         return favorites.find { it.refCode == foodRecord.refCode } != null
     }
+
+    override suspend fun updateUserFoodImage(id: String, bitmap: Bitmap): Boolean {
+        return true
+    }
+    override suspend fun fetchUserFoodImage(id: String): Bitmap? {
+        return null
+    }
+
+    override suspend fun deleteUserFoodImage(id: String): Boolean {
+        return true
+    }
+
 }
