@@ -15,10 +15,10 @@ internal fun FoodRecord.toFavoriteEntity(): FavoriteFoodEntity {
         uuid = foodRecord.uuid,
         id = foodRecord.id,
         name = foodRecord.name,
-        additionalData = foodRecord.additionalData,
+        additionalData = foodRecord.details,
         iconId = foodRecord.iconId,
 //        foodImagePath = foodRecord.foodImagePath,
-        passioIDEntityType = foodRecord.passioIDEntityType,
+        passioIDEntityType = foodRecord.entityType,
         selectedUnit = foodRecord.getSelectedUnit(),
         selectedQuantity = foodRecord.getSelectedQuantity(),
         mealLabel = foodRecord.mealLabel?.value, // Convert MealLabel enum to its string value
@@ -43,10 +43,10 @@ internal fun FavoriteFoodEntity.toFoodRecord(): FoodRecord {
         uuid = foodLogEntity.uuid
         id = foodLogEntity.id
         name = foodLogEntity.name
-        additionalData = foodLogEntity.additionalData
+        details = foodLogEntity.additionalData
         iconId = foodLogEntity.iconId
 //        foodImagePath = foodLogEntity.foodImagePath
-        passioIDEntityType = foodLogEntity.passioIDEntityType
+        entityType = foodLogEntity.passioIDEntityType
         selectedUnit = foodLogEntity.selectedUnit
         selectedQuantity = foodLogEntity.selectedQuantity
         mealLabel = foodLogEntity.mealLabel?.let { label ->

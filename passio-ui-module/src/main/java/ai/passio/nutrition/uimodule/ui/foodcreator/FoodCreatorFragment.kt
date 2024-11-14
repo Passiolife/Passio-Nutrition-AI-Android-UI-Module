@@ -233,7 +233,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         {
             ivThumb.loadFoodImage(customFood)
             name.setText(customFood.name)
-            brand.setText(customFood.additionalData)
+            brand.setText(customFood.details)
 
             viewModel.setBarcode(customFood.barcode ?: "")
 

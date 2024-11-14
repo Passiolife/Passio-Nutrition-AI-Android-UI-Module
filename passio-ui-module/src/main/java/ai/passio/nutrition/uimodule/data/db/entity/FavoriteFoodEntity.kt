@@ -15,7 +15,7 @@ data class FavoriteFoodEntity(
     val uuid: String,
     var id: String = "",
     var name: String = "",
-    var additionalData: String = "",
+    var additionalData: String ?= "",
     var iconId: String = "",
 //    var foodImagePath: String? = null,
     var passioIDEntityType: String = PassioIDEntityType.item.value,

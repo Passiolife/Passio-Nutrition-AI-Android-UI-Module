@@ -25,7 +25,7 @@ data class FoodLogIngredientEntity(
     var id: String = "",
     var refCode: String ?= "",
     var name: String = "",
-    var additionalData: String = "",
+    var additionalData: String ?= "",
     var iconId: String = "",
     var selectedUnit: String = "",
     var selectedQuantity: Double = 0.0,

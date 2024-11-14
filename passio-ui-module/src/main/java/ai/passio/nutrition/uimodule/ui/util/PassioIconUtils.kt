@@ -22,7 +22,7 @@ internal fun ImageView.loadFoodImage(
         }
         return
     }*/
-    loadPassioIcon(foodRecord.iconId, PassioIDEntityType.fromString(foodRecord.passioIDEntityType))
+    loadPassioIcon(foodRecord.iconId, PassioIDEntityType.fromString(foodRecord.entityType))
 }
 
 @OptIn(DelicateCoroutinesApi::class)

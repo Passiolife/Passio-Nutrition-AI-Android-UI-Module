@@ -270,7 +270,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 
     fun setDataToEdit(foodRecord: FoodRecord) {
 //        val nutritionFacts = nutritionFactsPair.first
-        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.passioIDEntityType)
+        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType)
 
 //        Log.d("nutritionFacts====", Gson().toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
@@ -620,7 +620,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 //                            this.foodImagePath = customFoodNew.foodImagePath
                             this.iconId = customFoodNew.iconId
                             this.id = customFoodNew.uuid
-                            this.passioIDEntityType = customFoodNew.passioIDEntityType
+                            this.entityType = customFoodNew.entityType
                             this.servingSizes.clear()
                             this.servingSizes.addAll(customFoodNew.servingSizes)
                             this.servingUnits.clear()
