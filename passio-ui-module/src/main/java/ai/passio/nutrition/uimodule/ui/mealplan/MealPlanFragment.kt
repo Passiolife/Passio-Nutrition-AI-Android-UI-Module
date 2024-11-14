@@ -18,7 +18,6 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.view.HorizontalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
-import android.util.Log
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 
@@ -174,8 +173,6 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
 
 
     private fun showMealPlans(mealPlanItems: List<PassioMealPlanItem>) {
-
-        Log.d("showMealPlans", "showMealPlans")
         val breakfast = mealPlanItems.filter { it.mealTime == PassioMealTime.BREAKFAST }
         val lunch = mealPlanItems.filter { it.mealTime == PassioMealTime.LUNCH }
         val dinner = mealPlanItems.filter { it.mealTime == PassioMealTime.DINNER }

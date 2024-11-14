@@ -5,7 +5,6 @@ import ai.passio.nutrition.uimodule.databinding.ItemImageFoodResultBinding
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
-import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.model.PassioSpeechRecognitionModel
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -48,6 +47,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 
                 image.loadPassioIcon(foodRecord.iconID)
                 name.text = foodRecord.foodName.capitalized()
+                nutritionPreview.calories
 
                 val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
                 val caloriesVal = ratio * foodInfo.advisorInfo.weightGrams
@@ -56,7 +56,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 //                calories.text = "$cal Cal"
                 calories.text = "${caloriesVal.singleDecimal()} Cal"
                 servingSize.text =
-                    "${foodInfo.advisorInfo.weightGrams.roundToInt()} ${Grams.unitName}"
+                    "${nutritionPreview.servingQuantity.roundToInt()} ${nutritionPreview.servingUnit}"
 
                 /*val quantity = foodRecord.nutritionPreview.servingQuantity
                 val selectedUnit = foodRecord.nutritionPreview.servingUnit

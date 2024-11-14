@@ -95,8 +95,8 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
                     val caloriesVal = ratio * foodInfo.weightGrams
 
                     calories.text = "${caloriesVal.singleDecimal()} Cal"
-                    servingSize.text =
-                        "${foodInfo.weightGrams.roundToInt()} ${Grams.unitName}"
+//                    servingSize.text = "${foodInfo.weightGrams.roundToInt()} ${Grams.unitName}"
+                    servingSize.text = "${nutritionPreview.servingQuantity.roundToInt()} ${nutritionPreview.servingUnit}"
                 }
 
                 foodSelect.isEnabled = true
