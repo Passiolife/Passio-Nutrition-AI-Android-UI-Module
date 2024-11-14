@@ -43,18 +43,18 @@ object MealPlanUseCase {
                     "weighGrams: ${weighGrams}\n" +
                     ""
         )*/
-        if (weighGrams == null || weighGrams == 0.0) {
-            if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
-                val quantity = nutritionPreview.servingQuantity
-                foodRecord.setSelectedQuantity(quantity)
-            } else {
-                val weight = nutritionPreview.weightQuantity
+//        if (weighGrams == null || weighGrams == 0.0) {
+        if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
+            val quantity = nutritionPreview.servingQuantity
+            foodRecord.setSelectedQuantity(quantity)
+        } else {
+            val weight = nutritionPreview.weightQuantity
 //                if (foodRecord.setSelectedUnit(Grams.unitName)) {
-                if (foodRecord.setSelectedUnit(nutritionPreview.weightUnit)) {
-                    foodRecord.setSelectedQuantity(weight)
-                }
+            if (foodRecord.setSelectedUnit(nutritionPreview.weightUnit)) {
+                foodRecord.setSelectedQuantity(weight)
             }
         }
+//        }
         return foodRecord
     }
 
