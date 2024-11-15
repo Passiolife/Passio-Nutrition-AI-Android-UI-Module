@@ -7,7 +7,6 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.dateToTimestamp
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioMealTime
-import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import ai.passio.passiosdk.passiofood.data.model.PassioSpeechRecognitionModel
@@ -26,6 +25,8 @@ object MealPlanUseCase {
 //        val foodItem = repository.fetchPassioFoodItem(passioFoodDataInfo, weighGrams) ?: return null
         val foodItem = repository.fetchPassioFoodItem(
             dataInfo = passioFoodDataInfo,
+//            servingUnit = Grams.unitName,
+//            servingQuantity = weighGrams
             servingUnit = passioFoodDataInfo.nutritionPreview.servingUnit,
             servingQuantity = passioFoodDataInfo.nutritionPreview.servingQuantity
         ) ?: return null
@@ -42,17 +43,18 @@ object MealPlanUseCase {
                     "weighGrams: ${weighGrams}\n" +
                     ""
         )*/
-        if (weighGrams == null || weighGrams == 0.0) {
-            if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
-                val quantity = nutritionPreview.servingQuantity
-                foodRecord.setSelectedQuantity(quantity)
-            } else {
-                val weight = nutritionPreview.weightQuantity
-                if (foodRecord.setSelectedUnit(Grams.unitName)) {
-                    foodRecord.setSelectedQuantity(weight)
-                }
+//        if (weighGrams == null || weighGrams == 0.0) {
+        if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
+            val quantity = nutritionPreview.servingQuantity
+            foodRecord.setSelectedQuantity(quantity)
+        } else {
+            val weight = nutritionPreview.weightQuantity
+//                if (foodRecord.setSelectedUnit(Grams.unitName)) {
+            if (foodRecord.setSelectedUnit(nutritionPreview.weightUnit)) {
+                foodRecord.setSelectedQuantity(weight)
             }
         }
+//        }
         return foodRecord
     }
 

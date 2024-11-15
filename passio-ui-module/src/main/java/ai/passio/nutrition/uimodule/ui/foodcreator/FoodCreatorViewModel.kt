@@ -270,7 +270,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 
     fun setDataToEdit(foodRecord: FoodRecord) {
 //        val nutritionFacts = nutritionFactsPair.first
-        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.passioIDEntityType)
+        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType)
 
 //        Log.d("nutritionFacts====", Gson().toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
@@ -368,7 +368,8 @@ class FoodCreatorViewModel : BaseViewModel() {
 //        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium ?: 0.0)
 //        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium ?: 0.0)
 
-        val passioNutrientsTemp = PassioNutrients(
+        val passioNutrients = PassioNutrients(
+            weight = UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram),
             carbs = requiredNutritionFacts.unitMassOf(REF_CARBS_ID),
             calories = requiredNutritionFacts.unitEnergyOf(REF_CALORIES_ID),
             proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID),
@@ -399,10 +400,10 @@ class FoodCreatorViewModel : BaseViewModel() {
             sugarAlcohol = null,
             vitaminA = null
         )
-        val passioNutrients = PassioNutrients(
-            passioNutrientsTemp,
-            UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
-        )
+//        val passioNutrients = PassioNutrients(
+//            passioNutrientsTemp,
+//            UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
+//        )
 
         val customFood = FoodRecord(
 
@@ -619,7 +620,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 //                            this.foodImagePath = customFoodNew.foodImagePath
                             this.iconId = customFoodNew.iconId
                             this.id = customFoodNew.uuid
-                            this.passioIDEntityType = customFoodNew.passioIDEntityType
+                            this.entityType = customFoodNew.entityType
                             this.servingSizes.clear()
                             this.servingSizes.addAll(customFoodNew.servingSizes)
                             this.servingUnits.clear()

@@ -11,7 +11,7 @@ class FoodRecordIngredient {
     var id: String = ""
     var refCode: String ?= ""
     var name: String = ""
-    var additionalData: String = ""
+    var details: String? = ""
     var iconId: String = ""
 
     var selectedUnit: String = ""
@@ -26,7 +26,7 @@ class FoodRecordIngredient {
         id: String,
         refCode: String?,
         name: String,
-        additionalData: String,
+        additionalData: String?,
         iconId: String,
         selectedUnit: String,
         selectedQuantity: Double,
@@ -37,7 +37,7 @@ class FoodRecordIngredient {
         this.id = id
         this.refCode = refCode
         this.name = name
-        this.additionalData = additionalData
+        this.details = additionalData
         this.iconId = iconId
         this.selectedUnit = selectedUnit
         this.selectedQuantity = selectedQuantity
@@ -52,7 +52,7 @@ class FoodRecordIngredient {
         id = foodRecord.id
         refCode = foodRecord.refCode
         name = foodRecord.name
-        additionalData = foodRecord.additionalData
+        details = foodRecord.details
         iconId = foodRecord.iconId
 
         selectedUnit = foodRecord.getSelectedUnit()
@@ -68,7 +68,7 @@ class FoodRecordIngredient {
         id = foodRecord.id
         refCode = foodRecord.refCode
         name = foodRecord.name
-        additionalData = foodRecord.additionalData
+        details = foodRecord.details
         iconId = foodRecord.iconId
 
         selectedUnit = foodRecord.getSelectedUnit()

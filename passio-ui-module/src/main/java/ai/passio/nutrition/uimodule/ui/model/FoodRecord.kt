@@ -29,10 +29,10 @@ internal fun getDBTimestamp(time: Long): Long {
 open class FoodRecord() {
     var id: String = ""
     var name: String = ""
-    var additionalData: String = ""
+    var details: String? = ""
     var iconId: String = ""
 //    var foodImagePath: String? = null
-    var passioIDEntityType = PassioIDEntityType.item.value
+    var entityType = PassioIDEntityType.item.value
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
 
@@ -76,9 +76,9 @@ open class FoodRecord() {
             refCode = uuid
         }
         this.name = productName
-        this.additionalData = brandName
+        this.details = brandName
         this.barcode = barcode
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
 //        this.foodImagePath = foodImagePath
         this.iconId = iconId
 
@@ -126,9 +126,9 @@ open class FoodRecord() {
         iconId: String
     ): FoodRecord {
         this.name = productName
-        this.additionalData = brandName
+        this.details = brandName
         this.barcode = barcode
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
 //        this.foodImagePath = foodImagePath
         this.iconId = iconId
 
@@ -173,7 +173,7 @@ open class FoodRecord() {
         id = ingredient.id
         name = ingredient.name
         iconId = ingredient.iconId
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
         servingSizes.addAll(ingredient.servingSizes)
         servingUnits.addAll(ingredient.servingUnits)
         selectedUnit = ingredient.selectedUnit
@@ -199,9 +199,9 @@ open class FoodRecord() {
 //            refCode = id
 //        }
         name = foodItem.name
-        additionalData = foodItem.details
+        details = foodItem.details
         iconId = foodItem.iconId
-        this.passioIDEntityType = passioIDEntityType.value
+        this.entityType = passioIDEntityType.value
         servingSizes.addAll(foodItem.amount.servingSizes)
         servingUnits.addAll(foodItem.amount.servingUnits)
         selectedUnit = foodItem.amount.selectedUnit
@@ -245,7 +245,7 @@ open class FoodRecord() {
         }*/
         if (record.iconId.isValid()) {
             iconId = record.iconId
-            passioIDEntityType = record.passioIDEntityType
+            entityType = record.entityType
         }
         setUnitToServing()
     }
@@ -261,7 +261,7 @@ open class FoodRecord() {
         }*/
         if (record.iconId.isValid()) {
             iconId = record.iconId
-            passioIDEntityType = PassioIDEntityType.item.value
+            entityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
@@ -280,7 +280,7 @@ open class FoodRecord() {
         }*/
         if (records.first().iconId.isValid()) {
             iconId = records.first().iconId
-            passioIDEntityType = PassioIDEntityType.item.value
+            entityType = PassioIDEntityType.item.value
         }
 //        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
@@ -321,7 +321,7 @@ open class FoodRecord() {
             selectedUnit = ingredients[0].selectedUnit
             selectedQuantity = ingredients[0].selectedQuantity
             name = ingredients[0].name
-            additionalData = ingredients[0].additionalData
+            details = ingredients[0].details
             iconId = ingredients[0].iconId
             calculateQuantity()
         } else {

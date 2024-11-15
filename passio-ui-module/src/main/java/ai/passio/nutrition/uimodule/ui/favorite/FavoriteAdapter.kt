@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.ui.favorite
 import ai.passio.nutrition.uimodule.databinding.ItemCustomFoodBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import android.view.LayoutInflater
 import android.view.View
@@ -52,9 +53,9 @@ class FavoriteAdapter(
 
                 image.loadFoodImage(customFood)
 
-                if (customFood.additionalData.isNotEmpty()) {
+                if (customFood.details.isValid()) {
                     servingSize.visibility = View.VISIBLE
-                    servingSize.text = customFood.additionalData
+                    servingSize.text = customFood.details
                 } else {
                     servingSize.visibility = View.GONE
                 }
