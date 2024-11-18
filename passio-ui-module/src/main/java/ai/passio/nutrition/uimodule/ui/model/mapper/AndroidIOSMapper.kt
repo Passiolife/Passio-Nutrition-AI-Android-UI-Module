@@ -14,7 +14,7 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 
-internal val iOSGson = GsonBuilder()
+private val iOSGson = GsonBuilder()
     .registerTypeAdapter(UnitMass::class.java, UnitMassSerializer())
     .registerTypeAdapter(FoodRecordIngredient::class.java, IngredientSerializer())
     .registerTypeAdapter(FoodRecordIngredient::class.java, IngredientDeserializer())
@@ -72,9 +72,16 @@ fun FoodRecord.toiOSJson(): String {
 }
 
 fun String.fromIOSJson(): FoodRecord? {
-    return iOSGson.fromJson(this, FoodRecord::class.java)
+    return iOSGson.fromJson(foodRecordDeserializer(this), FoodRecord::class.java)
 }
 
+private fun foodRecordDeserializer(json: String): JsonObject {
+    val jsonObject = passioGson.fromJson(json, JsonObject::class.java)
+    val createdAtDouble = jsonObject.get("createdAt").asDouble
+    jsonObject.remove("createdAt")
+    jsonObject.addProperty("createdAt", createdAtDouble.toLong())
+    return jsonObject
+}
 
 private class IngredientSerializer : JsonSerializer<FoodRecordIngredient> {
     override fun serialize(
@@ -106,6 +113,7 @@ private class IngredientSerializer : JsonSerializer<FoodRecordIngredient> {
             }*/
 
         }
+        foodRecordIngredientObject.addProperty("passioID", src.id)
         foodRecordIngredientObject.remove("referenceNutrients")
         foodRecordIngredientObject.add("nutrients", nutrientsObject)
         return foodRecordIngredientObject
@@ -143,6 +151,7 @@ private class IngredientDeserializer : JsonDeserializer<FoodRecordIngredient> {
         // Remove the "nutrients" object and add back "referenceNutrients"
         jsonObject.remove("nutrients")
         jsonObject.add("referenceNutrients", referenceNutrients)
+        jsonObject.addProperty("id", jsonObject.get("passioID").asString)
 
         // Use Gson to deserialize the modified JsonObject into FoodRecordIngredient
         return passioGson.fromJson(jsonObject, FoodRecordIngredient::class.java)

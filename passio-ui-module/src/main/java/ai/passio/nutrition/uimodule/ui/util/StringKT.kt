@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.util
 
+import ai.passio.nutrition.uimodule.ui.activity.PassioUiModuleActivity
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
@@ -10,6 +11,8 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.text.DecimalFormat
 
 
@@ -81,6 +84,18 @@ object StringKT {
         }
 
         return spannableString
+    }
+
+    // Function to load JSON from assets
+    fun loadJsonFromAssets(fileName: String): String? {
+        return try {
+            val inputStream = PassioUiModuleActivity.getContext().assets.open(fileName)
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            bufferedReader.use { it.readText() }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
 

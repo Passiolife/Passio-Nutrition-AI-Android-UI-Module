@@ -19,6 +19,7 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.model.getDBTimestamp
+import ai.passio.nutrition.uimodule.ui.model.mapper.toiOSJson
 import ai.passio.nutrition.uimodule.ui.util.deleteImageFromStorage
 import ai.passio.nutrition.uimodule.ui.util.getBitmapFromStorage
 import ai.passio.nutrition.uimodule.ui.util.getEndTimestamps
@@ -43,7 +44,16 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
 
     }
 
+
+
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
+        /*loadJsonFromAssets("iosjson.json")?.let {
+            it.fromIOSJson()?.toFoodLogEntity()?.let { toFoodLogEntity->
+                foodLogDao.insertFoodLog(toFoodLogEntity)
+            }
+
+        }*/
+        foodRecord.toiOSJson()
         foodLogDao.insertFoodLog(foodRecord.toFoodLogEntity())
         return true
     }
