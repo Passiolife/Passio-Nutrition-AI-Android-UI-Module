@@ -114,7 +114,7 @@ class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
             } else {
                 weight.setText(currentValue.singleDecimal())
             }
-            weightUnit.text = UserCache.getProfile().measurementUnit.waterUnit.value
+            weightUnit.text = UserCache.getProfile().waterUnit.value
             dayValue.text = weightRecord.getDisplayDay()
             timeValue.text = weightRecord.getDisplayTime()
         }

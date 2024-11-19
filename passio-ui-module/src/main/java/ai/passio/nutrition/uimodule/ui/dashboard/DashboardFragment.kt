@@ -46,8 +46,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
         with(binding) {
 
             var title = getString(R.string.welcome)
-            if (UserCache.getProfile().userName.isNotEmpty()) {
-                title += " " + UserCache.getProfile().userName
+            if (UserCache.getProfile().firstName.isNotEmpty()) {
+                title += " " + UserCache.getProfile().firstName
             }
             title += "!"
             toolbar.setup(title, baseToolbarListener)
@@ -154,7 +154,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
     private fun showWaterSummary(summary: Pair<Double, Double>) {
         with(binding)
         {
-            val unitVal = UserCache.getProfile().measurementUnit.waterUnit.value.lowercase()
+            val unitVal = UserCache.getProfile().waterUnit.value.lowercase()
             val totalVal = summary.first.singleDecimal()
             val remainingVal = summary.second.singleDecimal() + " $unitVal"
             waterValue.text = totalVal
@@ -170,7 +170,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
     private fun showWeightSummary(summary: Pair<Double, Double>) {
         with(binding)
         {
-            val unitVal = UserCache.getProfile().measurementUnit.weightUnit.value.lowercase()
+            val unitVal = UserCache.getProfile().units.value.lowercase()
             val totalVal = summary.first.singleDecimal()
             val remainingVal = summary.second.singleDecimal() + " $unitVal"
             weightValue.text = totalVal
@@ -253,8 +253,8 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             val userProfile = data.first
 
             var title = getString(R.string.welcome)
-            if (userProfile.userName.isNotEmpty()) {
-                title += " " + userProfile.userName
+            if (userProfile.firstName.isNotEmpty()) {
+                title += " " + userProfile.firstName
             }
             title += "!"
             toolbar.setup(title, baseToolbarListener)

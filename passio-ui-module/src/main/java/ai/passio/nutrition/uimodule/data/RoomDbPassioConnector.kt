@@ -1,7 +1,7 @@
 package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.data.db.PassioDatabase
-import ai.passio.nutrition.uimodule.data.db.entity.USER_ID
+import ai.passio.nutrition.uimodule.data.db.entity.USER_UUID
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomRecipeEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toFavoriteEntity
@@ -19,7 +19,6 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.model.getDBTimestamp
-import ai.passio.nutrition.uimodule.ui.model.mapper.toiOSJson
 import ai.passio.nutrition.uimodule.ui.util.deleteImageFromStorage
 import ai.passio.nutrition.uimodule.ui.util.getBitmapFromStorage
 import ai.passio.nutrition.uimodule.ui.util.getEndTimestamps
@@ -47,13 +46,6 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
 
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
-        /*loadJsonFromAssets("iosjson.json")?.let {
-            it.fromIOSJson()?.toFoodLogEntity()?.let { toFoodLogEntity->
-                foodLogDao.insertFoodLog(toFoodLogEntity)
-            }
-
-        }*/
-        foodRecord.toiOSJson()
         foodLogDao.insertFoodLog(foodRecord.toFoodLogEntity())
         return true
     }
@@ -112,7 +104,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }*/
 
     override suspend fun fetchUserProfile(): UserProfile {
-        return db.userDao().getUserEntityById(USER_ID)?.toUserProfile() ?: UserProfile()
+        return db.userDao().getUserEntityById(USER_UUID)?.toUserProfile() ?: UserProfile()
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {

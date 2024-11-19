@@ -4,7 +4,6 @@ import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
 import ai.passio.nutrition.uimodule.ui.profile.mlToOz
-import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.Locale
@@ -32,11 +31,9 @@ class WaterRecord {
 
         if (weight <= 0)
             return 0.0
-        return if (UserCache.getProfile().measurementUnit.waterUnit == WaterUnit.Metric) {
-            Log.d("measurementUnit::", "unit:aa ${UserCache.getProfile().measurementUnit.waterUnit} === vvv: $weight")
+        return if (UserCache.getProfile().waterUnit == WaterUnit.metric) {
             weight
         } else {
-            Log.d("measurementUnit::", "unit:bb ${UserCache.getProfile().measurementUnit.waterUnit} === vvv: ${mlToOz(weight)}")
             mlToOz(weight)
         }
     }

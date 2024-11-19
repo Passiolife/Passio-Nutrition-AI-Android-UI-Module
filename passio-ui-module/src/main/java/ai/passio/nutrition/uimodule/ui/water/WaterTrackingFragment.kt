@@ -104,14 +104,14 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
     }
 
     private fun setupQuickAdd() {
-        val waterUnit = UserCache.getProfile().measurementUnit.waterUnit
+        val waterUnit = UserCache.getProfile().waterUnit
         with(binding)
         {
             val glass: Double
             val bottleSmall: Double
             val bottleLarge: Double
 
-            if (waterUnit == WaterUnit.Imperial) {
+            if (waterUnit == WaterUnit.imperial) {
                 glass = WaterRecord.QUICK_ADD_GLASS
                 bottleSmall = WaterRecord.QUICK_ADD_BOTTLE_SMALL
                 bottleLarge = WaterRecord.QUICK_ADD_BOTTLE_LARGE

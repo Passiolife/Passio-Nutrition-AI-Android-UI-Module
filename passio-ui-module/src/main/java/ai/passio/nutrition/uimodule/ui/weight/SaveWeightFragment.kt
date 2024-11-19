@@ -113,7 +113,7 @@ class SaveWeightFragment : BaseFragment<WeightTrackingViewModel>() {
             } else {
                 weight.setText(currentValue.singleDecimal())
             }
-            weightUnit.text = UserCache.getProfile().measurementUnit.weightUnit.value
+            weightUnit.text = UserCache.getProfile().units.value
             dayValue.text = weightRecord.getDisplayDay()
             timeValue.text = weightRecord.getDisplayTime()
         }

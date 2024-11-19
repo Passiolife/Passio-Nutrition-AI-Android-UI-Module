@@ -25,7 +25,7 @@ class WeightRecord {
     fun getWightInCurrentUnit(): Double {
         if (weight <= 0)
             return 0.0
-        return if (UserCache.getProfile().measurementUnit.weightUnit == WeightUnit.Metric) {
+        return if (UserCache.getProfile().units == WeightUnit.metric) {
             weight
         } else {
             kgToLbs(weight)

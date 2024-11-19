@@ -4,7 +4,7 @@ import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.weight.WeightUseCase
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
 import ai.passio.nutrition.uimodule.ui.profile.lbsToKg
@@ -23,7 +23,7 @@ class WeightTrackingViewModel : BaseViewModel() {
 
     private val _weightRecordCurrentEvent = SingleLiveEvent<WeightRecord>()
     val weightRecordCurrentEvent: LiveData<WeightRecord> = _weightRecordCurrentEvent
-    private val measurementUnit: MeasurementUnit get() = UserCache.getProfile().measurementUnit
+    private val userProfile: UserProfile get() = UserCache.getProfile()
 
     private val _saveRecord = SingleLiveEvent<ResultWrapper<Boolean>>()
     val saveRecord: LiveData<ResultWrapper<Boolean>> = _saveRecord
@@ -68,7 +68,7 @@ class WeightTrackingViewModel : BaseViewModel() {
 
     fun updateWeight(weight: String) {
         weightRecordCurrent?.apply {
-            if (measurementUnit.weightUnit == WeightUnit.Imperial) {
+            if (userProfile.units == WeightUnit.imperial) {
                 weightRecordCurrent?.weight = lbsToKg(weight.toDoubleOrNull() ?: 0.0)
             } else {
                 weightRecordCurrent?.weight = weight.toDoubleOrNull() ?: 0.0

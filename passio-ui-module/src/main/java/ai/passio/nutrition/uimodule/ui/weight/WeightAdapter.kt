@@ -22,7 +22,7 @@ class WeightAdapter(
         fun bind(weightRecord: WeightRecord) {
             with(binding) {
                 weight.text = weightRecord.getWightInCurrentUnit().singleDecimal()
-                weightUnit.text = UserCache.getProfile().measurementUnit.weightUnit.value
+                weightUnit.text = UserCache.getProfile().units.value
                 dateTime.text = "${weightRecord.getDisplayDay()}\n${weightRecord.getDisplayTime()}"
                 root.setOnClickListener {
                     onTapped.invoke(weightRecord)
