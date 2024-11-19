@@ -20,6 +20,7 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_SUGARS_ADDED_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_SUGARS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_TRANS_FAT_ID
+import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_VITAMIN_A_RAE_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_VITAMIN_D_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.setValue
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitEnergyOf
@@ -240,6 +241,15 @@ class FoodCreatorViewModel : BaseViewModel() {
             isAdded = false
         )
         otherNutritionFacts.add(refPotassium)
+
+        val refVitaminARAE = NutritionFactsItem(
+            id = REF_VITAMIN_A_RAE_ID,
+            nutrientName = "vitamin A RAE",
+            unitSymbol = Milligrams.symbol,
+            value = 0.0,
+            isAdded = false
+        )
+        otherNutritionFacts.add(refVitaminARAE)
     }
 
 
@@ -321,6 +331,7 @@ class FoodCreatorViewModel : BaseViewModel() {
         otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium()?.value?.div(ratio) ?: 0.0)
         otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium()?.value?.div(ratio) ?: 0.0)
         otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium()?.value?.div(ratio) ?: 0.0)
+        otherNutritionFacts.setValue(REF_VITAMIN_A_RAE_ID, nutritionFacts.vitaminARAE()?.value?.div(ratio) ?: 0.0)
 
         customFoodRecord = foodRecord
         _isEditCustomFood.postValue(true)
@@ -367,6 +378,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 //        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium ?: 0.0)
 //        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium ?: 0.0)
 //        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium ?: 0.0)
+//        otherNutritionFacts.setValue(REF_VITAMIN_A_RAE_ID, nutritionFacts.a ?: 0.0)
 
         val passioNutrients = PassioNutrients(
             weight = UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram),
@@ -398,7 +410,8 @@ class FoodCreatorViewModel : BaseViewModel() {
             magnesium = null,
             phosphorus = null,
             sugarAlcohol = null,
-            vitaminA = null
+            vitaminA = null,
+            vitaminARAE = otherNutritionFacts.unitMassOf(REF_VITAMIN_A_RAE_ID)
         )
 //        val passioNutrients = PassioNutrients(
 //            passioNutrientsTemp,
@@ -570,6 +583,7 @@ class FoodCreatorViewModel : BaseViewModel() {
                     phosphorus = null,
                     sugarAlcohol = null,
                     vitaminA = null,
+                    vitaminARAE = otherNutritionFacts.unitMassOf(REF_VITAMIN_A_RAE_ID)
                 )
                 /*val passioNutrients = PassioNutrients(
                     passioNutrientsTemp,

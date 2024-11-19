@@ -568,6 +568,17 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/dashboard" />
 
+        <action
+            android:id="@+id/image_food_result_to_search"
+            app:destination="@id/search" />
+
+
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
+
     </fragment>
 
     <fragment
