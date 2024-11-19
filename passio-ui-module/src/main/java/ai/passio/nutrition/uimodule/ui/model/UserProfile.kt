@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.data.db.entity.USER_UUID
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.profile.ActivityLevel
 import ai.passio.nutrition.uimodule.ui.profile.CalorieDeficit
@@ -11,27 +12,33 @@ import ai.passio.nutrition.uimodule.ui.profile.kgToLbs
 import ai.passio.nutrition.uimodule.ui.profile.metersToFeetInches
 import ai.passio.nutrition.uimodule.ui.profile.metersToMetersCentimeters
 import ai.passio.nutrition.uimodule.ui.profile.mlToOz
-import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import kotlin.math.pow
 
 data class UserProfile(
-    var userName: String = "",
+    var firstName: String = "",
+    var uuid: String = USER_UUID,
     var age: Int = 0,
-    var gender: Gender = Gender.Male,
+    var gender: Gender = Gender.male,
     var height: Double = 0.0, //meter
     var weight: Double = 0.0, //kg
     var targetWeight: Double = 0.0, //kg
-    var activityLevel: ActivityLevel = ActivityLevel.NotActive,
-    var calorieDeficit: CalorieDeficit = CalorieDeficit.Maintain,
-    var passioMealPlan: PassioMealPlan? = null,
+    var activityLevel: String = ActivityLevel.notActive.label,
+    var goalWeightTimeLine: CalorieDeficit = CalorieDeficit.maintain,
+//    var mealPlan: PassioMealPlan? = null,
+    var mealPlan: UserMealPlan? = null,
     var waterTarget: Double = 0.0, //ml
-    var carbsPer: Int = 50, //percentage
-    var proteinPer: Int = 25, //percentage
-    var fatPer: Int = 25, //percentage
+    var carbsPercent: Int = 50, //percentage
+    var proteinPercent: Int = 25, //percentage
+    var fatPercent: Int = 25, //percentage
     var caloriesTarget: Int = 2100,
-    val measurementUnit: MeasurementUnit = MeasurementUnit(),
-    val userReminder: UserReminder = UserReminder()
-) {
+//    val measurementUnit: MeasurementUnit = MeasurementUnit(),
+    var heightUnits: LengthUnit = LengthUnit.imperial,
+    var units: WeightUnit = WeightUnit.imperial, //weightUnits
+    var waterUnit: WaterUnit = WaterUnit.imperial,
+    val userReminder: UserReminder = UserReminder(),
+
+
+    ) {
 
     // Calculate BMI value
     fun calculateBMI(): Float {
@@ -52,7 +59,7 @@ data class UserProfile(
 
     fun getDisplayHeight(): String {
         val displayText: String
-        if (measurementUnit.lengthUnit == LengthUnit.Imperial) {
+        if (heightUnits == LengthUnit.imperial) {
             val pair = metersToFeetInches(height)
             displayText = "" + pair.first + "'" + pair.second + "\""
         } else {
@@ -65,7 +72,7 @@ data class UserProfile(
     fun getDisplayWeight(): String {
         if (weight <= 0)
             return ""
-        val displayText: String = if (measurementUnit.weightUnit == WeightUnit.Metric) {
+        val displayText: String = if (units == WeightUnit.metric) {
             weight.toString()
         } else {
             kgToLbs(weight).toString()
@@ -76,7 +83,7 @@ data class UserProfile(
     fun getTargetWightInCurrentUnit(): Double {
         if (targetWeight <= 0)
             return 0.0
-        return if (UserCache.getProfile().measurementUnit.weightUnit == WeightUnit.Metric) {
+        return if (UserCache.getProfile().units == WeightUnit.metric) {
             targetWeight
         } else {
             kgToLbs(targetWeight)
@@ -95,7 +102,7 @@ data class UserProfile(
     fun getTargetWaterInCurrentUnit(): Double {
         if (waterTarget <= 0)
             return 0.0
-        return if (UserCache.getProfile().measurementUnit.waterUnit == WaterUnit.Metric) {
+        return if (UserCache.getProfile().waterUnit == WaterUnit.metric) {
             waterTarget
         } else {
             mlToOz(waterTarget)
@@ -110,9 +117,9 @@ data class UserProfile(
         }
     }
 
-    fun getCarbsGrams(): Float = (carbsPer * caloriesTarget) / 400f
+    fun getCarbsGrams(): Float = (carbsPercent * caloriesTarget) / 400f
 
-    fun getProteinGrams(): Float = (proteinPer * caloriesTarget) / 400f
+    fun getProteinGrams(): Float = (proteinPercent * caloriesTarget) / 400f
 
-    fun getFatGrams(): Float = (fatPer * caloriesTarget) / 900f
+    fun getFatGrams(): Float = (fatPercent * caloriesTarget) / 900f
 }

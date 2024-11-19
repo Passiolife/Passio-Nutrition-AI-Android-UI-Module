@@ -5,14 +5,13 @@ import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentMyProfileBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
-import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
+import ai.passio.nutrition.uimodule.ui.model.UserMealPlan
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.DailyNutritionTargetDialog.DailyNutritionTarget
 import ai.passio.nutrition.uimodule.ui.settings.HeightPickerDialog
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.toast
-import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -132,20 +131,20 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
 
         with(binding)
         {
-            name.setText(userProfile.userName)
+            name.setText(userProfile.firstName)
             age.setText(userProfile.getDisplayAge())
             height.text = userProfile.getDisplayHeight()
             weight.setText(userProfile.getDisplayWeight())
-            weightUnit.text = userProfile.measurementUnit.weightUnit.value
+            weightUnit.text = userProfile.units.value
             targetWeight.setText(userProfile.getDisplayTargetWeight())
-            targetWeightUnit.text = userProfile.measurementUnit.weightUnit.value
+            targetWeightUnit.text = userProfile.units.value
             waterTarget.setText(userProfile.getDisplayTargetWater())
-            waterUnit.text = userProfile.measurementUnit.waterUnit.value
+            waterUnit.text = userProfile.waterUnit.value
 
             setupGenderView(userProfile.gender)
             setupActivityLevelView(userProfile.activityLevel)
-            setupCalorieDeficitView(userProfile.measurementUnit, userProfile.calorieDeficit)
-            setupDietView(userProfile.passioMealPlan)
+            setupCalorieDeficitView(userProfile, userProfile.goalWeightTimeLine)
+            setupDietView(userProfile.mealPlan)
 
         }
     }
@@ -177,9 +176,9 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
         val proteinColor = ContextCompat.getColor(requireContext(), R.color.passio_protein)
         val fatColor = ContextCompat.getColor(requireContext(), R.color.passio_fat)
 
-        val carbPercent = userProfile.carbsPer
-        val proteinPercent = userProfile.proteinPer
-        val fatPercent = userProfile.fatPer
+        val carbPercent = userProfile.carbsPercent
+        val proteinPercent = userProfile.proteinPercent
+        val fatPercent = userProfile.fatPercent
         val calories = userProfile.caloriesTarget
 
         with(binding) {
@@ -263,7 +262,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
             if (gender.adapter == null || gender.adapter.count == 0) {
                 val adapter = GenericSpinnerAdapter(
                     context = requireContext(),
-                    items = listOf(Gender.Male, Gender.Female)
+                    items = listOf(Gender.male, Gender.female)
                 ) { item ->
                     item.value
                 }
@@ -286,7 +285,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
             }
 
             gender.setSelection(
-                if (genderValue == Gender.Male)
+                if (genderValue == Gender.male)
                     0
                 else
                     1
@@ -294,7 +293,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
         }
     }
 
-    private fun setupActivityLevelView(activityLevelValue: ActivityLevel) {
+    private fun setupActivityLevelView(activityLevelValue: String) {
         with(binding)
         {
             val items = viewModel.activityLevels
@@ -314,7 +313,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
                         id: Long
                     ) {
                         val selectedItem = parent.getItemAtPosition(position) as ActivityLevel
-                        viewModel.updateActivityLevel(selectedItem)
+                        viewModel.updateActivityLevel(selectedItem.label)
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
@@ -322,12 +321,12 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
                     }
                 }
             }
-            activityLevel.setSelection(items.indexOf(activityLevelValue))
+            activityLevel.setSelection(items.indexOf(activityLevelValue.getActivityLevel()))
         }
     }
 
     private fun setupCalorieDeficitView(
-        measurementUnit: MeasurementUnit,
+        userProfile: UserProfile,
         calorieDeficitValue: CalorieDeficit
     ) {
         with(binding)
@@ -338,12 +337,12 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
                     context = requireContext(),
                     items = items
                 ) { item ->
-                    if (item == CalorieDeficit.Maintain) {
+                    if (item == CalorieDeficit.maintain) {
                         item.lblImperial
-                    } else if (measurementUnit.weightUnit == WeightUnit.Imperial) {
-                        "${item.lblImperial} ${measurementUnit.weightUnit.value} / Week"
+                    } else if (userProfile.units == WeightUnit.imperial) {
+                        "${item.lblImperial} ${userProfile.units.value} / Week"
                     } else {
-                        "${item.lblMetric} ${measurementUnit.weightUnit.value} / Week"
+                        "${item.lblMetric} ${userProfile.units.value} / Week"
                     }
                 }
                 calorieDeficit.adapter = adapter
@@ -369,7 +368,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
     }
 
     private fun setupDietView(
-        passioMealPlanValue: PassioMealPlan?
+        passioMealPlanValue: UserMealPlan?
     ) {
         with(binding)
         {
@@ -390,7 +389,7 @@ class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
                             position: Int,
                             id: Long
                         ) {
-                            val selectedItem = parent.getItemAtPosition(position) as PassioMealPlan
+                            val selectedItem = parent.getItemAtPosition(position) as UserMealPlan
                             viewModel.updateMealPlan(selectedItem)
                         }
 

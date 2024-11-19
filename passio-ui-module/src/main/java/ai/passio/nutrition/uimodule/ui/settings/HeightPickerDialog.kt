@@ -1,7 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.settings
 
 import ai.passio.nutrition.uimodule.databinding.DialogHeightPickerBinding
-import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.profile.LengthUnit
 import ai.passio.nutrition.uimodule.ui.profile.feetInchesToMeters
@@ -29,7 +28,8 @@ class HeightPickerDialog(private val listener: HeightPickerListener) :
     private val viewModel: SettingsViewModel by lazy {
         ViewModelProvider(this)[SettingsViewModel::class.java]
     }
-    private var measurementUnit: MeasurementUnit = MeasurementUnit()
+//    private var measurementUnit: MeasurementUnit = MeasurementUnit()
+    private var userProfile: UserProfile = UserProfile()
 
     override fun onStart() {
         super.onStart()
@@ -64,7 +64,7 @@ class HeightPickerDialog(private val listener: HeightPickerListener) :
         }
 
         binding.save.setOnClickListener {
-            val height: Double = if (measurementUnit.lengthUnit == LengthUnit.Imperial) {
+            val height: Double = if (userProfile.heightUnits == LengthUnit.imperial) {
                 feetInchesToMeters(binding.valuePicker.value, binding.subValuePicker.value)
             } else { //LengthUnit.MeterCenti
                 metersCentimetersToMeters(binding.valuePicker.value, binding.subValuePicker.value)
@@ -75,9 +75,9 @@ class HeightPickerDialog(private val listener: HeightPickerListener) :
     }
 
     private fun setupPickers(userProfile: UserProfile) {
-        this.measurementUnit = userProfile.measurementUnit
+        this.userProfile = userProfile
         with(binding) {
-            if (measurementUnit.lengthUnit == LengthUnit.Imperial) {
+            if (userProfile.heightUnits == LengthUnit.imperial) {
                 valuePicker.minValue = 0
                 valuePicker.maxValue = 8
                 valuePicker.displayedValues = Array(9) { "$it'" }

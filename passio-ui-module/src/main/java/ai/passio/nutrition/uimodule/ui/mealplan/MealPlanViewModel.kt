@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.toPassioMealPlan
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
@@ -68,7 +69,7 @@ class MealPlanViewModel : BaseViewModel() {
     private fun getMealPlanItems() {
         viewModelScope.launch {
             if (selectedMealPlan == null) {
-                selectedMealPlan = (UserCache.getProfile().passioMealPlan
+                selectedMealPlan = (UserCache.getProfile().mealPlan?.toPassioMealPlan()
                     ?: _passioMealPlans.find { mealPlan -> mealPlan.mealPlanLabel == "balanced" }
                     ?: _passioMealPlans.firstOrNull()
                         )

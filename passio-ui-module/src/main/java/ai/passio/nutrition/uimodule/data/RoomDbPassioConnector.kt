@@ -1,7 +1,7 @@
 package ai.passio.nutrition.uimodule.data
 
 import ai.passio.nutrition.uimodule.data.db.PassioDatabase
-import ai.passio.nutrition.uimodule.data.db.entity.USER_ID
+import ai.passio.nutrition.uimodule.data.db.entity.USER_UUID
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomFoodEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toCustomRecipeEntity
 import ai.passio.nutrition.uimodule.data.db.mapper.toFavoriteEntity
@@ -42,6 +42,8 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     override fun initialize() {
 
     }
+
+
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
         foodLogDao.insertFoodLog(foodRecord.toFoodLogEntity())
@@ -102,7 +104,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }*/
 
     override suspend fun fetchUserProfile(): UserProfile {
-        return db.userDao().getUserEntityById(USER_ID)?.toUserProfile() ?: UserProfile()
+        return db.userDao().getUserEntityById(USER_UUID)?.toUserProfile() ?: UserProfile()
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfile): Boolean {

@@ -60,8 +60,8 @@ class Repository private constructor() {
         if (sharedPrefsPassioConnector.isMigrationNeeded()) {
             sharedPrefsPassioConnector.initialize()
             //migrate user profile
-            updateUser(sharedPrefsPassioConnector.fetchUserProfile())
-            Log.d("DATA MIGRATION", "Done migrating user profile")
+//            updateUser(sharedPrefsPassioConnector.fetchUserProfile())
+//            Log.d("DATA MIGRATION", "Done migrating user profile")
 
             //migrate records
             logFoodRecords(sharedPrefsPassioConnector.getRecords())

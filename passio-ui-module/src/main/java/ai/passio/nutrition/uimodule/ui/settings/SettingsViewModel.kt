@@ -37,40 +37,36 @@ class SettingsViewModel : BaseViewModel() {
 
     fun updateLengthUnit(lengthUnit: LengthUnit) {
         viewModelScope.launch {
-            with(userProfile) {
-                if (measurementUnit.lengthUnit.value != lengthUnit.value) {
-                    measurementUnit.lengthUnit = lengthUnit
-                    _updateProfileResult.postValue(
-                        ResultWrapper.Success(
-                            useCase.updateUserProfile(
-                                this
-                            )
+            if (userProfile.heightUnits.value != lengthUnit.value) {
+                userProfile.heightUnits = lengthUnit
+                _updateProfileResult.postValue(
+                    ResultWrapper.Success(
+                        useCase.updateUserProfile(
+                            userProfile
                         )
                     )
+                )
 
-                }
             }
         }
     }
 
     fun updateWeightUnit(weightUnit: WeightUnit) {
         viewModelScope.launch {
-            with(userProfile) {
-                if (measurementUnit.weightUnit.value != weightUnit.value) {
-                    measurementUnit.weightUnit = weightUnit
-                    if (weightUnit == WeightUnit.Metric) {
-                        measurementUnit.waterUnit = WaterUnit.Metric
-                    } else {
-                        measurementUnit.waterUnit = WaterUnit.Imperial
-                    }
-                    _updateProfileResult.postValue(
-                        ResultWrapper.Success(
-                            useCase.updateUserProfile(
-                                this
-                            )
+            if (userProfile.units.value != weightUnit.value) {
+                userProfile.units = weightUnit
+                if (weightUnit == WeightUnit.metric) {
+                    userProfile.waterUnit = WaterUnit.metric
+                } else {
+                    userProfile.waterUnit = WaterUnit.imperial
+                }
+                _updateProfileResult.postValue(
+                    ResultWrapper.Success(
+                        useCase.updateUserProfile(
+                            userProfile
                         )
                     )
-                }
+                )
             }
         }
     }

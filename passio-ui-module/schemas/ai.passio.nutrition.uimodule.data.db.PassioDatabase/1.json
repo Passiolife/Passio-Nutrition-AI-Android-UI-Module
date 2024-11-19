@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "968733a7d24d8df6d8adac850136f952",
+    "identityHash": "eacfe28ab46046199ef79ed090c26ab5",
     "entities": [
       {
         "tableName": "FoodLog",
@@ -186,12 +186,12 @@
       },
       {
         "tableName": "user_profile",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userName` TEXT NOT NULL, `age` INTEGER NOT NULL, `gender` TEXT NOT NULL, `height` REAL NOT NULL, `weight` REAL NOT NULL, `targetWeight` REAL NOT NULL, `activityLevel` TEXT NOT NULL, `calorieDeficit` TEXT NOT NULL, `passioMealPlan` TEXT, `waterTarget` REAL NOT NULL, `carbsPer` INTEGER NOT NULL, `proteinPer` INTEGER NOT NULL, `fatPer` INTEGER NOT NULL, `caloriesTarget` INTEGER NOT NULL, `measurementUnit` TEXT NOT NULL, `userReminder` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `userName` TEXT NOT NULL, `age` INTEGER NOT NULL, `gender` TEXT NOT NULL, `height` REAL NOT NULL, `weight` REAL NOT NULL, `targetWeight` REAL NOT NULL, `activityLevel` TEXT NOT NULL, `calorieDeficit` TEXT NOT NULL, `passioMealPlan` TEXT, `waterTarget` REAL NOT NULL, `carbsPer` INTEGER NOT NULL, `proteinPer` INTEGER NOT NULL, `fatPer` INTEGER NOT NULL, `caloriesTarget` INTEGER NOT NULL, `lengthUnit` TEXT NOT NULL, `weightUnit` TEXT NOT NULL, `waterUnit` TEXT NOT NULL, `userReminder` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -279,8 +279,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "measurementUnit",
-            "columnName": "measurementUnit",
+            "fieldPath": "lengthUnit",
+            "columnName": "lengthUnit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weightUnit",
+            "columnName": "weightUnit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "waterUnit",
+            "columnName": "waterUnit",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -294,7 +306,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "uuid"
           ]
         },
         "indices": [],
@@ -652,7 +664,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '968733a7d24d8df6d8adac850136f952')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eacfe28ab46046199ef79ed090c26ab5')"
     ]
   }
 }

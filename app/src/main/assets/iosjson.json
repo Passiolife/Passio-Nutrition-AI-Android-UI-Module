@@ -1,0 +1,834 @@
+{
+  "uuid": "33A5D3D1-4857-4474-A9F6-89C41E045C47",
+  "createdAt": 753365308.015873,
+  "scannedUnitName": "scanned amount",
+  "passioID": "",
+  "name": "Apple iOS",
+  "selectedQuantity": 1,
+  "openFoodLicense": "",
+  "details": "",
+  "servingSizes": [
+    {
+      "quantity": 1,
+      "unitName": "medium"
+    },
+    {
+      "quantity": 1,
+      "unitName": "cup, quartered or chopped"
+    },
+    {
+      "unitName": "cup, sliced",
+      "quantity": 1
+    },
+    {
+      "unitName": "oz, with skin, yields",
+      "quantity": 1
+    },
+    {
+      "quantity": 1,
+      "unitName": "crabapple"
+    },
+    {
+      "unitName": "cup",
+      "quantity": 1
+    },
+    {
+      "unitName": "ring",
+      "quantity": 1
+    },
+    {
+      "unitName": "slice",
+      "quantity": 1
+    },
+    {
+      "unitName": "thin slice",
+      "quantity": 1
+    },
+    {
+      "quantity": 1,
+      "unitName": "small (2-3/4\" dia)"
+    },
+    {
+      "quantity": 1,
+      "unitName": "large (3-1/4\" dia)"
+    },
+    {
+      "unitName": "oz",
+      "quantity": 1
+    },
+    {
+      "quantity": 100,
+      "unitName": "gram"
+    }
+  ],
+  "id": "90f84c1e-9a0d-11ea-98a4-b3eebae4841d",
+  "selectedUnit": "medium",
+  "refCode": "eyJsYWJlbGlkIjoiOTBmODRjMWUtOWEwZC0xMWVhLTk4YTQtYjNlZWJhZTQ4NDFkIiwidHlwZSI6InN5bm9ueW0iLCJyZXN1bHRpZCI6IjE2MDMyMTE1ODU0NDMiLCJtZXRhZGF0YSI6eyJzaG9ydE5hbWUiOmZhbHNlfX0=",
+  "ingredients": [
+    {
+      "entityType": "item",
+      "servingUnits": [
+        {
+          "unitName": "medium",
+          "weight": {
+            "unit": {
+              "symbol": "g",
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              }
+            },
+            "value": 182
+          }
+        },
+        {
+          "unitName": "cup, quartered or chopped",
+          "weight": {
+            "value": 125,
+            "unit": {
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              },
+              "symbol": "g"
+            }
+          }
+        },
+        {
+          "unitName": "cup, sliced",
+          "weight": {
+            "unit": {
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              },
+              "symbol": "g"
+            },
+            "value": 110
+          }
+        },
+        {
+          "weight": {
+            "unit": {
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              },
+              "symbol": "g"
+            },
+            "value": 26
+          },
+          "unitName": "oz, with skin, yields"
+        },
+        {
+          "unitName": "crabapple",
+          "weight": {
+            "value": 35,
+            "unit": {
+              "symbol": "g",
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              }
+            }
+          }
+        },
+        {
+          "unitName": "cup",
+          "weight": {
+            "value": 125,
+            "unit": {
+              "symbol": "g",
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              }
+            }
+          }
+        },
+        {
+          "weight": {
+            "value": 14,
+            "unit": {
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              },
+              "symbol": "g"
+            }
+          },
+          "unitName": "ring"
+        },
+        {
+          "unitName": "slice",
+          "weight": {
+            "value": 17,
+            "unit": {
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              },
+              "symbol": "g"
+            }
+          }
+        },
+        {
+          "unitName": "thin slice",
+          "weight": {
+            "unit": {
+              "symbol": "g",
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              }
+            },
+            "value": 7
+          }
+        },
+        {
+          "unitName": "small (2-3/4\" dia)",
+          "weight": {
+            "value": 149,
+            "unit": {
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              },
+              "symbol": "g"
+            }
+          }
+        },
+        {
+          "weight": {
+            "value": 223,
+            "unit": {
+              "symbol": "g",
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              }
+            }
+          },
+          "unitName": "large (3-1/4\" dia)"
+        },
+        {
+          "weight": {
+            "value": 28.3,
+            "unit": {
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              },
+              "symbol": "g"
+            }
+          },
+          "unitName": "oz"
+        },
+        {
+          "unitName": "tbsp",
+          "weight": {
+            "value": 7.8125,
+            "unit": {
+              "converter": {
+                "constant": 0,
+                "coefficient": 0.001
+              },
+              "symbol": "g"
+            }
+          }
+        },
+        {
+          "weight": {
+            "unit": {
+              "symbol": "g",
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              }
+            },
+            "value": 2.6041666666666665
+          },
+          "unitName": "tsp"
+        },
+        {
+          "unitName": "gram",
+          "weight": {
+            "unit": {
+              "converter": {
+                "coefficient": 0.001,
+                "constant": 0
+              },
+              "symbol": "g"
+            },
+            "value": 1
+          }
+        }
+      ],
+      "nutrients": {
+        "_carbs": {
+          "value": 13.81,
+          "unit": {
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            },
+            "symbol": "g"
+          }
+        },
+        "_proteins": {
+          "value": 0.26,
+          "unit": {
+            "symbol": "g",
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            }
+          }
+        },
+        "_calories": {
+          "unit": {
+            "symbol": "kCal",
+            "converter": {
+              "coefficient": 4184,
+              "constant": 0
+            }
+          },
+          "value": 52
+        },
+        "_cholesterol": {
+          "value": 0,
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            }
+          }
+        },
+        "_alcohol": {
+          "value": 0,
+          "unit": {
+            "symbol": "g",
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.001
+            }
+          }
+        },
+        "_potassium": {
+          "value": 107,
+          "unit": {
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            },
+            "symbol": "mg"
+          }
+        },
+        "_vitaminE": {
+          "value": 0.18,
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            }
+          }
+        },
+        "_sugars": {
+          "value": 10.39,
+          "unit": {
+            "symbol": "g",
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            }
+          }
+        },
+        "_calcium": {
+          "value": 6,
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.000001
+            }
+          }
+        },
+        "_satFat": {
+          "value": 0.028,
+          "unit": {
+            "symbol": "g",
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.001
+            }
+          }
+        },
+        "_vitaminB12": {
+          "value": 0,
+          "unit": {
+            "converter": {
+              "coefficient": 1e-9,
+              "constant": 0
+            },
+            "symbol": "µg"
+          }
+        },
+        "_monounsaturatedFat": {
+          "value": 0.007,
+          "unit": {
+            "symbol": "g",
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.001
+            }
+          }
+        },
+        "_magnesium": {
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.000001
+            }
+          },
+          "value": 5
+        },
+        "_vitaminB6": {
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            }
+          },
+          "value": 0.041
+        },
+        "_vitaminD": {
+          "value": 0,
+          "unit": {
+            "symbol": "µg",
+            "converter": {
+              "coefficient": 1e-9,
+              "constant": 0
+            }
+          }
+        },
+        "_zinc": {
+          "value": 0.04,
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            }
+          }
+        },
+        "_vitaminA_RAE": {
+          "unit": {
+            "symbol": "µg",
+            "converter": {
+              "constant": 0,
+              "coefficient": 1e-9
+            }
+          },
+          "value": 3
+        },
+        "_fat": {
+          "value": 0.17,
+          "unit": {
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            },
+            "symbol": "g"
+          }
+        },
+        "_phosphorus": {
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            }
+          },
+          "value": 11
+        },
+        "_vitaminKPhylloquinone": {
+          "unit": {
+            "converter": {
+              "constant": 0,
+              "coefficient": 1e-9
+            },
+            "symbol": "µg"
+          },
+          "value": 2.2
+        },
+        "_selenium": {
+          "unit": {
+            "symbol": "µg",
+            "converter": {
+              "constant": 0,
+              "coefficient": 1e-9
+            }
+          },
+          "value": 0
+        },
+        "_vitaminEAdded": {
+          "value": 0,
+          "unit": {
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.000001
+            },
+            "symbol": "mg"
+          }
+        },
+        "_polyunsaturatedFat": {
+          "value": 0.051,
+          "unit": {
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.001
+            },
+            "symbol": "g"
+          }
+        },
+        "referenceWeight": {
+          "unit": {
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            },
+            "symbol": "g"
+          },
+          "value": 100
+        },
+        "weight": {
+          "unit": {
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            },
+            "symbol": "g"
+          },
+          "value": 182
+        },
+        "_vitaminC": {
+          "value": 4.6,
+          "unit": {
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.000001
+            },
+            "symbol": "mg"
+          }
+        },
+        "_folicAcid": {
+          "unit": {
+            "converter": {
+              "coefficient": 1e-9,
+              "constant": 0
+            },
+            "symbol": "µg"
+          },
+          "value": 0
+        },
+        "_iron": {
+          "value": 0.12,
+          "unit": {
+            "converter": {
+              "coefficient": 0.000001,
+              "constant": 0
+            },
+            "symbol": "mg"
+          }
+        },
+        "_fibers": {
+          "value": 2.4,
+          "unit": {
+            "converter": {
+              "coefficient": 0.001,
+              "constant": 0
+            },
+            "symbol": "g"
+          }
+        },
+        "_sodium": {
+          "value": 1,
+          "unit": {
+            "symbol": "mg",
+            "converter": {
+              "constant": 0,
+              "coefficient": 0.000001
+            }
+          }
+        }
+      },
+      "refCode": "eyJsYWJlbGlkIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwidHlwZSI6InJlZmVyZW5jZSIsInJlc3VsdGlkIjoiMTYwMzIxMTU4NTQ0MyIsIm1ldGFkYXRhIjpudWxsfQ==",
+      "barcode": "",
+      "selectedUnit": "medium",
+      "selectedQuantity": 1,
+      "iconId": "",
+      "passioID": "1603211585443",
+      "name": "Apple",
+      "servingSizes": [
+        {
+          "unitName": "medium",
+          "quantity": 1
+        },
+        {
+          "quantity": 1,
+          "unitName": "cup, quartered or chopped"
+        },
+        {
+          "quantity": 1,
+          "unitName": "cup, sliced"
+        },
+        {
+          "quantity": 1,
+          "unitName": "oz, with skin, yields"
+        },
+        {
+          "quantity": 1,
+          "unitName": "crabapple"
+        },
+        {
+          "unitName": "cup",
+          "quantity": 1
+        },
+        {
+          "unitName": "ring",
+          "quantity": 1
+        },
+        {
+          "quantity": 1,
+          "unitName": "slice"
+        },
+        {
+          "unitName": "thin slice",
+          "quantity": 1
+        },
+        {
+          "unitName": "small (2-3/4\" dia)",
+          "quantity": 1
+        },
+        {
+          "unitName": "large (3-1/4\" dia)",
+          "quantity": 1
+        },
+        {
+          "unitName": "oz",
+          "quantity": 1
+        },
+        {
+          "quantity": 100,
+          "unitName": "gram"
+        }
+      ],
+      "details": ""
+    }
+  ],
+  "mealLabel": "Dinner",
+  "barcode": "",
+  "servingUnits": [
+    {
+      "unitName": "medium",
+      "weight": {
+        "value": 182,
+        "unit": {
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          },
+          "symbol": "g"
+        }
+      }
+    },
+    {
+      "weight": {
+        "value": 125,
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          }
+        }
+      },
+      "unitName": "cup, quartered or chopped"
+    },
+    {
+      "weight": {
+        "value": 110,
+        "unit": {
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          },
+          "symbol": "g"
+        }
+      },
+      "unitName": "cup, sliced"
+    },
+    {
+      "weight": {
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          }
+        },
+        "value": 26
+      },
+      "unitName": "oz, with skin, yields"
+    },
+    {
+      "unitName": "crabapple",
+      "weight": {
+        "value": 35,
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          }
+        }
+      }
+    },
+    {
+      "unitName": "cup",
+      "weight": {
+        "value": 125,
+        "unit": {
+          "converter": {
+            "constant": 0,
+            "coefficient": 0.001
+          },
+          "symbol": "g"
+        }
+      }
+    },
+    {
+      "unitName": "ring",
+      "weight": {
+        "unit": {
+          "converter": {
+            "constant": 0,
+            "coefficient": 0.001
+          },
+          "symbol": "g"
+        },
+        "value": 14
+      }
+    },
+    {
+      "unitName": "slice",
+      "weight": {
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          }
+        },
+        "value": 17
+      }
+    },
+    {
+      "unitName": "thin slice",
+      "weight": {
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          }
+        },
+        "value": 7
+      }
+    },
+    {
+      "unitName": "small (2-3/4\" dia)",
+      "weight": {
+        "value": 149,
+        "unit": {
+          "converter": {
+            "constant": 0,
+            "coefficient": 0.001
+          },
+          "symbol": "g"
+        }
+      }
+    },
+    {
+      "unitName": "large (3-1/4\" dia)",
+      "weight": {
+        "value": 223,
+        "unit": {
+          "converter": {
+            "constant": 0,
+            "coefficient": 0.001
+          },
+          "symbol": "g"
+        }
+      }
+    },
+    {
+      "unitName": "oz",
+      "weight": {
+        "value": 28.3,
+        "unit": {
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          },
+          "symbol": "g"
+        }
+      }
+    },
+    {
+      "weight": {
+        "unit": {
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          },
+          "symbol": "g"
+        },
+        "value": 2.6041666666666665
+      },
+      "unitName": "tsp"
+    },
+    {
+      "unitName": "tbsp",
+      "weight": {
+        "value": 7.8125,
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "coefficient": 0.001,
+            "constant": 0
+          }
+        }
+      }
+    },
+    {
+      "unitName": "gram",
+      "weight": {
+        "unit": {
+          "symbol": "g",
+          "converter": {
+            "constant": 0,
+            "coefficient": 0.001
+          }
+        },
+        "value": 1
+      }
+    }
+  ],
+  "entityType": "item",
+  "iconId": "VEG0002"
+}

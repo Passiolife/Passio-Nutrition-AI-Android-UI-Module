@@ -5,7 +5,6 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
-import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import android.content.Context
@@ -19,7 +18,7 @@ import java.util.Date
 internal val passioGson: Gson by lazy {
     GsonBuilder()
         .registerTypeAdapter(UnitMass::class.java, UnitMassSerializer())
-        .registerTypeAdapter(Unit::class.java, UnitDeserializer())
+//        .registerTypeAdapter(Unit::class.java, UnitDeserializer())
         .registerTypeAdapter(UnitEnergy::class.java, UnitEnergySerializer())
         .setExclusionStrategies(PassioNutrientsExclusionStrategy())
         .create()
@@ -366,14 +365,14 @@ internal class SharedPrefsPassioConnector(context: Context) : PassioConnector {
         return favorites.find { it.refCode == foodRecord.refCode } != null
     }
 
-    override suspend fun updateUserFoodImage(id: String, bitmap: Bitmap): Boolean {
+    override suspend fun updateUserFoodImage(iconId: String, bitmap: Bitmap): Boolean {
         return true
     }
-    override suspend fun fetchUserFoodImage(id: String): Bitmap? {
+    override suspend fun fetchUserFoodImage(iconId: String): Bitmap? {
         return null
     }
 
-    override suspend fun deleteUserFoodImage(id: String): Boolean {
+    override suspend fun deleteUserFoodImage(iconId: String): Boolean {
         return true
     }
 }
