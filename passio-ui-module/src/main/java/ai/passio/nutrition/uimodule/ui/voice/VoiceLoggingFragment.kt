@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.databinding.FragmentVoiceLoggingBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
@@ -43,6 +42,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
         START_LISTENING,
         LISTENING,
         FETCHING_RESULT,
+        NO_RESULT_FOUND,
         RESULT
     }
 
@@ -84,6 +84,9 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
             tryAgain.setOnClickListener {
                 viewModel.updateVoiceLoggingState(VoiceLoggingState.START_LISTENING)
             }
+            tryAgain2.setOnClickListener {
+                viewModel.updateVoiceLoggingState(VoiceLoggingState.START_LISTENING)
+            }
             log.setOnClickListener {
                 viewModel.logRecords((rvResult.adapter as SpeechRecognitionAdapter).getSelectedItems())
             }
@@ -91,6 +94,10 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
                 (rvResult.adapter as SpeechRecognitionAdapter).clearSelection()
             }
             searchManually.setOnClickListener {
+                sharedViewModel.setIsAddIngredientFromSearch(viewModel.getIsAddIngredient())
+                viewModel.navigateToSearch()
+            }
+            search.setOnClickListener {
                 sharedViewModel.setIsAddIngredientFromSearch(viewModel.getIsAddIngredient())
                 viewModel.navigateToSearch()
             }
@@ -284,8 +291,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
         viewModel.addIngredientEvent.observe(viewLifecycleOwner, ::addIngredients)
     }
 
-    private fun addIngredients(foodRecords: List<FoodRecordIngredient>)
-    {
+    private fun addIngredients(foodRecords: List<FoodRecordIngredient>) {
         sharedViewModel.addFoodIngredients(foodRecords)
         viewModel.navigateBackToRecipe()
     }
@@ -315,14 +321,6 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
             }
             val adapter = (rvResult.adapter as SpeechRecognitionAdapter)
             adapter.addData(passioRecognitionResult, passioRecognitionResult.indices.toList())
-            if (passioRecognitionResult.isEmpty()) {
-                clearSelected.visibility = View.GONE
-                noResult.visibility = View.VISIBLE
-                log.disable()
-            } else {
-                clearSelected.visibility = View.VISIBLE
-                noResult.visibility = View.GONE
-            }
         }
     }
 
@@ -344,12 +342,14 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
                     groupStartListening.visibility = View.VISIBLE
                     groupStopListening.visibility = View.GONE
                     resultContainer.visibility = View.GONE
+                    noResultFound.visibility = View.GONE
                 }
 
                 VoiceLoggingState.LISTENING -> {
                     groupStartListening.visibility = View.GONE
                     groupStopListening.visibility = View.VISIBLE
                     resultContainer.visibility = View.GONE
+                    noResultFound.visibility = View.GONE
                 }
 
                 VoiceLoggingState.FETCHING_RESULT -> {
@@ -358,6 +358,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
                     resultContainer.visibility = View.VISIBLE
                     viewLoadingResult.visibility = View.VISIBLE
                     resultView.visibility = View.GONE
+                    noResultFound.visibility = View.GONE
                 }
 
                 VoiceLoggingState.RESULT -> {
@@ -366,6 +367,16 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
                     resultContainer.visibility = View.VISIBLE
                     viewLoadingResult.visibility = View.GONE
                     resultView.visibility = View.VISIBLE
+                    noResultFound.visibility = View.GONE
+                }
+
+                VoiceLoggingState.NO_RESULT_FOUND -> {
+                    groupStartListening.visibility = View.GONE
+                    groupStopListening.visibility = View.GONE
+                    resultContainer.visibility = View.VISIBLE
+                    viewLoadingResult.visibility = View.GONE
+                    resultView.visibility = View.GONE
+                    noResultFound.visibility = View.VISIBLE
                 }
             }
         }

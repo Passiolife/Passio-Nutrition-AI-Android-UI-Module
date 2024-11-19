@@ -131,6 +131,12 @@ data class MicroNutrient(
                     unitSymbol = "IU"
                 ),
                 MicroNutrient(
+                    name = "Vitamin A RAE",
+                    value = foodRecords.sumOf { it?.nutrients()?.vitaminARAE()?.value ?: 0.0 },
+                    recommendedValue = 3000.0,
+                    unitSymbol = foodRecords.firstOrNull()?.nutrientsSelectedSize()?.vitaminARAE()?.unit?.symbol ?: "IU"
+                ),
+                MicroNutrient(
                     name = "Vitamin C",
                     value = foodRecords.sumOf { it?.nutrients()?.vitaminC()?.value ?: 0.0 },
                     recommendedValue = 90.0,

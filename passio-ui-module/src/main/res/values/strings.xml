@@ -214,11 +214,14 @@
     <string name="make_custom_recipe">Make custom recipe</string>
     <string name="edit_recipe_">Edit recipe</string>
     <string name="no_records_found">No records found.</string>
+    <string name="no_results_found">No Results Found</string>
     <string name="search_results">Search Results</string>
     <string name="keep_typing">Keep typing</string>
     <string name="type_in_food_name">Type in food name</string>
     <string name="alternative_s">Alternative(s)</string>
     <string name="meal_plan_notes">These meal plans are general guidelines and not based on personal dietary needs. Always consult with a healthcare provider or nutritionist.</string>
+    <string name="search_manually">Search Manually</string>
+    <string name="sorry_we_could_not_find_any_matches_please_try_again_or_try_searching_manually">Sorry, we could not find any matches. Please try again or try searching manually</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.voice
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioSDK
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 class VoiceLoggingViewModel : BaseViewModel() {
     private val mealPlanUseCase = MealPlanUseCase
     private var voiceLoggingState = VoiceLoggingFragment.VoiceLoggingState.START_LISTENING
-    private val _voiceLoggingStateEvent = SingleLiveEvent<VoiceLoggingFragment.VoiceLoggingState>()
+    private val _voiceLoggingStateEvent = MutableLiveData<VoiceLoggingFragment.VoiceLoggingState>()
     val voiceLoggingStateEvent: LiveData<VoiceLoggingFragment.VoiceLoggingState> =
         _voiceLoggingStateEvent
     private var voiceQuery: String = ""
@@ -70,8 +69,13 @@ class VoiceLoggingViewModel : BaseViewModel() {
             updateVoiceLoggingState(VoiceLoggingFragment.VoiceLoggingState.FETCHING_RESULT)
 
             PassioSDK.instance.recognizeSpeechRemote(voiceQuery) { result ->
-                _resultFoodInfo.postValue(result)
-                updateVoiceLoggingState(VoiceLoggingFragment.VoiceLoggingState.RESULT)
+                if (result.isEmpty()) {
+                    updateVoiceLoggingState(VoiceLoggingFragment.VoiceLoggingState.NO_RESULT_FOUND)
+                } else {
+                    _resultFoodInfo.postValue(result)
+                    updateVoiceLoggingState(VoiceLoggingFragment.VoiceLoggingState.RESULT)
+                }
+
             }
         }
     }

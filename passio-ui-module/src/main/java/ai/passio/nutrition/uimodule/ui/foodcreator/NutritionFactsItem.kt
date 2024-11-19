@@ -30,6 +30,7 @@ data class NutritionFactsItem(
         const val REF_IRON_ID = "refIron"
         const val REF_POTASSIUM_ID = "refPotassium"
         const val REF_MAGNESIUM_ID = "refMagnesium"
+        const val REF_VITAMIN_A_RAE_ID = "refVitaminARAE"
 
         internal fun List<NutritionFactsItem>.setValue(id: String, value: Double) {
             val item = this.find { it.id == id }

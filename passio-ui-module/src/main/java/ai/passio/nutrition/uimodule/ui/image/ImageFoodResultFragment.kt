@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.image
 
+import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentImageFoodResultBinding
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
 import ai.passio.nutrition.uimodule.ui.util.toast
@@ -53,6 +55,11 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
             reselect.setOnClickListener {
                 viewModel.navigateBack()
             }
+
+            search.setOnClickListener {
+                sharedViewModel.setIsAddIngredientFromSearch(viewModel.getIsAddIngredient())
+                viewModel.navigateToSearch()
+            }
             log.setOnClickListener {
                 viewModel.logRecords((rvResult.adapter as FoodImageResultAdapter).getSelectedItems())
             }
@@ -72,12 +79,18 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
     }
 
     private fun initObserver() {
+        setIngredientMode(viewModel.getIsAddIngredient())
+        sharedViewModel.isAddIngredientFromVoiceLD.observe(viewLifecycleOwner) { isAddIngredient ->
+            viewModel.setIsAddIngredient(isAddIngredient)
+            setIngredientMode(isAddIngredient)
+
+        }
         sharedViewModel.photoFoodResultLD.observe(viewLifecycleOwner) {
             viewModel.setImageBitmaps(it)
             showFoodImages(uris = it)
         }
 
-        viewModel.isProcessing.observe(viewLifecycleOwner) {
+        viewModel.isFetchingResult.observe(viewLifecycleOwner) {
             binding.viewLoading.isVisible = it
         }
         viewModel.showLoading.observe(viewLifecycleOwner) {
@@ -85,6 +98,19 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         }
         viewModel.resultFoodInfo.observe(viewLifecycleOwner, ::showResult)
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
+        viewModel.addIngredientEvent.observe(viewLifecycleOwner, ::addIngredients)
+    }
+
+
+    private fun addIngredients(foodRecords: List<FoodRecordIngredient>) {
+        sharedViewModel.addFoodIngredients(foodRecords)
+        viewModel.navigateBackToRecipe()
+    }
+
+    private fun setIngredientMode(isOn: Boolean) {
+        if (isOn) {
+            binding.log.text = getString(R.string.add_ingredient)
+        }
     }
 
     private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
@@ -123,11 +149,12 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
     private fun showResultView(isResultFound: Boolean) {
         with(binding)
         {
-            rvResult.isVisible = isResultFound
-            log.isVisible = isResultFound
-            cancel.isVisible = true
-            reselect.isVisible = !isResultFound
-            noResult.isVisible = !isResultFound
+            noResultFound.isVisible = !isResultFound
+            resultView.isVisible = isResultFound
+//            rvResult.isVisible = isResultFound
+//            log.isVisible = isResultFound
+//            cancel.isVisible = true
+//            reselect.isVisible = !isResultFound
         }
     }
 
