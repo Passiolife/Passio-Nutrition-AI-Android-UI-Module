@@ -46,6 +46,13 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
 
 
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
+        /*StringKT.loadJsonFromAssets("iosjson.json")?.let {
+            it.fromIOSJson()?.let {
+                fr->
+                foodLogDao.insertFoodLog(fr.toFoodLogEntity())
+            }
+
+        }*/
         foodLogDao.insertFoodLog(foodRecord.toFoodLogEntity())
         return true
     }

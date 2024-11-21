@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class MyProfileViewModel : BaseViewModel() {
 
@@ -171,6 +172,8 @@ class MyProfileViewModel : BaseViewModel() {
 
     private fun updateNutritionTarget() {
         if (userProfile != null) {
+
+
             userProfile?.caloriesTarget = calculateRecommendedCalorie()
             _dailyNutritionTarget.postValue(userProfile!!)
         }
@@ -182,7 +185,7 @@ class MyProfileViewModel : BaseViewModel() {
         return if (bmr == null) {
             userProfile!!.caloriesTarget
         } else {
-            (calculateCaloriesBasedOnActivityLevel(bmr) - userProfile!!.goalWeightTimeLine.calorieValue).toInt()//calorieDeficit.getValue(weightUnit)).toInt()
+            (calculateCaloriesBasedOnActivityLevel(bmr) - userProfile!!.goalWeightTimeLine.calorieValue).roundToInt()//calorieDeficit.getValue(weightUnit)).toInt()
         }
     }
 
@@ -200,11 +203,11 @@ class MyProfileViewModel : BaseViewModel() {
             return Pair(null, activityLevel)
         }
         val weightInKg = 10 * weight
-        val heightInMeter = height //* Conversion.CENTIMETER_TO_METER.value
+        val heightInCM = height * 100 //* Conversion.CENTIMETER_TO_METER.value
         val bmr = if (userProfile!!.gender == Gender.male) {
-            weightInKg + (6.25 * heightInMeter) - (5 * age) + 5
+            weightInKg + (6.25 * heightInCM) - (5 * age) + 5
         } else {
-            weightInKg + (6.25 * heightInMeter) - (5 * age) - 161
+            weightInKg + (6.25 * heightInCM) - (5 * age) - 161
         }
         return Pair(bmr, activityLevel)
     }

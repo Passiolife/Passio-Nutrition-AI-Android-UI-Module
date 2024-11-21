@@ -80,10 +80,10 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
                     name.text =
                         if (foodRecord.name.isValid()) foodRecord.name.capitalized() else "Nutrition Facts Label"
                     val cal = foodRecord.nutrients().calories()?.value ?: 0.0
-                    calories.text = "${cal.singleDecimal()} Cal"
+                    calories.text = "${cal.roundToInt()} Cal"
                     servingSize.text =
                         "${
-                            foodRecord.nutrients().weight.gramsValue().roundToInt()
+                            foodRecord.nutrients().weight.gramsValue().singleDecimal()
                         } ${Grams.unitName}"
                 } else if (advisorInfo != null) {
                     val nutritionPreview = advisorInfo.nutritionPreview
@@ -94,9 +94,9 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
                     val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
                     val caloriesVal = ratio * foodInfo.weightGrams
 
-                    calories.text = "${caloriesVal.singleDecimal()} Cal"
-//                    servingSize.text = "${foodInfo.weightGrams.roundToInt()} ${Grams.unitName}"
-                    servingSize.text = "${nutritionPreview.servingQuantity.roundToInt()} ${nutritionPreview.servingUnit}"
+                    calories.text = "${caloriesVal.roundToInt()} Cal"
+//                    servingSize.text = "${foodInfo.weightGrams.singleDecimal()} ${Grams.unitName}"
+                    servingSize.text = "${nutritionPreview.servingQuantity.singleDecimal()} ${nutritionPreview.servingUnit}"
                 }
 
                 foodSelect.isEnabled = true

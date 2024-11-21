@@ -10,7 +10,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.math.roundToInt
 
 internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selectedCount: Int) -> Unit) :
     RecyclerView.Adapter<SpeechRecognitionAdapter.ImageViewHolder>() {
@@ -56,7 +55,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 //                calories.text = "$cal Cal"
                 calories.text = "${caloriesVal.singleDecimal()} Cal"
                 servingSize.text =
-                    "${nutritionPreview.servingQuantity.roundToInt()} ${nutritionPreview.servingUnit}"
+                    "${nutritionPreview.servingQuantity.singleDecimal()} ${nutritionPreview.servingUnit}"
 
                 /*val quantity = foodRecord.nutritionPreview.servingQuantity
                 val selectedUnit = foodRecord.nutritionPreview.servingUnit
