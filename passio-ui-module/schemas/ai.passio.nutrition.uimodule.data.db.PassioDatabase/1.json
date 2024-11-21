@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "eacfe28ab46046199ef79ed090c26ab5",
+    "identityHash": "0a1ff8c8b25e1ab53dc4df3776cd7464",
     "entities": [
       {
         "tableName": "FoodLog",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT, `iconId` TEXT NOT NULL, `passioIDEntityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `id` TEXT NOT NULL, `name` TEXT NOT NULL, `additionalData` TEXT, `iconId` TEXT NOT NULL, `entityType` TEXT NOT NULL, `selectedUnit` TEXT NOT NULL, `selectedQuantity` REAL NOT NULL, `mealLabel` TEXT, `createdAt` INTEGER, `openFoodLicense` TEXT, `barcode` TEXT, `packagedFoodCode` TEXT, `refCode` TEXT, `ingredients` TEXT NOT NULL, `servingSizes` TEXT NOT NULL, `servingUnits` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -39,8 +39,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "passioIDEntityType",
-            "columnName": "passioIDEntityType",
+            "fieldPath": "entityType",
+            "columnName": "entityType",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -664,7 +664,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eacfe28ab46046199ef79ed090c26ab5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a1ff8c8b25e1ab53dc4df3776cd7464')"
     ]
   }
 }

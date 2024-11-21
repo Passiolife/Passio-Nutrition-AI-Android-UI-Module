@@ -23,9 +23,9 @@ internal fun UserEntity.toUserProfile(): UserProfile {
         fatPercent = userEntity.fatPer,
         caloriesTarget = userEntity.caloriesTarget,
 //        measurementUnit = MeasurementUnit(
-//            lengthUnit = userEntity.measurementUnit.lengthUnit,
-//            weightUnit = userEntity.measurementUnit.weightUnit,
-//            waterUnit = userEntity.measurementUnit.waterUnit
+        heightUnits = userEntity.lengthUnit,
+        units = userEntity.weightUnit,
+        waterUnit = userEntity.waterUnit,
 //        ),
         userReminder = userEntity.userReminder
     )
@@ -51,9 +51,9 @@ internal fun UserProfile.toUserEntity(): UserEntity {
         fatPer = userProfile.fatPercent,
         caloriesTarget = userProfile.caloriesTarget,
 //        measurementUnit = MeasurementUnit(
-//            lengthUnit = userProfile.lengthUnit,
-//            weightUnit = userProfile.weightUnit,
-//            waterUnit = userProfile.waterUnit
+        lengthUnit = userProfile.heightUnits,
+        weightUnit = userProfile.units,
+        waterUnit = userProfile.waterUnit,
 //        ),
         userReminder = userProfile.userReminder
     )

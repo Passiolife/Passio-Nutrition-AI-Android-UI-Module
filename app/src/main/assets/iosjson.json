@@ -289,7 +289,7 @@
           "unit": {
             "symbol": "kCal",
             "converter": {
-              "coefficient": 4184,
+              "coefficient": 4,
               "constant": 0
             }
           },
@@ -572,7 +572,7 @@
       "selectedQuantity": 1,
       "iconId": "",
       "passioID": "1603211585443",
-      "name": "Apple",
+      "name": "Apple ios ing",
       "servingSizes": [
         {
           "unitName": "medium",

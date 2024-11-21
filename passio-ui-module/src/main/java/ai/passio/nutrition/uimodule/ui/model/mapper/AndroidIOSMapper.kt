@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.PassioNutrientsExclusionStrategy
 import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
@@ -14,11 +15,23 @@ import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import java.lang.reflect.Type
 
+private val myGson = GsonBuilder().create()
+
 private val iOSGson = GsonBuilder()
     .registerTypeAdapter(UnitMass::class.java, UnitMassSerializer())
+    .registerTypeAdapter(UnitEnergy::class.java, UnitEnergySerializer())
     .registerTypeAdapter(FoodRecordIngredient::class.java, IngredientSerializer())
     .registerTypeAdapter(FoodRecordIngredient::class.java, IngredientDeserializer())
     .setExclusionStrategies(PassioNutrientsExclusionStrategy())
+    .serializeNulls()
+    .create()
+private val iOSGsonForUnits = GsonBuilder()
+    .registerTypeAdapter(UnitMass::class.java, UnitMassSerializer())
+    .registerTypeAdapter(UnitEnergy::class.java, UnitEnergySerializer())
+//    .registerTypeAdapter(FoodRecordIngredient::class.java, IngredientSerializer())
+//    .registerTypeAdapter(FoodRecordIngredient::class.java, IngredientDeserializer())
+    .setExclusionStrategies(PassioNutrientsExclusionStrategy())
+    .serializeNulls()
     .create()
 
 // Mapping from Android names to iOS names
@@ -68,6 +81,10 @@ private val iosToAndroidMapNutrients =
 
 
 fun FoodRecord.toiOSJson(): String {
+    val jsonString = iOSGson.toJson(this)
+    val jsonObject = myGson.fromJson(jsonString, JsonObject::class.java)
+    jsonObject.addProperty("scannedUnitName", "")
+    jsonObject.addProperty("passioID", "")
     return iOSGson.toJson(this)
 }
 
@@ -91,7 +108,7 @@ private class IngredientSerializer : JsonSerializer<FoodRecordIngredient> {
     ): JsonElement {
 
         val foodRecordIngredientObject =
-            passioGson.fromJson(passioGson.toJson(src), JsonObject::class.java)
+            passioGson.fromJson(iOSGsonForUnits.toJson(src), JsonObject::class.java)
 
         val referenceNutrients = foodRecordIngredientObject.getAsJsonObject("referenceNutrients")
         val nutrientsObject = JsonObject()
@@ -151,10 +168,12 @@ private class IngredientDeserializer : JsonDeserializer<FoodRecordIngredient> {
         // Remove the "nutrients" object and add back "referenceNutrients"
         jsonObject.remove("nutrients")
         jsonObject.add("referenceNutrients", referenceNutrients)
-        jsonObject.addProperty("id", jsonObject.get("passioID").asString)
+        if (!jsonObject.has("id")) {
+            jsonObject.addProperty("id", jsonObject.get("passioID").asString)
+        }
 
         // Use Gson to deserialize the modified JsonObject into FoodRecordIngredient
-        return passioGson.fromJson(jsonObject, FoodRecordIngredient::class.java)
+        return iOSGsonForUnits.fromJson(jsonObject, FoodRecordIngredient::class.java)
     }
 }
 
@@ -164,6 +183,38 @@ private class UnitMassSerializer :
 
     override fun serialize(
         unitMass: UnitMass,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext
+    ): JsonElement {
+        val unit = unitMass.unit
+        val converter = unit.converter
+
+        // Create the nested converter object
+        val converterJson = JsonObject().apply {
+            addProperty("coefficient", converter.coefficient)
+            addProperty("constant", 0)
+        }
+
+        // Create the unit object with converter and symbol
+        val unitJson = JsonObject().apply {
+            add("converter", converterJson)
+            addProperty("symbol", unit.symbol)
+        }
+
+        // Create the unitMass object with unit and value
+        val unitMassJson = JsonObject().apply {
+            add("unit", unitJson)
+            addProperty("value", unitMass.value)
+        }
+        return unitMassJson
+    }
+}
+
+private class UnitEnergySerializer :
+    JsonSerializer<UnitEnergy> {
+
+    override fun serialize(
+        unitMass: UnitEnergy,
         typeOfSrc: Type?,
         context: JsonSerializationContext
     ): JsonElement {

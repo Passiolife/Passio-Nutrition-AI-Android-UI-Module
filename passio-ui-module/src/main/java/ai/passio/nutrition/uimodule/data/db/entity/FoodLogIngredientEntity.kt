@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.data.db.entity
 
 import ai.passio.nutrition.uimodule.data.db.typeconverter.FoodLogTypeConverters
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
@@ -26,6 +27,7 @@ data class FoodLogIngredientEntity(
     var refCode: String ?= "",
     var name: String = "",
     var additionalData: String ?= "",
+    var entityType: String = PassioIDEntityType.item.value,
     var iconId: String = "",
     var selectedUnit: String = "",
     var selectedQuantity: Double = 0.0,

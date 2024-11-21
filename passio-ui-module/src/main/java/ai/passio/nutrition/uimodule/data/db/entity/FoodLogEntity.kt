@@ -16,7 +16,7 @@ data class FoodLogEntity(
     var additionalData: String ?= "",
     var iconId: String = "",
 //    var foodImagePath: String? = null,
-    var passioIDEntityType: String = PassioIDEntityType.item.value,
+    var entityType: String = PassioIDEntityType.item.value,
     var selectedUnit: String = "",
     var selectedQuantity: Double = 0.0,
     var mealLabel: String? = null, // Use String instead of MealLabel enum

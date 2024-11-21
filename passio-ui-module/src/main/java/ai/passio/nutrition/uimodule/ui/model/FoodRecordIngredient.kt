@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.model
 
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import ai.passio.passiosdk.passiofood.data.model.PassioIngredient
@@ -13,7 +14,7 @@ class FoodRecordIngredient {
     var name: String = ""
     var details: String? = ""
     var iconId: String = ""
-
+    var entityType: String = PassioIDEntityType.item.value
     var selectedUnit: String = ""
     var selectedQuantity: Double = 0.0
     var servingSizes: List<PassioServingSize>
@@ -27,6 +28,7 @@ class FoodRecordIngredient {
         refCode: String?,
         name: String,
         additionalData: String?,
+        entityType: String = PassioIDEntityType.item.value,
         iconId: String,
         selectedUnit: String,
         selectedQuantity: Double,
@@ -38,6 +40,7 @@ class FoodRecordIngredient {
         this.refCode = refCode
         this.name = name
         this.details = additionalData
+        this.entityType = entityType
         this.iconId = iconId
         this.selectedUnit = selectedUnit
         this.selectedQuantity = selectedQuantity
@@ -54,6 +57,7 @@ class FoodRecordIngredient {
         name = foodRecord.name
         details = foodRecord.details
         iconId = foodRecord.iconId
+        entityType = foodRecord.entityType
 
         selectedUnit = foodRecord.getSelectedUnit()
         selectedQuantity = foodRecord.getSelectedQuantity()
@@ -70,6 +74,7 @@ class FoodRecordIngredient {
         name = foodRecord.name
         details = foodRecord.details
         iconId = foodRecord.iconId
+        entityType = foodRecord.entityType
 
         selectedUnit = foodRecord.getSelectedUnit()
         selectedQuantity = foodRecord.getSelectedQuantity()
