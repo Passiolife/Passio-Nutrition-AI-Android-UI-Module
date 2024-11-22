@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.edit.EditFoodFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
@@ -172,7 +173,14 @@ class EditRecipesViewModel : BaseViewModel() {
                 }
                 if (useCase.saveRecipe(foodRecord)) {
                     if (loggedRecord != null) {
-                        loggedRecord?.apply {
+                        val loggedRecordNew = foodRecord.copy()
+                        loggedRecordNew.apply {
+                            this.create(loggedRecord?.createdAtTime())
+                            this.mealLabel = loggedRecord?.mealLabel
+                            editFoodUseCase.deleteRecord(loggedRecord!!)
+                            editFoodUseCase.logFoodRecord(loggedRecordNew, true)
+                        }
+                        /*loggedRecord?.apply {
                             this.name = foodRecord.name
                             this.ingredients = foodRecord.ingredients
 //                            this.foodImagePath = foodRecord.foodImagePath
@@ -186,7 +194,7 @@ class EditRecipesViewModel : BaseViewModel() {
                             this.setSelectedQuantity(foodRecord.getSelectedQuantity())
                             this.setSelectedUnit(foodRecord.getSelectedUnit())
                             editFoodUseCase.logFoodRecord(this, true)
-                        }
+                        }*/
                     }
                     _saveRecipeEvent.postValue(ResultWrapper.Success(true))
                 } else {

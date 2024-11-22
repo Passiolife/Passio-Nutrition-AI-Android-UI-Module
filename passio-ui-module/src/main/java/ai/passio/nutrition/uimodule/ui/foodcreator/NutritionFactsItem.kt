@@ -32,11 +32,16 @@ data class NutritionFactsItem(
         const val REF_MAGNESIUM_ID = "refMagnesium"
         const val REF_VITAMIN_A_RAE_ID = "refVitaminARAE"
 
-        internal fun List<NutritionFactsItem>.setValue(id: String, value: Double) {
+        internal fun List<NutritionFactsItem>.setValue(id: String, value: Double?) {
             val item = this.find { it.id == id }
-            if (item != null && value > 0.0) {
-                item.value = value
-                item.isAdded = true
+            if (item != null/* value >= 0.0*/) {
+
+                if (value != null) {
+                    item.value = value
+                    item.isAdded = true
+                } else {
+                    item.isAdded = false
+                }
             }
         }
 

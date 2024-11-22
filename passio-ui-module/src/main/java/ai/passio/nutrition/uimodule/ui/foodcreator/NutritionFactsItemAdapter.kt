@@ -30,7 +30,7 @@ class NutritionFactsItemAdapter(
         with(holder.binding) {
             val nutritionFactsItem = nutritionFactsItems[position]
             lblName.text = nutritionFactsItem.nutrientName
-            lblValue.setText(if (nutritionFactsItem.value == 0.0) "" else nutritionFactsItem.value.toString())
+            lblValue.setText(if (nutritionFactsItem.value == 0.0) "0" else nutritionFactsItem.value.toString())
             val textWatcher = object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
