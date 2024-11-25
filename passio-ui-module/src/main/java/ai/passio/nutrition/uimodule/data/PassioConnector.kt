@@ -47,7 +47,7 @@ interface PassioConnector {
 
     suspend fun fetchAllUserFoodsMatching(searchQuery: String): List<FoodRecord>
 
-    suspend fun fetchUserFood(uuid: String): FoodRecord?
+    suspend fun fetchUserFood(refCode: String): FoodRecord?
 
     suspend fun deleteUserFood(foodRecord: FoodRecord): Boolean
 
@@ -55,7 +55,7 @@ interface PassioConnector {
 
     suspend fun updateRecipe(foodRecord: FoodRecord): Boolean
 
-    suspend fun fetchRecipe(uuid: String): FoodRecord?
+    suspend fun fetchRecipe(refCode: String): FoodRecord?
 
     suspend fun fetchRecipes(): List<FoodRecord>
 

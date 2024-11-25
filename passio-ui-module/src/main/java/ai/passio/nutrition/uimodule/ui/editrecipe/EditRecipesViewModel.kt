@@ -69,8 +69,7 @@ class EditRecipesViewModel : BaseViewModel() {
         this.loggedRecord = loggedRecord
     }
 
-    fun showPrefilledData()
-    {
+    fun showPrefilledData() {
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
 
@@ -79,10 +78,7 @@ class EditRecipesViewModel : BaseViewModel() {
             _showLoading.postValue(true)
             foodRecord = editRecipe.clone()
             foodRecord.entityType = PassioIDEntityType.recipe.value
-            if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
-                isEditRecipe = true
-            }
-
+            isEditRecipe = useCase.getRecipe(foodRecord.refCode) != null
             foodRecord.setUnitToServing()
             _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
             _showLoading.postValue(false)
@@ -102,8 +98,8 @@ class EditRecipesViewModel : BaseViewModel() {
             }
         }
     }
-    private fun setIconId(iconId: String)
-    {
+
+    private fun setIconId(iconId: String) {
         this.iconId = iconId
         foodRecord.iconId = iconId
         _iconIdEvent.postValue(iconId)
@@ -135,6 +131,7 @@ class EditRecipesViewModel : BaseViewModel() {
         foodRecord.addIngredient(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
+
     fun addIngredients(foodRecordIngredient: List<FoodRecordIngredient>) {
         foodRecord.addIngredients(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
@@ -168,8 +165,8 @@ class EditRecipesViewModel : BaseViewModel() {
 
             } else {
                 _showLoading.postValue(true)
-                if (!foodRecord.isUserRecipe()) {
-                    foodRecord = foodRecord.copyAsRecipe()
+                if (!isEditRecipe) {
+                    foodRecord = foodRecord.copyAsRecipe() //create new recipe, else edit recipe
                 }
                 if (useCase.saveRecipe(foodRecord)) {
                     if (loggedRecord != null) {
@@ -226,6 +223,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun navigateToCameraScanning() {
         navigate(EditRecipeFragmentDirections.editRecipeToCamera())
     }
+
     fun navigateToSearch() {
         navigate(EditRecipeFragmentDirections.editRecipeToSearch())
     }

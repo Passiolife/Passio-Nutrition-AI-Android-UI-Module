@@ -12,8 +12,8 @@ interface CustomFoodDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(customFood: CustomFoodEntity)
 
-    @Query("SELECT * FROM CustomFood WHERE uuid = :uuid")
-    suspend fun get(uuid: String): CustomFoodEntity?
+    @Query("SELECT * FROM CustomFood WHERE refCode = :refCode")
+    suspend fun getByRefCode(refCode: String): CustomFoodEntity?
 
     @Query("SELECT * FROM CustomFood WHERE barcode = :barcode")
     suspend fun getByBarcode(barcode: String): CustomFoodEntity?

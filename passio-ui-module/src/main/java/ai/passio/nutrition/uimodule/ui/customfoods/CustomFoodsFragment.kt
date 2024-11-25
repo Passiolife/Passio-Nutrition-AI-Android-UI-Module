@@ -75,11 +75,7 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
                 menuBridge.closeMenu()
                 when (menuBridge.position) {
                     0 -> {
-                        sharedViewModel.editCustomFood(
-                            customFoodsAdapter.getItem(
-                                adapterPosition
-                            )
-                        )
+                        sharedViewModel.editCustomFood(customFoodsAdapter.getItem(adapterPosition), true)
                         viewModel.navigateToFoodCreator()
                     }
 

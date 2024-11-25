@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.ui.activity
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
+import ai.passio.nutrition.uimodule.ui.edit.EditFoodDataModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
@@ -43,8 +44,9 @@ class SharedViewModel : ViewModel() {
     private val _nutritionFactsPair = SingleLiveEvent<Pair<PassioNutritionFacts, String>>()
     val nutritionFactsPair: LiveData<Pair<PassioNutritionFacts, String>> get() = _nutritionFactsPair
 
-    private val _editCustomFood = SingleLiveEvent<FoodRecord>()
-    val editCustomFood: LiveData<FoodRecord> get() = _editCustomFood
+    private val _editCustomFood =
+        SingleLiveEvent<Pair<FoodRecord, Boolean>>() //record, isEdit: true/false
+    val editCustomFood: LiveData<Pair<FoodRecord, Boolean>> get() = _editCustomFood
 
     private val _editRecipe = SingleLiveEvent<FoodRecord>()
     val editRecipe: LiveData<FoodRecord> get() = _editRecipe
@@ -57,8 +59,8 @@ class SharedViewModel : ViewModel() {
     private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
     val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
 
-    private val _detailsFoodRecordLD = SingleLiveEvent<Pair<FoodRecord, Boolean>>()
-    val detailsFoodRecordLD: LiveData<Pair<FoodRecord, Boolean>> get() = _detailsFoodRecordLD
+    private val _detailsFoodRecordLD = SingleLiveEvent<EditFoodDataModel>()
+    val detailsFoodRecordLD: LiveData<EditFoodDataModel> get() = _detailsFoodRecordLD
 
     private val _editIngredientLD = SingleLiveEvent<Pair<FoodRecordIngredient, Int>>()
     val editIngredientLD: LiveData<Pair<FoodRecordIngredient, Int>> get() = _editIngredientLD
@@ -129,8 +131,8 @@ class SharedViewModel : ViewModel() {
         _nutritionFactsPair.postValue(nutritionFacts)
     }
 
-    fun editCustomFood(foodRecord: FoodRecord) {
-        _editCustomFood.postValue(foodRecord)
+    fun editCustomFood(foodRecord: FoodRecord, isEditUserFood: Boolean) {
+        _editCustomFood.postValue(foodRecord to isEditUserFood)
     }
 
     fun editRecipe(foodRecord: FoodRecord) {
@@ -167,7 +169,13 @@ class SharedViewModel : ViewModel() {
     }
 
     fun detailsFoodRecord(foodRecord: FoodRecord, isEditFav: Boolean = false) {
-        _detailsFoodRecordLD.postValue(foodRecord to isEditFav)
+//        _detailsFoodRecordLD.postValue(foodRecord to isEditFav)
+
+        val editFoodDataModel = EditFoodDataModel(
+            foodRecord = foodRecord,
+            isEditFav = isEditFav
+        )
+        _detailsFoodRecordLD.postValue(editFoodDataModel)
     }
 
     //to add ingredient from EditIngredient screen to Recipe screen. send ingredient to recipe screen

@@ -10,7 +10,7 @@ import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 class FoodRecordIngredient {
 
     var id: String = ""
-    var refCode: String ?= ""
+    var refCode: String = ""
     var name: String = ""
     var details: String? = ""
     var iconId: String = ""
@@ -25,7 +25,7 @@ class FoodRecordIngredient {
 
     constructor(
         id: String,
-        refCode: String?,
+        refCode: String,
         name: String,
         additionalData: String?,
         entityType: String = PassioIDEntityType.item.value,

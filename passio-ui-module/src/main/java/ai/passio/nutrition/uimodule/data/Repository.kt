@@ -29,6 +29,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.joda.time.DateTime
 import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import kotlin.coroutines.suspendCoroutine
 
 class Repository private constructor() {
@@ -69,12 +71,22 @@ class Repository private constructor() {
 
             //migrate custom foods
             sharedPrefsPassioConnector.fetchAllUserFoods().forEach {
+                it.refCode = it.uuid
+                if (!it.refCode.isValid())
+                {
+                    it.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+                }
                 saveCustomFood(it)
             }
             Log.d("DATA MIGRATION", "Done migrating custom foods")
 
             //migrate recipes
             sharedPrefsPassioConnector.fetchRecipes().forEach {
+                it.refCode = it.uuid
+                if (!it.refCode.isValid())
+                {
+                    it.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+                }
                 saveRecipe(it)
             }
             Log.d("DATA MIGRATION", "Done migrating recipes")
@@ -304,8 +316,8 @@ class Repository private constructor() {
         }
     }
 
-    suspend fun fetchCustomFood(uuid: String): FoodRecord? {
-        return connector.fetchUserFood(uuid)
+    suspend fun fetchCustomFood(refCode: String): FoodRecord? {
+        return connector.fetchUserFood(refCode)
     }
 
     suspend fun deleteCustomFood(foodRecord: FoodRecord): Boolean {
@@ -333,8 +345,8 @@ class Repository private constructor() {
         }
     }
 
-    suspend fun fetchRecipe(id: String): FoodRecord? {
-        return connector.fetchRecipe(id)
+    suspend fun fetchRecipe(refCode: String): FoodRecord? {
+        return connector.fetchRecipe(refCode)
     }
 
     suspend fun deleteRecipe(foodRecord: FoodRecord): Boolean {

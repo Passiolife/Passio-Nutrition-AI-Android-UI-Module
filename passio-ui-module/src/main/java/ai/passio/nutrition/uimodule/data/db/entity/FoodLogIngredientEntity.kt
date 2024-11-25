@@ -24,7 +24,7 @@ data class FoodLogIngredientEntity(
 //    @PrimaryKey(autoGenerate = true) val ingredientId: Long = 0,
 //    var foodUUID: String, // Foreign key to reference FoodLogEntity
     var id: String = "",
-    var refCode: String ?= "",
+    var refCode: String = "",
     var name: String = "",
     var additionalData: String ?= "",
     var entityType: String = PassioIDEntityType.item.value,

@@ -26,7 +26,7 @@ internal fun FoodRecord.toFavoriteEntity(): FavoriteFoodEntity {
         openFoodLicense = foodRecord.openFoodLicense,
         barcode = foodRecord.barcode, // Convert barcode to String (handle this conversion properly)
         packagedFoodCode = foodRecord.packagedFoodCode, // Convert packaged food code to String
-        refCode = foodRecord.refCode ?: "",
+        refCode = foodRecord.refCode,
 
         ingredients = foodRecord.ingredients.map { ingredient ->
             ingredient.toFoodLogIngredientEntity()

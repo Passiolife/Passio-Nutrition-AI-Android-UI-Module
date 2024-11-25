@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.foodcreator
 
 import ai.passio.passiosdk.passiofood.data.measurement.Converter
+import ai.passio.passiosdk.passiofood.data.measurement.KiloCalories
 import ai.passio.passiosdk.passiofood.data.measurement.Unit
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
@@ -48,7 +49,10 @@ data class NutritionFactsItem(
         internal fun List<NutritionFactsItem>.unitMassOf(id: String): UnitMass? {
             val item = this.find { it.id == id }
             if (item != null) {
-                return UnitMass(Unit(Converter(), item.unitSymbol), item.value)
+//                return UnitMass(Unit(Converter(), item.unitSymbol), item.value)
+                val unit =
+                    Unit.unitFromString(item.unitSymbol) ?: Unit(Converter(), item.unitSymbol)
+                return UnitMass(unit, item.value)
             }
             return null
         }
@@ -56,7 +60,8 @@ data class NutritionFactsItem(
         internal fun List<NutritionFactsItem>.unitEnergyOf(id: String): UnitEnergy? {
             val item = this.find { it.id == id }
             if (item != null) {
-                return UnitEnergy(Unit(Converter(), item.unitSymbol), item.value)
+//                return UnitEnergy(Unit(Converter(), item.unitSymbol), item.value)
+                return UnitEnergy(KiloCalories, item.value)
             }
             return null
         }

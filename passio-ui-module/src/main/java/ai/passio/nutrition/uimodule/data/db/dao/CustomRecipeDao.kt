@@ -12,8 +12,8 @@ interface CustomRecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(customRecipe: CustomRecipeEntity)
 
-    @Query("SELECT * FROM CustomRecipe WHERE uuid = :uuid")
-    suspend fun get(uuid: String): CustomRecipeEntity?
+    @Query("SELECT * FROM CustomRecipe WHERE refCode = :refCode")
+    suspend fun getByRefCode(refCode: String): CustomRecipeEntity?
 
     @Delete
     suspend fun delete(customRecipe: CustomRecipeEntity)
