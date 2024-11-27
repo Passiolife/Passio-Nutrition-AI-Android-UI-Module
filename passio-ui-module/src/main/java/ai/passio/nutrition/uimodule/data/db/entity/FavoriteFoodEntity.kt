@@ -9,15 +9,15 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 
 const val FavTblName = "FavoriteFood"
+
 @Entity(tableName = FavTblName)
 data class FavoriteFoodEntity(
 //    @PrimaryKey
     val uuid: String,
     var id: String = "",
     var name: String = "",
-    var additionalData: String ?= "",
+    var additionalData: String? = "",
     var iconId: String = "",
-//    var foodImagePath: String? = null,
     var passioIDEntityType: String = PassioIDEntityType.item.value,
     var selectedUnit: String = "",
     var selectedQuantity: Double = 0.0,

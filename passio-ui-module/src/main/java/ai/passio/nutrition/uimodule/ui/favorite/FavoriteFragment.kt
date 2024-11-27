@@ -72,7 +72,7 @@ class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
                     setBackgroundColor(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.passio_red800
+                            R.color.passio_red500
                         )
                     )
                     width = DesignUtils.dp2px(80f)

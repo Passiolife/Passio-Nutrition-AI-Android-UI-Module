@@ -35,8 +35,8 @@ object RecipeUseCase {
         return repository.logFoodRecord(record)
     }
 
-    suspend fun getRecipe(uuid: String): FoodRecord? {
-        return repository.fetchRecipe(uuid)
+    suspend fun getRecipe(refCode: String): FoodRecord? {
+        return repository.fetchRecipe(refCode)
     }
 
     /*

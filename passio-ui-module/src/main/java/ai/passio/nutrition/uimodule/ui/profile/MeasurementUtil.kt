@@ -4,21 +4,22 @@ package ai.passio.nutrition.uimodule.ui.profile
 Represents different measurement systems for units.
  */
 /*enum class MeasurementSystem(val value: String) {
-    *//**
-    The metric measurement system.
-    For weight, it uses kilograms (kg).
-    For height, it primarily uses meters (m) and centimeters (cm).
-    For water, it uses liters (L) or milliliters (mL).
-     *//*
+    */
+/**
+The metric measurement system.
+For weight, it uses kilograms (kg).
+For height, it primarily uses meters (m) and centimeters (cm).
+For water, it uses liters (L) or milliliters (mL).
+ *//*
     Metric("Metric"),
 
     *//**
-    The imperial measurement system.
+The imperial measurement system.
 
-    For weight, it uses pounds (lbs).
-    For height, it primarily uses feet (ft) and inches (in).
-    For water, it uses ounces (oz).
-     *//*
+For weight, it uses pounds (lbs).
+For height, it primarily uses feet (ft) and inches (in).
+For water, it uses ounces (oz).
+ *//*
     Imperial("Imperial"),
 }*/
 
@@ -105,7 +106,10 @@ enum class ActivityLevel(val label: String, val valueDiff: Double) {
     moderatelyActive("Moderately Active", 1.55),
 
     /// Very active.
-    active("Active", 1.725)
+    active("Active", 1.725),
+
+    /// Very active.
+    extraActive("Extra Active", 1.9)
 }
 
 fun String.getActivityLevel(): ActivityLevel {

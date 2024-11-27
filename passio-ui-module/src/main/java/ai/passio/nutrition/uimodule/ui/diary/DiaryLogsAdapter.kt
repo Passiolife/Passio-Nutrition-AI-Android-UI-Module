@@ -5,7 +5,6 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
-import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +49,7 @@ class DiaryLogsAdapter(
                 val quantity = foodRecord.getSelectedQuantity().singleDecimal()
                 val selectedUnit = foodRecord.getSelectedUnit()
                 val weight = foodRecord.servingWeight().gramsValue()
-                servingSize.text = "$quantity $selectedUnit (${weight.roundToInt()}g)"
+                servingSize.text = "$quantity $selectedUnit (${weight.singleDecimal()}g)"
 
                 root.setOnClickListener {
                     recordSelected.invoke(foodRecord)

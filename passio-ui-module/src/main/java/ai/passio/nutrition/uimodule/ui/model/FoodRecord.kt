@@ -18,8 +18,8 @@ import java.util.Locale
 import java.util.UUID
 
 private const val TIMESTAMP_1970 = 978300000
-private const val CUSTOM_FOOD_PREFIX = "custom_food_"
-private const val FOOD_RECIPE_PREFIX = "food_recipe_"
+//private const val CUSTOM_FOOD_PREFIX = "custom_food_"
+//private const val FOOD_RECIPE_PREFIX = "food_recipe_"
 
 internal fun getDBTimestamp(time: Long): Long {
     val createdAt = time / 1000L - TIMESTAMP_1970
@@ -31,7 +31,8 @@ open class FoodRecord() {
     var name: String = ""
     var details: String? = ""
     var iconId: String = ""
-//    var foodImagePath: String? = null
+
+    //    var foodImagePath: String? = null
     var entityType = PassioIDEntityType.item.value
 
     var ingredients: MutableList<FoodRecordIngredient> = mutableListOf()
@@ -48,7 +49,7 @@ open class FoodRecord() {
     var openFoodLicense: String? = null
     var barcode: String? = ""
     var packagedFoodCode: PackagedFoodCode? = null
-    var refCode: String ?= null
+    var refCode: String = ""
 
     companion object {
         const val ZERO_QUANTITY = 0.00001
@@ -57,6 +58,7 @@ open class FoodRecord() {
     //custom food
     constructor(
         iconId: String,
+//        refCode: String,
         productName: String,
         brandName: String,
         barcode: String?,
@@ -70,11 +72,12 @@ open class FoodRecord() {
     ) : this() {
 
 //        this.id = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-        this.uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-        if (!refCode.isValid())
-        {
+//        this.uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+        this.uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+        if (!refCode.isValid()) {
             refCode = uuid
         }
+
         this.name = productName
         this.details = brandName
         this.barcode = barcode
@@ -194,10 +197,6 @@ open class FoodRecord() {
     ) : this() {
         id = foodItem.id
         refCode = foodItem.refCode
-//        if (!refCode.isValid())
-//        {
-//            refCode = id
-//        }
         name = foodItem.name
         details = foodItem.details
         iconId = foodItem.iconId
@@ -212,22 +211,23 @@ open class FoodRecord() {
         calculateQuantityForIngredients()
     }
 
-    fun isCustomFood(): Boolean {
+  /*  fun isCustomFood(): Boolean {
 //        return id.startsWith(CUSTOM_FOOD_PREFIX)
         return uuid.startsWith(CUSTOM_FOOD_PREFIX)
-    }
+    }*/
 
     fun isRecipe(): Boolean {
-        return isUserRecipe() || isPassioRecipe()
+//        return isUserRecipe() || isPassioRecipe()
+        return ingredients.size > 1 //&& !uuid.startsWith(FOOD_RECIPE_PREFIX)
     }
 
-    fun isUserRecipe(): Boolean {
+    /*fun isUserRecipe(): Boolean {
         return uuid.startsWith(FOOD_RECIPE_PREFIX)
     }
 
     fun isPassioRecipe(): Boolean {
         return ingredients.size > 1 && !uuid.startsWith(FOOD_RECIPE_PREFIX)
-    }
+    }*/
 
     fun addIngredient(record: FoodRecord, index: Int? = null) {
         if (record.ingredients.size == 1) {
@@ -489,15 +489,15 @@ fun FoodRecord.copy(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
             id = if (uuid.isValid()) uuid else UUID.randomUUID().toString().uppercase(Locale.ROOT)
-            uuid = if (isCustomFood()) {
+            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            /*uuid = if (isCustomFood()) {
                 "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
             } else if (isUserRecipe()) {
                 "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
             } else {
                 UUID.randomUUID().toString().uppercase(Locale.ROOT)
-            }
-            if (!refCode.isValid())
-            {
+            }*/
+            if (!refCode.isValid()) {
                 refCode = id
             }
         }
@@ -510,22 +510,25 @@ fun FoodRecord.clone(): FoodRecord {
 fun FoodRecord.copyAsCustomFood(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
-            uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-
-            if (!refCode.isValid())
+//            uuid = "${CUSTOM_FOOD_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            refCode = uuid
+            /*if (!refCode.isValid())
             {
                 refCode = uuid
-            }
+            }*/
         }
 }
 
 fun FoodRecord.copyAsRecipe(): FoodRecord {
     return passioGson.fromJson(passioGson.toJson(this), FoodRecord::class.java)
         .apply {
-            uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
-            if (!refCode.isValid())
+//            uuid = "${FOOD_RECIPE_PREFIX}${UUID.randomUUID().toString().uppercase(Locale.ROOT)}"
+            uuid = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            refCode = uuid
+            /*if (!refCode.isValid())
             {
                 refCode = uuid
-            }
+            }*/
         }
 }

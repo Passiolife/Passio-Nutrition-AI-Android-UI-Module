@@ -48,7 +48,7 @@ class IngredientAdapter(
                 val quantity = ingredient.selectedQuantity.singleDecimal()
                 val selectedUnit = ingredient.selectedUnit
                 val weight = ingredient.servingWeight().gramsValue()
-                servingSize.text = "$quantity $selectedUnit (${weight.roundToInt()}g)"
+                servingSize.text = "$quantity $selectedUnit (${weight.singleDecimal()}g)"
 
 
                 root.setOnClickListener {

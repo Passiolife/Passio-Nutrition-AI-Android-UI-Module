@@ -44,8 +44,14 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }
 
 
-
     override suspend fun updateRecord(foodRecord: FoodRecord): Boolean {
+        /*StringKT.loadJsonFromAssets("iosjson.json")?.let {
+            it.fromIOSJson()?.let {
+                fr->
+                foodLogDao.insertFoodLog(fr.toFoodLogEntity())
+            }
+
+        }*/
         foodLogDao.insertFoodLog(foodRecord.toFoodLogEntity())
         return true
     }
@@ -76,32 +82,32 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return result
     }
 
-   /* override suspend fun fetchAdherence(): List<Long> {
-        val records = foodLogDao.getAllFoodLogs().toFoodRecords()
+    /* override suspend fun fetchAdherence(): List<Long> {
+         val records = foodLogDao.getAllFoodLogs().toFoodRecords()
 
-        val uniqueDates = HashSet<Long>() // HashSet to store unique dates
-        // Iterate through each record and add the date component to the HashSet
+         val uniqueDates = HashSet<Long>() // HashSet to store unique dates
+         // Iterate through each record and add the date component to the HashSet
 
-        fun timestampOnlyDate(timestamp: Long): Long {
-            // Convert millis to a date with only date part (ignoring time)
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = timestamp
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return calendar.timeInMillis
-        }
+         fun timestampOnlyDate(timestamp: Long): Long {
+             // Convert millis to a date with only date part (ignoring time)
+             val calendar = Calendar.getInstance()
+             calendar.timeInMillis = timestamp
+             calendar.set(Calendar.HOUR_OF_DAY, 0)
+             calendar.set(Calendar.MINUTE, 0)
+             calendar.set(Calendar.SECOND, 0)
+             calendar.set(Calendar.MILLISECOND, 0)
+             return calendar.timeInMillis
+         }
 
-        records.forEach { record ->
-            record.createdAtTime()?.let { timestamp ->
-                val date = timestampOnlyDate(timestamp)
-                uniqueDates.add(date)
-            }
-        }
-        val result = uniqueDates.toList()
-        return result
-    }*/
+         records.forEach { record ->
+             record.createdAtTime()?.let { timestamp ->
+                 val date = timestampOnlyDate(timestamp)
+                 uniqueDates.add(date)
+             }
+         }
+         val result = uniqueDates.toList()
+         return result
+     }*/
 
     override suspend fun fetchUserProfile(): UserProfile {
         return db.userDao().getUserEntityById(USER_UUID)?.toUserProfile() ?: UserProfile()
@@ -168,12 +174,12 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return db.customFoodDao().filterCustomFoods(searchQuery.trim()).toFoodRecords()
     }
 
-    override suspend fun fetchUserFood(uuid: String): FoodRecord? {
-        return db.customFoodDao().get(uuid)?.toFoodRecord()
+    override suspend fun fetchUserFood(refCode: String): FoodRecord? {
+        return db.customFoodDao().getByRefCode(refCode)?.toFoodRecord()
     }
 
     override suspend fun deleteUserFood(foodRecord: FoodRecord): Boolean {
-        db.customFoodDao().get(foodRecord.uuid)?.let {
+        db.customFoodDao().getByRefCode(foodRecord.refCode)?.let {
             db.customFoodDao().delete(it)
         }
         return true
@@ -188,8 +194,8 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
         return true
     }
 
-    override suspend fun fetchRecipe(uuid: String): FoodRecord? {
-        return db.customRecipeDao().get(uuid)?.toFoodRecord()
+    override suspend fun fetchRecipe(refCode: String): FoodRecord? {
+        return db.customRecipeDao().getByRefCode(refCode)?.toFoodRecord()
     }
 
     override suspend fun fetchRecipes(): List<FoodRecord> {
@@ -201,7 +207,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }
 
     override suspend fun deleteRecipe(foodRecord: FoodRecord): Boolean {
-        db.customRecipeDao().get(foodRecord.uuid)?.let {
+        db.customRecipeDao().getByRefCode(foodRecord.refCode)?.let {
             db.customRecipeDao().delete(it)
         }
         return true
@@ -213,10 +219,8 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }
 
     override suspend fun deleteFavorite(foodRecord: FoodRecord): Boolean {
-        foodRecord.refCode?.let {
-            db.favoriteDao().get(it)?.let { tempFav ->
-                db.favoriteDao().delete(tempFav)
-            }
+        db.favoriteDao().get(foodRecord.refCode)?.let { tempFav ->
+            db.favoriteDao().delete(tempFav)
         }
         return true
     }
@@ -226,7 +230,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     }
 
     override suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
-        return db.favoriteDao().get(foodRecord.refCode ?: "") != null
+        return db.favoriteDao().get(foodRecord.refCode) != null
     }
 
     override suspend fun updateUserFoodImage(iconId: String, bitmap: Bitmap): Boolean {
@@ -237,6 +241,7 @@ class RoomDbPassioConnector(applicationContext: Context) : PassioConnector {
     override suspend fun fetchUserFoodImage(iconId: String): Bitmap? {
         return getBitmapFromStorage(iconId)
     }
+
     override suspend fun deleteUserFoodImage(iconId: String): Boolean {
         return deleteImageFromStorage(iconId)
     }

@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,8 +27,11 @@ class EditFoodViewModel : BaseViewModel() {
     private val recipeUseCase = RecipeUseCase
     private val customFoodUseCase = CustomFoodUseCase
 
-    private val _editFoodModelLD = MutableLiveData<EditFoodModel>()
-    val editFoodModelLD: LiveData<EditFoodModel> get() = _editFoodModelLD
+    private var customFood: FoodRecord? = null
+    private var customRecipe: FoodRecord? = null
+    private lateinit var editFoodDataModel: EditFoodDataModel
+    private val _editFoodModelLD = MutableLiveData<EditFoodDataModel>()
+    val editFoodModelLD: LiveData<EditFoodDataModel> get() = _editFoodModelLD
     private val _internalUpdate = SingleLiveEvent<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>>()
     val internalUpdate: LiveData<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>> get() = _internalUpdate
     private var isEditLogMode = false
@@ -56,60 +60,88 @@ class EditFoodViewModel : BaseViewModel() {
     val isFavEvent: LiveData<Boolean> = _isFavEvent
     private val _isEditFavEvent = MutableLiveData<Boolean>()
     val isEditFavEvent: LiveData<Boolean> = _isEditFavEvent
-    private var isEditFav = false
+//    private var isEditFav = false
 
-    private lateinit var foodRecord: FoodRecord
+//    private lateinit var foodRecord: FoodRecord
+
 
     fun setEditLogMode(isEditMode: Boolean) {
         this.isEditLogMode = isEditMode
     }
 
-    fun setFoodRecord(foodRecord: FoodRecord, isEditFav: Boolean = false) {
-        this.isEditFav = isEditFav
-        _isEditFavEvent.postValue(this.isEditFav)
-        this.foodRecord = foodRecord
-        checkFavStatus()
-        val model = EditFoodModel(foodRecord, true)
-        _editFoodModelLD.postValue(model)
+    /* fun setFoodRecord(foodRecord: FoodRecord, isEditFav: Boolean = false) {
+         this.isEditFav = isEditFav
+         _isEditFavEvent.postValue(this.isEditFav)
+ //        this.foodRecord = foodRecord
+         checkFavStatus()
+         val model = EditFoodModel(foodRecord, true)
+         _editFoodModelLD.postValue(model)
+     }*/
+    fun setFoodRecord(editFoodDataModelTemp: EditFoodDataModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _showLoading.postValue(true)
+            editFoodDataModel = editFoodDataModelTemp
+            _isEditFavEvent.postValue(editFoodDataModel.isEditFav)
+
+            if (editFoodDataModel.foodRecord.refCode.isValid()) {
+                customFood = customFoodUseCase.fetchCustomFood(editFoodDataModel.foodRecord.refCode)
+                customRecipe = recipeUseCase.getRecipe(editFoodDataModel.foodRecord.refCode)
+            }
+            editFoodDataModel.isUserFood = customFood != null
+            editFoodDataModel.isUserRecipe = customRecipe != null
+
+
+//        this.isEditFav = isEditFav
+//        _isEditFavEvent.postValue(this.isEditFav)
+//        this.foodRecord = foodRecord
+            checkFavStatus()
+//        val model = EditFoodModel(foodRecord, true)
+            _editFoodModelLD.postValue(editFoodDataModel)
+            _showLoading.postValue(false)
+        }
     }
 
     fun getFoodRecord(searchResult: PassioFoodDataInfo) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             val fr = mealPlanUseCase.getFoodRecord(searchResult, passioMealTimeNow())
-            val model = EditFoodModel(fr, true)
-            _editFoodModelLD.postValue(model)
-            _showLoading.postValue(false)
             if (fr != null) {
-                foodRecord = fr
+                editFoodDataModel = EditFoodDataModel(
+                    foodRecord = fr,
+                    isUserFood = customFood != null,
+                    isUserRecipe = customRecipe != null,
+                    isEditFav = false
+                )
+                _editFoodModelLD.postValue(editFoodDataModel)
+                _showLoading.postValue(false)
                 checkFavStatus()
             }
         }
     }
 
     fun updateServingQuantity(value: Double, origin: EditFoodFragment.UpdateOrigin) {
-        foodRecord.setSelectedQuantity(value)
-        _internalUpdate.postValue(foodRecord to origin)
+        editFoodDataModel.foodRecord.setSelectedQuantity(value)
+        _internalUpdate.postValue(editFoodDataModel.foodRecord to origin)
     }
 
     fun updateServingUnit(index: Int, origin: EditFoodFragment.UpdateOrigin) {
-        val unit = foodRecord.servingUnits[index].unitName
-        foodRecord.setSelectedUnit(unit)
-        _internalUpdate.postValue(foodRecord to origin)
+        val unit = editFoodDataModel.foodRecord.servingUnits[index].unitName
+        editFoodDataModel.foodRecord.setSelectedUnit(unit)
+        _internalUpdate.postValue(editFoodDataModel.foodRecord to origin)
     }
 
     fun updateMealLabel(mealLabel: MealLabel) {
-        foodRecord.mealLabel = mealLabel
+        editFoodDataModel.foodRecord.mealLabel = mealLabel
     }
 
     fun updateCreatedAt(date: Long) {
-        foodRecord.create(date)
+        editFoodDataModel.foodRecord.create(date)
     }
 
     fun deleteCurrentRecord() {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            _deleteLogFood.postValue(useCase.deleteRecord(foodRecord))
+            _deleteLogFood.postValue(useCase.deleteRecord(editFoodDataModel.foodRecord))
             _showLoading.postValue(false)
         }
     }
@@ -117,8 +149,8 @@ class EditFoodViewModel : BaseViewModel() {
     fun logCurrentRecord() {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            if (useCase.logFoodRecord(foodRecord, isEditLogMode)) {
-                _resultLogFood.postValue(ResultWrapper.Success(foodRecord))
+            if (useCase.logFoodRecord(editFoodDataModel.foodRecord, isEditLogMode)) {
+                _resultLogFood.postValue(ResultWrapper.Success(editFoodDataModel.foodRecord))
             } else {
                 _resultLogFood.postValue(ResultWrapper.Error("Failed to log food. Please try again"))
             }
@@ -129,8 +161,8 @@ class EditFoodViewModel : BaseViewModel() {
     fun editRecipeFromLoggedFood(isUpdateLog: Boolean) {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            val recipe = recipeUseCase.getRecipe(foodRecord.id)
-            _recipeInfo.postValue(recipe to isUpdateLog)
+//            val recipe = recipeUseCase.getRecipe(foodRecord.id)
+            _recipeInfo.postValue(customRecipe to isUpdateLog)
             _showLoading.postValue(false)
         }
     }
@@ -138,7 +170,7 @@ class EditFoodViewModel : BaseViewModel() {
     fun editCustomFromLoggedFood(isUpdateLog: Boolean) {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            val customFood = customFoodUseCase.fetchCustomFood(foodRecord.id)
+//            val customFood = customFoodUseCase.fetchCustomFood(foodRecord.id)
             _customFoodInfo.postValue(customFood to isUpdateLog)
             _showLoading.postValue(false)
         }
@@ -155,7 +187,7 @@ class EditFoodViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(EditFoodFragmentDirections.editToNutritionInfo())
         }
-        return foodRecord
+        return editFoodDataModel.foodRecord
 
     }
 
@@ -184,27 +216,27 @@ class EditFoodViewModel : BaseViewModel() {
     }
 
     fun getFoodRecord(): FoodRecord {
-        return foodRecord
+        return editFoodDataModel.foodRecord
     }
 
-    fun getIngredient(index: Int) = foodRecord.ingredients[index]
+    fun getIngredient(index: Int) = editFoodDataModel.foodRecord.ingredients[index]
 
     fun editIngredient(ingredient: Pair<FoodRecordIngredient?, Int>) {
         val editIngredient = ingredient.first
         val indexToEdit = ingredient.second
         if (editIngredient == null && indexToEdit != -1) {
-            this.foodRecord.removeIngredient(indexToEdit)
+            editFoodDataModel.foodRecord.removeIngredient(indexToEdit)
         } else if (editIngredient != null && indexToEdit != -1) {
-            this.foodRecord.replaceIngredient(editIngredient, indexToEdit)
+            editFoodDataModel.foodRecord.replaceIngredient(editIngredient, indexToEdit)
         } else if (editIngredient != null) {
-            this.foodRecord.addIngredient(editIngredient)
+            editFoodDataModel.foodRecord.addIngredient(editIngredient)
         }
-        _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+        _internalUpdate.postValue(editFoodDataModel.foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
 
     private fun checkFavStatus() {
         viewModelScope.launch(Dispatchers.IO) {
-            isFav = favoriteUseCase.isFavorite(foodRecord)
+            isFav = favoriteUseCase.isFavorite(editFoodDataModel.foodRecord)
             _isFavEvent.postValue(isFav)
         }
     }
@@ -212,9 +244,9 @@ class EditFoodViewModel : BaseViewModel() {
     fun toggleFavorite() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = if (!isFav) {
-                favoriteUseCase.markFavorite(foodRecord)
+                favoriteUseCase.markFavorite(editFoodDataModel.foodRecord)
             } else {
-                favoriteUseCase.markUnfavorite(foodRecord)
+                favoriteUseCase.markUnfavorite(editFoodDataModel.foodRecord)
             }
             if (result) {
                 isFav = !isFav
@@ -226,7 +258,7 @@ class EditFoodViewModel : BaseViewModel() {
     fun saveFavorite() {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
-            val result = favoriteUseCase.markFavorite(foodRecord)
+            val result = favoriteUseCase.markFavorite(editFoodDataModel.foodRecord)
             if (result) {
                 isFav = !isFav
                 _isFavEvent.postValue(isFav)
@@ -234,6 +266,20 @@ class EditFoodViewModel : BaseViewModel() {
             }
             _showLoading.postValue(false)
         }
+    }
+
+    fun isCustomFood(): Boolean {
+        if (::editFoodDataModel.isInitialized) {
+            return editFoodDataModel.isUserFood
+        }
+        return false
+    }
+
+    fun isUserRecipe(): Boolean {
+        if (::editFoodDataModel.isInitialized) {
+            return editFoodDataModel.isUserRecipe
+        }
+        return false
     }
 
 

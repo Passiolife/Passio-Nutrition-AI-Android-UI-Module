@@ -149,8 +149,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun initObserver() {
-        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { pair ->
-            viewModel.setFoodRecord(pair.first, pair.second)
+        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { editFoodDataModel ->
+            viewModel.setFoodRecord(editFoodDataModel)
         }
 
         sharedViewModel.editSearchResultLD.observe(viewLifecycleOwner) { searchResult ->
@@ -163,13 +163,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         )
 
         viewModel.editFoodModelLD.observe(viewLifecycleOwner) { editFoodModel ->
-            if (editFoodModel.foodRecord == null) {
-                renderError()
-            } else {
-                binding.openFoodFacts.isVisible =
-                    !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
-                renderFoodRecord(editFoodModel)
-            }
+            binding.openFoodFacts.isVisible =
+                !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
+            renderFoodRecord(editFoodModel)
         }
 
         viewModel.internalUpdate.observe(viewLifecycleOwner) { pair ->
@@ -242,7 +238,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             val isUpdateLog = result.second
 
             if (recipe != null) {
-                sharedViewModel.editCustomFood(recipe)
+                sharedViewModel.editCustomFood(recipe, true)
                 if (isUpdateLog) {
                     sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
                 }
@@ -260,7 +256,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
                         override fun onPositiveAction() {
                             sharedViewModel.editCustomFood(
-                                viewModel.getFoodRecord().copyAsCustomFood()
+                                viewModel.getFoodRecord().copyAsCustomFood(), false
                             )
                             if (isUpdateLog) {
                                 sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
@@ -312,12 +308,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             addEditRecipe.setOnClickListener {
 
                 val foodRecord = viewModel.getFoodRecord()
-                val createUserFoodType = if (foodRecord.isUserRecipe()) {
+                val createUserFoodType = if (viewModel.isUserRecipe()) {
                     CreateUserFoodType.USER_RECIPE
                 } else {
                     CreateUserFoodType.PASSIO_RECIPE
                 }
-                if (foodRecord.isUserRecipe() && !viewModel.isEditLogMode()) {
+                if (viewModel.isUserRecipe() && !viewModel.isEditLogMode()) {
                     sharedViewModel.editRecipe(foodRecord)
                     viewModel.navigateToEditRecipe()
                 } else {
@@ -352,13 +348,13 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         override fun onRightIconClicked() {
             val foodRecord = viewModel.getFoodRecord()
-            val createUserFoodType = if (foodRecord.isCustomFood()) {
+            val createUserFoodType = if (viewModel.isCustomFood()) {
                 CreateUserFoodType.USER_FOOD
             } else {
                 CreateUserFoodType.PASSIO_FOOD
             }
-            if (foodRecord.isCustomFood() && !viewModel.isEditLogMode()) {
-                sharedViewModel.editCustomFood(foodRecord)
+            if (viewModel.isCustomFood() && !viewModel.isEditLogMode()) {
+                sharedViewModel.editCustomFood(foodRecord, true)
                 viewModel.navigateToFoodCreator()
             } else {
 
@@ -371,7 +367,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                         }
 
                         override fun onCreate(isUpdateLog: Boolean) {
-                            sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood())
+                            sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood(), false)
                             if (isUpdateLog) {
                                 sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
                             }
@@ -461,17 +457,20 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
     }
 
-    private fun renderFoodRecord(model: EditFoodModel) {
+    private fun renderFoodRecord(model: EditFoodDataModel) {
         setupEditOption(model.foodRecord)
-        setupImmutableProperties(model.foodRecord!!)
+        setupImmutableProperties(model.foodRecord)
         renderNutrients(model.foodRecord)
         renderServingSize(model.foodRecord)
-        if (model.showIngredients) {
+
+        renderMealTimeAndDate(model.foodRecord)
+        renderIngredients(model.foodRecord)
+        /*if (model.showIngredients) {
             renderMealTimeAndDate(model.foodRecord)
             renderIngredients(model.foodRecord)
         } else {
             hideSecondaryViews()
-        }
+        }*/
     }
 
     private fun setupEditOption(foodRecord: FoodRecord?) {

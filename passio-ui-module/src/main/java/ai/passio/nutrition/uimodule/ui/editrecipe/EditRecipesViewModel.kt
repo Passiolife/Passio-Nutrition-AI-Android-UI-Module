@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.edit.EditFoodFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
@@ -68,8 +69,7 @@ class EditRecipesViewModel : BaseViewModel() {
         this.loggedRecord = loggedRecord
     }
 
-    fun showPrefilledData()
-    {
+    fun showPrefilledData() {
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
 
@@ -78,10 +78,7 @@ class EditRecipesViewModel : BaseViewModel() {
             _showLoading.postValue(true)
             foodRecord = editRecipe.clone()
             foodRecord.entityType = PassioIDEntityType.recipe.value
-            if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
-                isEditRecipe = true
-            }
-
+            isEditRecipe = useCase.getRecipe(foodRecord.refCode) != null
             foodRecord.setUnitToServing()
             _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
             _showLoading.postValue(false)
@@ -101,8 +98,8 @@ class EditRecipesViewModel : BaseViewModel() {
             }
         }
     }
-    private fun setIconId(iconId: String)
-    {
+
+    private fun setIconId(iconId: String) {
         this.iconId = iconId
         foodRecord.iconId = iconId
         _iconIdEvent.postValue(iconId)
@@ -134,6 +131,7 @@ class EditRecipesViewModel : BaseViewModel() {
         foodRecord.addIngredient(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
+
     fun addIngredients(foodRecordIngredient: List<FoodRecordIngredient>) {
         foodRecord.addIngredients(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
@@ -167,12 +165,19 @@ class EditRecipesViewModel : BaseViewModel() {
 
             } else {
                 _showLoading.postValue(true)
-                if (!foodRecord.isUserRecipe()) {
-                    foodRecord = foodRecord.copyAsRecipe()
+                if (!isEditRecipe) {
+                    foodRecord = foodRecord.copyAsRecipe() //create new recipe, else edit recipe
                 }
                 if (useCase.saveRecipe(foodRecord)) {
                     if (loggedRecord != null) {
-                        loggedRecord?.apply {
+                        val loggedRecordNew = foodRecord.copy()
+                        loggedRecordNew.apply {
+                            this.create(loggedRecord?.createdAtTime())
+                            this.mealLabel = loggedRecord?.mealLabel
+                            editFoodUseCase.deleteRecord(loggedRecord!!)
+                            editFoodUseCase.logFoodRecord(loggedRecordNew, true)
+                        }
+                        /*loggedRecord?.apply {
                             this.name = foodRecord.name
                             this.ingredients = foodRecord.ingredients
 //                            this.foodImagePath = foodRecord.foodImagePath
@@ -186,7 +191,7 @@ class EditRecipesViewModel : BaseViewModel() {
                             this.setSelectedQuantity(foodRecord.getSelectedQuantity())
                             this.setSelectedUnit(foodRecord.getSelectedUnit())
                             editFoodUseCase.logFoodRecord(this, true)
-                        }
+                        }*/
                     }
                     _saveRecipeEvent.postValue(ResultWrapper.Success(true))
                 } else {
@@ -218,6 +223,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun navigateToCameraScanning() {
         navigate(EditRecipeFragmentDirections.editRecipeToCamera())
     }
+
     fun navigateToSearch() {
         navigate(EditRecipeFragmentDirections.editRecipeToSearch())
     }

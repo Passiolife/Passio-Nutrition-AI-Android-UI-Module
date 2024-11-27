@@ -38,8 +38,8 @@ object CustomFoodUseCase {
         return repository.fetchCustomFoods(searchQuery)
 
     }
-    suspend fun fetchCustomFood(uuid: String): FoodRecord? {
-        return repository.fetchCustomFood(uuid)
+    suspend fun fetchCustomFood(refCode: String): FoodRecord? {
+        return repository.fetchCustomFood(refCode)
 
     }
 

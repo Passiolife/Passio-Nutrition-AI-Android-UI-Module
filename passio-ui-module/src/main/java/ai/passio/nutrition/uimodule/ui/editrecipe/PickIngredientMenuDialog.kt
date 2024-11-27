@@ -22,7 +22,7 @@ class PickIngredientMenuDialog(private val onPickIngredientOption: OnPickIngredi
 
     private val menuItems = listOf(
 //        AddFoodOption(5, R.string.favorites, R.drawable.ic_favorites),
-        AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice),
+        AddFoodOption(4, R.string.voice_logging, R.drawable.ic_voice_menu),
         AddFoodOption(1, R.string.text_search, R.drawable.icon_search),
 //        AddFoodOption(0, R.string.food_scanner, R.drawable.ic_food_scanner) //implemented code but this function no longer needed.
     )

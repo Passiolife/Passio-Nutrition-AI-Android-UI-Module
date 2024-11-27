@@ -54,13 +54,29 @@ object StringKT {
     }
 
 
-    private val oneDecimalFormat = DecimalFormat("0.#")
+    //    private val oneDecimalFormat = DecimalFormat("0.#")
+    private val twoDecimalFormat = DecimalFormat("0.##")
     fun Double.singleDecimal(): String {
-        return oneDecimalFormat.format(this)
+        val value = this
+        return if (value % 1 == 0.0) {
+            value.toInt().toString()
+        } else {
+//            String.format("%.2f", value).trimEnd('0').trimEnd('.')
+            twoDecimalFormat.format(this).trimEnd('0').trimEnd('.')
+        }
+
+//        return oneDecimalFormat.format(this)
     }
 
     fun Float.singleDecimal(): String {
-        return oneDecimalFormat.format(this)
+//        return oneDecimalFormat.format(this)
+
+        val value = this
+        return if (value % 1 == 0.0f) {
+            value.toInt().toString()
+        } else {
+            twoDecimalFormat.format(this).trimEnd('0').trimEnd('.')
+        }
     }
 
     fun AppCompatTextView.setDrawableEnd(drawableResId: Int) {

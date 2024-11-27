@@ -286,7 +286,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             viewModel.setDataFromNutritionFacts(it)
         }
         sharedViewModel.editCustomFood.observe(viewLifecycleOwner) {
-            viewModel.setDataToEdit(it)
+            viewModel.setDataToEdit(it.first, it.second)
         }
 
         sharedViewModel.editFoodUpdateLog.observe(viewLifecycleOwner) { editRecipe ->
@@ -321,7 +321,7 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
             binding.loading.isVisible = it
         }
         viewModel.prefillFoodData.observe(viewLifecycleOwner, ::showPrefilledData)
-        viewModel.isEditCustomFood.observe(viewLifecycleOwner) { isEditCustomFood ->
+        viewModel.isEditCustomFoodEvent.observe(viewLifecycleOwner) { isEditCustomFood ->
             binding.delete.isVisible = isEditCustomFood
 
         }

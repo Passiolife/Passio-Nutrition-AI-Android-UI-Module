@@ -25,7 +25,7 @@ internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
         additionalData = foodRecord.details,
         iconId = foodRecord.iconId,
 //        foodImagePath = foodRecord.foodImagePath,
-        passioIDEntityType = foodRecord.entityType,
+        entityType = foodRecord.entityType,
         selectedUnit = foodRecord.getSelectedUnit(),
         selectedQuantity = foodRecord.getSelectedQuantity(),
         mealLabel = foodRecord.mealLabel?.value, // Convert MealLabel enum to its string value
@@ -51,6 +51,7 @@ internal fun FoodRecordIngredient.toFoodLogIngredientEntity(): FoodLogIngredient
         id = ingredient.id,
         refCode = ingredient.refCode,
         name = ingredient.name,
+        entityType = ingredient.entityType,
         additionalData = ingredient.details,
         iconId = ingredient.iconId,
         selectedUnit = ingredient.selectedUnit,
@@ -68,9 +69,10 @@ internal fun FoodLogEntity.toFoodRecord(): FoodRecord {
         id = foodLogEntity.id
         name = foodLogEntity.name
         details = foodLogEntity.additionalData
+        entityType = foodLogEntity.entityType
         iconId = foodLogEntity.iconId
 //        foodImagePath = foodLogEntity.foodImagePath
-        entityType = foodLogEntity.passioIDEntityType
+        entityType = foodLogEntity.entityType
         selectedUnit = foodLogEntity.selectedUnit
         selectedQuantity = foodLogEntity.selectedQuantity
         mealLabel = foodLogEntity.mealLabel?.let { label ->
@@ -100,6 +102,7 @@ internal fun FoodLogIngredientEntity.toFoodRecordIngredient(): FoodRecordIngredi
         refCode = ingredientEntity.refCode,
         name = ingredientEntity.name,
         additionalData = ingredientEntity.additionalData,
+        entityType = ingredientEntity.entityType,
         iconId = ingredientEntity.iconId,
         selectedUnit = ingredientEntity.selectedUnit,
         selectedQuantity = ingredientEntity.selectedQuantity,
