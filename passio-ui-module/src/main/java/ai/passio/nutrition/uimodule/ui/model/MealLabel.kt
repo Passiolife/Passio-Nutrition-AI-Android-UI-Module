@@ -1,5 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.model
 
+import ai.passio.nutrition.uimodule.ui.model.MealLabel.Companion.stringToMealLabel
+import ai.passio.passiosdk.passiofood.PassioMealTime
 import java.util.*
 
 enum class MealLabel(val value: String) {
@@ -35,4 +37,8 @@ enum class MealLabel(val value: String) {
             }
         }
     }
+}
+
+fun PassioMealTime.toMealLabel(): MealLabel {
+    return stringToMealLabel(this.mealName)
 }

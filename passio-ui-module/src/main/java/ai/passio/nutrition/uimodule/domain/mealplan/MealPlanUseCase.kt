@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.domain.mealplan
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.model.toMealLabel
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.dateToTimestamp
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
@@ -33,7 +34,7 @@ object MealPlanUseCase {
 
         val nutritionPreview = passioFoodDataInfo.nutritionPreview
         val foodRecord = FoodRecord(foodItem)
-        foodRecord.mealLabel = MealLabel.stringToMealLabel(passioMealTime.mealName)
+        foodRecord.mealLabel = passioMealTime.toMealLabel()
         /*Log.d(
             "nutritionPreview===", "" +
                     "weightQuantity: ${nutritionPreview.weightQuantity}\n" +
