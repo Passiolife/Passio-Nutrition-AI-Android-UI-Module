@@ -19,6 +19,7 @@ import ai.passio.passiosdk.passiofood.NutritionFactsRecognitionListener
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.content.Context
 import android.graphics.Bitmap
@@ -59,6 +60,34 @@ class Repository private constructor() {
 
     suspend fun migrateDataFromOldSharedPrefsPassioConnector(): Boolean {
 
+        fun migrateIngredients(foodRecord: FoodRecord): FoodRecord {
+            val it = foodRecord
+            if (!it.refCode.isValid()) {
+                it.refCode = it.uuid
+            }
+            if (!it.refCode.isValid()) {
+                it.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            }
+
+            it.ingredients.forEach { ingredient ->
+
+                if (!ingredient.refCode.isValid() && ingredient.id.isValid()) {
+                    ingredient.refCode = ingredient.id
+                }
+                if (!ingredient.refCode.isValid() && it.uuid.isValid()) {
+                    ingredient.refCode = it.uuid
+                }
+                if (!ingredient.refCode.isValid()) {
+                    ingredient.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+                }
+
+                ingredient.entityType = PassioIDEntityType.item.value
+
+            }
+
+            return it
+        }
+
         if (sharedPrefsPassioConnector.isMigrationNeeded()) {
             sharedPrefsPassioConnector.initialize()
             //migrate user profile
@@ -66,28 +95,24 @@ class Repository private constructor() {
 //            Log.d("DATA MIGRATION", "Done migrating user profile")
 
             //migrate records
-            logFoodRecords(sharedPrefsPassioConnector.getRecords())
+//            logFoodRecords(sharedPrefsPassioConnector.getRecords())
+            sharedPrefsPassioConnector.getRecords().forEach {
+                val tempRecord = migrateIngredients(it)
+                logFoodRecord(tempRecord)
+            }
             Log.d("DATA MIGRATION", "Done migrating food logs records")
 
             //migrate custom foods
             sharedPrefsPassioConnector.fetchAllUserFoods().forEach {
-                it.refCode = it.uuid
-                if (!it.refCode.isValid())
-                {
-                    it.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
-                }
-                saveCustomFood(it)
+                val tempRecord = migrateIngredients(it)
+                saveCustomFood(tempRecord)
             }
             Log.d("DATA MIGRATION", "Done migrating custom foods")
 
             //migrate recipes
             sharedPrefsPassioConnector.fetchRecipes().forEach {
-                it.refCode = it.uuid
-                if (!it.refCode.isValid())
-                {
-                    it.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
-                }
-                saveRecipe(it)
+                val tempRecord = migrateIngredients(it)
+                saveRecipe(tempRecord)
             }
             Log.d("DATA MIGRATION", "Done migrating recipes")
 
@@ -218,7 +243,10 @@ class Repository private constructor() {
         val startOfMonth = getStartOfMonth(today)//.millis
         val endOfMonth = getEndOfMonth(today)//.millis
 
-        Log.d("getLogsForMonth==", "day: $day , startOfMonth: $startOfMonth , endOfMonth: $endOfMonth, today: $today")
+        Log.d(
+            "getLogsForMonth==",
+            "day: $day , startOfMonth: $startOfMonth , endOfMonth: $endOfMonth, today: $today"
+        )
         return connector.fetchDayLogFor(startOfMonth.toDate(), endOfMonth.toDate())
     }
 
@@ -229,10 +257,10 @@ class Repository private constructor() {
         return connector.fetchDayLogFor(before30Days.toDate(), today.toDate())
     }
 
-  /*  suspend fun fetchAdherence(): List<Long> {
-        return connector.fetchAdherence()
-    }
-*/
+    /*  suspend fun fetchAdherence(): List<Long> {
+          return connector.fetchAdherence()
+      }
+  */
     suspend fun updateUser(userProfile: UserProfile): Boolean {
         UserCache.setProfile(userProfile)
         return connector.updateUserProfile(userProfile)
