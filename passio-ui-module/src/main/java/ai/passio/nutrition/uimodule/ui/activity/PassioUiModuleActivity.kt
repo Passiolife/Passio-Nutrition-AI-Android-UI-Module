@@ -6,8 +6,11 @@ import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.RoomDbPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import ai.passio.nutrition.uimodule.ui.menu.MainMenuDialog
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +25,7 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
     private val binding: ActivityPassioUiModuleBinding get() = _binding!!
 
     private val sharedViewModel: SharedViewModel by viewModels()
+    private val tokenTrackingViewModel: TokenTrackingViewModel by viewModels()
     private val navigationIds = listOf(
         R.id.dashboard,
         R.id.diary,
@@ -29,10 +33,17 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         R.id.progress
     )
 
-    companion object{
+    // Variables to store drag offsets and bounds
+    private var offsetX = 0f
+    private var offsetY = 0f
+    private var initialTouchX = 0f
+    private var initialTouchY = 0f
+    private lateinit var parentRect: Rect
+
+    companion object {
 
         private lateinit var context: Context
-        internal fun getContext() : Context{
+        internal fun getContext(): Context {
             return context
         }
     }
@@ -53,11 +64,27 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
         _binding = ActivityPassioUiModuleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        tokenTrackingObserver()
+        setupDraggableBox()
         sharedViewModel.userProfileCacheEvent.observe(this) {
             setupNav()
+            tokenTrackingViewModel.checkTokenTrackingStatus()
         }
 
         sharedViewModel.checkAndMigrateDataFromOldDB()
+    }
+
+    private fun tokenTrackingObserver() {
+        tokenTrackingViewModel.isTokenTrackingEnabled.observe(this) { isEnabled ->
+            if (isEnabled) {
+                binding.draggableBox.visibility = View.VISIBLE
+            } else {
+                binding.draggableBox.visibility = View.GONE
+            }
+        }
+        tokenTrackingViewModel.tokenInfo.observe(this) { info ->
+            binding.tokenInfoText.text = info
+        }
     }
 
     private fun setupNav() {
@@ -114,6 +141,46 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
 
                 else -> false
 
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupDraggableBox() {
+        with(binding) {
+            draggableBox.setOnTouchListener { view, motionEvent ->
+                when (motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        // Store initial touch positions
+                        initialTouchX = motionEvent.rawX
+                        initialTouchY = motionEvent.rawY
+                        offsetX = view.x
+                        offsetY = view.y
+
+                        // Capture parent view bounds
+                        val parentView = view.parent as View
+                        parentRect = Rect(0, 0, parentView.width, parentView.height)
+                        true
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        // Calculate new position
+                        val deltaX = motionEvent.rawX - initialTouchX
+                        val deltaY = motionEvent.rawY - initialTouchY
+
+                        // Clamp within parent bounds
+                        val newX = (offsetX + deltaX).coerceIn(0f, parentRect.width().toFloat() - view.width)
+                        val newY =
+                            (offsetY + deltaY).coerceIn(0f, parentRect.height().toFloat() - view.height)
+
+                        // Update position
+                        view.x = newX
+                        view.y = newY
+                        true
+                    }
+
+                    else -> false
+                }
             }
         }
     }

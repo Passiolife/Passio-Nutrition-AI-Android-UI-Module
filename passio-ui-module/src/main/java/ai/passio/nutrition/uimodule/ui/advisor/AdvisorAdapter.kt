@@ -126,7 +126,7 @@ internal class AdvisorAdapter(
                     binding.tvMessage,
                     passioAdvisorData.getIngredientContent().trimIndent()
                 )
-                if (passioAdvisorData.selectedFoodIndexes.size > 0) {
+                if (passioAdvisorData.selectedFoodIndexes.isNotEmpty()) {
                     logFood.enable()
                 } else {
                     logFood.disable()

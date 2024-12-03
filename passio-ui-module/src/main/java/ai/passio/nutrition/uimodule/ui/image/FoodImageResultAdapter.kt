@@ -91,11 +91,7 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
                     image.loadPassioIcon(advisorInfo.iconID)
                     name.text = advisorInfo.foodName.capitalized()
 
-                    val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
-                    val caloriesVal = ratio * foodInfo.weightGrams
-
-                    calories.text = "${caloriesVal.roundToInt()} Cal"
-//                    servingSize.text = "${foodInfo.weightGrams.singleDecimal()} ${Grams.unitName}"
+                    calories.text = "${nutritionPreview.calories} Cal"
                     servingSize.text = "${nutritionPreview.servingQuantity.singleDecimal()} ${nutritionPreview.servingUnit}"
                 }
 
