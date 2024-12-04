@@ -30,9 +30,9 @@
             android:background="@color/passio_bottom_navigation_background"
             android:clipChildren="false"
             app:itemIconTint="@color/bottom_navigation_selector"
-            app:itemTextColor="@color/bottom_navigation_selector"
             app:itemTextAppearanceActive="@style/BottomNavigationTextAppearanceActive"
             app:itemTextAppearanceInactive="@style/BottomNavigationTextAppearanceInactive"
+            app:itemTextColor="@color/bottom_navigation_selector"
             app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,8 +45,8 @@
             android:id="@+id/viewLoading"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clickable="true"
             android:background="@color/passio_white40p"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,6 +56,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
+        </FrameLayout>
+
+        <!-- Draggable Box -->
+        <FrameLayout
+            android:id="@+id/draggableBox"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@color/passio_gray700"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Token Info Text -->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tokenInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:text="@string/token_tracking"
+                android:textColor="@color/passio_white"
+                android:textSize="@dimen/_12ssp" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

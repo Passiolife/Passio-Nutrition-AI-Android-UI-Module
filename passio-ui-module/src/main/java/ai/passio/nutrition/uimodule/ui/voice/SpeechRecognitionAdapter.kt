@@ -46,14 +46,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 
                 image.loadPassioIcon(foodRecord.iconID)
                 name.text = foodRecord.foodName.capitalized()
-                nutritionPreview.calories
-
-                val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
-                val caloriesVal = ratio * foodInfo.advisorInfo.weightGrams
-
-//                val cal = foodRecord.nutritionPreview.calories
-//                calories.text = "$cal Cal"
-                calories.text = "${caloriesVal.singleDecimal()} Cal"
+                calories.text = "${nutritionPreview.calories} Cal"
                 servingSize.text =
                     "${nutritionPreview.servingQuantity.singleDecimal()} ${nutritionPreview.servingUnit}"
 

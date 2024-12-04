@@ -52,9 +52,16 @@ abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false
 
     private fun handleNavigation(navCommand: NavigationCommand) {
         lifecycleScope.launch(Dispatchers.Main) {
+
+            findNavController().currentBackStackEntry
             when (navCommand) {
                 is NavigationCommand.ToDirection -> findNavController().navigate(navCommand.directions)
-                is NavigationCommand.Back -> findNavController().navigateUp()
+                is NavigationCommand.Back -> {
+                    if (!navController.navigateUp()) {
+                        // No destinations in the back stack, finish the activity
+                        requireActivity().finish()
+                    }
+                }
             }
         }
     }
