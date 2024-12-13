@@ -10,13 +10,13 @@ import ai.passio.nutrition.uimodule.databinding.FragmentVoiceLoggingBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.data.model.PassioSpeechRecognitionModel
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
@@ -26,15 +26,12 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import java.util.Locale
 
 
-private val PERMISSION = arrayOf(
-    Manifest.permission.RECORD_AUDIO
-)
+private const val PERMISSION = Manifest.permission.RECORD_AUDIO
 
 class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
 
@@ -48,6 +45,7 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
 
     private var _binding: FragmentVoiceLoggingBinding? = null
     private val binding: FragmentVoiceLoggingBinding get() = _binding!!
+    private val permissionUtil = PermissionUtil(this, PERMISSION)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,12 +67,15 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
             prepareRecognizer()
 
             startListening.setOnClickListener {
-                checkPermissions()
-                if (!permissionGranted) {
-                    return@setOnClickListener
-                }
-                viewModel.updateVoiceLoggingState(VoiceLoggingState.LISTENING)
-                speechRecognizer?.startListening(intent)
+
+                permissionUtil.checkAndRequestPermission(
+                    onGranted = {
+                        viewModel.updateVoiceLoggingState(VoiceLoggingState.LISTENING)
+                        speechRecognizer?.startListening(intent)
+                    },
+                    onDenied = {
+                        requireContext().toast("Permission: $PERMISSION needed")
+                    })
             }
             stopListening.setOnClickListener {
                 speechRecognizer?.stopListening()
@@ -133,43 +134,6 @@ class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
             )
         }
         binding.searchManually.text = spannableString
-    }
-
-    private var permissionGranted = false
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            var allGranted = true
-            permissions.entries.forEach {
-                if (!it.value) {
-                    allGranted = false
-                    requireContext().toast("Permission: ${it.key} needed")
-                }
-            }
-            if (allGranted) {
-                permissionGranted = true
-                viewModel.updateVoiceLoggingState(VoiceLoggingState.LISTENING)
-                speechRecognizer?.startListening(intent)
-            }
-        }
-
-    private fun checkPermissions() {
-        val notGranted = PERMISSION.filterNot { permission ->
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                permission
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-
-        if (notGranted.isEmpty()) {
-            permissionGranted = true
-            return
-        }
-
-        // You can directly ask for the permission.
-        // The registered ActivityResultCallback gets the result of this request.
-        requestPermissionLauncher.launch(notGranted.toTypedArray())
     }
 
     private val intent: Intent by lazy {

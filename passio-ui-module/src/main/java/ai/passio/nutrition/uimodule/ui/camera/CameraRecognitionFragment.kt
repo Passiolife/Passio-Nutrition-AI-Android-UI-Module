@@ -8,25 +8,19 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.ProgressDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.camera.view.PreviewView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -45,6 +39,9 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     private var _binding: FragmentCameraRecognitionBinding? = null
     private val binding: FragmentCameraRecognitionBinding get() = _binding!!
+    private val permissionUtil =
+        PermissionUtil(this@CameraRecognitionFragment, Manifest.permission.CAMERA)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -75,15 +72,12 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         binding.recognitionResult.setRecognitionResultListener(recognitionResultListener)
 
         // Check for camera permission
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission is not granted, request permission
-            requestCameraPermission()
-        } else {
-            // Permission is already granted
+        permissionUtil.checkAndRequestPermission(onGranted = {
             cameraPermissionGranted()
-        }
+        }, onDenied = {
+            requireContext().toast("Camera permission is required to use this feature.")
+            viewModel.navigateBack()
+        })
 
         binding.cameraFlash.setOnClickListener {
             viewModel.toggleCameraFlash()
@@ -319,63 +313,10 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
         }
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            // Permission is granted
-            cameraPermissionGranted()
-        } else {
-            // Permission is denied
-            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                // Permission denied without "Don't ask again"
-                showPermissionDeniedMessage()
-            } else {
-                // Permission denied with "Don't ask again"
-                showPermissionDeniedPermanentlyMessage()
-            }
-        }
-    }
-
-    private fun requestCameraPermission() {
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-    }
-
     private fun cameraPermissionGranted() {
         // Your code to start the camera
         ScanInfoDialog.show(requireContext())
     }
-
-    private fun showPermissionDeniedMessage() {
-        // Show a message explaining why the permission is needed
-        AlertDialog.Builder(requireContext())
-            .setTitle("Permission needed")
-            .setMessage("Camera permission is needed to access this feature.")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                requestCameraPermission()
-            }
-            .show()
-    }
-
-    private fun showPermissionDeniedPermanentlyMessage() {
-        // Show a message guiding the user to the app settings
-        AlertDialog.Builder(requireContext())
-            .setTitle("Permission needed")
-            .setMessage("Camera permission is needed to access this feature. Please enable it in the app settings.")
-            .setPositiveButton("Open Settings") { dialog, _ ->
-                dialog.dismiss()
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", requireContext().packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
 
     override fun onStart() {
         super.onStart()
