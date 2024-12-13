@@ -340,17 +340,17 @@ class RecognitionResultView @JvmOverloads constructor(
             it.tvCarbs.text = getLblValueFormat(
                 context.resources.getString(R.string.carbs),
                 nutritionFacts.carbs,
-                nutritionFacts.servingSizeUnitName ?: "g"
+                nutritionFacts.servingUnit ?: "g"
             )
             it.tvProtein.text = getLblValueFormat(
                 context.resources.getString(R.string.protein),
                 nutritionFacts.protein,
-                nutritionFacts.servingSizeUnitName ?: "g"
+                nutritionFacts.servingUnit ?: "g"
             )
             it.tvFat.text = getLblValueFormat(
                 context.resources.getString(R.string.fat),
                 nutritionFacts.fat,
-                nutritionFacts.servingSizeUnitName ?: "g"
+                nutritionFacts.servingUnit ?: "g"
             )
 
 

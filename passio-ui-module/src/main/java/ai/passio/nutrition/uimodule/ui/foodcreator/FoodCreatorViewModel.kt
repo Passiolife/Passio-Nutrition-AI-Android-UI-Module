@@ -378,13 +378,14 @@ class FoodCreatorViewModel : BaseViewModel() {
 
         Log.d("nutritionFacts====", passioGson.toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
-        nutritionFacts.servingSize?.let { servingSize ->
-            val pair = splitServingSize(servingSize)
-            setServingSize(pair.first)
-            setServingUnit(pair.second)
+        nutritionFacts.servingQuantity?.let {
+            setServingSize(it)
+        }
+        nutritionFacts.servingUnit?.let {
+            setServingUnit(it)
         }
         var ratio = 1.0
-        nutritionFacts.servingSizeQuantity?.let {
+        nutritionFacts.weightQuantity?.let {
             ratio = 100 / it
             setWeightGram(it)
         }
