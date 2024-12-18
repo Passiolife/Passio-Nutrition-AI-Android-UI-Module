@@ -143,6 +143,10 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     private fun initOnClickCallback() {
         with(binding)
         {
+            foodsLabel.isVisible = false
+            barcodeLabel.isVisible = false
+            nutritionFactsLabel.isVisible = false
+
             foodsLabel.setOnClickListener(this@CameraRecognitionFragment)
             barcodeLabel.setOnClickListener(this@CameraRecognitionFragment)
             nutritionFactsLabel.setOnClickListener(this@CameraRecognitionFragment)
@@ -314,7 +318,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     private fun setupToolbar() {
         binding.toolbar.apply {
-            setup(getString(R.string.food_scanner), this@CameraRecognitionFragment)
+            setup(getString(R.string.scan_barcode), this@CameraRecognitionFragment)
             setRightIcon(R.drawable.ic_info)
         }
     }

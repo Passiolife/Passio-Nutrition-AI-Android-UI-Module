@@ -94,7 +94,10 @@
     <string name="take_photos">Take Photos</string>
     <string name="select_photos">Select Photos</string>
     <string name="food_scanner">Food Scanner</string>
+    <string name="scan_barcode">Scan Barcode</string>
+    <string name="scan_a_barcode_menu">Scan a Barcode</string>
     <string name="text_search">Text Search</string>
+    <string name="photo_logging">Photo Logging</string>
     <string name="use_image">Use Image</string>
     <string name="ai_advisor">AI Advisor</string>
     <string name="voice_logging">Voice Logging</string>

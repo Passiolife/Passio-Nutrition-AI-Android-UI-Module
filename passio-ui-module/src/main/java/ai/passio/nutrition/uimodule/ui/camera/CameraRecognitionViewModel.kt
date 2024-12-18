@@ -24,7 +24,8 @@ class CameraRecognitionViewModel : BaseViewModel() {
     val recognitionResults = MutableLiveData<RecognitionResult>()
     val foodItemResult = SingleLiveEvent<ResultWrapper<PassioFoodItem>>()
     val showLoading = SingleLiveEvent<Boolean>()
-    private var scanMode: ScanMode = ScanMode.VISUAL
+//    private var scanMode: ScanMode = ScanMode.VISUAL
+    private var scanMode: ScanMode = ScanMode.BARCODE
     val scanModeEvent = MutableLiveData<ScanMode>()
 
     private var cameraZoomLevel: Float = 0f
