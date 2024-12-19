@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
+import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
@@ -102,6 +103,9 @@ class SharedViewModel : ViewModel() {
 
     private val _photoFoodResultLD = SingleLiveEvent<List<Bitmap>>()
     val photoFoodResultLD: LiveData<List<Bitmap>> get() = _photoFoodResultLD
+
+    private val _myFoodTypeLD = SingleLiveEvent<MyFoodType>()
+    val myFoodTypeLD: LiveData<MyFoodType> get() = _myFoodTypeLD
 
     private val userProfileCase = UserProfileUseCase
 
@@ -223,6 +227,11 @@ class SharedViewModel : ViewModel() {
 
     fun setDiaryDate(currentDate: Date) {
         _diaryCurrentDate.postValue(currentDate)
+    }
+
+    fun setMyFoodsType(type: MyFoodType)
+    {
+        _myFoodTypeLD.postValue(type)
     }
 
 }

@@ -7,16 +7,6 @@
     android:background="@color/passio_background"
     tools:context=".ui.progress.ProgressFragment">
 
-    <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/passio_toolbar_background"
-        android:elevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.yanzhenjie.recyclerview.SwipeRecyclerView
         android:id="@+id/rvFoods"
         android:layout_width="0dp"
@@ -26,29 +16,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:itemCount="5"
         tools:listitem="@layout/search_item_layout" />
-
 
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/noDataFound"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semi_bold"
         android:gravity="center"
         android:padding="20dp"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:text="@string/no_records_found"
         android:textColor="@color/passio_gray900"
         android:textSize="16sp"
-        android:fontFamily="@font/inter_semi_bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.25"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/loading"
