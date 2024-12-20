@@ -319,7 +319,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     private fun setupToolbar() {
         binding.toolbar.apply {
             setup(getString(R.string.scan_barcode), this@CameraRecognitionFragment)
-            setRightIcon(R.drawable.ic_info)
+//            setRightIcon(R.drawable.ic_info)
         }
     }
 
@@ -347,7 +347,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     private fun cameraPermissionGranted() {
         // Your code to start the camera
-        ScanInfoDialog.show(requireContext())
+//        ScanInfoDialog.show(requireContext())
     }
 
     private fun showPermissionDeniedMessage() {
@@ -461,7 +461,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     }
 
     override fun onRightIconClicked() {
-        ScanInfoDialog.show(requireContext(), true)
+//        ScanInfoDialog.show(requireContext(), true)
     }
 
     override fun onClick(p0: View?) {
