@@ -11,6 +11,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
+import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.generateImageID
@@ -43,6 +44,8 @@ class EditRecipesViewModel : BaseViewModel() {
 
     private val _showMessageEvent = SingleLiveEvent<String>()
     val showMessageEvent: LiveData<String> = _showMessageEvent
+    private val _deleteRecipeEvent = SingleLiveEvent<Boolean>()
+    val deleteRecipeEvent: LiveData<Boolean> = _deleteRecipeEvent
 
     private var foodRecord = FoodRecord()
     private var loggedRecord: FoodRecord? = null
@@ -205,14 +208,14 @@ class EditRecipesViewModel : BaseViewModel() {
     fun deleteRecipe() {
         viewModelScope.launch {
             _showLoading.postValue(true)
-            if (useCase.deleteRecipe(foodRecord)) {
-                _showMessageEvent.postValue("Recipe deleted!")
-            } else {
-                _showMessageEvent.postValue("Could not delete recipe, Please try again.")
-            }
-            navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+            _deleteRecipeEvent.postValue(useCase.deleteRecipe(foodRecord))
             _showLoading.postValue(false)
         }
+    }
+
+    fun navigateToMyRecipes() {
+        navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+
     }
 
     fun navigateToTakePhoto() {
@@ -232,7 +235,7 @@ class EditRecipesViewModel : BaseViewModel() {
         navigate(EditRecipeFragmentDirections.editRecipeToVoiceLogging())
     }
 
-    fun navigateOnSave() {
+    fun navigateOnSave(): MyFoodType? {
         if (loggedRecord != null) //update log upon create or save
         {
             navigate(EditRecipeFragmentDirections.editRecipeToDiary())
@@ -246,8 +249,10 @@ class EditRecipesViewModel : BaseViewModel() {
             navigateBack()
         }*/
         else {
-            navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+            navigateToMyRecipes()
+            return MyFoodType.UserRecipes
         }
+        return null
     }
 
     fun navigateToEditIngredient() {

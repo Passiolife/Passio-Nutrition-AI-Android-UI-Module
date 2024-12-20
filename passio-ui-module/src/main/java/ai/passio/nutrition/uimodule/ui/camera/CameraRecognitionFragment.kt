@@ -137,6 +137,10 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     private fun initOnClickCallback() {
         with(binding)
         {
+            foodsLabel.isVisible = false
+            barcodeLabel.isVisible = false
+            nutritionFactsLabel.isVisible = false
+
             foodsLabel.setOnClickListener(this@CameraRecognitionFragment)
             barcodeLabel.setOnClickListener(this@CameraRecognitionFragment)
             nutritionFactsLabel.setOnClickListener(this@CameraRecognitionFragment)
@@ -308,14 +312,14 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
 
     private fun setupToolbar() {
         binding.toolbar.apply {
-            setup(getString(R.string.food_scanner), this@CameraRecognitionFragment)
-            setRightIcon(R.drawable.ic_info)
+            setup(getString(R.string.scan_barcode), this@CameraRecognitionFragment)
+//            setRightIcon(R.drawable.ic_info)
         }
     }
 
     private fun cameraPermissionGranted() {
         // Your code to start the camera
-        ScanInfoDialog.show(requireContext())
+//        ScanInfoDialog.show(requireContext())
     }
 
     override fun onStart() {
@@ -398,7 +402,7 @@ class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     }
 
     override fun onRightIconClicked() {
-        ScanInfoDialog.show(requireContext(), true)
+//        ScanInfoDialog.show(requireContext(), true)
     }
 
     override fun onClick(p0: View?) {

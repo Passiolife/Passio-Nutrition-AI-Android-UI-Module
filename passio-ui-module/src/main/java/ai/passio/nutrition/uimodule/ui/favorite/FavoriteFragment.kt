@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
-import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.toast
@@ -30,25 +29,12 @@ class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
         return binding.root
     }
 
-    private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
-        override fun onBack() {
-            viewModel.navigateBack()
-        }
-
-        override fun onRightIconClicked() {
-        }
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initObserver()
         with(binding)
         {
-            toolbar.setup(getString(R.string.favorites), baseToolbarListener)
-            toolbar.hideRightIcon()
-
             customFoodsAdapter = FavoriteAdapter(::onDetails, ::onLog)
             rvFoods.adapter = null
 

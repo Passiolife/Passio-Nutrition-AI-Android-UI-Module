@@ -10,6 +10,12 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import com.google.android.material.tabs.TabLayoutMediator
 
+enum class MyFoodType(val value: Int) {
+    UserFoods(0),
+    UserRecipes(1),
+    UserFavorites(2);
+}
+
 class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
 
     private var _binding: FragmentMyFoodsBinding? = null
@@ -37,18 +43,23 @@ class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
                 when (position) {
                     0 -> tab.text = requireContext().getString(R.string.custom_foods)
                     1 -> tab.text = requireContext().getString(R.string.recipes)
+                    2 -> tab.text = requireContext().getString(R.string.favorites)
                 }
             }.attach()
         }
 
-        arguments?.getBoolean("isRecipeShow", false)?.let {
-            if (it) {
-                binding.tabLayout.post {
-                    binding.tabLayout.getTabAt(1)?.select()
+        initObserver()
+
+    }
+
+    private fun initObserver() {
+        sharedViewModel.myFoodTypeLD.observe(viewLifecycleOwner) {
+            with(binding) {
+                if (it.value <= 2) {
+                    tabLayout.getTabAt(it.value)?.select()
                 }
             }
         }
-
     }
 
     private val baseToolbarListener = object : BaseToolbar.ToolbarListener {

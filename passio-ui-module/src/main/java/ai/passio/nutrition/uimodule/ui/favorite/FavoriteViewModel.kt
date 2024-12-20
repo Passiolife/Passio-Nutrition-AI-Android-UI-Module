@@ -63,12 +63,7 @@ class FavoriteViewModel : BaseViewModel() {
     }
 
     fun navigateToDetails() {
-        navigate(FavoriteFragmentDirections.favoriteToEdit())
+        navigate(MyFoodsFragmentDirections.myFoodsToEdit())
     }
 
-    fun navigateToDiary() {
-        viewModelScope.launch(Dispatchers.Main) {
-            navigate(MyFoodsFragmentDirections.myFoodsToDiary())
-        }
-    }
 }

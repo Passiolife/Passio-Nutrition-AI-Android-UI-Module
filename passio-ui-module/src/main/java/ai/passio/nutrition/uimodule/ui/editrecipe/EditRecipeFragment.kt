@@ -15,6 +15,7 @@ import ai.passio.nutrition.uimodule.ui.menu.AddFoodOption
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerListener
 import ai.passio.nutrition.uimodule.ui.util.PhotoPickerManager
@@ -241,6 +242,18 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
         }
         viewModel.saveRecipeEvent.observe(viewLifecycleOwner, ::recipeSaved)
         viewModel.showMessageEvent.observe(viewLifecycleOwner, ::showMessage)
+        viewModel.deleteRecipeEvent.observe(viewLifecycleOwner, ::recipeDeleted)
+    }
+
+
+    private fun recipeDeleted(isRecipeDeleted: Boolean) {
+        if (isRecipeDeleted) {
+            requireContext().toast("Recipe deleted successfully.")
+            sharedViewModel.setMyFoodsType(MyFoodType.UserRecipes)
+            viewModel.navigateToMyRecipes()
+        } else {
+            requireContext().toast("Could not delete recipe, please try again.")
+        }
     }
 
 
@@ -253,7 +266,11 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
             is ResultWrapper.Success -> {
                 if (resultWrapper.value) {
                     requireContext().toast("Recipe saved successfully.")
-                    viewModel.navigateOnSave()
+                    val myFoodType = viewModel.navigateOnSave()
+                    if (myFoodType != null)
+                    {
+                        sharedViewModel.setMyFoodsType(myFoodType)
+                    }
                 } else {
                     requireContext().toast("Could not save recipe, please try again.")
                 }
