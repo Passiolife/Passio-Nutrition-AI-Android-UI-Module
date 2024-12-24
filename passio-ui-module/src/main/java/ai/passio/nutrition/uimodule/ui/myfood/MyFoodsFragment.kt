@@ -55,8 +55,10 @@ class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
     private fun initObserver() {
         sharedViewModel.myFoodTypeLD.observe(viewLifecycleOwner) {
             with(binding) {
-                if (it.value <= 2) {
-                    tabLayout.getTabAt(it.value)?.select()
+                tabLayout.post {
+                    if (it.value <= 2) {
+                        tabLayout.getTabAt(it.value)?.select()
+                    }
                 }
             }
         }

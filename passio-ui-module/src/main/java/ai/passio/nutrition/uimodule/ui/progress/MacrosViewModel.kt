@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import java.util.Date
@@ -26,7 +27,7 @@ class MacrosViewModel : BaseViewModel() {
     val showLoading: LiveData<Boolean> = _showLoading
 
     fun fetchLogsForCurrentWeek() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             _timePeriod.postValue(TimePeriod.WEEK)
             val records = useCase.getLogsForWeek(currentDate)
@@ -36,7 +37,7 @@ class MacrosViewModel : BaseViewModel() {
     }
 
     fun fetchLogsForCurrentMonth() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             _timePeriod.postValue(TimePeriod.MONTH)
             val records = useCase.getLogsForMonth(currentDate)

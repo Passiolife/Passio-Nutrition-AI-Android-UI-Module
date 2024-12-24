@@ -10,6 +10,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.CommonDialog
 import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT_FULL
 import ai.passio.nutrition.uimodule.ui.util.OnCommonDialogListener
@@ -447,9 +448,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         with(binding) {
             foodImage.loadFoodImage(foodRecord)
             foodName.text = foodRecord.name.capitalized()
-            if (!foodRecord.name.equals(foodRecord.details, true)) {
-                infoName.text = foodRecord.details?.capitalized()
-            }
+            infoName.text = foodRecord.getShortInfo()
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener

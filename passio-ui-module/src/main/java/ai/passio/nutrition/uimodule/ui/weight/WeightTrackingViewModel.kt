@@ -39,7 +39,7 @@ class WeightTrackingViewModel : BaseViewModel() {
     private var currentDate = Date()
 
     fun initRecord(weightRecordEdit: WeightRecord?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordCurrent = weightRecordEdit ?: WeightRecord.create()
             _weightRecordCurrentEvent.postValue(weightRecordCurrent!!)
         }
@@ -77,7 +77,7 @@ class WeightTrackingViewModel : BaseViewModel() {
     }
 
     fun updateWeightRecord() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordCurrent?.let {
                 _weightRecordCurrentEvent.postValue(it)
                 if (it.dateTime <= 0) {
@@ -91,7 +91,7 @@ class WeightTrackingViewModel : BaseViewModel() {
         }
     }
     fun removeWeightRecord(weightRecordRemove: WeightRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordRemove.let {
                 _removeRecord.postValue(ResultWrapper.Success(useCase.removeWeightRecord(it)))
             }
@@ -105,7 +105,7 @@ class WeightTrackingViewModel : BaseViewModel() {
     }
 
     fun fetchRecords() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _timePeriod.postValue(currentTimePeriod)
             val records = useCase.getWeightRecords(currentDate, currentTimePeriod)
             _weightRecords.postValue(Pair(records, currentTimePeriod))

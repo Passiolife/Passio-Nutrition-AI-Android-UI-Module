@@ -3,9 +3,9 @@ package ai.passio.nutrition.uimodule.ui.camera
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.RecognitionResultViewBinding
 import ai.passio.nutrition.uimodule.domain.camera.RecognitionResult
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
-import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
@@ -248,13 +248,7 @@ class RecognitionResultView @JvmOverloads constructor(
             it.viewDragUp.isVisible = false
             val foodRecord = result.foodItem
             it.barcodeName.text = foodRecord.name.capitalized()
-            it.barcodeId.text = if (foodRecord.barcode.isValid()) {
-                "UPC:${foodRecord.barcode}"
-            } else if (foodRecord.packagedFoodCode.isValid()) {
-                "UPC:${foodRecord.packagedFoodCode}"
-            } else {
-                foodRecord.details
-            }
+            it.barcodeId.text = foodRecord.getShortInfo()
             it.barcodeImage.loadFoodImage(result.foodItem)
             disableDrag()
 //            bottomSheetBehavior.state = STATE_COLLAPSED

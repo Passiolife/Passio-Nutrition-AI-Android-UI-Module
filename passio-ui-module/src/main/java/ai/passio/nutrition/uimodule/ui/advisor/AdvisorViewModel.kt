@@ -116,7 +116,7 @@ class AdvisorViewModel : BaseViewModel() {
     }
 
     fun sendImages(currentBitmaps: List<Bitmap>) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             passioAdvisorData.add(PassioAdvisorData.createSender(currentBitmaps))
             addQueryProcessing()
             var currentCount = 0

@@ -63,7 +63,7 @@ class VoiceLoggingViewModel : BaseViewModel() {
             errorVoiceRecognition()
             return
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             voiceQuery = newVoiceQuery
             _voiceQueryEvent.postValue(voiceQuery)
             updateVoiceLoggingState(VoiceLoggingFragment.VoiceLoggingState.FETCHING_RESULT)

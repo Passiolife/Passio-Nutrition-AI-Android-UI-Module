@@ -63,7 +63,7 @@ class MyProfileViewModel : BaseViewModel() {
     }
 
     fun updateUser() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             if (userProfile != null && useCase.updateUserProfile(userProfile!!)) {
                 _updateProfileEvent.postValue(ResultWrapper.Success(userProfile!!))
@@ -77,7 +77,7 @@ class MyProfileViewModel : BaseViewModel() {
 
     fun changeDailyNutritionTarget(dailyNutritionTarget: DailyNutritionTarget) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userProfile?.apply {
                 caloriesTarget = dailyNutritionTarget.caloriesGoal
                 carbsPercent = dailyNutritionTarget.carbsPer

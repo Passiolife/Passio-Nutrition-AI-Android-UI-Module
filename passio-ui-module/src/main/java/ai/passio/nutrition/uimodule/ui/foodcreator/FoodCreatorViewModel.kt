@@ -544,7 +544,7 @@ class FoodCreatorViewModel : BaseViewModel() {
     }
 
     fun deleteCustomFood() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (customFoodRecord != null) {
                 _showLoading.postValue(true)
                 if (useCase.deleteCustomFood(customFoodRecord!!)) {
@@ -560,7 +560,7 @@ class FoodCreatorViewModel : BaseViewModel() {
     }
 
     fun saveCustomFood() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             if (servingUnit.equals(Grams.symbol, true) || servingUnit.equals(
                     Milliliters.symbol,

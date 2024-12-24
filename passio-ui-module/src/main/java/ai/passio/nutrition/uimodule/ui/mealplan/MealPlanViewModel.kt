@@ -67,7 +67,7 @@ class MealPlanViewModel : BaseViewModel() {
     }
 
     private fun getMealPlanItems() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (selectedMealPlan == null) {
                 selectedMealPlan = (UserCache.getProfile().mealPlan?.toPassioMealPlan()
                     ?: _passioMealPlans.find { mealPlan -> mealPlan.mealPlanLabel == "balanced" }
