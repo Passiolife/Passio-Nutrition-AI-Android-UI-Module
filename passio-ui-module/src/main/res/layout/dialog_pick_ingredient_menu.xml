@@ -7,7 +7,7 @@
     android:background="@color/passio_gray500"
     android:gravity="bottom|center_horizontal"
     android:orientation="vertical"
-    tools:context=".ui.menu.AddFoodFragment">
+    tools:context=".ui.menu.MainMenuDialog">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addFoodList"

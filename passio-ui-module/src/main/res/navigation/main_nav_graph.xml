@@ -286,34 +286,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/add_food"
-        android:name="ai.passio.nutrition.uimodule.ui.menu.AddFoodFragment"
-        android:label="Add Food"
-        tools:layout="@layout/fragment_add_food">
-
-        <action
-            android:id="@+id/add_food_to_camera"
-            app:destination="@id/camera" />
-
-        <action
-            android:id="@+id/add_food_to_search"
-            app:destination="@id/search" />
-        <action
-            android:id="@+id/add_food_to_photo"
-            app:destination="@id/take_select_photo" />
-        <action
-            android:id="@+id/add_food_to_voice_logging"
-            app:destination="@id/voice_logging" />
-        <action
-            android:id="@+id/add_food_to_advisor"
-            app:destination="@id/advisor" />
-        <action
-            android:id="@+id/add_food_to_my_foods"
-            app:destination="@id/my_foods" />
-
-    </fragment>
-
-    <fragment
         android:id="@+id/my_foods"
         android:name="ai.passio.nutrition.uimodule.ui.myfood.MyFoodsFragment"
         android:label="MyFoodsFragment"
