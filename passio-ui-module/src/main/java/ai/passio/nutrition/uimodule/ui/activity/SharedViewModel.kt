@@ -123,7 +123,7 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun preCacheUserProfile() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val userProfile = userProfileCase.getUserProfile()
             UserCache.setProfile(userProfile)
             _userProfileCacheEvent.postValue(ResultWrapper.Success(userProfile))

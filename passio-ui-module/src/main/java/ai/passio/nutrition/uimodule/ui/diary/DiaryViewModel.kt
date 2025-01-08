@@ -45,7 +45,7 @@ class DiaryViewModel : BaseViewModel() {
     val showLoading = SingleLiveEvent<Boolean>()
 
     fun fetchLogsForCurrentDay() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             showLoading.postValue(true)
             val userProfile = useCaseUserProfile.getUserProfile()
             val records = useCase.getLogsForDay(currentDate)
@@ -79,7 +79,7 @@ class DiaryViewModel : BaseViewModel() {
     }
 
     fun deleteLog(foodRecord: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             showLoading.postValue(true)
             useCase.deleteRecord(foodRecord)
             fetchLogsForCurrentDay()
@@ -132,13 +132,13 @@ class DiaryViewModel : BaseViewModel() {
     }
 
     private fun getQuickSuggestions() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (currentMealTime == passioMealTimeNow() && quickSuggestionsPassio.isNotEmpty()) {
                 improveQuickSuggestions()
             } else {
                 currentMealTime = passioMealTimeNow()
                 PassioSDK.instance.fetchSuggestions(currentMealTime) { foodDataInfo ->
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         quickSuggestionsPassio.clear()
                         quickSuggestionsPassio.addAll(foodDataInfo)
                         improveQuickSuggestions()
@@ -149,7 +149,7 @@ class DiaryViewModel : BaseViewModel() {
     }
 
     private fun improveQuickSuggestions() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getQuickAdds {
                 _quickSuggestions.postValue(it)
             }
@@ -158,14 +158,14 @@ class DiaryViewModel : BaseViewModel() {
 
     private fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             fun fetchSDKSuggestions(
                 todayRecords: List<String>,
                 userSuggestedFoods: List<SuggestedFoods>,
                 completion: (List<SuggestedFoods>) -> Unit
             ) {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     val sdkSuggestedFoods = quickSuggestionsPassio.map { SuggestedFoods(it) }
                     val finalSdkSuggestedFoods = (userSuggestedFoods + sdkSuggestedFoods)
                         .distinctBy { it.name.lowercase() }

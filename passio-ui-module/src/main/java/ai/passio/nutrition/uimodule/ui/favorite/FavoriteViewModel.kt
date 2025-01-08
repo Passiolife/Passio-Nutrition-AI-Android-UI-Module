@@ -28,7 +28,7 @@ class FavoriteViewModel : BaseViewModel() {
     val logFoodEvent: LiveData<ResultWrapper<Boolean>> = _logFoodEvent
 
     fun getFavoriteFoods() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             val customFoods = useCase.fetchFavorites()
             _favoriteListEvent.postValue(customFoods)

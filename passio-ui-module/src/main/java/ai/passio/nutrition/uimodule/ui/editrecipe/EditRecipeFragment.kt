@@ -23,7 +23,6 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
-import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.util.uriToBitmap
@@ -334,7 +333,7 @@ class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
         servingUnitAdapter.setDropDownViewResource(R.layout.serving_unit_item)
 
         with(binding) {
-            ivThumb.loadFoodImage(foodRecord)
+//            ivThumb.loadFoodImage(foodRecord)
             if (!foodRecord.name.isValid()) {
                 name.text?.clear()
             } else {

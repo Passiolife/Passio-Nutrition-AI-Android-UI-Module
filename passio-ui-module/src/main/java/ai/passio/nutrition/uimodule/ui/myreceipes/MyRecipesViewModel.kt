@@ -26,7 +26,7 @@ class MyRecipesViewModel : BaseViewModel() {
     val logRecipeEvent: LiveData<ResultWrapper<Boolean>> = _logRecipeEvent
 
     fun getRecipes() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             val customFoods = useCase.fetchRecipes()
             _recipeListEvent.postValue(customFoods)
@@ -36,7 +36,7 @@ class MyRecipesViewModel : BaseViewModel() {
     }
 
     fun deleteRecipe(foodRecord: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             useCase.deleteRecipe(foodRecord)
             getRecipes()
@@ -45,7 +45,7 @@ class MyRecipesViewModel : BaseViewModel() {
     }
 
     fun logRecipe(foodRecord: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             _logRecipeEvent.postValue(ResultWrapper.Success(useCase.logRecipe(foodRecord)))
             _showLoading.postValue(false)

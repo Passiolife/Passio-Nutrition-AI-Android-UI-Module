@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.model
 
 import ai.passio.nutrition.uimodule.data.passioGson
+import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.PackagedFoodCode
@@ -205,16 +206,19 @@ open class FoodRecord() {
         servingUnits.addAll(foodItem.amount.servingUnits)
         selectedUnit = foodItem.amount.selectedUnit
         selectedQuantity = foodItem.amount.selectedQuantity
+        foodItem.ingredients.find { it.metadata.barcode.isValid() }?.metadata?.barcode?.let {
+            barcode = it
+        }
         openFoodLicense = foodItem.isOpenFood()
         Log.d("foodItem.isOpenFood()", "===foodItem.isOpenFood(): ${foodItem.isOpenFood()}")
         ingredients = foodItem.ingredients.map { FoodRecordIngredient(it) }.toMutableList()
         calculateQuantityForIngredients()
     }
 
-  /*  fun isCustomFood(): Boolean {
-//        return id.startsWith(CUSTOM_FOOD_PREFIX)
-        return uuid.startsWith(CUSTOM_FOOD_PREFIX)
-    }*/
+    /*  fun isCustomFood(): Boolean {
+  //        return id.startsWith(CUSTOM_FOOD_PREFIX)
+          return uuid.startsWith(CUSTOM_FOOD_PREFIX)
+      }*/
 
     fun isRecipe(): Boolean {
 //        return isUserRecipe() || isPassioRecipe()
@@ -236,34 +240,13 @@ open class FoodRecord() {
         } else {
             ingredients.addAll(index ?: ingredients.size, record.ingredients)
         }
-        if (!name.isValid()) {
-            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
-        }
-        /*if (!foodImagePath.isValid() && record.iconId.isValid()) {
-            iconId = record.iconId
-            passioIDEntityType = record.passioIDEntityType
-        }*/
-        if (record.iconId.isValid()) {
-            iconId = record.iconId
-            entityType = record.entityType
-        }
+
         setUnitToServing()
     }
 
     fun addIngredient(record: FoodRecordIngredient, index: Int? = null) {
         ingredients.add(index ?: ingredients.size, record)
-        if (!name.isValid()) {
-            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
-        }
-        /*if (!foodImagePath.isValid() && record.iconId.isValid()) {
-            iconId = record.iconId
-            passioIDEntityType = PassioIDEntityType.item.value
-        }*/
-        if (record.iconId.isValid()) {
-            iconId = record.iconId
-            entityType = PassioIDEntityType.item.value
-        }
-//        ingredients.add(index ?: ingredients.size, record)
+
         setUnitToServing()
     }
 
@@ -272,17 +255,8 @@ open class FoodRecord() {
 
         ingredients.addAll(index ?: ingredients.size, records)
         if (!name.isValid()) {
-            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
+//            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
         }
-        /*if (!foodImagePath.isValid() && records.first().iconId.isValid()) {
-            iconId = records.first().iconId
-            passioIDEntityType = PassioIDEntityType.item.value
-        }*/
-        if (records.first().iconId.isValid()) {
-            iconId = records.first().iconId
-            entityType = PassioIDEntityType.item.value
-        }
-//        ingredients.add(index ?: ingredients.size, record)
         setUnitToServing()
     }
 
@@ -531,4 +505,16 @@ fun FoodRecord.copyAsRecipe(): FoodRecord {
                 refCode = uuid
             }*/
         }
+}
+
+fun FoodRecord.getShortInfo(): String {
+    return if (this.barcode.isValid()) {
+        "UPC: ${this.barcode}"
+    } else if (this.packagedFoodCode.isValid()) {
+        "UPC: ${this.packagedFoodCode}"
+    } else if (!this.name.equals(this.details, true)) {
+        this.details?.capitalized() ?: ""
+    } else {
+        ""
+    }
 }

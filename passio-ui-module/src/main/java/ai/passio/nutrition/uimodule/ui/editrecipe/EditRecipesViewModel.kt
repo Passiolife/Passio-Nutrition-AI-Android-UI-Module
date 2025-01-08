@@ -13,10 +13,12 @@ import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.generateImageID
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import ai.passio.passiosdk.passiofood.data.model.PassioFoodAmount.Companion.SERVING_UNIT_NAME
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
@@ -77,13 +79,29 @@ class EditRecipesViewModel : BaseViewModel() {
     }
 
     fun setRecipeToEditOrCreateNew(editRecipe: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             foodRecord = editRecipe.clone()
+            foodRecord.details = ""
             foodRecord.entityType = PassioIDEntityType.recipe.value
             isEditRecipe = useCase.getRecipe(foodRecord.refCode) != null
+            val selectedUnit = foodRecord.selectedUnit
+            val selectedQty = foodRecord.selectedQuantity
             foodRecord.setUnitToServing()
+
+            if (selectedUnit.isGram()) {
+                foodRecord.setSelectedUnit(Grams.unitName)
+                foodRecord.setSelectedQuantity(selectedQty)
+                updateServingQuantity(
+                    foodRecord.getSelectedQuantity(),
+                    EditFoodFragment.UpdateOrigin.INGREDIENT
+                )
+            } else if (selectedUnit.equals(SERVING_UNIT_NAME, true)) {
+                foodRecord.setSelectedUnit(SERVING_UNIT_NAME)
+                foodRecord.setSelectedQuantity(selectedQty)
+            }
             _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+            setIconId(foodRecord.iconId)
             _showLoading.postValue(false)
         }
     }
@@ -160,7 +178,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun getIngredient(index: Int) = foodRecord.ingredients[index]
 
     fun saveRecipe() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (!foodRecord.name.isValid()) {
                 _saveRecipeEvent.postValue(ResultWrapper.Error("Please enter a recipe name."))
             } else if (foodRecord.ingredients.size <= 1) {
@@ -170,6 +188,7 @@ class EditRecipesViewModel : BaseViewModel() {
                 _showLoading.postValue(true)
                 if (!isEditRecipe) {
                     foodRecord = foodRecord.copyAsRecipe() //create new recipe, else edit recipe
+                    foodRecord.details = ""
                 }
                 if (useCase.saveRecipe(foodRecord)) {
                     if (loggedRecord != null) {
@@ -206,7 +225,7 @@ class EditRecipesViewModel : BaseViewModel() {
     }
 
     fun deleteRecipe() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             _deleteRecipeEvent.postValue(useCase.deleteRecipe(foodRecord))
             _showLoading.postValue(false)

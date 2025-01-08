@@ -89,7 +89,7 @@ class DashboardViewModel : BaseViewModel() {
     }
 
     fun fetchLogsForCurrentDay() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLogsLoading.postValue(true)
             val userProfile = useCaseUserProfile.getUserProfile()
             val records = useCase.getLogsForDay(currentDate)
@@ -167,7 +167,7 @@ class DashboardViewModel : BaseViewModel() {
     }
 
     private fun fetchWaterSummary() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isWaterLoading.postValue(true)
             val totalWater =
                 waterUseCase.getRecords(currentDate).sumOf { it.getWaterInCurrentUnit() }
@@ -182,7 +182,7 @@ class DashboardViewModel : BaseViewModel() {
     }
 
     private fun fetchWeightSummary() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isWeightLoading.postValue(true)
             val totalWater =
                 weightUseCase.getLatest()?.getWightInCurrentUnit() ?: 0.0

@@ -139,7 +139,7 @@ class EditFoodViewModel : BaseViewModel() {
     }
 
     fun deleteCurrentRecord() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             _deleteLogFood.postValue(useCase.deleteRecord(editFoodDataModel.foodRecord))
             _showLoading.postValue(false)
@@ -147,7 +147,7 @@ class EditFoodViewModel : BaseViewModel() {
     }
 
     fun logCurrentRecord() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             if (useCase.logFoodRecord(editFoodDataModel.foodRecord, isEditLogMode)) {
                 _resultLogFood.postValue(ResultWrapper.Success(editFoodDataModel.foodRecord))
@@ -159,7 +159,7 @@ class EditFoodViewModel : BaseViewModel() {
     }
 
     fun editRecipeFromLoggedFood(isUpdateLog: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
 //            val recipe = recipeUseCase.getRecipe(foodRecord.id)
             _recipeInfo.postValue(customRecipe to isUpdateLog)
@@ -168,7 +168,7 @@ class EditFoodViewModel : BaseViewModel() {
     }
 
     fun editCustomFromLoggedFood(isUpdateLog: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
 //            val customFood = customFoodUseCase.fetchCustomFood(foodRecord.id)
             _customFoodInfo.postValue(customFood to isUpdateLog)

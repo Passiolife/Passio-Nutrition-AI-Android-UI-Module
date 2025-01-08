@@ -10,6 +10,7 @@ import ai.passio.nutrition.uimodule.ui.profile.WeightUnit
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsViewModel : BaseViewModel() {
@@ -29,14 +30,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getMeasurementUnit() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userProfile = useCase.getUserProfile()
             _userProfileEvent.postValue(userProfile)
         }
     }
 
     fun updateLengthUnit(lengthUnit: LengthUnit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (userProfile.heightUnits.value != lengthUnit.value) {
                 userProfile.heightUnits = lengthUnit
                 _updateProfileResult.postValue(
@@ -52,7 +53,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun updateWeightUnit(weightUnit: WeightUnit) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (userProfile.units.value != weightUnit.value) {
                 userProfile.units = weightUnit
                 if (weightUnit == WeightUnit.metric) {
@@ -72,7 +73,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun updateBreakfastReminder(isReminderOn: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             with(userProfile) {
                 userReminder.isBreakfastOn = isReminderOn
                 _updateProfileResult.postValue(ResultWrapper.Success(useCase.updateUserProfile(this)))
@@ -81,7 +82,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun updateLunchReminder(isReminderOn: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             with(userProfile) {
                 userReminder.isLunchOn = isReminderOn
                 _updateProfileResult.postValue(ResultWrapper.Success(useCase.updateUserProfile(this)))
@@ -90,7 +91,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun updateDinnerReminder(isReminderOn: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             with(userProfile) {
                 userReminder.isDinnerOn = isReminderOn
                 _updateProfileResult.postValue(ResultWrapper.Success(useCase.updateUserProfile(this)))

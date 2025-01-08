@@ -8,6 +8,7 @@ import ai.passio.nutrition.uimodule.ui.edit.EditFoodModel
 import ai.passio.nutrition.uimodule.ui.edit.OpenFoodFactsDialog
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
@@ -211,9 +212,7 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
         with(binding) {
             foodImage.loadFoodImage(foodRecord)
             foodName.text = foodRecord.name.capitalized()
-            if (!foodRecord.name.equals(foodRecord.details, true)) {
-                infoName.text = foodRecord.details?.capitalized()
-            }
+            infoName.text = foodRecord.getShortInfo()
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener

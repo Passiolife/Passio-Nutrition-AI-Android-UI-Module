@@ -39,7 +39,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     private var currentDate = Date()
 
     fun initRecord(weightRecordEdit: WaterRecord?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordCurrent = weightRecordEdit ?: WaterRecord.create()
             _weightRecordCurrentEvent.postValue(weightRecordCurrent!!)
         }
@@ -77,7 +77,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun updateWeightRecord() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordCurrent?.let {
                 _weightRecordCurrentEvent.postValue(it)
                 if (it.dateTime <= 0) {
@@ -92,7 +92,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun quickAdd(quickWeight: Double) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val quickRecord = WaterRecord.create()
             quickRecord.apply {
                 if (userProfile.waterUnit == WaterUnit.imperial) {
@@ -107,7 +107,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun removeWeightRecord(weightRecordRemove: WaterRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordRemove.let {
                 _removeRecord.postValue(ResultWrapper.Success(useCase.removeRecord(it)))
             }
@@ -121,7 +121,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun fetchRecords() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _timePeriod.postValue(currentTimePeriod)
             val records = useCase.getRecords(currentDate, currentTimePeriod)
             _weightRecords.postValue(Pair(records, currentTimePeriod))
