@@ -362,6 +362,11 @@ class FoodCreatorViewModel : BaseViewModel() {
 
         customFoodRecord = foodRecord.clone()
 
+        if (customFoodRecord?.name == customFoodRecord?.details)
+        {
+            customFoodRecord?.details = ""
+        }
+
         if (!isEditCustomFood) {
             customFoodRecord?.id = ""
             customFoodRecord?.uuid = ""
@@ -369,14 +374,14 @@ class FoodCreatorViewModel : BaseViewModel() {
         }
 
         _isEditCustomFoodEvent.postValue(isEditCustomFood)
-        _prefillFoodData.postValue(foodRecord)
+        _prefillFoodData.postValue(customFoodRecord!!)
     }
 
     fun setDataFromNutritionFacts(nutritionFactsPair: Pair<PassioNutritionFacts, String>) {
         val nutritionFacts = nutritionFactsPair.first
         this.passioIDEntityType = PassioIDEntityType.nutritionFacts
 
-        Log.d("nutritionFacts====", passioGson.toJson(nutritionFacts))
+//        Log.d("nutritionFacts====", passioGson.toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
         nutritionFacts.servingQuantity?.let {
             setServingSize(it)
