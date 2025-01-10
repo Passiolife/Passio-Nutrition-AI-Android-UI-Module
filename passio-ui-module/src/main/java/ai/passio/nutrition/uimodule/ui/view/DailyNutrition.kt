@@ -59,6 +59,20 @@ class DailyNutrition @JvmOverloads constructor(
         setup(0, 0, 0, 0, 0, 0, 0, 0)
     }
 
+    fun hideTitleAndProgressReportButton()
+    {
+        binding.title.isVisible = false
+        binding.progressReport.isVisible = false
+        background = ContextCompat.getDrawable(context, R.color.passio_white)
+        elevation = DesignUtils.dp2pxFloat(0f)
+        setPadding(
+            DesignUtils.dp2px(8f),
+            DesignUtils.dp2px(0f),
+            DesignUtils.dp2px(8f),
+            DesignUtils.dp2px(8f)
+        )
+    }
+
     fun setLoading(isLoading: Boolean) {
         binding.progressDailyNutrition.isVisible = isLoading
     }

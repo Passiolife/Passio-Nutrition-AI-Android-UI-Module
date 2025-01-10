@@ -61,7 +61,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    api 'ai.passio.passiosdk:nutrition-ai:3.2.3-1'
+    api 'ai.passio.passiosdk:nutrition-ai:3.2.3-2'
 //    api(project(":passio-sdk"))
 //    embed project(path: ':passio-sdk', configuration: 'default')
 

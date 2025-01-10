@@ -226,6 +226,11 @@
     <string name="search_manually">Search Manually</string>
     <string name="sorry_we_could_not_find_any_matches_please_try_again_or_try_searching_manually">Sorry, we could not find any matches. Please try again or try searching manually</string>
     <string name="token_tracking">Token tracking…</string>
+    <string name="create_recipe">Create Recipe</string>
+    <string name="view_your_diary_or_add_more">View your diary or add more</string>
+    <string name="add_more">Add More</string>
+    <string name="adjust_serving_size">Adjust Serving Size</string>
+    <string name="done">Done</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>
