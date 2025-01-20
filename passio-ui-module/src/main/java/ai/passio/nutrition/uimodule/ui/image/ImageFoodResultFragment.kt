@@ -4,7 +4,6 @@ import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.databinding.FragmentImageFoodResultBinding
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
-import ai.passio.nutrition.uimodule.ui.advisor.OnItemSelectChange
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
 import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT_FULL_WITH_TIME
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
@@ -25,6 +25,7 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.data.measurement.UnitEnergy
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import android.annotation.SuppressLint
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.view.isVisible
@@ -52,27 +53,19 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
             toolbar.hideRightIcon()
             dailyNutrition.hideTitleAndProgressReportButton()
             enableLogButton(false)
-            rvResult.adapter = FoodImageResultAdapter(object : OnItemSelectChange {
+            rvResult.adapter = FoodImageResultAdapter(object : OnFoodImageSelectChange {
                 override fun onItemSelectChange(selectedCount: Int) {
                     enableLogButton(selectedCount != 0)
                     updateNutritionChart()
                 }
 
-                override fun onIndexSelect(index: Int) {
+                override fun onTapped(editIndex: Int, imageFoodResult: ImageFoodResult) {
+                    if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                        showEditNutritionFactsDialog(editIndex, imageFoodResult)
+                    } else {
+                        showAdjustServingSizeDialog(editIndex, imageFoodResult)
+                    }
                 }
-
-                override fun onIndexDeselect(index: Int) {
-                }
-
-            }, onEdit = { editIndex, record ->
-                AdjustServingSizeDialog(
-                    editIndex = editIndex,
-                    foodRecord = record,
-                    onAdjustServingSizeListener = onAdjustServingSizeListener
-                ).show(
-                    childFragmentManager,
-                    "AdjustServingSizeDialog"
-                )
 
             })
             updateNutritionChart()
@@ -114,9 +107,59 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
 
 
     private val onAdjustServingSizeListener = object : OnAdjustServingSizeListener {
-        override fun onChanged(editedIndex: Int, updatedFoodRecord: FoodRecord) {
-            viewModel.updateFoodRecord(editedIndex, updatedFoodRecord)
+        override fun onChanged(editedIndex: Int, updatedImageFoodResult: ImageFoodResult) {
+            viewModel.updateFoodRecord(editedIndex, updatedImageFoodResult)
         }
+
+        override fun onCancelled(editedIndex: Int) {
+
+        }
+
+        override fun onEdit(editedIndex: Int, updatedImageFoodResult: ImageFoodResult) {
+            showEditNutritionFactsDialog(editedIndex, updatedImageFoodResult)
+        }
+    }
+
+    private val onEditNutritionFactsListener = object : OnEditNutritionFactsListener {
+        override fun onChanged(
+            editedIndex: Int,
+            updatedImageFoodResult: ImageFoodResult
+        ) {
+            viewModel.updateFoodRecord(editedIndex, updatedImageFoodResult)
+        }
+
+        override fun onCancelled(
+            editedIndex: Int,
+            imageFoodResult: ImageFoodResult
+        ) {
+            if (!imageFoodResult.isBarcodeDataMissing() && !imageFoodResult.isNutritionFactsDataMissing()) {
+                showAdjustServingSizeDialog(editedIndex, imageFoodResult)
+            }
+
+        }
+
+    }
+
+    private fun showAdjustServingSizeDialog(indexToEdit: Int, imageFoodResult: ImageFoodResult) {
+        AdjustServingSizeDialog(
+            editIndex = indexToEdit,
+            imageFoodResult = imageFoodResult,
+            onAdjustServingSizeListener = onAdjustServingSizeListener
+        ).show(
+            childFragmentManager,
+            "AdjustServingSizeDialog"
+        )
+    }
+
+    private fun showEditNutritionFactsDialog(indexToEdit: Int, imageFoodResult: ImageFoodResult) {
+        EditNutritionFactsDialog(
+            editIndex = indexToEdit,
+            imageFoodResult = imageFoodResult,
+            onEditNutritionFactsListener = onEditNutritionFactsListener
+        ).show(
+            childFragmentManager,
+            "EditNutritionFactsDialog"
+        )
     }
 
 
@@ -256,11 +299,23 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         viewModel.navigateToRecipe()
     }
 
-    private fun foodItemLogged(resultWrapper: ResultWrapper<Boolean>) {
+    @SuppressLint("SetTextI18n")
+    private fun foodItemLogged(resultWrapper: ResultWrapper<Triple<Boolean, Int, Int>>) {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
-                if (resultWrapper.value) {
-                    binding.viewAddedToDiary.isVisible = true
+                val isLogged = resultWrapper.value.first
+                val totalLoggedCount = resultWrapper.value.second
+                val totalCustomFoodSaved = resultWrapper.value.third
+                if (isLogged) {
+                    with(binding) {
+                        viewAddedToDiary.isVisible = true
+                        viewAddedToDiary.isVisible = totalCustomFoodSaved != 0
+                        tvCustomFoodCount.text =
+                            "$totalCustomFoodSaved ${resources.getString(R.string.custom_food_created)}"
+                        tvLoggedCount.text =
+                            "$totalLoggedCount ${resources.getString(R.string.item_added_to_diary)}"
+                    }
+
                 } else {
                     requireContext().toast("Could not log food item(s).")
                 }
@@ -276,7 +331,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         with(binding)
         {
             val adapter = rvResult.adapter as FoodImageResultAdapter
-            val records = adapter.getSelectedItems()
+            val records = adapter.getSelectedItems().map { it.record }
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()
             val currentCarbs = records.map { it.nutrients().carbs() }
@@ -300,14 +355,24 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         }
     }
 
-    private fun showResult(result: List<FoodRecord>) {
+    private fun showResult(result: List<ImageFoodResult>) {
         with(binding) {
             hideAll()
             noResultFound.isVisible = result.isEmpty()
             resultView.isVisible = result.isNotEmpty()
 
             val adapter = rvResult.adapter as FoodImageResultAdapter
-            adapter.addData(result, result.indices.toList())
+//            val selectionList = mutableListOf<Int>()
+//            for (i in result.indices) {
+//                if (!result[i].isBarcodeDataMissing() && !result[i].isNutritionFactsDataMissing()) {
+//                    selectionList.add(i)
+//                }
+//            }
+            result.forEach {
+                it.isSelected = !(it.isBarcodeDataMissing() && it.isNutritionFactsDataMissing())
+            }
+            adapter.addData(result)
+//            adapter.addData(result, selectionList)
             updateNutritionChart()
         }
     }

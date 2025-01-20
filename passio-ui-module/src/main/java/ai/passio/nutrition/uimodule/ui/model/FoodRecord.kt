@@ -95,8 +95,10 @@ open class FoodRecord() {
         ) Milliliters.symbol else Grams.symbol
 //        iconId = foodItem.iconId
 
-        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
-        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+//        selectedUnit = gramUnitName //foodItem.amount.selectedUnit
+//        selectedQuantity = weightInGrams //foodItem.amount.selectedQuantity
+        selectedUnit = servingUnit //foodItem.amount.selectedUnit
+        selectedQuantity = servingWeight //foodItem.amount.selectedQuantity
 
         servingSizes.clear()
         servingUnits.clear()
@@ -508,6 +510,18 @@ fun FoodRecord.copyAsRecipe(): FoodRecord {
 }
 
 fun FoodRecord.getShortInfo(): String {
+    return if (!this.name.equals(this.details, true)) {
+        this.details?.capitalized() ?: ""
+    }/* else if (this.barcode.isValid()) {
+        "UPC: ${this.barcode}"
+    } else if (this.packagedFoodCode.isValid()) {
+        "UPC: ${this.packagedFoodCode}"
+    }*/ else {
+        ""
+    }
+}
+
+fun FoodRecord.getShortInfo2(): String {
     return if (this.barcode.isValid()) {
         "UPC: ${this.barcode}"
     } else if (this.packagedFoodCode.isValid()) {

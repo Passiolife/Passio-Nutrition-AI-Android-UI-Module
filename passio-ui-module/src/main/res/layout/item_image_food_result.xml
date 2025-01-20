@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -177,9 +178,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/foodSelect"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:scaleType="fitCenter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="20dp"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/image"

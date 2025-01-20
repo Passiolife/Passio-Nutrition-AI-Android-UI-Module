@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.toMealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
@@ -31,15 +32,15 @@ class ImageFoodResultViewModel : BaseViewModel() {
     private val _showLoading = SingleLiveEvent<Boolean>()
     val showLoading: LiveData<Boolean> get() = _showLoading
 
-    private val resultFoodInfoList = mutableListOf<FoodRecord>()
-    private val _resultFoodInfoEvent = MutableLiveData<List<FoodRecord>>()
-    val resultFoodInfoEvent: LiveData<List<FoodRecord>> get() = _resultFoodInfoEvent
+    private val resultFoodInfoList = mutableListOf<ImageFoodResult>()
+    private val _resultFoodInfoEvent = MutableLiveData<List<ImageFoodResult>>()
+    val resultFoodInfoEvent: LiveData<List<ImageFoodResult>> get() = _resultFoodInfoEvent
 
     private val _createRecipeEvent = SingleLiveEvent<FoodRecord>()
     val createRecipeEvent: LiveData<FoodRecord> get() = _createRecipeEvent
 
-    private val _logFoodEvent = SingleLiveEvent<ResultWrapper<Boolean>>()
-    val logFoodEvent: LiveData<ResultWrapper<Boolean>> = _logFoodEvent
+    private val _logFoodEvent = SingleLiveEvent<ResultWrapper<Triple<Boolean, Int, Int>>>()
+    val logFoodEvent: LiveData<ResultWrapper<Triple<Boolean, Int, Int>>> = _logFoodEvent
 
     private val _addIngredientEvent = SingleLiveEvent<List<FoodRecordIngredient>>()
     val addIngredientEvent: LiveData<List<FoodRecordIngredient>> = _addIngredientEvent
@@ -121,29 +122,56 @@ class ImageFoodResultViewModel : BaseViewModel() {
     private fun fetchFoodRecords(list: List<PassioAdvisorFoodInfo>) {
         viewModelScope.launch(Dispatchers.IO) {
             resultFoodInfoList.clear()
-            resultFoodInfoList.addAll(mealPlanUseCase.getFoodRecords(list, currentMealTime))
+            resultFoodInfoList.addAll(
+                mealPlanUseCase.getFoodRecordsForImages(
+                    list,
+                    currentMealTime
+                )
+            )
             _isFetchingResult.postValue(false)
             _resultFoodInfoEvent.postValue(resultFoodInfoList)
         }
     }
 
-    fun logRecords(list: List<FoodRecord>) {
+//    private val customFoodUseCase = CustomFoodUseCase
+    fun logRecords(list: List<ImageFoodResult>) {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             if (list.isEmpty()) {
                 _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items!"))
             } else {
+
+                /*list.forEach { imageRecord ->
+
+                    if (imageRecord.resultType == PassioFoodResultType.NUTRITION_FACTS || imageRecord.resultType == PassioFoodResultType.BARCODE && !imageRecord.isCustomFood) {
+                        val customFood = imageRecord.record.copyAsCustomFood()
+                        customFoodUseCase.saveCustomFood(customFood)
+                        imageRecord.record = customFood
+                        imageRecord.isCustomFood = true
+                        totalCustomFoodSaved = totalCustomFoodSaved + 1
+                    }
+                }*/
+
                 list.forEach {
-                    it.create(selectedDateTime.millis)
-                    it.mealLabel = currentMealTime.toMealLabel()
+                    it.record.create(selectedDateTime.millis)
+                    it.record.mealLabel = currentMealTime.toMealLabel()
                 }
 
                 if (isAddIngredient) {
-                    _addIngredientEvent.postValue(list.map { fr -> FoodRecordIngredient(fr) })
+                    _addIngredientEvent.postValue(list.map { fr -> FoodRecordIngredient(fr.record) })
                 } else {
+
+                    val isLogged = mealPlanUseCase.logFoodRecords(list.map { it.record })
+                    val totalLoggedItems = list.size
+                    var totalCustomFoodSaved = list.count { it.isCustomFood }
+
                     _logFoodEvent.postValue(
                         ResultWrapper.Success(
-                            mealPlanUseCase.logFoodRecords(list)
+                            Triple(
+                                isLogged,
+                                totalLoggedItems,
+                                totalCustomFoodSaved
+                            )
                         )
                     )
                 }
@@ -152,27 +180,31 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    fun createRecipe(list: List<FoodRecord>) {
+    fun createRecipe(list: List<ImageFoodResult>) {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             if (list.isEmpty()) {
                 _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items!"))
             } else {
                 list.forEach {
-                    it.create(selectedDateTime.millis)
-                    it.mealLabel = currentMealTime.toMealLabel()
+                    it.record.create(selectedDateTime.millis)
+                    it.record.mealLabel = currentMealTime.toMealLabel()
                 }
-                val recipeRecord = list.first().clone()
+                val recipeRecord = list.first().record.clone()
                 recipeRecord.ingredients.clear()
-                recipeRecord.addIngredients(list.map { FoodRecordIngredient(it) })
+                recipeRecord.addIngredients(list.map { FoodRecordIngredient(it.record) })
                 _createRecipeEvent.postValue(recipeRecord)
             }
             _showLoading.postValue(false)
         }
     }
 
-    fun updateFoodRecord(indexToEdit: Int, updatedFoodRecord: FoodRecord) {
-        resultFoodInfoList[indexToEdit] = updatedFoodRecord
+    val editedRecordsIndex = mutableListOf<Int>()
+    fun updateFoodRecord(indexToEdit: Int, updatedImageFoodResult: ImageFoodResult) {
+        if (!editedRecordsIndex.contains(indexToEdit)) {
+            editedRecordsIndex.add(indexToEdit)
+        }
+        resultFoodInfoList[indexToEdit] = updatedImageFoodResult
         _resultFoodInfoEvent.postValue(resultFoodInfoList)
     }
 

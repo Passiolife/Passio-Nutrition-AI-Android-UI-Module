@@ -68,6 +68,7 @@
     <string name="scan_barcode_description">Scan the barcode usually found on the back side of packaged food.</string>
     <string name="serving">Serving</string>
     <string name="item_added_to_diary">Item Added To Diary</string>
+    <string name="custom_food_created">Custom Food Created</string>
     <string name="view_your_diary_or_continue_scanning">View your diary or continue scanning.</string>
     <string name="keep_scanning">Keep Scanning</string>
     <string name="view_diary">View Diary</string>
@@ -231,6 +232,11 @@
     <string name="add_more">Add More</string>
     <string name="adjust_serving_size">Adjust Serving Size</string>
     <string name="done">Done</string>
+    <string name="edit_nutrition_facts">Edit Nutrition Facts</string>
+    <string name="portions">Portions</string>
+    <string name="cal">- cal</string>
+    <string name="g">- g</string>
+    <string name="unit">Unit</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

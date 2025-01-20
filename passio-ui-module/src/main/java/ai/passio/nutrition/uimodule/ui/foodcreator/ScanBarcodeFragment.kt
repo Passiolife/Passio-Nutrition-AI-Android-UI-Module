@@ -4,6 +4,7 @@ import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentScanBarcodeBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
@@ -25,6 +26,7 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
     private val binding: FragmentScanBarcodeBinding get() = _binding!!
     private val permissionUtil =
         PermissionUtil(this@ScanBarcodeFragment, Manifest.permission.CAMERA)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,7 +39,11 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sharedViewModel.scanForBarcode.observe(viewLifecycleOwner) { isCheckExisting ->
+            viewModel.putCheckExisting(isCheckExisting)
+        }
         viewModel.scanBarcodeStatusEvent.observe(viewLifecycleOwner, ::onRecognitionResult)
+        viewModel.scanForFoodEvent.observe(viewLifecycleOwner, ::sendResult)
 
         setupToolbar()
         initOnClickCallback()
@@ -61,6 +67,11 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
 
 
         }
+    }
+
+    private fun sendResult(result: Pair<Barcode, FoodRecord?>) {
+        sharedViewModel.sendBarcodeScanResult(result.first, result.second)
+        viewModel.navigateBack()
     }
 
     private fun sendResult(barcode: Barcode) {

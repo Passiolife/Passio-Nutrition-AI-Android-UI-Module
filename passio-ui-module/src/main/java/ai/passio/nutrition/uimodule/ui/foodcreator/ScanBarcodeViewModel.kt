@@ -12,6 +12,7 @@ import ai.passio.passiosdk.passiofood.PassioSDK
 import androidx.camera.core.CameraSelector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 enum class ScanBarcodeStatus {
@@ -29,12 +30,20 @@ class ScanBarcodeViewModel : BaseViewModel() {
     private var scanBarcodeStatus: ScanBarcodeStatus = ScanBarcodeStatus.SCANNING
     private val _scanBarcodeStatusEvent = SingleLiveEvent<ScanBarcodeStatus>()
     val scanBarcodeStatusEvent: LiveData<ScanBarcodeStatus> = _scanBarcodeStatusEvent
+    private val _scanForFoodEvent = SingleLiveEvent<Pair<Barcode, FoodRecord?>>()
+    val scanForFoodEvent: LiveData<Pair<Barcode, FoodRecord?>> = _scanForFoodEvent
 
     //    private var foodRecord: FoodRecord? = null
     private var barcode: Barcode? = null
 
     var existingSystemItem: FoodRecord? = null
     var existingCustomFood: FoodRecord? = null
+
+    var isCheckExisting = true
+
+    fun putCheckExisting(isCheck: Boolean) {
+        isCheckExisting = isCheck
+    }
 
     private fun stopDetection() {
         useCase.stopFoodDetection()
@@ -79,26 +88,32 @@ class ScanBarcodeViewModel : BaseViewModel() {
     }
 
     private fun validateBarcode() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (!barcode.isValid()) {
                 ScanBarcodeStatus.NOT_FOUND
                 _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
                 return@launch
             }
-            existingCustomFood = useCase.fetchFoodFromCustomFoods(barcode!!)
-            if (existingCustomFood != null) {
-                scanBarcodeStatus = ScanBarcodeStatus.CUSTOM_FOOD_ALREADY_EXIST
+
+            if (isCheckExisting) {
+                existingCustomFood = useCase.fetchFoodFromCustomFoods(barcode!!)
+                if (existingCustomFood != null) {
+                    scanBarcodeStatus = ScanBarcodeStatus.CUSTOM_FOOD_ALREADY_EXIST
+                    _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+                    return@launch
+                }
+                existingSystemItem = useCase.fetchFoodItemForProduct(barcode!!)
+                if (existingSystemItem != null) {
+                    scanBarcodeStatus = ScanBarcodeStatus.BARCODE_IN_SYSTEM
+                    _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
+                    return@launch
+                }
+                scanBarcodeStatus = ScanBarcodeStatus.NEW_BARCODE
                 _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
-                return@launch
+            } else {
+                val record = useCase.fetchFoodItemForProduct(barcode!!)
+                _scanForFoodEvent.postValue(barcode!! to record)
             }
-            existingSystemItem = useCase.fetchFoodItemForProduct(barcode!!)
-            if (existingSystemItem != null) {
-                scanBarcodeStatus = ScanBarcodeStatus.BARCODE_IN_SYSTEM
-                _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
-                return@launch
-            }
-            scanBarcodeStatus = ScanBarcodeStatus.NEW_BARCODE
-            _scanBarcodeStatusEvent.postValue(scanBarcodeStatus)
         }
     }
 
@@ -106,8 +121,7 @@ class ScanBarcodeViewModel : BaseViewModel() {
         return barcode ?: ""
     }
 
-    fun navigateToFoodDetails()
-    {
+    fun navigateToFoodDetails() {
         navigate(ScanBarcodeFragmentDirections.scanBarcodeToEdit())
     }
 

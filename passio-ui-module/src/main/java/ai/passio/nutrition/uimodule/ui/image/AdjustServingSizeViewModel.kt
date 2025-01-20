@@ -1,54 +1,44 @@
 package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.edit.EditFoodModel
 import ai.passio.nutrition.uimodule.ui.editingredient.EditIngredientFragment
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class AdjustServingSizeViewModel : BaseViewModel() {
 
-    private val _editFoodModelLD = MutableLiveData<EditFoodModel>()
-    val editFoodModelLD: LiveData<EditFoodModel> get() = _editFoodModelLD
+    private val _editFoodModelLD = MutableLiveData<ImageFoodResult>()
+    val editFoodModelLD: LiveData<ImageFoodResult> get() = _editFoodModelLD
     private val _internalUpdate =
-        SingleLiveEvent<Pair<FoodRecord, EditIngredientFragment.UpdateOrigin>>()
-    val internalUpdate: LiveData<Pair<FoodRecord, EditIngredientFragment.UpdateOrigin>> get() = _internalUpdate
-    private lateinit var foodRecord: FoodRecord
+        SingleLiveEvent<Pair<ImageFoodResult, EditIngredientFragment.UpdateOrigin>>()
+    val internalUpdate: LiveData<Pair<ImageFoodResult, EditIngredientFragment.UpdateOrigin>> get() = _internalUpdate
+    private lateinit var imageFoodResult: ImageFoodResult
     private var editIngredientIndex = -1
 
-    fun setFoodRecord(foodRecord: FoodRecord) {
-        this.foodRecord = foodRecord
-        val model = EditFoodModel(foodRecord, true)
-        _editFoodModelLD.postValue(model)
-    }
-
-    fun editFoodRecord(editFoodRecord: Pair<FoodRecord, Int>) {
-        this.foodRecord = editFoodRecord.first
+    fun editFoodRecord(editFoodRecord: Pair<ImageFoodResult, Int>) {
+        this.imageFoodResult = editFoodRecord.first
         this.editIngredientIndex = editFoodRecord.second
-        val model = EditFoodModel(foodRecord, true)
-        _editFoodModelLD.postValue(model)
+        _editFoodModelLD.postValue(this.imageFoodResult)
     }
 
     fun updateServingQuantity(value: Double, origin: EditIngredientFragment.UpdateOrigin) {
-        foodRecord.setSelectedQuantity(value)
-        _internalUpdate.postValue(foodRecord to origin)
+        imageFoodResult.record.setSelectedQuantity(value)
+        _internalUpdate.postValue(imageFoodResult to origin)
     }
 
     fun updateServingUnit(index: Int, origin: EditIngredientFragment.UpdateOrigin) {
-        val unit = foodRecord.servingUnits[index].unitName
-        foodRecord.setSelectedUnit(unit)
-        _internalUpdate.postValue(foodRecord to origin)
+        val unit = imageFoodResult.record.servingUnits[index].unitName
+        imageFoodResult.record.setSelectedUnit(unit)
+        _internalUpdate.postValue(imageFoodResult to origin)
     }
 
     fun getEditFoodRecordIndex(): Int {
         return editIngredientIndex
     }
 
-    fun getFoodRecord(): FoodRecord {
-        return foodRecord
+    fun getFoodRecord(): ImageFoodResult {
+        return imageFoodResult
     }
-
-
 }

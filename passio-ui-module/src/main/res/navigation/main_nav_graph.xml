@@ -583,6 +583,11 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/dashboard" />
 
+
+        <action
+            android:id="@+id/image_food_result_to_scan_barcode"
+            app:destination="@id/scan_barcode" />
+
     </fragment>
 
     <fragment

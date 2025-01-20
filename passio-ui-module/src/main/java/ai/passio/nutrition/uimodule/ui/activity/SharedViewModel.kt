@@ -59,6 +59,10 @@ class SharedViewModel : ViewModel() {
 
     private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
     val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
+    private val _barcodeScanResult = SingleLiveEvent<Pair<Barcode, FoodRecord?>>()
+    val barcodeScanResult: LiveData<Pair<Barcode, FoodRecord?>> get() = _barcodeScanResult
+    private val _scanForBarcode = SingleLiveEvent<Boolean>()
+    val scanForBarcode: LiveData<Boolean> get() = _scanForBarcode
 
     private val _detailsFoodRecordLD = SingleLiveEvent<EditFoodDataModel>()
     val detailsFoodRecordLD: LiveData<EditFoodDataModel> get() = _detailsFoodRecordLD
@@ -154,6 +158,15 @@ class SharedViewModel : ViewModel() {
 
     fun sendBarcodeScanResult(barcode: Barcode) {
         _barcodeScanFoodRecord.postValue(barcode)
+    }
+
+    fun scanBarcode(isCheckExisting: Boolean = true)
+    {
+        _scanForBarcode.postValue(isCheckExisting)
+    }
+
+    fun sendBarcodeScanResult(barcode: Barcode, foodRecord: FoodRecord?) {
+        _barcodeScanResult.postValue(barcode to foodRecord)
     }
 
     fun passToNutritionInfo(foodRecord: FoodRecord) {

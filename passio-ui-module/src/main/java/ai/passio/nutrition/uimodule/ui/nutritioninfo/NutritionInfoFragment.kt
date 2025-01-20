@@ -11,7 +11,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.MicroNutrient
-import ai.passio.nutrition.uimodule.ui.model.getShortInfo
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo2
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
@@ -92,7 +92,7 @@ class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
         {
             image.loadFoodImage(foodRecord)
             name.text = foodRecord.name.capitalized()
-            upcInfo.text = foodRecord.getShortInfo()
+            upcInfo.text = foodRecord.getShortInfo2()
         }
     }
 

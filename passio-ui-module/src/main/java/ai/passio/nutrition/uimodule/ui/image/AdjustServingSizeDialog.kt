@@ -2,9 +2,10 @@ package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.DialogAdjustServingSizeBinding
-import ai.passio.nutrition.uimodule.ui.edit.EditFoodModel
+import ai.passio.nutrition.uimodule.ui.base.BaseDialogFragment
 import ai.passio.nutrition.uimodule.ui.editingredient.EditIngredientFragment.UpdateOrigin
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
@@ -24,19 +25,18 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 
 interface OnAdjustServingSizeListener {
-    fun onChanged(editedIndex: Int, updatedFoodRecord: FoodRecord)
+    fun onChanged(editedIndex: Int, updatedImageFoodResult: ImageFoodResult)
+    fun onEdit(editedIndex: Int, imageFoodResult: ImageFoodResult)
+    fun onCancelled(editedIndex: Int)
 }
 
 internal class AdjustServingSizeDialog(
-    private val foodRecord: FoodRecord,
+    private val imageFoodResult: ImageFoodResult,
     private val editIndex: Int,
     private val onAdjustServingSizeListener: OnAdjustServingSizeListener
-) : DialogFragment() {
-    val viewModel by viewModels<AdjustServingSizeViewModel>()
+) : BaseDialogFragment<AdjustServingSizeViewModel>() {
     private var _binding: DialogAdjustServingSizeBinding? = null
     private val binding: DialogAdjustServingSizeBinding get() = _binding!!
     private lateinit var servingUnitAdapter: ArrayAdapter<String>
@@ -66,14 +66,19 @@ internal class AdjustServingSizeDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.editFoodRecord(foodRecord to editIndex)
+        isCancelable = false
+        viewModel.editFoodRecord(imageFoodResult to editIndex)
         with(binding) {
 
             cancel.setOnClickListener {
+                onAdjustServingSizeListener.onCancelled(viewModel.getEditFoodRecordIndex())
                 dismiss()
             }
             edit.setOnClickListener {
+                onAdjustServingSizeListener.onEdit(
+                    viewModel.getEditFoodRecordIndex(),
+                    viewModel.getFoodRecord()
+                )
                 dismiss()
             }
             done.setOnClickListener {
@@ -84,9 +89,6 @@ internal class AdjustServingSizeDialog(
                 dismiss()
             }
 
-            foodName.text = foodRecord.name.capitalized()
-            foodImage.loadFoodImage(foodRecord)
-
             servingQuantity.setSingleLine()
             servingQuantity.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -95,6 +97,7 @@ internal class AdjustServingSizeDialog(
                         viewModel.updateServingQuantity(quantity, UpdateOrigin.QUANTITY)
                         servingQuantity.clearFocus()
                     } catch (e: NumberFormatException) {
+                        e.printStackTrace()
                         return@setOnEditorActionListener true
                     }
                     return@setOnEditorActionListener false
@@ -119,24 +122,25 @@ internal class AdjustServingSizeDialog(
         }
     }
 
-    private fun renderFoodRecord(model: EditFoodModel) {
-        setupImmutableProperties(model.foodRecord!!)
+    private fun renderFoodRecord(imageFoodResult: ImageFoodResult) {
+        setupImmutableProperties(imageFoodResult)
 //        renderNutrients(model.foodRecord)
-        renderServingSize(model.foodRecord)
+        renderServingSize(imageFoodResult)
     }
 
-    private fun updateFoodRecord(foodRecord: FoodRecord, origin: UpdateOrigin) {
+    private fun updateFoodRecord(imageFoodResult: ImageFoodResult, origin: UpdateOrigin) {
 //        renderNutrients(foodRecord)
-        renderServingSize(foodRecord, origin)
+        renderServingSize(imageFoodResult, origin)
         if (origin == UpdateOrigin.INGREDIENT) {
-            setupImmutableProperties(foodRecord)
+            setupImmutableProperties(imageFoodResult)
         }
     }
 
-    private fun setupImmutableProperties(foodRecord: FoodRecord) {
+    private fun setupImmutableProperties(imageFoodResult: ImageFoodResult) {
         if (_binding == null) return
 
-        val units = foodRecord.servingUnits.map { it.unitName.capitalized() }
+        val foodRecord = imageFoodResult.record
+        val units = foodRecord.servingUnits.map { it.unitName }
         val indexOfSelected = units.indexOfFirst { it.lowercase() == foodRecord.getSelectedUnit() }
         servingUnitAdapter =
             ArrayAdapter<String>(requireContext(), R.layout.serving_unit_item, units)
@@ -154,9 +158,10 @@ internal class AdjustServingSizeDialog(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun renderServingSize(foodRecord: FoodRecord, origin: UpdateOrigin? = null) {
+    private fun renderServingSize(imageFoodResult: ImageFoodResult, origin: UpdateOrigin? = null) {
         if (_binding == null) return
 
+        val foodRecord = imageFoodResult.record
         with(binding) {
             val weightGrams = foodRecord.servingWeight().gramsValue().singleDecimal()
             servingSizeValue.text = " ($weightGrams g)"

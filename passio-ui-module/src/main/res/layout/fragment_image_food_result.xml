@@ -238,11 +238,11 @@
         android:background="@color/passio_background"
         android:elevation="4dp"
         android:gravity="center"
-        android:visibility="gone"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/_16sdp"
         android:paddingTop="@dimen/_16sdp"
         android:paddingBottom="@dimen/_20sdp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -318,7 +318,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -329,7 +329,7 @@
             android:padding="16dp">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/added_to_diary"
+                android:id="@+id/tvLoggedCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ic_mark_correct"
@@ -344,6 +344,19 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCustomFoodCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:text="@string/custom_food_created"
+                android:textColor="@color/passio_gray900"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvLoggedCount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/view_or_continue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -354,7 +367,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/added_to_diary" />
+                app:layout_constraintTop_toBottomOf="@id/tvCustomFoodCount" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/viewDiary"

@@ -1,6 +1,5 @@
 package ai.passio.nutrition.uimodule.ui.foodcreator
 
-import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.domain.foodimage.FoodImageUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
@@ -22,9 +21,6 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_TRANS_FAT_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_VITAMIN_A_RAE_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_VITAMIN_D_ID
-import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.setValue
-import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitEnergyOf
-import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitMassOf
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copy
@@ -43,7 +39,6 @@ import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -314,8 +309,8 @@ class FoodCreatorViewModel : BaseViewModel() {
         setIconId(foodRecord.iconId)
 
 //        foodRecord.servingWeight()
-        val ratio = 100 / foodRecord.servingWeight().gramsValue()
-        val nutritionFacts = foodRecord.nutrientsReference()
+        val ratio = 1 //100 / foodRecord.servingWeight().gramsValue()
+        val nutritionFacts = foodRecord.nutrientsSelectedSize()
         requiredNutritionFacts.setValue(
             REF_CARBS_ID,
             nutritionFacts.carbs()?.value?.div(ratio) ?: 0.0
