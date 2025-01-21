@@ -6,6 +6,7 @@ import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.RoomDbPassioConnector
 import ai.passio.nutrition.uimodule.databinding.ActivityPassioUiModuleBinding
 import ai.passio.nutrition.uimodule.ui.menu.MainMenuDialog
+import ai.passio.passiosdk.passiofood.PassioSDK
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
@@ -58,6 +59,7 @@ internal class PassioUiModuleActivity : AppCompatActivity() {
 
         val connector =
             NutritionUIModule.getConnector() ?: RoomDbPassioConnector(applicationContext)
+        PassioSDK.instance.updateLanguage(PassioLanguage.getLanguageCode())
 //            NutritionUIModule.getConnector() ?: SharedPrefsPassioConnector(applicationContext)
         Repository.create(applicationContext, connector)
 
