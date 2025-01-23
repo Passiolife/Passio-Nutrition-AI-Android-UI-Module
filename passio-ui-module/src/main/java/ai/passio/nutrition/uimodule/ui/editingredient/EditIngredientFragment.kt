@@ -36,7 +36,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import kotlin.math.roundToInt
 
-class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
+internal class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
 
     private var _binding: FragmentEditIngredientBinding? = null
     private val binding: FragmentEditIngredientBinding get() = _binding!!

@@ -10,7 +10,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 
-class AddFoodFragment : BaseFragment<BaseViewModel>() {
+internal class AddFoodFragment : BaseFragment<BaseViewModel>() {
 
     private val adapter = AddFoodAdapter(
         listOf(

@@ -27,7 +27,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class DashboardFragment : BaseFragment<DashboardViewModel>() {
+internal class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     private var _binding: FragmentDashboardBinding? = null
     private val binding: FragmentDashboardBinding get() = _binding!!

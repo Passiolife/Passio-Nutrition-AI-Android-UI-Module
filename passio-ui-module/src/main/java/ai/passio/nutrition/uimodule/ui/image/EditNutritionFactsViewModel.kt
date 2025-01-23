@@ -2,17 +2,19 @@ package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.foodcreator.BarcodeResultType
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALORIES_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_PROTEIN_ID
+import ai.passio.nutrition.uimodule.ui.model.BarcodeScanResult
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
-import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.KiloCalories
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
@@ -26,15 +28,16 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditNutritionFactsViewModel : BaseViewModel() {
+internal class EditNutritionFactsViewModel : BaseViewModel() {
     private val customFoodUseCase = CustomFoodUseCase
-    private val _editFoodModelLD = MutableLiveData<ImageFoodResult>()
-    val editFoodModelLD: LiveData<ImageFoodResult> get() = _editFoodModelLD
+    private val _editFoodModelLD = MutableLiveData<FoodRecord>()
+    val editFoodModelLD: LiveData<FoodRecord> get() = _editFoodModelLD
 
     private val _saveFoodModelLD = SingleLiveEvent<ImageFoodResult>()
     val saveFoodModelLD: LiveData<ImageFoodResult> get() = _saveFoodModelLD
 
     private lateinit var imageFoodResult: ImageFoodResult
+    private lateinit var foodRecord: FoodRecord
     private var editIngredientIndex = -1
 
     private val _servingQuantityEvent = MutableLiveData<Double>()
@@ -52,6 +55,10 @@ class EditNutritionFactsViewModel : BaseViewModel() {
     private val _weightGramUnitEvent = MutableLiveData<String>()
     val weightGramUnitEvent: LiveData<String> get() = _weightGramUnitEvent
     private var weightGramUnit: String = Grams.symbol
+    var isNewToCreate = true
+
+    private val _nutritionFactsValidatorEvent = MutableLiveData<NutritionFactsValidator>()
+    val nutritionFactsValidatorEvent: LiveData<NutritionFactsValidator> get() = _nutritionFactsValidatorEvent
 
 //    private val _foodNameEvent = MutableLiveData<String>()
 //    val foodNameEvent: LiveData<String> get() = _foodNameEvent
@@ -115,10 +122,12 @@ class EditNutritionFactsViewModel : BaseViewModel() {
 
     fun editFoodRecord(editFoodRecord: Pair<ImageFoodResult, Int>) {
         this.imageFoodResult = editFoodRecord.first
-        this.imageFoodResult.record = this.imageFoodResult.record.clone()
+//        this.imageFoodResult.record = this.imageFoodResult.record.clone()
+        this.foodRecord = this.imageFoodResult.record.clone()
         this.editIngredientIndex = editFoodRecord.second
+        isNewToCreate = !imageFoodResult.isCustomFood
 
-        val foodRecord = imageFoodResult.record
+//        val foodRecord = imageFoodResult.record
         val ratio = 1.0
         val nutritionFacts = foodRecord.nutrientsSelectedSize()
         setCalories(nutritionFacts.calories()?.value?.div(ratio))
@@ -135,22 +144,55 @@ class EditNutritionFactsViewModel : BaseViewModel() {
         weightGram = foodRecord.nutrientsSelectedSize().weight.gramsValue()
         weightGramUnit = Grams.symbol
 
-        _servingQuantityEvent.postValue(servingQuantity)
-        _servingUnitEvent.postValue(servingUnit)
-        _weightGramEvent.postValue(weightGram)
-        _weightGramUnitEvent.postValue(weightGramUnit)
+        updateNutrientsOnUI()
 
-        _editFoodModelLD.postValue(this.imageFoodResult)
+
+        _editFoodModelLD.postValue(this.foodRecord)
     }
 
     fun updateNutrientsOnUI() {
         _servingQuantityEvent.postValue(servingQuantity)
         _weightGramEvent.postValue(weightGram)
+        _servingUnitEvent.postValue(servingUnit)
+        _weightGramUnitEvent.postValue(weightGramUnit)
+        validateData()
+    }
+
+    fun validateData() {
+
+        val carbs = requiredNutritionFacts.unitMassOf(REF_CARBS_ID)
+        val calories = requiredNutritionFacts.unitEnergyOf(REF_CALORIES_ID)
+        val proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID)
+        val fat = requiredNutritionFacts.unitMassOf(REF_FAT_ID)
+
+        val isValidName = foodRecord.name.isValid()
+
+        val isValidCalories = calories != null
+        val isValidCarbs = carbs != null
+        val isValidProteins = proteins != null
+        val isValidFat = fat != null
+        val isValidWeight = weightGram > 0.0
+        val isValidServing = servingQuantity > 0.0
+        val isValidServingUnit = servingUnit.isValid()
+
+        val nutritionFactsValidator = NutritionFactsValidator(
+            isValidName = isValidName,
+            isValidCalories = isValidCalories,
+            isValidCarbs = isValidCarbs,
+            isValidProteins = isValidProteins,
+            isValidFat = isValidFat,
+            isValidWeight = isValidWeight,
+            isValidServing = isValidServing,
+            isValidServingUnit = isValidServingUnit,
+        )
+        _nutritionFactsValidatorEvent.postValue(nutritionFactsValidator)
+
     }
 
     fun updateServingQuantity(value: Double) {
         if (servingQuantity != value) {
             servingQuantity = value
+            validateData()
 //            _servingQuantityEvent.postValue(servingQuantity)
         }
 //        foodRecord.setSelectedQuantity(value)
@@ -158,8 +200,11 @@ class EditNutritionFactsViewModel : BaseViewModel() {
     }
 
     fun updateServingUnit(updatedUnitName: String) {
-        servingUnit = updatedUnitName
-        _servingUnitEvent.postValue(servingUnit)
+        if (servingUnit != updatedUnitName) {
+            servingUnit = updatedUnitName
+            validateData()
+        }
+//        _servingUnitEvent.postValue(servingUnit)
 //        val unit = foodRecord.servingUnits[index].unitName
 //        foodRecord.setSelectedUnit(unit)
 //        _internalUpdate.postValue(foodRecord to origin)
@@ -168,6 +213,7 @@ class EditNutritionFactsViewModel : BaseViewModel() {
     fun setWeightInGram(weightInGram: Double) {
         if (weightGram != weightInGram) {
             weightGram = weightInGram
+            validateData()
 //            _weightGramEvent.postValue(weightGram)
         }
 
@@ -177,18 +223,24 @@ class EditNutritionFactsViewModel : BaseViewModel() {
         return editIngredientIndex
     }
 
-    fun getFoodRecord(): ImageFoodResult {
-        return imageFoodResult
-    }
+//    fun getFoodRecord(): ImageFoodResult {
+//        return imageFoodResult
+//    }
+//    fun getFoodRecord(): FoodRecord {
+//        return foodRecord
+//    }
 
     fun setFoodName(name: String) {
-        imageFoodResult.record.name = name
+//        imageFoodResult.record.name = name
+        foodRecord.name = name
+        validateData()
     }
 
     fun setCalories(calories: Double?) {
         requiredNutritionFacts.find { it.id == REF_CALORIES_ID }.apply {
             this?.value = calories
         }
+        validateData()
 //        if (foodRecord.nutrientsSelectedSize().calories()?.value != calories) {
 //            setNutrient("refCalories", calories)
 //        }
@@ -198,6 +250,7 @@ class EditNutritionFactsViewModel : BaseViewModel() {
         requiredNutritionFacts.find { it.id == REF_FAT_ID }.apply {
             this?.value = fat
         }
+        validateData()
 //        if (foodRecord.nutrientsSelectedSize().fat()?.value != fat) {
 //            setNutrient("refFat", fat)
 //        }
@@ -207,6 +260,7 @@ class EditNutritionFactsViewModel : BaseViewModel() {
         requiredNutritionFacts.find { it.id == REF_PROTEIN_ID }.apply {
             this?.value = protein
         }
+        validateData()
 //        if (foodRecord.nutrientsSelectedSize().protein()?.value != protein) {
 //            setNutrient("refProteins", protein)
 //        }
@@ -216,17 +270,22 @@ class EditNutritionFactsViewModel : BaseViewModel() {
         requiredNutritionFacts.find { it.id == REF_CARBS_ID }.apply {
             this?.value = carbs
         }
+        validateData()
 //        if (foodRecord.nutrientsSelectedSize().carbs()?.value != carbs) {
 //            setNutrient("refCarbs", carbs)
 //        }
     }
 
-    fun updateMissingFromBarcode(barcode: Barcode, record: FoodRecord?) {
-        imageFoodResult.record.barcode = barcode
+    fun updateMissingFromBarcode(barcodeScanResult: BarcodeScanResult) {
+//        imageFoodResult.record.barcode = barcode
+        val record = barcodeScanResult.record
+        if (barcodeScanResult.barcode.isValid()) {
+            foodRecord.barcode = barcodeScanResult.barcode
+        }
 
         if (record != null) {
-            if (!imageFoodResult.record.name.isValid() && record.name.isValid()) {
-                imageFoodResult.record.name = record.name
+            if (!foodRecord.name.isValid() && record.name.isValid()) {
+                foodRecord.name = record.name
             }
 
             if (record.nutrientsSelectedSize()
@@ -250,8 +309,16 @@ class EditNutritionFactsViewModel : BaseViewModel() {
                 setFat(record.nutrientsSelectedSize().fat()!!.value)
             }
 
+            if (barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST) {
+                isNewToCreate = false
+                foodRecord.id = record.id
+                foodRecord.refCode = record.refCode
+                foodRecord.iconId = record.iconId
+                imageFoodResult.isCustomFood = true
+            }
+
             updateNutrientsOnUI()
-            _editFoodModelLD.postValue(imageFoodResult)
+            _editFoodModelLD.postValue(foodRecord)
         }
 
     }
@@ -259,13 +326,18 @@ class EditNutritionFactsViewModel : BaseViewModel() {
     fun saveCustomFood() {
         viewModelScope.launch(Dispatchers.IO)
         {
+            var weightGramFinal = weightGram
+            if (servingUnit.isGram()) {
+                weightGramFinal = servingQuantity
+            }
+
             val oldNutrients =
                 PassioNutrients(
-                    imageFoodResult.record.nutrientsReference(),
-                    UnitMass(Grams, weightGram)
+                    foodRecord.nutrientsReference(),
+                    UnitMass(Grams, weightGramFinal)
                 )
             val passioNutrients = PassioNutrients(
-                weight = UnitMass(Grams, weightGram),
+                weight = UnitMass(Grams, weightGramFinal),
                 carbs = requiredNutritionFacts.unitMassOf(REF_CARBS_ID),
                 calories = requiredNutritionFacts.unitEnergyOf(REF_CALORIES_ID),
                 proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID),
@@ -299,37 +371,37 @@ class EditNutritionFactsViewModel : BaseViewModel() {
             )
 
             val customFood = if (imageFoodResult.isCustomFood) {
-                imageFoodResult.record.editCustomFood(
-                    productName = imageFoodResult.record.name,
-                    brandName = imageFoodResult.record.details ?: "",
-                    barcode = imageFoodResult.record.barcode,
+                foodRecord.editCustomFood(
+                    productName = foodRecord.name,
+                    brandName = foodRecord.details ?: "",
+                    barcode = foodRecord.barcode,
                     servingWeight = servingQuantity,
                     servingUnit = servingUnit,
-                    weightInGrams = weightGram,
+                    weightInGrams = weightGramFinal,
                     weightInGramsUnit = weightGramUnit,
                     passioNutrients = passioNutrients,
-                    passioIDEntityType = PassioIDEntityType.fromString(imageFoodResult.record.entityType),
-                    iconId = imageFoodResult.record.iconId
+                    passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType),
+                    iconId = foodRecord.iconId
                 )
             } else {
                 FoodRecord(
-                    productName = imageFoodResult.record.name,
-                    brandName = imageFoodResult.record.details ?: "",
-                    barcode = imageFoodResult.record.barcode,
+                    productName = foodRecord.name,
+                    brandName = foodRecord.details ?: "",
+                    barcode = foodRecord.barcode,
                     servingWeight = servingQuantity,
                     servingUnit = servingUnit,
-                    weightInGrams = weightGram,
+                    weightInGrams = weightGramFinal,
                     weightInGramsUnit = weightGramUnit,
                     passioNutrients = passioNutrients,
-                    passioIDEntityType = PassioIDEntityType.fromString(imageFoodResult.record.entityType),
-                    iconId = imageFoodResult.record.iconId
+                    passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType),
+                    iconId = foodRecord.iconId
                 ).copyAsCustomFood()
             }
+            customFoodUseCase.saveCustomFood(customFood)
             imageFoodResult.record = customFood
             imageFoodResult.isCustomFood = true
-            customFoodUseCase.saveCustomFood(customFood)
+            imageFoodResult.isSelected = true
             _saveFoodModelLD.postValue(imageFoodResult)
-
         }
     }
 

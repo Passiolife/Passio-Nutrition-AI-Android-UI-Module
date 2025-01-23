@@ -33,7 +33,7 @@ import java.util.Locale
 
 private const val PERMISSION = Manifest.permission.RECORD_AUDIO
 
-class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
+internal class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
 
     enum class VoiceLoggingState {
         START_LISTENING,

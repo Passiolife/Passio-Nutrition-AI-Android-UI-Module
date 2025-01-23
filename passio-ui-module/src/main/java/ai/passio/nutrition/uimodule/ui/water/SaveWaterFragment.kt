@@ -18,7 +18,7 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import android.text.Editable
 import android.text.TextWatcher
 
-class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
+internal class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
 
     private var _binding: FragmentSaveWeightBinding? = null
     private val binding: FragmentSaveWeightBinding get() = _binding!!

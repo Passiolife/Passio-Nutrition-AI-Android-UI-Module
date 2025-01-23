@@ -155,7 +155,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topView"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvResult"
@@ -184,7 +184,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
 
-            <androidx.appcompat.widget.AppCompatTextView
+           <!-- <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/createRecipe"
                 style="@style/btn_negative_action"
                 android:layout_width="0dp"
@@ -194,7 +194,19 @@
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/create_recipe" />
+                android:text="@string/create_recipe" />-->
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tryAgain"
+                style="@style/btn_negative_action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/try_again" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/log"
@@ -318,7 +330,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

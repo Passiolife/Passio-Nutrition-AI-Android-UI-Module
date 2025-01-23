@@ -33,7 +33,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import org.joda.time.DateTime
 import java.util.Date
 
-class MacrosFragment : BaseFragment<MacrosViewModel>() {
+internal class MacrosFragment : BaseFragment<MacrosViewModel>() {
 
     private var _binding: FragmentMacrosBinding? = null
     private val binding: FragmentMacrosBinding get() = _binding!!

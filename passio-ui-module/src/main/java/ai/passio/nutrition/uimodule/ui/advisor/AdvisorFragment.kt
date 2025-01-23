@@ -33,7 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AdvisorFragment : BaseFragment<AdvisorViewModel>(isSharedContext = true) {
+internal class AdvisorFragment : BaseFragment<AdvisorViewModel>(isSharedContext = true) {
 
     private var _binding: FragmentAdvisorBinding? = null
     private val binding: FragmentAdvisorBinding get() = _binding!!

@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class VoiceLoggingViewModel : BaseViewModel() {
+internal class VoiceLoggingViewModel : BaseViewModel() {
     private val mealPlanUseCase = MealPlanUseCase
     private var voiceLoggingState = VoiceLoggingFragment.VoiceLoggingState.START_LISTENING
     private val _voiceLoggingStateEvent = MutableLiveData<VoiceLoggingFragment.VoiceLoggingState>()

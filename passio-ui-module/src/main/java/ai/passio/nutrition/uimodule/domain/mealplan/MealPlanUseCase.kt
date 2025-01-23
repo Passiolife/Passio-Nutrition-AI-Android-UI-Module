@@ -139,10 +139,22 @@ object MealPlanUseCase {
                 null
             }
             if (foodRecord != null) {
-                ImageFoodResult(
-                    record = foodRecord,
-                    resultType = passioMealPlanItem.resultType
-                )
+                var customFood: FoodRecord? = null
+                if (foodRecord.barcode.isValid()) {
+                    customFood = repository.getCustomFoodUsingBarcode(foodRecord.barcode!!)
+                }
+                if (customFood != null) {
+                    ImageFoodResult(
+                        record = customFood,
+                        isCustomFood = true,
+                        resultType = passioMealPlanItem.resultType
+                    )
+                } else {
+                    ImageFoodResult(
+                        record = foodRecord,
+                        resultType = passioMealPlanItem.resultType
+                    )
+                }
             } else {
                 null
             }

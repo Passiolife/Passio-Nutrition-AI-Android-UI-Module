@@ -22,7 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
+internal class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
 
     private val adapter = AddFoodAdapter(
         listOf(

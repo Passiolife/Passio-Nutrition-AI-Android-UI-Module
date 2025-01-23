@@ -21,7 +21,7 @@ import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 
-class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
+internal class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
 
     private var _binding: FragmentMealPlanBinding? = null
     private val binding: FragmentMealPlanBinding get() = _binding!!

@@ -5,13 +5,61 @@ import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.WindowManager
 import androidx.core.view.isVisible
+import ai.passio.nutrition.uimodule.R
+import android.annotation.SuppressLint
 
 internal interface OnCommonDialogListener {
     fun onNegativeAction()
     fun onPositiveAction()
+}
+
+
+@SuppressLint("SetTextI18n")
+internal class CustomFoodCreatedInfoDialog(
+    context: Context,
+) : Dialog(context) {
+
+    val binding: DialogCommonBinding = DialogCommonBinding.inflate(layoutInflater)
+
+    init {
+        window?.setLayout(
+            DesignUtils.screenWidth(context) - DesignUtils.dp2px(20f),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        setContentView(binding.root)
+        setCancelable(false)
+        binding.cancel.isVisible = false
+        binding.title.text = "A Custom Food Has Been Created"
+        val text = "The edits have been saved for future logs. You can edit this item from your My Foods lists."
+        val spannable = SpannableString(text)
+
+// Find the start and end indices of "My Foods"
+        val start = text.indexOf("My Foods")
+        val end = start + "My Foods".length
+
+// Apply bold style to "My Foods"
+        if (start >= 0) {
+            spannable.setSpan(
+                StyleSpan(Typeface.BOLD),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        binding.description.text = spannable
+        binding.create.text = context.getString(R.string.ok)
+        binding.create.setOnClickListener {
+            dismiss()
+        }
+    }
 }
 
 internal class CommonDialog(

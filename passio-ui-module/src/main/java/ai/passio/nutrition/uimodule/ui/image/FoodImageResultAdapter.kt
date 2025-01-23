@@ -10,6 +10,7 @@ import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
@@ -37,7 +38,7 @@ class FoodImageResultAdapter(
         list.addAll(newData)
 //        this.selectedItemPositions.clear()
 //        this.selectedItemPositions.addAll(selectedItemPositions)
-        onItemSelectChange.onItemSelectChange(list.count { it.isSelected })
+//        onItemSelectChange.onItemSelectChange(list.count { it.isSelected })
 //        onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
         notifyDataSetChanged()
     }
@@ -106,31 +107,25 @@ class FoodImageResultAdapter(
                 }
 
                 if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
-                    mainItem.setBackgroundResource(R.drawable.rc_8_red)
+                    mainItem.setBackgroundResource(R.drawable.rc_8_rose)
+                    servingSize.text = "item will not be logged, edit data manually"
+                    foodSelect.setImageResource(R.drawable.ic_edit)
+                    llData.isVisible = false
                 } else {
+                    llData.isVisible = true
                     mainItem.setBackgroundResource(R.drawable.rc_8_white)
                 }
                 root.setOnClickListener {
-
                     onItemSelectChange.onTapped(adapterPosition, imageFoodResult)
-
                 }
                 foodSelect.setOnClickListener {
-                    if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing())
-                        return@setOnClickListener
-
-                    imageFoodResult.isSelected = !imageFoodResult.isSelected
-//                    val id = adapterPosition
-//                    if (selectedItemPositions.contains(id)) {
-//                        onItemSelectChange.onIndexDeselect(id)
-//                        selectedItemPositions.remove(id)
-//                    } else {
-//                        onItemSelectChange.onIndexSelect(id)
-//                        selectedItemPositions.add(id)
-//                    }
-//                    onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
-                    onItemSelectChange.onItemSelectChange(list.count { it.isSelected })
-                    notifyItemChanged(adapterPosition)
+                    if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                        onItemSelectChange.onTapped(adapterPosition, imageFoodResult)
+                    } else {
+                        imageFoodResult.isSelected = !imageFoodResult.isSelected
+                        onItemSelectChange.onItemSelectChange(list.count { it.isSelected })
+                        notifyItemChanged(adapterPosition)
+                    }
                 }
             }
         }

@@ -46,3 +46,21 @@ internal fun List<NutritionFactsItemNew>.unitEnergyOf(id: String): UnitEnergy? {
     }
     return null
 }
+
+internal data class NutritionFactsValidator(
+    val isValidName: Boolean,
+    val isValidCalories: Boolean,
+    val isValidCarbs: Boolean,
+    val isValidProteins: Boolean,
+    val isValidFat: Boolean,
+    val isValidWeight: Boolean,
+    val isValidServing: Boolean,
+    val isValidServingUnit: Boolean
+) {
+
+    fun isAllDataValid(): Boolean {
+        val isAllValid =
+            isValidName && isValidCalories && isValidCarbs && isValidProteins && isValidFat && isValidWeight && isValidServing && isValidServingUnit
+        return isAllValid
+    }
+}

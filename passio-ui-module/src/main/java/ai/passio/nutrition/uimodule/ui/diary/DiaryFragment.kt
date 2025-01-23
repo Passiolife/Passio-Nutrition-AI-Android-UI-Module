@@ -28,7 +28,7 @@ import org.joda.time.DateTime
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
+internal class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
     BaseToolbar.ToolbarListener {
 
     private var _binding: FragmentDiaryBinding? = null

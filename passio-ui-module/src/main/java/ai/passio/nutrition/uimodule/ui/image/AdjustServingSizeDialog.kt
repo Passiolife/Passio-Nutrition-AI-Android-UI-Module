@@ -14,6 +14,7 @@ import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
+import ai.passio.passiosdk.passiofood.data.model.PassioFoodResultType
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -25,6 +26,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 
 interface OnAdjustServingSizeListener {
     fun onChanged(editedIndex: Int, updatedImageFoodResult: ImageFoodResult)
@@ -33,7 +35,7 @@ interface OnAdjustServingSizeListener {
 }
 
 internal class AdjustServingSizeDialog(
-    private val imageFoodResult: ImageFoodResult,
+    private val imageFoodRecordResult: ImageFoodResult,
     private val editIndex: Int,
     private val onAdjustServingSizeListener: OnAdjustServingSizeListener
 ) : BaseDialogFragment<AdjustServingSizeViewModel>() {
@@ -67,24 +69,26 @@ internal class AdjustServingSizeDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
-        viewModel.editFoodRecord(imageFoodResult to editIndex)
+        viewModel.editFoodRecord(imageFoodRecordResult to editIndex)
         with(binding) {
 
             cancel.setOnClickListener {
                 onAdjustServingSizeListener.onCancelled(viewModel.getEditFoodRecordIndex())
                 dismiss()
             }
+            edit.isVisible =
+                imageFoodRecordResult.resultType == PassioFoodResultType.NUTRITION_FACTS || imageFoodRecordResult.resultType == PassioFoodResultType.BARCODE
             edit.setOnClickListener {
                 onAdjustServingSizeListener.onEdit(
                     viewModel.getEditFoodRecordIndex(),
-                    viewModel.getFoodRecord()
+                    viewModel.getUpdatedImageFoodResult()
                 )
                 dismiss()
             }
             done.setOnClickListener {
                 onAdjustServingSizeListener.onChanged(
                     viewModel.getEditFoodRecordIndex(),
-                    viewModel.getFoodRecord()
+                    viewModel.getUpdatedImageFoodResult()
                 )
                 dismiss()
             }
@@ -122,24 +126,23 @@ internal class AdjustServingSizeDialog(
         }
     }
 
-    private fun renderFoodRecord(imageFoodResult: ImageFoodResult) {
-        setupImmutableProperties(imageFoodResult)
+    private fun renderFoodRecord(foodRecord: FoodRecord) {
+        setupImmutableProperties(foodRecord)
 //        renderNutrients(model.foodRecord)
-        renderServingSize(imageFoodResult)
+        renderServingSize(foodRecord)
     }
 
-    private fun updateFoodRecord(imageFoodResult: ImageFoodResult, origin: UpdateOrigin) {
+    private fun updateFoodRecord(foodRecord: FoodRecord, origin: UpdateOrigin) {
 //        renderNutrients(foodRecord)
-        renderServingSize(imageFoodResult, origin)
+        renderServingSize(foodRecord, origin)
         if (origin == UpdateOrigin.INGREDIENT) {
-            setupImmutableProperties(imageFoodResult)
+            setupImmutableProperties(foodRecord)
         }
     }
 
-    private fun setupImmutableProperties(imageFoodResult: ImageFoodResult) {
+    private fun setupImmutableProperties(foodRecord: FoodRecord) {
         if (_binding == null) return
 
-        val foodRecord = imageFoodResult.record
         val units = foodRecord.servingUnits.map { it.unitName }
         val indexOfSelected = units.indexOfFirst { it.lowercase() == foodRecord.getSelectedUnit() }
         servingUnitAdapter =
@@ -158,10 +161,10 @@ internal class AdjustServingSizeDialog(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun renderServingSize(imageFoodResult: ImageFoodResult, origin: UpdateOrigin? = null) {
+    private fun renderServingSize(foodRecord: FoodRecord, origin: UpdateOrigin? = null) {
         if (_binding == null) return
 
-        val foodRecord = imageFoodResult.record
+
         with(binding) {
             val weightGrams = foodRecord.servingWeight().gramsValue().singleDecimal()
             servingSizeValue.text = " ($weightGrams g)"

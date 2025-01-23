@@ -44,6 +44,7 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:hint="@string/enter_name"
             android:inputType="textCapWords"
+            android:imeOptions="actionDone"
             app:layout_constraintBottom_toTopOf="@id/barcode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/foodImage"
@@ -104,7 +105,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/inter_regular"
             android:gravity="center"
-            android:text="@string/carbs"
+            android:text="@string/carbs_g"
             android:textColor="@color/passio_gray900"
             app:layout_constraintBottom_toBottomOf="@id/caloriesLabel"
             app:layout_constraintEnd_toEndOf="@id/carbs"
@@ -118,7 +119,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/inter_regular"
             android:gravity="center"
-            android:text="@string/protein"
+            android:text="@string/protein_g"
             android:textColor="@color/passio_gray900"
             app:layout_constraintBottom_toBottomOf="@id/caloriesLabel"
             app:layout_constraintEnd_toEndOf="@id/protein"
@@ -131,7 +132,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/inter_regular"
             android:gravity="center"
-            android:text="@string/fat"
+            android:text="@string/fat_g"
             android:textColor="@color/passio_gray900"
             app:layout_constraintBottom_toBottomOf="@id/caloriesLabel"
             app:layout_constraintEnd_toEndOf="@id/fat"
@@ -278,41 +279,6 @@
             app:layout_constraintWidth_percent="0.20"
             tools:ignore="Autofill,LabelFor" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/weightLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="@font/inter_regular"
-            android:gravity="center"
-            android:text="@string/weight"
-            android:textColor="@color/passio_gray900"
-            app:layout_constraintBottom_toBottomOf="@id/servingLabel"
-            app:layout_constraintEnd_toEndOf="@id/weight"
-            app:layout_constraintStart_toStartOf="@id/weight"
-            app:layout_constraintTop_toTopOf="@id/servingLabel" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/weight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:background="@drawable/rc_6_border_gray300"
-            android:gravity="center"
-            android:hint="@string/g"
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal"
-            android:paddingHorizontal="@dimen/_8sdp"
-            android:paddingTop="9dp"
-            android:paddingBottom="9dp"
-            android:textColor="@color/passio_gray900"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/servingUnit"
-            app:layout_constraintTop_toBottomOf="@id/servingLabel"
-            app:layout_constraintWidth_percent="0.30"
-            tools:ignore="Autofill,LabelFor" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/unitLabel"
@@ -337,11 +303,48 @@
             android:clipToPadding="false"
             android:padding="2dp"
             android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="@id/weight"
+            app:layout_constraintBottom_toBottomOf="@id/serving"
             app:layout_constraintEnd_toStartOf="@id/weight"
             app:layout_constraintStart_toEndOf="@id/serving"
             app:layout_constraintTop_toTopOf="@id/weight" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/weightLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
+            android:text="@string/weight_g"
+            android:textColor="@color/passio_gray900"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/servingLabel"
+            app:layout_constraintEnd_toEndOf="@id/weight"
+            app:layout_constraintStart_toStartOf="@id/weight"
+            app:layout_constraintTop_toTopOf="@id/servingLabel" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/weight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:background="@drawable/rc_6_border_gray300"
+            android:gravity="center"
+            android:hint="@string/g"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_12ssp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/servingUnit"
+            app:layout_constraintTop_toBottomOf="@id/servingLabel"
+            app:layout_constraintWidth_percent="0.30"
+            tools:ignore="Autofill,LabelFor" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

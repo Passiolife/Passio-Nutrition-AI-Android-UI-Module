@@ -14,6 +14,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
+import ai.passio.nutrition.uimodule.ui.util.CustomFoodCreatedInfoDialog
 import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT_FULL_WITH_TIME
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
@@ -31,7 +32,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.view.isVisible
 import org.joda.time.DateTime
 
-class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
+internal class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
 
     private var _binding: FragmentImageFoodResultBinding? = null
     private val binding: FragmentImageFoodResultBinding get() = _binding!!
@@ -55,8 +56,9 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
             enableLogButton(false)
             rvResult.adapter = FoodImageResultAdapter(object : OnFoodImageSelectChange {
                 override fun onItemSelectChange(selectedCount: Int) {
-                    enableLogButton(selectedCount != 0)
-                    updateNutritionChart()
+//                    enableLogButton(selectedCount != 0)
+//                    updateNutritionChart()
+                    viewModel.updateItemSelection()
                 }
 
                 override fun onTapped(editIndex: Int, imageFoodResult: ImageFoodResult) {
@@ -68,7 +70,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
                 }
 
             })
-            updateNutritionChart()
+            updateNutritionChart(emptyList())
             cancelFetch.setOnClickListener {
                 viewModel.navigateBack()
             }
@@ -80,8 +82,11 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
                         viewModel.setDateTime(selectedDateTime)
                     })
             }
-            createRecipe.setOnClickListener {
-                viewModel.createRecipe((rvResult.adapter as FoodImageResultAdapter).getSelectedItems())
+            /*createRecipe.setOnClickListener {
+                viewModel.createRecipe()
+            }*/
+            tryAgain.setOnClickListener {
+                viewModel.navigateBack()
             }
             reselect.setOnClickListener {
                 viewModel.navigateBack()
@@ -92,7 +97,8 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
                 viewModel.navigateToSearch()
             }
             log.setOnClickListener {
-                viewModel.logRecords((rvResult.adapter as FoodImageResultAdapter).getSelectedItems())
+//                viewModel.logRecords((rvResult.adapter as FoodImageResultAdapter).getSelectedItems())
+                viewModel.logRecords()
             }
             viewDiary.setOnClickListener {
                 sharedViewModel.setDiaryDate(viewModel.getDateTime().toDate())
@@ -120,11 +126,19 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         }
     }
 
+    private fun showCustomFoodCreatedInfo() {
+        CustomFoodCreatedInfoDialog(requireContext()).show()
+    }
+
     private val onEditNutritionFactsListener = object : OnEditNutritionFactsListener {
         override fun onChanged(
             editedIndex: Int,
-            updatedImageFoodResult: ImageFoodResult
+            updatedImageFoodResult: ImageFoodResult,
+            isNewCreated: Boolean
         ) {
+            if (isNewCreated) {
+                showCustomFoodCreatedInfo()
+            }
             viewModel.updateFoodRecord(editedIndex, updatedImageFoodResult)
         }
 
@@ -143,7 +157,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
     private fun showAdjustServingSizeDialog(indexToEdit: Int, imageFoodResult: ImageFoodResult) {
         AdjustServingSizeDialog(
             editIndex = indexToEdit,
-            imageFoodResult = imageFoodResult,
+            imageFoodRecordResult = imageFoodResult,
             onAdjustServingSizeListener = onAdjustServingSizeListener
         ).show(
             childFragmentManager,
@@ -154,7 +168,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
     private fun showEditNutritionFactsDialog(indexToEdit: Int, imageFoodResult: ImageFoodResult) {
         EditNutritionFactsDialog(
             editIndex = indexToEdit,
-            imageFoodResult = imageFoodResult,
+            imageFoodRecordResult = imageFoodResult,
             onEditNutritionFactsListener = onEditNutritionFactsListener
         ).show(
             childFragmentManager,
@@ -232,7 +246,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         with(binding)
         {
             if (isToday(selectedDateTime.millis)) {
-                dateValue.text = "Today"
+                dateValue.text = requireContext().getString(R.string.today)
             } else {
                 dateValue.text = dateToFormat(
                     selectedDateTime,
@@ -290,7 +304,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
     private fun setIngredientMode(isOn: Boolean) {
         if (isOn) {
             binding.log.text = getString(R.string.add_ingredient)
-            binding.createRecipe.isVisible = false
+//            binding.createRecipe.isVisible = false
         }
     }
 
@@ -309,7 +323,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
                 if (isLogged) {
                     with(binding) {
                         viewAddedToDiary.isVisible = true
-                        viewAddedToDiary.isVisible = totalCustomFoodSaved != 0
+                        tvCustomFoodCount.isVisible = totalCustomFoodSaved != 0
                         tvCustomFoodCount.text =
                             "$totalCustomFoodSaved ${resources.getString(R.string.custom_food_created)}"
                         tvLoggedCount.text =
@@ -327,11 +341,11 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
         }
     }
 
-    private fun updateNutritionChart() {
+    private fun updateNutritionChart(records: List<FoodRecord>) {
         with(binding)
         {
-            val adapter = rvResult.adapter as FoodImageResultAdapter
-            val records = adapter.getSelectedItems().map { it.record }
+//            val adapter = rvResult.adapter as FoodImageResultAdapter
+//            val records = adapter.getSelectedItems().map { it.record }
             val currentCalories = records.map { it.nutrients().calories() }
                 .fold(UnitEnergy()) { acc, unitEnergy -> acc + unitEnergy }.kcalValue()
             val currentCarbs = records.map { it.nutrients().carbs() }
@@ -361,6 +375,7 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
             noResultFound.isVisible = result.isEmpty()
             resultView.isVisible = result.isNotEmpty()
 
+
             val adapter = rvResult.adapter as FoodImageResultAdapter
 //            val selectionList = mutableListOf<Int>()
 //            for (i in result.indices) {
@@ -368,12 +383,13 @@ class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
 //                    selectionList.add(i)
 //                }
 //            }
-            result.forEach {
-                it.isSelected = !(it.isBarcodeDataMissing() && it.isNutritionFactsDataMissing())
-            }
+
             adapter.addData(result)
 //            adapter.addData(result, selectionList)
-            updateNutritionChart()
+
+            val selectedRecords = result.filter { it.isSelected }.map { it.record }
+            enableLogButton(selectedRecords.isNotEmpty())
+            updateNutritionChart(selectedRecords)
         }
     }
 

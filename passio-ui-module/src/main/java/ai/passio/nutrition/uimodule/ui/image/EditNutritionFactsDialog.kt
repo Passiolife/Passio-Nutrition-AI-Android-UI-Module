@@ -7,10 +7,14 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_PROTEIN_ID
+import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
+import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setupEditable
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import android.graphics.Color
@@ -23,20 +27,22 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.isVisible
 
 interface OnEditNutritionFactsListener {
-    fun onChanged(editedIndex: Int, updatedImageFoodResult: ImageFoodResult)
+    fun onChanged(editedIndex: Int, updatedImageFoodResult: ImageFoodResult, isNewCreated: Boolean)
     fun onCancelled(editedIndex: Int, imageFoodResult: ImageFoodResult)
 }
 
 internal class EditNutritionFactsDialog(
-    private val imageFoodResult: ImageFoodResult,
+    private val imageFoodRecordResult: ImageFoodResult,
     private val editIndex: Int,
     private val onEditNutritionFactsListener: OnEditNutritionFactsListener
 ) : BaseDialogFragment<EditNutritionFactsViewModel>() {
     private var _binding: DialogEditNutritionFactsBinding? = null
     private val binding: DialogEditNutritionFactsBinding get() = _binding!!
     private lateinit var servingUnitAdapter: ArrayAdapter<String>
+
 
     override fun onStart() {
         super.onStart()
@@ -65,12 +71,12 @@ internal class EditNutritionFactsDialog(
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
         if (editIndex != viewModel.getEditFoodRecordIndex()) {
-            viewModel.editFoodRecord(imageFoodResult to editIndex)
+            viewModel.editFoodRecord(imageFoodRecordResult to editIndex)
         }
         viewModel.updateNutrientsOnUI()
 
-        sharedViewModel.barcodeScanResult.observe(viewLifecycleOwner) {
-            viewModel.updateMissingFromBarcode(it.first, it.second)
+        sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcodeScanResult ->
+            viewModel.updateMissingFromBarcode(barcodeScanResult)
         }
 
         with(binding) {
@@ -79,7 +85,7 @@ internal class EditNutritionFactsDialog(
                 dismiss()
                 onEditNutritionFactsListener.onCancelled(
                     editIndex,
-                    imageFoodResult
+                    imageFoodRecordResult
                 )
             }
 
@@ -89,7 +95,6 @@ internal class EditNutritionFactsDialog(
             }
 
             barcode.setOnClickListener {
-                sharedViewModel.scanBarcode(isCheckExisting = false)
                 viewModel.navigateToScanBarcode()
             }
             serving.setupEditable { txt ->
@@ -129,7 +134,8 @@ internal class EditNutritionFactsDialog(
         viewModel.saveFoodModelLD.observe(viewLifecycleOwner) { editFoodModel ->
             onEditNutritionFactsListener.onChanged(
                 viewModel.getEditFoodRecordIndex(),
-                editFoodModel
+                editFoodModel,
+                viewModel.isNewToCreate
             )
             dismiss()
         }
@@ -139,7 +145,7 @@ internal class EditNutritionFactsDialog(
         }
 
         viewModel.servingUnitEvent.observe(viewLifecycleOwner) { value ->
-            renderServingSize(value, viewModel.getFoodRecord())
+            renderServingSize(value)
         }
 
         viewModel.weightGramEvent.observe(viewLifecycleOwner) { value ->
@@ -148,20 +154,56 @@ internal class EditNutritionFactsDialog(
         viewModel.weightGramUnitEvent.observe(viewLifecycleOwner) { value ->
 
         }
+        viewModel.nutritionFactsValidatorEvent.observe(viewLifecycleOwner, ::showValidationInfo)
 
-
-//        viewModel.internalUpdate.observe(viewLifecycleOwner) { pair ->
-//            updateFoodRecord(pair.first, pair.second)
-//        }
     }
 
-    private fun renderFoodRecord(model: ImageFoodResult) {
-        renderNutrients(model)
+    private fun showValidationInfo(nutritionFactsValidator: NutritionFactsValidator) {
+        with(binding)
+        {
+            if (nutritionFactsValidator.isAllDataValid()) {
+                save.enable()
+            }
+            else{
+                save.disable()
+            }
+
+            markViewAsValid(calories, nutritionFactsValidator.isValidCalories)
+            markViewAsValid(carbs, nutritionFactsValidator.isValidCarbs)
+            markViewAsValid(protein, nutritionFactsValidator.isValidProteins)
+            markViewAsValid(fat, nutritionFactsValidator.isValidFat)
+            markViewAsValid(serving, nutritionFactsValidator.isValidServing)
+            markViewAsValid(servingUnit, nutritionFactsValidator.isValidServingUnit)
+            markViewAsValid(weight, nutritionFactsValidator.isValidWeight)
+            markViewAsValid(foodName, nutritionFactsValidator.isValidName)
+
+        }
+    }
+
+    private fun checkIsGramUnitForServing(servingUnit: String)
+    {
+        with(binding) {
+            weight.isVisible = !servingUnit.isGram()
+        }
+    }
+
+    private fun markViewAsValid(view: View, isValid: Boolean)
+    {
+        if (isValid)
+        {
+            view.setBackgroundResource(R.drawable.rc_6_border_gray300)
+        }
+        else{
+            view.setBackgroundResource(R.drawable.rc_6_border_red300)
+        }
+    }
+
+    private fun renderFoodRecord(model: FoodRecord) {
+        renderNutrients()
         setupImmutableProperties(model)
-//        renderServingSize(model)
     }
 
-    private fun renderNutrients(model: ImageFoodResult) {
+    private fun renderNutrients() {
         val requiredNutritionFacts = viewModel.requiredNutritionFacts
         with(binding) {
             setNutrientValue(
@@ -177,28 +219,26 @@ internal class EditNutritionFactsDialog(
         }
     }
 
-//    private fun updateFoodRecord(foodRecord: FoodRecord, origin: UpdateOrigin) {
-////        renderNutrients(foodRecord)
-//        renderServingSize(foodRecord, origin)
-//        if (origin == UpdateOrigin.INGREDIENT) {
-//            setupImmutableProperties(foodRecord)
-//        }
-//    }
-
-    private fun setupImmutableProperties(imageFoodResult: ImageFoodResult) {
+    private fun setupImmutableProperties(foodRecord: FoodRecord) {
         if (_binding == null) return
 
-        val foodRecord = imageFoodResult.record
+
+//        val foodRecord = imageFoodResult.record
         with(binding) {
+            if (imageFoodRecordResult.isCustomFood) {
+                save.text = getString(R.string.update)
+            } else {
+                save.text = getString(R.string.save)
+            }
             foodImage.loadFoodImage(foodRecord)
             foodName.setText(foodRecord.name.capitalized())
             barcode.text = foodRecord.barcode ?: ""
         }
     }
 
-    private fun renderServingSize(selectedUnit: String, imageFoodResult: ImageFoodResult) {
+    private fun renderServingSize(selectedUnit: String) {
         if (_binding == null) return
-
+        checkIsGramUnitForServing(servingUnit = selectedUnit)
         val units = viewModel.unitList
         val indexOfSelected = units.indexOfFirst { it.lowercase() == selectedUnit.lowercase() }
         servingUnitAdapter =
@@ -225,7 +265,9 @@ internal class EditNutritionFactsDialog(
 
     private val servingUnitListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            viewModel.updateServingUnit(viewModel.unitList[position])
+            val selectedUnit = viewModel.unitList[position]
+            checkIsGramUnitForServing(servingUnit = selectedUnit)
+            viewModel.updateServingUnit(selectedUnit)
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {}

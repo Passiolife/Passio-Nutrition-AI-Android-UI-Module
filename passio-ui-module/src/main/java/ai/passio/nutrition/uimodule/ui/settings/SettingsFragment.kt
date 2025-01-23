@@ -17,7 +17,7 @@ import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setOnChangeListener
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.widget.AdapterView
 
-class SettingsFragment : BaseFragment<SettingsViewModel>() {
+internal class SettingsFragment : BaseFragment<SettingsViewModel>() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding: FragmentSettingsBinding get() = _binding!!

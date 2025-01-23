@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseDialogFragment<VM : BaseViewModel>(isSharedContext: Boolean = false) : DialogFragment() {
+internal abstract class BaseDialogFragment<VM : BaseViewModel>(isSharedContext: Boolean = false) : DialogFragment() {
     private lateinit var navController: NavController
     protected val viewModel: VM by lazy {
         ViewModelProvider(if (isSharedContext) requireActivity() else this)[getVMClass()]

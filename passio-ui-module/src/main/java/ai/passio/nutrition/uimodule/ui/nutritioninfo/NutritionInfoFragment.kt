@@ -18,7 +18,7 @@ import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.view.BottomSpaceItemDecoration
 import androidx.core.view.isVisible
 
-class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
+internal class NutritionInfoFragment : BaseFragment<NutritionInfoViewModel>() {
 
     private var _binding: FragmentNutritionInfoBinding? = null
     private val binding: FragmentNutritionInfoBinding get() = _binding!!

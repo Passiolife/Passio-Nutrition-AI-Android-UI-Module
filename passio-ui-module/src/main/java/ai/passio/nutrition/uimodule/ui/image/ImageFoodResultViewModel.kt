@@ -1,17 +1,21 @@
 package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.model.copy
+import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.model.toMealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
+import ai.passio.passiosdk.passiofood.data.model.PassioFoodResultType
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +27,7 @@ import org.joda.time.DateTime
 class ImageFoodResultViewModel : BaseViewModel() {
 
     private val mealPlanUseCase = MealPlanUseCase
+    private val customFoodUseCase = CustomFoodUseCase
 
     private val currentBitmaps = arrayListOf<Bitmap>()
 
@@ -128,29 +133,28 @@ class ImageFoodResultViewModel : BaseViewModel() {
                     currentMealTime
                 )
             )
+            resultFoodInfoList.forEach {
+                it.isSelected = !(it.isBarcodeDataMissing() || it.isNutritionFactsDataMissing())
+            }
             _isFetchingResult.postValue(false)
             _resultFoodInfoEvent.postValue(resultFoodInfoList)
         }
     }
 
-//    private val customFoodUseCase = CustomFoodUseCase
-    fun logRecords(list: List<ImageFoodResult>) {
+    fun updateItemSelection() {
+        _resultFoodInfoEvent.postValue(resultFoodInfoList)
+    }
+
+    //    private val customFoodUseCase = CustomFoodUseCase
+//    fun logRecords(list1: List<ImageFoodResult>) {
+    fun logRecords() {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
+            val list = resultFoodInfoList.filter { it.isSelected }
             if (list.isEmpty()) {
                 _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items!"))
             } else {
 
-                /*list.forEach { imageRecord ->
-
-                    if (imageRecord.resultType == PassioFoodResultType.NUTRITION_FACTS || imageRecord.resultType == PassioFoodResultType.BARCODE && !imageRecord.isCustomFood) {
-                        val customFood = imageRecord.record.copyAsCustomFood()
-                        customFoodUseCase.saveCustomFood(customFood)
-                        imageRecord.record = customFood
-                        imageRecord.isCustomFood = true
-                        totalCustomFoodSaved = totalCustomFoodSaved + 1
-                    }
-                }*/
 
                 list.forEach {
                     it.record.create(selectedDateTime.millis)
@@ -158,13 +162,23 @@ class ImageFoodResultViewModel : BaseViewModel() {
                 }
 
                 if (isAddIngredient) {
-                    _addIngredientEvent.postValue(list.map { fr -> FoodRecordIngredient(fr.record) })
+                    _addIngredientEvent.postValue(list.map { fr -> FoodRecordIngredient(fr.record.copy()) })
                 } else {
 
-                    val isLogged = mealPlanUseCase.logFoodRecords(list.map { it.record })
-                    val totalLoggedItems = list.size
-                    var totalCustomFoodSaved = list.count { it.isCustomFood }
 
+                    val totalLoggedItems = list.size
+                    var totalCustomFoodSaved = 0 //list.count { it.isCustomFood }
+
+                    list.forEach { imageRecord ->
+                        if (!imageRecord.isCustomFood && (imageRecord.resultType == PassioFoodResultType.NUTRITION_FACTS || imageRecord.resultType == PassioFoodResultType.BARCODE)) {
+                            val customFood = imageRecord.record.copyAsCustomFood()
+                            customFoodUseCase.saveCustomFood(customFood)
+                            imageRecord.record = customFood
+                            imageRecord.isCustomFood = true
+                            totalCustomFoodSaved = totalCustomFoodSaved + 1
+                        }
+                    }
+                    val isLogged = mealPlanUseCase.logFoodRecords(list.map { it.record.copy() })
                     _logFoodEvent.postValue(
                         ResultWrapper.Success(
                             Triple(
@@ -180,9 +194,11 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    fun createRecipe(list: List<ImageFoodResult>) {
+    //    fun createRecipe(list1: List<ImageFoodResult>) {
+    fun createRecipe() {
         viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
+            val list = resultFoodInfoList.filter { it.isSelected }
             if (list.isEmpty()) {
                 _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food items!"))
             } else {

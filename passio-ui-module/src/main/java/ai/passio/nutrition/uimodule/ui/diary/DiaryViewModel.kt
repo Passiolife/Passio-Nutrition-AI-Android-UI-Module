@@ -9,6 +9,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.meals
 import ai.passio.nutrition.uimodule.ui.model.toMealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
@@ -101,7 +102,7 @@ class DiaryViewModel : BaseViewModel() {
                 logFoodEvent.postValue(
                     ResultWrapper.Success(
                         mealPlanUseCase.logFoodRecord(
-                            foodRecord
+                            foodRecord.copy()
                         )
                     )
                 )

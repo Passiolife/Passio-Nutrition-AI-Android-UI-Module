@@ -7,6 +7,7 @@
     <string name="edit">Edit</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="save">Save</string>
+    <string name="update">Update</string>
     <string name="log">Log</string>
     <string name="scan_info_title">Ways To Scan</string>
     <string name="scan_info_message">You can quickly switch between scanning modes to log your food a variety of ways</string>
@@ -37,8 +38,11 @@
     <string name="delete">Delete</string>
     <string name="daily_nutrition">Daily Nutrition</string>
     <string name="carbs">Carbs</string>
+    <string name="carbs_g">Carbs(g)</string>
     <string name="protein">Protein</string>
+    <string name="protein_g">Protein(g)</string>
     <string name="fat">Fat</string>
+    <string name="fat_g">Fat(g)</string>
     <string name="carbs_per">Carbs(%)</string>
     <string name="protein_per">Protein(%)</string>
     <string name="fat_per">Fat(%)</string>
@@ -67,8 +71,8 @@
     <string name="gallery">Gallery</string>
     <string name="scan_barcode_description">Scan the barcode usually found on the back side of packaged food.</string>
     <string name="serving">Serving</string>
-    <string name="item_added_to_diary">Item Added To Diary</string>
-    <string name="custom_food_created">Custom Food Created</string>
+    <string name="item_added_to_diary">Item(s) Added To Diary</string>
+    <string name="custom_food_created">Custom Food(s) Created</string>
     <string name="view_your_diary_or_continue_scanning">View your diary or continue scanning.</string>
     <string name="keep_scanning">Keep Scanning</string>
     <string name="view_diary">View Diary</string>
@@ -190,6 +194,7 @@
     <string name="enter_unit_name">Enter unit name</string>
     <string name="units">Units</string>
     <string name="weight">Weight</string>
+    <string name="weight_g">Weight(g)</string>
     <string name="enter_calories">Enter calories</string>
     <string name="enter_carbs">Enter carbs</string>
     <string name="enter_weight_lower">Enter weight</string>
