@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.ui.view
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.DailyNutritionLayoutBinding
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -59,8 +60,7 @@ class DailyNutrition @JvmOverloads constructor(
         setup(0, 0, 0, 0, 0, 0, 0, 0)
     }
 
-    fun hideTitleAndProgressReportButton()
-    {
+    fun hideTitleAndProgressReportButton() {
         binding.title.isVisible = false
         binding.progressReport.isVisible = false
         background = ContextCompat.getDrawable(context, R.color.passio_white)
@@ -107,6 +107,7 @@ class DailyNutrition @JvmOverloads constructor(
             binding.caloriesTarget,
             caloriesCurrent,
             caloriesTarget,
+            "",
             caloriesColor,
             caloriesOverColor
         )
@@ -116,6 +117,7 @@ class DailyNutrition @JvmOverloads constructor(
             binding.carbsTarget,
             carbsCurrent,
             carbsTarget,
+            " g",
             carbsColor,
             carbsOverColor
         )
@@ -125,6 +127,7 @@ class DailyNutrition @JvmOverloads constructor(
             binding.proteinTarget,
             proteinCurrent,
             proteinTarget,
+            " g",
             proteinColor,
             proteinOverColor
         )
@@ -134,6 +137,7 @@ class DailyNutrition @JvmOverloads constructor(
             binding.fatTarget,
             fatCurrent,
             fatTarget,
+            " g",
             fatColor,
             fatOverColor
         )
@@ -154,17 +158,19 @@ class DailyNutrition @JvmOverloads constructor(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderChart(
         chart: PieChart,
         currentTextView: TextView,
         targetTextView: TextView,
         currentValue: Int,
         targetValue: Int,
+        unitName: String,
         valueColor: Int,
         overValueColor: Int
     ) {
-        currentTextView.text = currentValue.toString()
-        targetTextView.text = targetValue.toString()
+        currentTextView.text = "$currentValue$unitName"
+        targetTextView.text = "$targetValue$unitName"
 
         val entries = mutableListOf<PieEntry>()
         if (currentValue <= targetValue) {
