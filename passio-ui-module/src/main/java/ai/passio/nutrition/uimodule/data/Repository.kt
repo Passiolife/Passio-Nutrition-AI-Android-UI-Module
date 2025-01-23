@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.data
 
+import ai.passio.nutrition.uimodule.NutritionUIModule
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
@@ -152,8 +153,15 @@ class Repository private constructor() {
     suspend fun fetchSearchResults(
         query: String
     ): Pair<List<PassioFoodDataInfo>, List<String>> = suspendCoroutine { cont ->
-        PassioSDK.instance.searchForFood(query) { result, searchOptions ->
-            cont.resumeWith(Result.success(result to searchOptions))
+
+        if (NutritionUIModule.getConfiguration().shouldUseLegacySearch) {
+            PassioSDK.instance.searchForFood(query) { result, searchOptions ->
+                cont.resumeWith(Result.success(result to searchOptions))
+            }
+        } else {
+            PassioSDK.instance.searchForFoodSemantic(query) { result, searchOptions ->
+                cont.resumeWith(Result.success(result to searchOptions))
+            }
         }
     }
 

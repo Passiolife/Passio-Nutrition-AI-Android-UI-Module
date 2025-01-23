@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.databinding.FragmentVoiceLoggingBinding
+import ai.passio.nutrition.uimodule.ui.activity.PassioLanguage
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
@@ -28,8 +29,6 @@ import android.text.style.StyleSpan
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import java.util.Locale
-
 
 private const val PERMISSION = Manifest.permission.RECORD_AUDIO
 
@@ -137,12 +136,15 @@ internal class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
     }
 
     private val intent: Intent by lazy {
+
         Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
             )
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.US)
+            val languageTag = PassioLanguage.getLangTag()
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
+//            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.US)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 3 * 1000L)
             putExtra(

@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.activity
 
+import ai.passio.nutrition.uimodule.NutritionUIModule
 import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
@@ -12,6 +13,8 @@ import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
@@ -21,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.Locale
 
 internal object UserCache {
     private lateinit var userProfile: UserProfile
@@ -37,6 +41,46 @@ internal object UserCache {
     }
 }
 
+internal object PassioLanguage {
+    private var passioLanguageTag: String? = null
+    private var passioLanguageCode: String? = null
+    private fun getLocalFromLanguageCode(): Locale {
+        val local =
+            Locale.getAvailableLocales()
+                .find {
+                    it.language.equals(
+                        NutritionUIModule.getConfiguration().languageCode,
+                        true
+                    )
+                } ?: Locale.US
+        return local
+    }
+
+    internal fun getLanguageCode(): String {
+        if (!passioLanguageCode.isValid() || passioLanguageCode?.lowercase() != NutritionUIModule.getConfiguration().languageCode.lowercase()) {
+            passioLanguageTag = null
+            passioLanguageCode = getLocalFromLanguageCode().language.lowercase()
+        }
+        return passioLanguageCode!!
+    }
+
+    internal fun getLangTag(): String {
+        if (!passioLanguageTag.isValid()) {
+
+            val local = getLocalFromLanguageCode()
+            val lngCode = local.language.lowercase()
+            var countryCode = local.country.uppercase()
+            if (!countryCode.isValid()) {
+                countryCode = lngCode.uppercase()
+            }
+
+            passioLanguageTag = "$lngCode-$countryCode"
+        }
+        return passioLanguageTag!!
+    }
+}
+
+class SharedViewModel : ViewModel() {
 internal class SharedViewModel : ViewModel() {
 
     private val _diaryCurrentDate = SingleLiveEvent<Date>()
@@ -229,8 +273,7 @@ internal class SharedViewModel : ViewModel() {
         _diaryCurrentDate.postValue(currentDate)
     }
 
-    fun setMyFoodsType(type: MyFoodType)
-    {
+    fun setMyFoodsType(type: MyFoodType) {
         _myFoodTypeLD.postValue(type)
     }
 
