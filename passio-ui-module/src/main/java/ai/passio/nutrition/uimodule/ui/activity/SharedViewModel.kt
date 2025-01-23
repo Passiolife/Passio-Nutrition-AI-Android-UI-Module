@@ -14,7 +14,6 @@ import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
-import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
@@ -80,7 +79,6 @@ internal object PassioLanguage {
     }
 }
 
-class SharedViewModel : ViewModel() {
 internal class SharedViewModel : ViewModel() {
 
     private val _diaryCurrentDate = SingleLiveEvent<Date>()
