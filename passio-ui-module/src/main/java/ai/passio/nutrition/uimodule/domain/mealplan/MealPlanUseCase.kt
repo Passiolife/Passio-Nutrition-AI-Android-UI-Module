@@ -99,7 +99,7 @@ object MealPlanUseCase {
             if (passioMealPlanItem.packagedFoodItem != null) {
                 FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
                     if (!name.isValid()) {
-                        name = "Nutrition Facts Label"
+                        name = "Scanned Nutrition Label"
                     }
                     entityType = PassioIDEntityType.packagedFoodCode.value
                 }
@@ -123,10 +123,15 @@ object MealPlanUseCase {
         return passioMealPlanItems.mapNotNull { passioMealPlanItem ->
             val foodRecord = if (passioMealPlanItem.packagedFoodItem != null) {
                 FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
-                    if (!name.isValid()) {
+                    if (!name.isValid() && passioMealPlanItem.resultType == PassioFoodResultType.NUTRITION_FACTS) {
                         name = "Nutrition Facts Label"
+                        entityType = PassioIDEntityType.packagedFoodCode.value
                     }
-                    entityType = PassioIDEntityType.packagedFoodCode.value
+                    else if (passioMealPlanItem.resultType == PassioFoodResultType.BARCODE)
+                    {
+                        entityType = PassioIDEntityType.barcode.value
+                    }
+
                 }
             } else if (passioMealPlanItem.foodDataInfo != null) {
                 getFoodRecord(

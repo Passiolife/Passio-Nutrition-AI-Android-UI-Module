@@ -2,7 +2,6 @@ package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.foodcreator.BarcodeResultType
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALORIES_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
@@ -279,10 +278,10 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
     fun updateMissingFromBarcode(barcodeScanResult: BarcodeScanResult) {
 //        imageFoodResult.record.barcode = barcode
         val record = barcodeScanResult.record
-        if (barcodeScanResult.barcode.isValid()) {
-            foodRecord.barcode = barcodeScanResult.barcode
-        }
-
+//        if (barcodeScanResult.barcode.isValid()) {
+//            foodRecord.barcode = barcodeScanResult.barcode
+//        }
+        foodRecord.barcode = barcodeScanResult.barcode
         if (record != null) {
             if (!foodRecord.name.isValid() && record.name.isValid()) {
                 foodRecord.name = record.name
@@ -309,13 +308,14 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
                 setFat(record.nutrientsSelectedSize().fat()!!.value)
             }
 
-            if (barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST) {
-                isNewToCreate = false
-                foodRecord.id = record.id
-                foodRecord.refCode = record.refCode
-                foodRecord.iconId = record.iconId
-                imageFoodResult.isCustomFood = true
-            }
+//            if (barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST) {
+//                isNewToCreate = false
+//                foodRecord.id = record.id
+//                foodRecord.uuid = record.uuid
+//                foodRecord.refCode = record.refCode
+//                foodRecord.iconId = record.iconId
+//                imageFoodResult.isCustomFood = true
+//            }
 
             updateNutrientsOnUI()
             _editFoodModelLD.postValue(foodRecord)

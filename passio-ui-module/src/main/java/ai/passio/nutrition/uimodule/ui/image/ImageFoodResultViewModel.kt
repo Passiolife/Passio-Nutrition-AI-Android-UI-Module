@@ -12,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.model.toMealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
@@ -112,7 +113,6 @@ class ImageFoodResultViewModel : BaseViewModel() {
                     }*/
                     if (currentCount == currentBitmaps.size) {
 
-
                         fetchFoodRecords(resultList)
 //                        _resultFoodInfo.postValue(resultFoodInfoList)
                         /*if (resultFoodInfoList.isEmpty()) {
@@ -136,6 +136,13 @@ class ImageFoodResultViewModel : BaseViewModel() {
             resultFoodInfoList.forEach {
                 it.isSelected = !(it.isBarcodeDataMissing() || it.isNutritionFactsDataMissing())
             }
+            val resultFoodInfoListTemp = resultFoodInfoList.groupBy { it.record.barcode }
+                .flatMap { (barcode, group) ->
+                    if (!barcode.isValid()) group // Keep duplicates for null or 0
+                    else listOf(group.first()) // Keep only the first for unique ids
+                }
+            resultFoodInfoList.clear()
+            resultFoodInfoList.addAll(resultFoodInfoListTemp)
             _isFetchingResult.postValue(false)
             _resultFoodInfoEvent.postValue(resultFoodInfoList)
         }
@@ -170,8 +177,24 @@ class ImageFoodResultViewModel : BaseViewModel() {
                     var totalCustomFoodSaved = 0 //list.count { it.isCustomFood }
 
                     list.forEach { imageRecord ->
-                        if (!imageRecord.isCustomFood && (imageRecord.resultType == PassioFoodResultType.NUTRITION_FACTS || imageRecord.resultType == PassioFoodResultType.BARCODE)) {
-                            val customFood = imageRecord.record.copyAsCustomFood()
+                        if (!imageRecord.isCustomFood && (imageRecord.resultType == PassioFoodResultType.NUTRITION_FACTS/* || imageRecord.resultType == PassioFoodResultType.BARCODE*/)) {
+                            var existFood: FoodRecord? = null
+                            if (imageRecord.record.barcode.isValid()) {
+                                existFood =
+                                    customFoodUseCase.fetchFoodFromCustomFoods(imageRecord.record.barcode!!)
+                            }
+                            val customFood =
+                                if (existFood == null) {
+                                    imageRecord.record.copyAsCustomFood()
+                                } else {
+                                    imageRecord.record.apply {
+                                        id = existFood.id
+                                        uuid = existFood.id
+                                        iconId = existFood.iconId
+                                        refCode = existFood.refCode
+                                    }
+                                    imageRecord.record
+                                }
                             customFoodUseCase.saveCustomFood(customFood)
                             imageRecord.record = customFood
                             imageRecord.isCustomFood = true
