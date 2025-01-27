@@ -16,7 +16,7 @@ enum class MyFoodType(val value: Int) {
     UserFavorites(2);
 }
 
-class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
+internal class MyFoodsFragment : BaseFragment<MyFoodsViewModel>() {
 
     private var _binding: FragmentMyFoodsBinding? = null
     private val binding: FragmentMyFoodsBinding get() = _binding!!

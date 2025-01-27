@@ -42,7 +42,7 @@ import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
-class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
+internal class EditRecipeFragment : BaseFragment<EditRecipesViewModel>() {
 
     private var _binding: FragmentEditRecipeBinding? = null
     private val binding: FragmentEditRecipeBinding get() = _binding!!

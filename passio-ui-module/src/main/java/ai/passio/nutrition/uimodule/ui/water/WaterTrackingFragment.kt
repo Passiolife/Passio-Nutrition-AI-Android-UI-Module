@@ -51,7 +51,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
+internal class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
 
     private var _binding: FragmentWaterTrackingBinding? = null
     private val binding: FragmentWaterTrackingBinding get() = _binding!!

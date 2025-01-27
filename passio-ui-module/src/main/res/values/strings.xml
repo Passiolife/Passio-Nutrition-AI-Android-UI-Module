@@ -7,6 +7,7 @@
     <string name="edit">Edit</string>
     <string name="edit_recipe">Edit Recipe</string>
     <string name="save">Save</string>
+    <string name="update">Update</string>
     <string name="log">Log</string>
     <string name="scan_info_title">Ways To Scan</string>
     <string name="scan_info_message">You can quickly switch between scanning modes to log your food a variety of ways</string>
@@ -37,8 +38,11 @@
     <string name="delete">Delete</string>
     <string name="daily_nutrition">Daily Nutrition</string>
     <string name="carbs">Carbs</string>
+    <string name="carbs_g">Carbs(g)</string>
     <string name="protein">Protein</string>
+    <string name="protein_g">Protein(g)</string>
     <string name="fat">Fat</string>
+    <string name="fat_g">Fat(g)</string>
     <string name="carbs_per">Carbs(%)</string>
     <string name="protein_per">Protein(%)</string>
     <string name="fat_per">Fat(%)</string>
@@ -67,7 +71,8 @@
     <string name="gallery">Gallery</string>
     <string name="scan_barcode_description">Scan the barcode usually found on the back side of packaged food.</string>
     <string name="serving">Serving</string>
-    <string name="item_added_to_diary">Item Added To Diary</string>
+    <string name="item_added_to_diary">Item(s) Added To Diary</string>
+    <string name="custom_food_created">Custom Food(s) Created</string>
     <string name="view_your_diary_or_continue_scanning">View your diary or continue scanning.</string>
     <string name="keep_scanning">Keep Scanning</string>
     <string name="view_diary">View Diary</string>
@@ -189,6 +194,7 @@
     <string name="enter_unit_name">Enter unit name</string>
     <string name="units">Units</string>
     <string name="weight">Weight</string>
+    <string name="weight_g">Weight(g)</string>
     <string name="enter_calories">Enter calories</string>
     <string name="enter_carbs">Enter carbs</string>
     <string name="enter_weight_lower">Enter weight</string>
@@ -226,6 +232,16 @@
     <string name="search_manually">Search Manually</string>
     <string name="sorry_we_could_not_find_any_matches_please_try_again_or_try_searching_manually">Sorry, we could not find any matches. Please try again or try searching manually</string>
     <string name="token_tracking">Token tracking…</string>
+    <string name="create_recipe">Create Recipe</string>
+    <string name="view_your_diary_or_add_more">View your diary or add more</string>
+    <string name="add_more">Add More</string>
+    <string name="adjust_serving_size">Adjust Serving Size</string>
+    <string name="done">Done</string>
+    <string name="edit_nutrition_facts">Edit Nutrition Facts</string>
+    <string name="portions">Portions</string>
+    <string name="cal">- cal</string>
+    <string name="g">- g</string>
+    <string name="unit">Unit</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

@@ -46,7 +46,7 @@ import org.joda.time.DateTime
 import java.util.Date
 import kotlin.math.roundToInt
 
-class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
+internal class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
     private var _binding: FragmentEditFoodBinding? = null
     private val binding: FragmentEditFoodBinding get() = _binding!!

@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.data.Repository
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.edit.EditFoodDataModel
+import ai.passio.nutrition.uimodule.ui.model.BarcodeScanResult
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
@@ -13,7 +14,6 @@ import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
-import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.Locale
 
-object UserCache {
+internal object UserCache {
     private lateinit var userProfile: UserProfile
     fun getProfile(): UserProfile {
         return if (::userProfile.isInitialized) {
@@ -79,7 +79,7 @@ internal object PassioLanguage {
     }
 }
 
-class SharedViewModel : ViewModel() {
+internal class SharedViewModel : ViewModel() {
 
     private val _diaryCurrentDate = SingleLiveEvent<Date>()
     val diaryCurrentDate: LiveData<Date> get() = _diaryCurrentDate
@@ -99,8 +99,8 @@ class SharedViewModel : ViewModel() {
     private val _editFoodUpdateLog = SingleLiveEvent<FoodRecord>()
     val editFoodUpdateLog: LiveData<FoodRecord> get() = _editFoodUpdateLog
 
-    private val _barcodeScanFoodRecord = SingleLiveEvent<Barcode>()
-    val barcodeScanFoodRecord: LiveData<Barcode> get() = _barcodeScanFoodRecord
+    private val _barcodeScanFoodRecord = SingleLiveEvent<BarcodeScanResult>()
+    val barcodeScanFoodRecord: LiveData<BarcodeScanResult> get() = _barcodeScanFoodRecord
 
     private val _detailsFoodRecordLD = SingleLiveEvent<EditFoodDataModel>()
     val detailsFoodRecordLD: LiveData<EditFoodDataModel> get() = _detailsFoodRecordLD
@@ -194,8 +194,8 @@ class SharedViewModel : ViewModel() {
     }
 
 
-    fun sendBarcodeScanResult(barcode: Barcode) {
-        _barcodeScanFoodRecord.postValue(barcode)
+    fun sendBarcodeScanResult(barcodeScanResult: BarcodeScanResult) {
+        _barcodeScanFoodRecord.postValue(barcodeScanResult)
     }
 
     fun passToNutritionInfo(foodRecord: FoodRecord) {

@@ -48,7 +48,13 @@ class MainActivity : ComponentActivity() {
 
     private fun onSDKReady() {
 //        NutritionUIModule.launch(context = this, connector = MyPassioConnector(this))
-        NutritionUIModule.launch(context = this, nutritionUIConfiguration = NutritionUIConfiguration(languageCode = "es"))
+        NutritionUIModule.launch(
+            context = this,
+            nutritionUIConfiguration = NutritionUIConfiguration(
+                languageCode = "en",
+                shouldUseLegacySearch = false
+            )
+        )
         finish()
     }
 }

@@ -29,7 +29,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditRecipesViewModel : BaseViewModel() {
+internal class EditRecipesViewModel : BaseViewModel() {
 
     private val useCase = RecipeUseCase
     private val editFoodUseCase = EditFoodUseCase

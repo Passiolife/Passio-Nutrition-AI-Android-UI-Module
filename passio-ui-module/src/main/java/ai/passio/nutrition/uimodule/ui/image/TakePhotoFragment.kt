@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-class TakePhotoFragment : BaseFragment<BaseViewModel>() {
+internal class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
     companion object {
         private const val TAG = "CameraXApp"

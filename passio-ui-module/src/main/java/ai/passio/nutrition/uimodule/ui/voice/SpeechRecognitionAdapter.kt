@@ -1,7 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.voice
 
 import ai.passio.nutrition.uimodule.R
-import ai.passio.nutrition.uimodule.databinding.ItemImageFoodResultBinding
+import ai.passio.nutrition.uimodule.databinding.ItemImageAdvisorResultBinding
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
@@ -35,7 +35,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
         notifyDataSetChanged()
     }
 
-    inner class ImageViewHolder(val binding: ItemImageFoodResultBinding) :
+    inner class ImageViewHolder(val binding: ItemImageAdvisorResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(foodInfo: PassioSpeechRecognitionModel) {
@@ -79,7 +79,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val binding =
-            ItemImageFoodResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemImageAdvisorResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ImageViewHolder(binding)
     }
 

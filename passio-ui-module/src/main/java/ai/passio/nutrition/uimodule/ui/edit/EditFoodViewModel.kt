@@ -19,7 +19,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditFoodViewModel : BaseViewModel() {
+internal class EditFoodViewModel : BaseViewModel() {
 
     private val favoriteUseCase = FavoriteUseCase
     private val useCase = EditFoodUseCase

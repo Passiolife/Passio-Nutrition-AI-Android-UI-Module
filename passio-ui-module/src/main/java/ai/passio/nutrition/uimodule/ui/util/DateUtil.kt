@@ -10,7 +10,6 @@ import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 
 
@@ -78,7 +77,9 @@ fun showDatePickerDialog(
         context, R.style.DatePickerTheme,
         { _, selectedYear, selectedMonth, selectedDay ->
             // Format the selected date
-            val selectedDate = DateTime(selectedYear, selectedMonth + 1, selectedDay, 0, 0)
+//            val selectedDate = DateTime(selectedYear, selectedMonth + 1, selectedDay, 0, 0)
+            val selectedDate = now.withYear(selectedYear).withMonthOfYear(selectedMonth + 1)
+                .withDayOfMonth(selectedDay)
             onDateSelected.invoke(selectedDate)
         },
         year, month, day
@@ -96,22 +97,42 @@ fun showDatePickerDialog(
      datePicker.show(requireActivity().supportFragmentManager, "DATE")*/
 }
 
-fun showTimePickerDialog(context: Context, onTimeSelected: (selectedDateTime: DateTime) -> Unit) {
-    val calendar = Calendar.getInstance()
-    val hour = calendar.get(Calendar.HOUR_OF_DAY)
-    val minute = calendar.get(Calendar.MINUTE)
+fun showTimePickerDialog(
+    context: Context,
+    now: DateTime = DateTime.now(),
+    onTimeSelected: (selectedDateTime: DateTime) -> Unit
+) {
+//    val calendar = Calendar.getInstance()
+    val hour = now.hourOfDay //calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = now.minuteOfHour //calendar.get(Calendar.MINUTE)
 
-    val timePickerDialog = TimePickerDialog(context, { _, selectedHour, selectedMinute ->
-        val selectedDateTime = DateTime.now()
+
+    val timePickerDialog = TimePickerDialog(context, R.style.DatePickerTheme, { _, selectedHour, selectedMinute ->
+        val selectedDateTime = now
             .withHourOfDay(selectedHour)
             .withMinuteOfHour(selectedMinute)
 
-//        val timeFormatter = DateTimeFormat.forPattern("hh:mm a")
-//        val formattedTime = selectedDateTime.toString(timeFormatter)
         onTimeSelected.invoke(selectedDateTime)
     }, hour, minute, false)
 
     timePickerDialog.show()
+}
+
+fun showDateTimePickerDialog(
+    context: Context,
+    now: DateTime = DateTime.now(),
+    onDateSelected: (selectedDateTime: DateTime) -> Unit
+) {
+
+    showDatePickerDialog(context = context, now = now, onDateSelected = { selectedDate ->
+        showTimePickerDialog(
+            context = context,
+            now = selectedDate,
+            onTimeSelected = { selectedTime ->
+                onDateSelected.invoke(selectedTime)
+            })
+    })
+
 }
 
 
@@ -136,9 +157,19 @@ fun dateToTimestamp(dateString: String, dateFormat: String): Long {
 
 const val DAY_FORMAT = "EE"
 const val DAY_FORMAT_FULL = "EEEE, MMMM dd, yyyy"
+const val DAY_FORMAT_FULL_WITH_TIME = "MM/dd/yy hh:mm a"
 fun dateToFormat(localDate: LocalDate, format: String): String {
     // Define the formatter for the desired pattern
-    val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.ENGLISH)
+    val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.US)
+
+    // Format the date to the desired pattern
+    val formattedDate = localDate.toString(formatter)
+    return formattedDate
+}
+
+fun dateToFormat(localDate: DateTime, format: String): String {
+    // Define the formatter for the desired pattern
+    val formatter = DateTimeFormat.forPattern(format).withLocale(Locale.US)
 
     // Format the date to the desired pattern
     val formattedDate = localDate.toString(formatter)

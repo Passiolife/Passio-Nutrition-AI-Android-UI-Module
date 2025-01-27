@@ -3,7 +3,7 @@ package ai.passio.nutrition.uimodule.ui.camera
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.RecognitionResultViewBinding
 import ai.passio.nutrition.uimodule.domain.camera.RecognitionResult
-import ai.passio.nutrition.uimodule.ui.model.getShortInfo
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo2
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
@@ -248,7 +248,7 @@ class RecognitionResultView @JvmOverloads constructor(
             it.viewDragUp.isVisible = false
             val foodRecord = result.foodItem
             it.barcodeName.text = foodRecord.name.capitalized()
-            it.barcodeId.text = foodRecord.getShortInfo()
+            it.barcodeId.text = foodRecord.getShortInfo2()
             it.barcodeImage.loadFoodImage(result.foodItem)
             disableDrag()
 //            bottomSheetBehavior.state = STATE_COLLAPSED

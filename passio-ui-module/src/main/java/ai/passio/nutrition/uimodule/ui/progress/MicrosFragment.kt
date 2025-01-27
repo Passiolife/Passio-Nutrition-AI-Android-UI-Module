@@ -16,7 +16,7 @@ import org.joda.time.format.DateTimeFormat
 import java.util.Date
 import java.util.Locale
 
-class MicrosFragment : BaseFragment<MicrosViewModel>() {
+internal class MicrosFragment : BaseFragment<MicrosViewModel>() {
 
     private var _binding: FragmentMicrosBinding? = null
     private val binding: FragmentMicrosBinding get() = _binding!!

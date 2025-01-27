@@ -30,7 +30,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 
-class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
+internal class MyProfileFragment : BaseFragment<MyProfileViewModel>() {
 
     private var _binding: FragmentMyProfileBinding? = null
     private val binding: FragmentMyProfileBinding get() = _binding!!

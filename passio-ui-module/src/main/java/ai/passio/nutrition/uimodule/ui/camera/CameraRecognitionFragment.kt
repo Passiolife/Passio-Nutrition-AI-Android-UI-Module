@@ -33,7 +33,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
+internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewModel>(),
     PassioCameraViewProvider,
     BaseToolbar.ToolbarListener, View.OnClickListener {
 

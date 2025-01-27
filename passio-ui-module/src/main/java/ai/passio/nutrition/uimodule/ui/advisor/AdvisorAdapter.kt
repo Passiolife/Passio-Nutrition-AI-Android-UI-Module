@@ -6,8 +6,6 @@ import ai.passio.nutrition.uimodule.databinding.ItemAdvisorReceiverTextBinding
 import ai.passio.nutrition.uimodule.databinding.ItemAdvisorSenderImageBinding
 import ai.passio.nutrition.uimodule.databinding.ItemAdvisorSenderTextBinding
 import ai.passio.nutrition.uimodule.databinding.ItemAdvisorWelcomeBinding
-import ai.passio.nutrition.uimodule.ui.image.FoodImageResultAdapter
-import ai.passio.nutrition.uimodule.ui.image.OnItemSelectChange
 import ai.passio.nutrition.uimodule.ui.model.PassioAdvisorData
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
@@ -132,7 +130,7 @@ internal class AdvisorAdapter(
                     logFood.disable()
                 }
 
-                val foodResultAdapter = FoodImageResultAdapter(object : OnItemSelectChange {
+                val foodResultAdapter = AdvisorImageResultAdapter(object : OnItemSelectChange {
                     override fun onItemSelectChange(selectedCount: Int) {
                         if (selectedCount > 0) {
                             logFood.enable()

@@ -4,10 +4,10 @@ import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.FragmentScanBarcodeBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+import ai.passio.nutrition.uimodule.ui.model.BarcodeScanResult
 import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
-import ai.passio.passiosdk.passiofood.Barcode
 import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,7 +17,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 
-class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
+internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
     PassioCameraViewProvider,
     BaseToolbar.ToolbarListener {
 
@@ -25,6 +25,7 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
     private val binding: FragmentScanBarcodeBinding get() = _binding!!
     private val permissionUtil =
         PermissionUtil(this@ScanBarcodeFragment, Manifest.permission.CAMERA)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,8 +64,13 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
         }
     }
 
-    private fun sendResult(barcode: Barcode) {
-        sharedViewModel.sendBarcodeScanResult(barcode)
+//    private fun sendResult(result: Pair<Barcode, FoodRecord?>) {
+//        sharedViewModel.sendBarcodeScanResult(result.first, result.second)
+//        viewModel.navigateBack()
+//    }
+
+    private fun sendResult(barcodeScanResult: BarcodeScanResult) {
+        sharedViewModel.sendBarcodeScanResult(barcodeScanResult)
         viewModel.navigateBack()
     }
 
@@ -118,7 +124,9 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
 
     override fun requestPreviewView(): PreviewView = binding.cameraPreview
 
-    private fun onRecognitionResult(result: ScanBarcodeStatus) {
+    private fun onRecognitionResult(results: Pair<ScanBarcodeStatus, BarcodeScanResult?>) {
+        val result = results.first
+        val barcodeScanResult = results.second
         with(binding) {
             viewItem.setOnClickListener {
             }
@@ -133,7 +141,9 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                 ScanBarcodeStatus.NEW_BARCODE -> {
                     viewResult.visibility = View.GONE
                     scanningMessage.visibility = View.GONE
-                    sendResult(viewModel.geBarcode())
+                    barcodeScanResult?.let {
+                        sendResult(barcodeScanResult)
+                    }
                 }
 
                 ScanBarcodeStatus.BARCODE_IN_SYSTEM -> {
@@ -141,14 +151,16 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     scanningMessage.visibility = View.GONE
                     showBarcodeInSystemView()
                     viewItem.setOnClickListener {
-                        viewModel.existingSystemItem?.let {
+                        barcodeScanResult?.record?.let {
                             sharedViewModel.detailsFoodRecord(it)
                             viewModel.navigateToFoodDetails()
                         }
                     }
                     createFood.setOnClickListener {
-                        sendResult(viewModel.geBarcode())
-                        viewModel.navigateBack()
+                        barcodeScanResult?.let {
+                            sendResult(it)
+//                            viewModel.navigateBack()
+                        }
                     }
                 }
 
@@ -157,15 +169,18 @@ class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     scanningMessage.visibility = View.GONE
                     showCustomFoodAlreadyExistView()
                     viewItem.setOnClickListener {
-                        viewModel.existingCustomFood?.let {
+                        barcodeScanResult?.record?.let {
                             sharedViewModel.detailsFoodRecord(it)
                             viewModel.navigateToFoodDetails()
                         }
                     }
 
                     createFood.setOnClickListener {
-                        sendResult("")
-                        viewModel.navigateBack()
+                        barcodeScanResult?.let {
+                            barcodeScanResult.barcode = ""
+                            sendResult(it)
+//                            viewModel.navigateBack()
+                        }
                     }
                 }
 

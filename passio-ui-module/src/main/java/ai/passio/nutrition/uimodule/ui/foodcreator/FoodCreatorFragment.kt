@@ -30,7 +30,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 
-class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
+internal class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
 
     private var _binding: FragmentFoodCreatorBinding? = null
     private val binding: FragmentFoodCreatorBinding get() = _binding!!
@@ -292,8 +292,8 @@ class FoodCreatorFragment : BaseFragment<FoodCreatorViewModel>() {
         sharedViewModel.editFoodUpdateLog.observe(viewLifecycleOwner) { editRecipe ->
             viewModel.setToUpdateLog(editRecipe.clone())
         }
-        sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcode ->
-            viewModel.setBarcode(barcode)
+        sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcodeScanResult ->
+            viewModel.setBarcode(barcodeScanResult.barcode)
         }
         viewModel.barcodeEvent.observe(viewLifecycleOwner) { barcode ->
             binding.barcode.text = barcode

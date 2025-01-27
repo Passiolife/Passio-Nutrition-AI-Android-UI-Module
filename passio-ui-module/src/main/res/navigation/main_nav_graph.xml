@@ -572,6 +572,22 @@
             app:popUpTo="@id/edit_recipe"
             app:popUpToInclusive="false" />
 
+        <action
+            android:id="@+id/image_food_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:destination="@id/edit_recipe" />
+
+        <action
+            android:id="@+id/image_food_result_to_take_select_photo"
+            app:destination="@id/take_select_photo"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+
+
+        <action
+            android:id="@+id/image_food_result_to_scan_barcode"
+            app:destination="@id/scan_barcode" />
+
     </fragment>
 
     <fragment

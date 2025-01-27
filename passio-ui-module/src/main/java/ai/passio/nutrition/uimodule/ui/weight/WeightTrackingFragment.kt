@@ -41,7 +41,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
+internal class WeightTrackingFragment : BaseFragment<WeightTrackingViewModel>() {
 
     private var _binding: FragmentWeightTrackingBinding? = null
     private val binding: FragmentWeightTrackingBinding get() = _binding!!

@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
-class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
+internal class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
 
     private var _binding: FragmentCustomFoodsBinding? = null
     private val binding: FragmentCustomFoodsBinding get() = _binding!!

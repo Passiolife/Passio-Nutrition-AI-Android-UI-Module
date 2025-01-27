@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
-class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
+internal class FavoriteFragment : BaseFragment<FavoriteViewModel>() {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding: FragmentFavoriteBinding get() = _binding!!
