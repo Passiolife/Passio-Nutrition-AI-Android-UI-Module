@@ -20,16 +20,16 @@ object CameraUseCase {
         return repository.recognitionResultFlow(config).map { mapRecognitionResult(it) }
     }
 
-    fun nutritionFactsFlow(): Flow<RecognitionResult> {
-        return repository.nutritionFactsResultFlow()
-            .map {
-                if (it.first == null) {
-                    RecognitionResult.NoRecognition
-                } else {
-                    RecognitionResult.NutritionFactRecognition(Pair(it.first!!, it.second))
-                }
-            }
-    }
+    /* fun nutritionFactsFlow(): Flow<RecognitionResult> {
+         return repository.nutritionFactsResultFlow()
+             .map {
+                 if (it.first == null) {
+                     RecognitionResult.NoRecognition
+                 } else {
+                     RecognitionResult.NutritionFactRecognition(Pair(it.first!!, it.second))
+                 }
+             }
+     }*/
 
     suspend fun fetchFoodItemForPassioID(passioID: PassioID): PassioFoodItem? {
         return repository.fetchFoodItemForPassioID(passioID)
@@ -52,17 +52,23 @@ object CameraUseCase {
             return RecognitionResult.NoRecognition
         }
 
-        val visualCandidate =
-            candidates.detectedCandidates?.firstOrNull() //maxByOrNull { it.confidence }
-        if (visualCandidate != null) {
-            return RecognitionResult.VisualRecognition(visualCandidate)
-        }
+        /*  val visualCandidate =
+              candidates.detectedCandidates?.firstOrNull() //maxByOrNull { it.confidence }
+          if (visualCandidate != null) {
+              return RecognitionResult.VisualRecognition(visualCandidate)
+          }*/
 
         val barcodeCandidate =
             candidates.barcodeCandidates?.firstOrNull() //maxByOrNull { it.boundingBox.width() * it.boundingBox.height() }
         if (barcodeCandidate != null) {
+
+            val foodRecord = repository.getCustomFoodUsingBarcode(barcodeCandidate.barcode)
+            if (foodRecord != null) {
+                return RecognitionResult.FoodRecordRecognition(foodRecord)
+            }
+
             val foodItem = repository.fetchFoodItemForProduct(barcodeCandidate.barcode)
-                ?: return RecognitionResult.NoProductRecognition
+                ?: return RecognitionResult.NoProductRecognition(barcodeCandidate.barcode)
             return RecognitionResult.FoodRecordRecognition(
                 FoodRecord(
                     foodItem,
@@ -72,7 +78,7 @@ object CameraUseCase {
                 })
         }
 
-        val packagedCandidate =
+        /*val packagedCandidate =
             candidates.packagedFoodCandidates?.firstOrNull() //maxByOrNull { it.confidence }
         if (packagedCandidate != null) {
             val foodItem = repository.fetchFoodItemForProduct(packagedCandidate.packagedFoodCode)
@@ -84,7 +90,7 @@ object CameraUseCase {
                 ).apply {
                     this.packagedFoodCode = packagedCandidate.packagedFoodCode
                 })
-        }
+        }*/
 
         return RecognitionResult.NoRecognition
     }

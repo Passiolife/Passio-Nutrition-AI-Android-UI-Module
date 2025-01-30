@@ -177,9 +177,9 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
 
                     createFood.setOnClickListener {
                         barcodeScanResult?.let {
-                            barcodeScanResult.barcode = ""
-                            sendResult(it)
-//                            viewModel.navigateBack()
+//                            barcodeScanResult.barcode = ""
+//                            sendResult(it)
+                            viewModel.navigateBack()
                         }
                     }
                 }

@@ -18,6 +18,7 @@ import android.util.Log
 import java.util.Locale
 import java.util.UUID
 
+internal const val DEFAULT_NUTRITION_FACTS_LABEL = "Scanned Nutrition Label"
 private const val TIMESTAMP_1970 = 978300000
 //private const val CUSTOM_FOOD_PREFIX = "custom_food_"
 //private const val FOOD_RECIPE_PREFIX = "food_recipe_"
@@ -256,9 +257,9 @@ open class FoodRecord() {
         if (records.isEmpty()) return
 
         ingredients.addAll(index ?: ingredients.size, records)
-        if (!name.isValid()) {
+//        if (!name.isValid()) {
 //            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
-        }
+//        }
         setUnitToServing()
     }
 
@@ -306,15 +307,15 @@ open class FoodRecord() {
         return true
     }
 
-    fun replaceIngredient(newIngredient: FoodRecord, index: Int): Boolean {
-        if (index >= ingredients.size) {
-            return false
-        }
-
-        removeIngredient(index)
-        addIngredient(newIngredient, index)
-        return true
-    }
+//    fun replaceIngredient(newIngredient: FoodRecord, index: Int): Boolean {
+//        if (index >= ingredients.size) {
+//            return false
+//        }
+//
+//        removeIngredient(index)
+//        addIngredient(newIngredient, index)
+//        return true
+//    }
 
     fun replaceIngredient(newIngredient: FoodRecordIngredient, index: Int): Boolean {
         if (index >= ingredients.size) {
@@ -371,15 +372,15 @@ open class FoodRecord() {
         return true
     }
 
-    fun setSelectedUnitKeepWeight(unit: String): Boolean {
-        if (selectedUnit == unit) return true
-
-        val servingWeight = servingUnits.firstOrNull { it.unitName == unit }?.weight ?: return false
-
-        selectedUnit = unit
-        selectedQuantity = ingredientWeight() / servingWeight
-        return true
-    }
+//    fun setSelectedUnitKeepWeight(unit: String): Boolean {
+//        if (selectedUnit == unit) return true
+//
+//        val servingWeight = servingUnits.firstOrNull { it.unitName == unit }?.weight ?: return false
+//
+//        selectedUnit = unit
+//        selectedQuantity = ingredientWeight() / servingWeight
+//        return true
+//    }
 
     fun create(time: Long?) {
         if (time == null) {

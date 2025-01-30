@@ -23,38 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/foodsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="10dp"
-        android:padding="6dp"
-        app:layout_constraintEnd_toStartOf="@id/barcodeLabel"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:srcCompat="@drawable/icon_foods" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/barcodeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:padding="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:srcCompat="@drawable/icon_barcode_disabled" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/nutritionFactsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="6dp"
-        android:padding="6dp"
-        app:layout_constraintStart_toEndOf="@id/barcodeLabel"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:srcCompat="@drawable/icon_nutrition_facts_disabled" />
 
     <FrameLayout
         android:id="@+id/viewfinder"
@@ -64,7 +33,7 @@
         app:layout_constraintDimensionRatio="1:0.7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nutritionFactsLabel"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintWidth_percent="0.90">
 
         <ImageView
@@ -166,63 +135,11 @@
         android:id="@+id/recognitionResult"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/scanningMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_sheet_background"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="116dp"
-        android:visibility="gone"
-        tools:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="@id/tvProgressInfo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvProgressTitle" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvProgressTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="16dp"
-            android:text="@string/scanning"
-            android:textColor="@color/passio_gray900"
-            android:textSize="14sp"
-            android:fontFamily="@font/inter_semi_bold"
-            app:layout_constraintStart_toEndOf="@id/progress_bar"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvProgressInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="16dp"
-            android:text="@string/place_food"
-            android:textColor="@color/passio_gray500"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/progress_bar"
-            app:layout_constraintTop_toBottomOf="@id/tvProgressTitle" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewAddedToDiary"

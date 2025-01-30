@@ -13,6 +13,8 @@ import android.text.style.StyleSpan
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import ai.passio.nutrition.uimodule.R
+import ai.passio.nutrition.uimodule.databinding.DialogCaptureNutritionFactsInfoBinding
+import ai.passio.nutrition.uimodule.databinding.DialogNoNutritionFactsResultBinding
 import android.annotation.SuppressLint
 
 internal interface OnCommonDialogListener {
@@ -20,11 +22,12 @@ internal interface OnCommonDialogListener {
     fun onPositiveAction()
 }
 
+internal const val dimAmount = 0.4f
 
 @SuppressLint("SetTextI18n")
 internal class CustomFoodCreatedInfoDialog(
     context: Context,
-) : Dialog(context) {
+) : Dialog(context, android.R.style.ThemeOverlay) {
 
     val binding: DialogCommonBinding = DialogCommonBinding.inflate(layoutInflater)
 
@@ -34,11 +37,13 @@ internal class CustomFoodCreatedInfoDialog(
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setDimAmount(dimAmount)
         setContentView(binding.root)
         setCancelable(false)
         binding.cancel.isVisible = false
         binding.title.text = "A Custom Food Has Been Created"
-        val text = "The edits have been saved for future logs. You can edit this item from your My Foods lists."
+        val text =
+            "The edits have been saved for future logs. You can edit this item from your My Foods lists."
         val spannable = SpannableString(text)
 
 // Find the start and end indices of "My Foods"
@@ -69,7 +74,7 @@ internal class CommonDialog(
     title: String?,
     description: String,
     listener: OnCommonDialogListener,
-) : Dialog(context) {
+) : Dialog(context, android.R.style.ThemeOverlay) {
 
     val binding: DialogCommonBinding = DialogCommonBinding.inflate(layoutInflater)
 
@@ -79,6 +84,7 @@ internal class CommonDialog(
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setDimAmount(dimAmount)
         setContentView(binding.root)
         setCancelable(false) // Make it non-cancelable
 //        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -137,3 +143,56 @@ internal class CommonDialog(
     }
 
 }
+
+
+@SuppressLint("SetTextI18n")
+internal class CaptureNutritionFactsLabelInfoDialog(
+    context: Context,
+) : Dialog(context, android.R.style.ThemeOverlay) {
+
+    val binding: DialogCaptureNutritionFactsInfoBinding =
+        DialogCaptureNutritionFactsInfoBinding.inflate(layoutInflater)
+
+    init {
+        this.window?.setLayout(
+            DesignUtils.screenWidth(context) - DesignUtils.dp2px(20f),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setDimAmount(dimAmount)
+        setContentView(binding.root)
+        setCancelable(false)
+        binding.create.setOnClickListener {
+            dismiss()
+        }
+    }
+}
+
+internal class NoNutritionFactsResultDialog(
+    context: Context,
+    listener: OnCommonDialogListener
+) : Dialog(context, android.R.style.ThemeOverlay) {
+
+    val binding: DialogNoNutritionFactsResultBinding =
+        DialogNoNutritionFactsResultBinding.inflate(layoutInflater)
+
+    init {
+        this.window?.setLayout(
+            DesignUtils.screenWidth(context) - DesignUtils.dp2px(20f),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setDimAmount(dimAmount)
+        setContentView(binding.root)
+        setCancelable(false)
+        binding.tryAgain.setOnClickListener {
+            dismiss()
+            listener.onNegativeAction()
+        }
+        binding.enterManually.setOnClickListener {
+            dismiss()
+            listener.onPositiveAction()
+        }
+    }
+}
+

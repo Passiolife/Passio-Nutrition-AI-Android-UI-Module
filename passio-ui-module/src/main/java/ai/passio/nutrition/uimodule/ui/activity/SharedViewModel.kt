@@ -14,6 +14,7 @@ import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.passiosdk.passiofood.Barcode
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.graphics.Bitmap
@@ -146,6 +147,13 @@ internal class SharedViewModel : ViewModel() {
     private val _photoFoodResultLD = SingleLiveEvent<List<Bitmap>>()
     val photoFoodResultLD: LiveData<List<Bitmap>> get() = _photoFoodResultLD
 
+    private val _barcodeToTakeNutritionFactsPhotoLD = SingleLiveEvent<Barcode?>()
+    val barcodeToTakeNutritionFactsPhotoLD: LiveData<Barcode?> get() = _barcodeToTakeNutritionFactsPhotoLD
+    private val _nutritionFactsPhotoLD = SingleLiveEvent<Pair<Barcode?, Bitmap>>()
+    val nutritionFactsPhotoLD: LiveData<Pair<Barcode?, Bitmap>> get() = _nutritionFactsPhotoLD
+    private val _nutritionFactsPhotoLoggedLD = SingleLiveEvent<FoodRecord>()
+    val nutritionFactsPhotoLoggedLD: LiveData<FoodRecord> get() = _nutritionFactsPhotoLoggedLD
+
     private val _myFoodTypeLD = SingleLiveEvent<MyFoodType>()
     val myFoodTypeLD: LiveData<MyFoodType> get() = _myFoodTypeLD
 
@@ -173,9 +181,9 @@ internal class SharedViewModel : ViewModel() {
     }
 
 
-    fun sendNutritionFactsToFoodCreator(nutritionFacts: Pair<PassioNutritionFacts, String>) {
-        _nutritionFactsPair.postValue(nutritionFacts)
-    }
+//    fun sendNutritionFactsToFoodCreator(nutritionFacts: Pair<PassioNutritionFacts, String>) {
+//        _nutritionFactsPair.postValue(nutritionFacts)
+//    }
 
     fun editCustomFood(foodRecord: FoodRecord, isEditUserFood: Boolean) {
         _editCustomFood.postValue(foodRecord to isEditUserFood)
@@ -265,6 +273,17 @@ internal class SharedViewModel : ViewModel() {
 
     fun addPhotoFoodResult(uris: List<Bitmap>) {
         _photoFoodResultLD.postValue(uris)
+    }
+    fun addBarcodeToTakeNutritionFactsPhoto(barcode: Barcode?) {
+        _barcodeToTakeNutritionFactsPhotoLD.postValue(barcode)
+    }
+
+    fun addNutritionFactsPhotoToResult(bitmap: Bitmap, barcode: Barcode?) {
+        _nutritionFactsPhotoLD.postValue(barcode to bitmap)
+    }
+
+    fun setLoggedNutritionFactsResult(foodRecord: FoodRecord) {
+        _nutritionFactsPhotoLoggedLD.postValue(foodRecord)
     }
 
     fun setDiaryDate(currentDate: Date) {

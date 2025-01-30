@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.domain.mealplan
 
 import ai.passio.nutrition.uimodule.data.Repository
+import ai.passio.nutrition.uimodule.ui.model.DEFAULT_NUTRITION_FACTS_LABEL
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
@@ -68,7 +69,7 @@ object MealPlanUseCase {
         foodRecord.apply {
 
             if (resultType == PassioFoodResultType.NUTRITION_FACTS && !name.isValid()) {
-                name = "Scanned Nutrition Label"
+                name = DEFAULT_NUTRITION_FACTS_LABEL
             }
 
             val entity = if (resultType == PassioFoodResultType.FOOD_ITEM) {
@@ -104,7 +105,7 @@ object MealPlanUseCase {
             if (passioMealPlanItem.packagedFoodItem != null) {
                 FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
                     if (!name.isValid()) {
-                        name = "Scanned Nutrition Label"
+                        name = DEFAULT_NUTRITION_FACTS_LABEL
                     }
                     entityType = PassioIDEntityType.packagedFoodCode.value
                 }
@@ -129,7 +130,7 @@ object MealPlanUseCase {
             val foodRecord = if (passioMealPlanItem.packagedFoodItem != null) {
                 FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
                     if (!name.isValid() && passioMealPlanItem.resultType == PassioFoodResultType.NUTRITION_FACTS) {
-                        name = "Nutrition Facts Label"
+                        name = DEFAULT_NUTRITION_FACTS_LABEL
                         entityType = PassioIDEntityType.packagedFoodCode.value
                     } else if (passioMealPlanItem.resultType == PassioFoodResultType.BARCODE) {
                         entityType = PassioIDEntityType.barcode.value

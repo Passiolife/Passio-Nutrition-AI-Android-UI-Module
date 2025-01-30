@@ -14,22 +14,17 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
 import android.Manifest
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.camera.view.PreviewView
-import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
 import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
-import kotlinx.coroutines.Job
+import ai.passio.passiosdk.passiofood.Barcode
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -68,7 +63,6 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
         initOnClickCallback()
 
 //        binding.recognitionResult.layoutParams.height = (resources.displayMetrics.heightPixels * 0.6).toInt()
-        binding.recognitionResult.addBottomSheetCallback(bottomSheetCallback)
         binding.recognitionResult.setRecognitionResultListener(recognitionResultListener)
 
         // Check for camera permission
@@ -104,9 +98,15 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
         sharedViewModel.isAddIngredientFromSearchLD.observe(viewLifecycleOwner) { isAddIngredient ->
             viewModel.setIsAddIngredient(isAddIngredient)
         }
+        sharedViewModel.nutritionFactsPhotoLoggedLD.observe(viewLifecycleOwner) { loggedRecord ->
+            lifecycleScope.launch {
+                delay(300)
+                viewModel.stopDetection()
+                foodItemLogged(ResultWrapper.Success(true))
+            }
+        }
 
         viewModel.recognitionResults.observe(viewLifecycleOwner, ::onRecognitionResult)
-        viewModel.scanModeEvent.observe(viewLifecycleOwner, ::scanModeUpdated)
         viewModel.foodItemResult.observe(viewLifecycleOwner, ::editFoodItem)
         viewModel.logFoodEvent.observe(viewLifecycleOwner, ::foodItemLogged)
         viewModel.cameraZoomLevelRangeEvent.observe(viewLifecycleOwner, ::setupCameraZoomMode)
@@ -137,13 +137,6 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
     private fun initOnClickCallback() {
         with(binding)
         {
-            foodsLabel.isVisible = false
-            barcodeLabel.isVisible = false
-            nutritionFactsLabel.isVisible = false
-
-            foodsLabel.setOnClickListener(this@CameraRecognitionFragment)
-            barcodeLabel.setOnClickListener(this@CameraRecognitionFragment)
-            nutritionFactsLabel.setOnClickListener(this@CameraRecognitionFragment)
             keepScanning.setOnClickListener(this@CameraRecognitionFragment)
             viewDiary.setOnClickListener(this@CameraRecognitionFragment)
         }
@@ -156,7 +149,6 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
                     with(binding)
                     {
                         recognitionResult.visibility = View.GONE
-                        scanningMessage.visibility = View.GONE
                         viewAddedToDiary.visibility = View.VISIBLE
                         recognitionResult.reset()
                     }
@@ -199,24 +191,29 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
     private val recognitionResultListener = object :
         RecognitionResultView.RecognitionResultListener {
 
+        override fun onNutritionFactsTapped(barcode: Barcode?) {
+            sharedViewModel.addBarcodeToTakeNutritionFactsPhoto(barcode)
+            viewModel.navigateToTakePhoto()
+        }
+
         override fun onCancelled() {
-            viewModel.navigateBack()
+            viewModel.startOrUpdateDetection()
         }
 
         override fun onLog(result: RecognitionResult) {
             viewModel.stopDetection()
             when (result) {
-                is RecognitionResult.VisualRecognition -> {
+                /*is RecognitionResult.VisualRecognition -> {
                     viewModel.logFood(result.visualCandidate.passioID)
-                }
+                }*/
 
                 is RecognitionResult.FoodRecordRecognition -> {
                     viewModel.logFoodRecord(result.foodItem)
                 }
 
-                is RecognitionResult.NutritionFactRecognition -> {
-
-                }
+//                is RecognitionResult.NutritionFactRecognition -> {
+//
+//                }
 
                 else -> {
 
@@ -227,18 +224,18 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
         override fun onEdit(result: RecognitionResult) {
             viewModel.stopDetection()
             when (result) {
-                is RecognitionResult.VisualRecognition -> {
-                    viewModel.fetchFoodItemToEdit(result.visualCandidate.passioID)
-                }
+//                is RecognitionResult.VisualRecognition -> {
+//                    viewModel.fetchFoodItemToEdit(result.visualCandidate.passioID)
+//                }
 
                 is RecognitionResult.FoodRecordRecognition -> {
                     editFoodRecord(result.foodItem)
                 }
 
-                is RecognitionResult.NutritionFactRecognition -> {
-                    sharedViewModel.sendNutritionFactsToFoodCreator(result.nutritionFactsPair)
-                    viewModel.navigateToFoodCreator()
-                }
+//                is RecognitionResult.NutritionFactRecognition -> {
+//                    sharedViewModel.sendNutritionFactsToFoodCreator(result.nutritionFactsPair)
+//                    viewModel.navigateToFoodCreator()
+//                }
 
                 else -> {
 
@@ -252,67 +249,11 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
         }
     }
 
-    private val bottomSheetCallback = object : BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == STATE_COLLAPSED) {
-                viewModel.startOrUpdateDetection()
-            } else {
-                viewModel.stopDetection()
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            Log.d("MMMM", "ON SLIDE: $slideOffset")
-        }
-    }
-
-    private var highlightJob: Job? = null
-    private fun highlightScanMode(str: String) {
-        highlightJob?.cancel()
-        highlightJob = lifecycleScope.launch {
-            binding.tvScanModeHighlight.text = str
-            binding.tvScanModeHighlight.isVisible = true
-            delay(2000)
-            binding.tvScanModeHighlight.isVisible = false
-        }
-
-
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun scanModeUpdated(scanMode: ScanMode) {
-        when (scanMode) {
-            ScanMode.VISUAL -> {
-                binding.foodsLabel.setImageResource(R.drawable.icon_foods)
-                binding.barcodeLabel.setImageResource(R.drawable.icon_barcode_disabled)
-                binding.nutritionFactsLabel.setImageResource(R.drawable.icon_nutrition_facts_disabled)
-                binding.tvProgressInfo.text = "Place your food within the frame."
-                highlightScanMode(resources.getString(R.string.foods))
-            }
-
-            ScanMode.BARCODE -> {
-                binding.foodsLabel.setImageResource(R.drawable.icon_foods_disabled)
-                binding.barcodeLabel.setImageResource(R.drawable.icon_barcode)
-                binding.nutritionFactsLabel.setImageResource(R.drawable.icon_nutrition_facts_disabled)
-                binding.tvProgressInfo.text = "Place your barcode within the frame."
-                highlightScanMode(resources.getString(R.string.barcode_mode))
-            }
-
-            ScanMode.NUTRITION_FACTS -> {
-                binding.foodsLabel.setImageResource(R.drawable.icon_foods_disabled)
-                binding.barcodeLabel.setImageResource(R.drawable.icon_barcode_disabled)
-                binding.nutritionFactsLabel.setImageResource(R.drawable.icon_nutrition_facts)
-                binding.tvProgressInfo.text = "Place the nutrition facts within the frame."
-                highlightScanMode(resources.getString(R.string.nutrition_facts_mode))
-            }
-
-        }
-
-    }
 
     private fun setupToolbar() {
         binding.toolbar.apply {
-            setup(getString(R.string.scan_barcode), this@CameraRecognitionFragment)
+            setup(getString(R.string.barcode_scan), this@CameraRecognitionFragment)
+            hideRightIcon()
 //            setRightIcon(R.drawable.ic_info)
         }
     }
@@ -333,7 +274,6 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
     }
 
     override fun onDestroyView() {
-        binding.recognitionResult.removeBottomSheetCallback(bottomSheetCallback)
         _binding = null
         super.onDestroyView()
     }
@@ -346,25 +286,23 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
         binding.let {
             val isIngredient = viewModel.getIsAddIngredient()
             when (result) {
-                RecognitionResult.NoProductRecognition -> {
+                is RecognitionResult.NoProductRecognition -> {
+                    it.recognitionResult.visibility = View.VISIBLE
                     it.viewAddedToDiary.visibility = View.GONE
-                    it.recognitionResult.visibility = View.GONE
-                    it.scanningMessage.visibility = View.VISIBLE
                     it.recognitionResult.reset()
+                    it.recognitionResult.showNoProductView(result.barcode)
                 }
 
                 RecognitionResult.NoRecognition -> {
+                    it.recognitionResult.visibility = View.VISIBLE
                     it.viewAddedToDiary.visibility = View.GONE
-                    it.recognitionResult.visibility = View.GONE
-                    it.scanningMessage.visibility = View.VISIBLE
                     it.recognitionResult.reset()
+                    it.recognitionResult.showScanningView()
                 }
 
                 is RecognitionResult.FoodRecordRecognition -> {
-                    it.viewAddedToDiary.visibility = View.GONE
                     it.recognitionResult.visibility = View.VISIBLE
-                    it.scanningMessage.visibility = View.GONE
-
+                    it.viewAddedToDiary.visibility = View.GONE
                     it.recognitionResult.showFoodRecordRecognition(
                         result,
                         if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
@@ -373,26 +311,26 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
                     )
                 }
 
-                is RecognitionResult.VisualRecognition -> {
-                    it.viewAddedToDiary.visibility = View.GONE
-                    it.recognitionResult.visibility = View.VISIBLE
-                    it.scanningMessage.visibility = View.GONE
+                /* is RecognitionResult.VisualRecognition -> {
+                     it.viewAddedToDiary.visibility = View.GONE
+                     it.recognitionResult.visibility = View.VISIBLE
+                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showVisualResult(
-                        result,
-                        if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
-                            R.string.log
-                        )
-                    )
-                }
+                     it.recognitionResult.showVisualResult(
+                         result,
+                         if (isIngredient) resources.getString(R.string.add_ingredient) else resources.getString(
+                             R.string.log
+                         )
+                     )
+                 }
 
-                is RecognitionResult.NutritionFactRecognition -> {
-                    it.viewAddedToDiary.visibility = View.GONE
-                    it.recognitionResult.visibility = View.VISIBLE
-                    it.scanningMessage.visibility = View.GONE
+                 is RecognitionResult.NutritionFactRecognition -> {
+                     it.viewAddedToDiary.visibility = View.GONE
+                     it.recognitionResult.visibility = View.VISIBLE
+                     it.scanningMessage.visibility = View.GONE
 
-                    it.recognitionResult.showNutritionFactsResult(result)
-                }
+                     it.recognitionResult.showNutritionFactsResult(result)
+                 }*/
             }
         }
     }
@@ -407,18 +345,6 @@ internal class CameraRecognitionFragment : BaseFragment<CameraRecognitionViewMod
 
     override fun onClick(p0: View?) {
         when (p0) {
-
-            binding.foodsLabel -> {
-                viewModel.setFoodScanMode(ScanMode.VISUAL)
-            }
-
-            binding.barcodeLabel -> {
-                viewModel.setFoodScanMode(ScanMode.BARCODE)
-            }
-
-            binding.nutritionFactsLabel -> {
-                viewModel.setFoodScanMode(ScanMode.NUTRITION_FACTS)
-            }
 
             binding.keepScanning -> {
                 viewModel.startOrUpdateDetection()
