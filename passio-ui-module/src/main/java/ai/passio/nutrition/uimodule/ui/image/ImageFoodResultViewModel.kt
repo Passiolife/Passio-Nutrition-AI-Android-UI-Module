@@ -100,13 +100,21 @@ class ImageFoodResultViewModel : BaseViewModel() {
         viewModelScope.launch {
             _isFetchingResult.postValue(true)
 
-            val resultList = mutableListOf<PassioAdvisorFoodInfo>()
+            val resultList = mutableListOf<Pair<Bitmap, PassioAdvisorFoodInfo?>>()
             var currentCount = 0
             currentBitmaps.forEach { bitmap ->
 //                currentCount += 1
                 PassioSDK.instance.recognizeImageRemote(bitmap) { result ->
                     currentCount += 1
-                    resultList.addAll(result)
+                    if (result.isNotEmpty()) {
+                        val pairList = result.map {
+                            Pair(bitmap, it)
+                        }
+                        resultList.addAll(pairList)
+                    } else {
+                        val pairList = Pair(bitmap, null)
+                        resultList.add(pairList)
+                    }
                     //enable comment to get continues result for each images
                     /*if (resultFoodInfoList.isNotEmpty()) {
                         _resultFoodInfo.postValue(resultFoodInfoList)
@@ -124,7 +132,7 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    private fun fetchFoodRecords(list: List<PassioAdvisorFoodInfo>) {
+    private fun fetchFoodRecords(list: List<Pair<Bitmap, PassioAdvisorFoodInfo?>>) {
         viewModelScope.launch(Dispatchers.IO) {
             resultFoodInfoList.clear()
             resultFoodInfoList.addAll(
@@ -134,7 +142,8 @@ class ImageFoodResultViewModel : BaseViewModel() {
                 )
             )
             resultFoodInfoList.forEach {
-                it.isSelected = !(it.isBarcodeDataMissing() || it.isNutritionFactsDataMissing())
+                it.isSelected =
+                    !(it.isFoodItemDataMissing() || it.isBarcodeDataMissing() || it.isNutritionFactsDataMissing())
             }
             val resultFoodInfoListTemp = resultFoodInfoList.groupBy { it.record.barcode }
                 .flatMap { (barcode, group) ->
@@ -247,6 +256,19 @@ class ImageFoodResultViewModel : BaseViewModel() {
         _resultFoodInfoEvent.postValue(resultFoodInfoList)
     }
 
+    fun updateFoodRecordFromSearch(foodRecord: FoodRecord) {
+        if (searchIndex == -1)
+            return
+
+        if (!editedRecordsIndex.contains(searchIndex)) {
+            editedRecordsIndex.add(searchIndex)
+        }
+        resultFoodInfoList[searchIndex].record = foodRecord
+        resultFoodInfoList[searchIndex].isSelected = true
+        _resultFoodInfoEvent.postValue(resultFoodInfoList)
+        searchIndex = -1
+    }
+
     fun navigateToDiary() {
         viewModelScope.launch(Dispatchers.Main) {
             navigate(ImageFoodResultFragmentDirections.imageFoodResultToDiary())
@@ -260,7 +282,9 @@ class ImageFoodResultViewModel : BaseViewModel() {
         }
     }
 
-    fun navigateToSearch() {
+    var searchIndex = -1
+    fun navigateToSearch(searchIndex: Int) {
+        this.searchIndex = searchIndex
         viewModelScope.launch(Dispatchers.Main) {
             navigate(ImageFoodResultFragmentDirections.imageFoodResultToSearch())
         }

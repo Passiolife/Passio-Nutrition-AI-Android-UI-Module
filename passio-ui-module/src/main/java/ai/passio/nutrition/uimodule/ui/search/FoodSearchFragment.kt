@@ -13,6 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 
+internal enum class SearchActionType {
+    NONE,
+    FOOD_PICKER_FROM_IMAGE_FOOD_RESULT
+}
+
 internal class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
 
     private var _binding: FragmentSearchBinding? = null
@@ -41,6 +46,9 @@ internal class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
             )
         }
 
+        sharedViewModel.pickFoodFromSearchLD.observe(viewLifecycleOwner) { searchPickerType ->
+            viewModel.setSearchPickerType(searchPickerType)
+        }
         sharedViewModel.isAddIngredientFromSearchLD.observe(viewLifecycleOwner) { isAddIngredient ->
             viewModel.setIsAddIngredient(isAddIngredient)
         }
@@ -82,7 +90,10 @@ internal class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
         when (resultWrapper) {
             is ResultWrapper.Success -> {
                 val foodRecord = resultWrapper.value
-                if (foodRecord.ingredients.size > 1) {
+                if (viewModel.getSearchPickerType() == SearchActionType.FOOD_PICKER_FROM_IMAGE_FOOD_RESULT) {
+                    sharedViewModel.sendPickFoodFromSearchResult(foodRecord)
+                    viewModel.navigateBack()
+                } else if (foodRecord.ingredients.size > 1) {
                     sharedViewModel.addFoodIngredients(resultWrapper.value)
                     viewModel.navigateBackToEditRecipe()
                 } else {
@@ -120,7 +131,9 @@ internal class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
         }
 
         override fun onFoodItemSelected(searchItem: PassioFoodDataInfo) {
-            if (viewModel.getIsAddIngredient()) {
+            if (viewModel.getSearchPickerType() == SearchActionType.FOOD_PICKER_FROM_IMAGE_FOOD_RESULT) {
+                viewModel.editIngredient(searchItem)
+            } else if (viewModel.getIsAddIngredient()) {
                 viewModel.editIngredient(searchItem)
             } else {
                 sharedViewModel.passToEdit(searchItem)
@@ -129,7 +142,9 @@ internal class FoodSearchFragment : BaseFragment<FoodSearchViewModel>() {
         }
 
         override fun onFoodItemSelected(searchItem: FoodRecord) {
-            if (viewModel.getIsAddIngredient()) {
+            if (viewModel.getSearchPickerType() == SearchActionType.FOOD_PICKER_FROM_IMAGE_FOOD_RESULT) {
+                editFoodIngredient(ResultWrapper.Success(searchItem))
+            } else if (viewModel.getIsAddIngredient()) {
                 editFoodIngredient(ResultWrapper.Success(searchItem))
             } else {
                 sharedViewModel.detailsFoodRecord(searchItem)

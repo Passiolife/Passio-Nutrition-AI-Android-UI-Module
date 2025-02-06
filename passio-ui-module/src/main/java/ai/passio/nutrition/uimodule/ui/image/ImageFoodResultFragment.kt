@@ -14,6 +14,7 @@ import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.profile.GenericSpinnerAdapter
+import ai.passio.nutrition.uimodule.ui.search.SearchActionType
 import ai.passio.nutrition.uimodule.ui.util.CustomFoodCreatedInfoDialog
 import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT_FULL_WITH_TIME
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
@@ -62,7 +63,11 @@ internal class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>(
                 }
 
                 override fun onTapped(editIndex: Int, imageFoodResult: ImageFoodResult) {
-                    if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                    if (imageFoodResult.isFoodItemDataMissing()){
+                        sharedViewModel.pickFoodFromSearch(SearchActionType.FOOD_PICKER_FROM_IMAGE_FOOD_RESULT)
+                        viewModel.navigateToSearch(editIndex)
+                    }
+                    else if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
                         showEditNutritionFactsDialog(editIndex, imageFoodResult)
                     } else {
                         showAdjustServingSizeDialog(editIndex, imageFoodResult)
@@ -94,7 +99,7 @@ internal class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>(
 
             search.setOnClickListener {
                 sharedViewModel.setIsAddIngredientFromSearch(viewModel.getIsAddIngredient())
-                viewModel.navigateToSearch()
+                viewModel.navigateToSearch(-1)
             }
             log.setOnClickListener {
 //                viewModel.logRecords((rvResult.adapter as FoodImageResultAdapter).getSelectedItems())
@@ -214,6 +219,10 @@ internal class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>(
         sharedViewModel.isAddIngredientFromVoiceLD.observe(viewLifecycleOwner) { isAddIngredient ->
             viewModel.setIsAddIngredient(isAddIngredient)
             setIngredientMode(isAddIngredient)
+
+        }
+        sharedViewModel.pickFoodFromSearchResultLD.observe(viewLifecycleOwner) { searchFoodRecord ->
+            viewModel.updateFoodRecordFromSearch(searchFoodRecord)
 
         }
         sharedViewModel.photoFoodResultLD.observe(viewLifecycleOwner) {

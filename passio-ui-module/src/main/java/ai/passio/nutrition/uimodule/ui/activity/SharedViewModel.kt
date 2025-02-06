@@ -12,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.model.WeightRecord
 import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
+import ai.passio.nutrition.uimodule.ui.search.SearchActionType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.passiosdk.passiofood.Barcode
@@ -129,6 +130,12 @@ internal class SharedViewModel : ViewModel() {
 
     private val _isAddIngredientFromVoiceLD = SingleLiveEvent<Boolean>()
     val isAddIngredientFromVoiceLD: LiveData<Boolean> get() = _isAddIngredientFromVoiceLD
+
+    private val _pickFoodFromSearchLD = SingleLiveEvent<SearchActionType>()
+    val pickFoodFromSearchLD: LiveData<SearchActionType> get() = _pickFoodFromSearchLD
+
+    private val _pickFoodFromSearchResultLD = SingleLiveEvent<FoodRecord>()
+    val pickFoodFromSearchResultLD: LiveData<FoodRecord> get() = _pickFoodFromSearchResultLD
 
     private val _editSearchResultLD = SingleLiveEvent<PassioFoodDataInfo>()
     val editSearchResultLD: LiveData<PassioFoodDataInfo> get() = _editSearchResultLD
@@ -261,6 +268,12 @@ internal class SharedViewModel : ViewModel() {
 
     fun setIsAddIngredientUsingVoice(isAddIngredient: Boolean) {
         _isAddIngredientFromVoiceLD.postValue(isAddIngredient)
+    }
+    fun pickFoodFromSearch(searchActionType: SearchActionType) {
+        _pickFoodFromSearchLD.postValue(searchActionType)
+    }
+    fun sendPickFoodFromSearchResult(foodRecord: FoodRecord) {
+        _pickFoodFromSearchResultLD.postValue(foodRecord)
     }
 
     fun addEditWeight(weightRecord: WeightRecord) {

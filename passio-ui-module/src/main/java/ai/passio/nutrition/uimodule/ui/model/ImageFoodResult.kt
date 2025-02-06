@@ -10,6 +10,22 @@ data class ImageFoodResult(
     val resultType: PassioFoodResultType
 ) {
 
+    fun isFoodItemDataMissing(): Boolean {
+        with(record) {
+            return if (resultType == PassioFoodResultType.FOOD_ITEM /*|| entityType == PassioIDEntityType.packagedFoodCode.value*/) {
+                (!name.isValid()
+                        || nutrients().calories() == null
+                        || nutrients().carbs() == null
+                        || nutrients().protein() == null
+                        || nutrients().fat() == null
+                        || selectedQuantity < 0
+                        || !selectedUnit.isValid()
+                        || nutrients().weight == null)
+            } else {
+                false
+            }
+        }
+    }
     fun isBarcodeDataMissing(): Boolean {
         with(record) {
             return if (resultType == PassioFoodResultType.BARCODE /*|| entityType == PassioIDEntityType.packagedFoodCode.value*/) {
