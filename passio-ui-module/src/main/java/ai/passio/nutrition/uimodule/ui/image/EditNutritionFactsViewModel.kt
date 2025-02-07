@@ -3,6 +3,7 @@ package ai.passio.nutrition.uimodule.ui.image
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.camera.NutritionFactsPhotoResultFragmentDirections
+import ai.passio.nutrition.uimodule.ui.foodcreator.BarcodeResultType
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALORIES_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
@@ -148,7 +149,8 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
         setFat(nutritionFacts.fat()?.value?.div(ratio))
 
         servingQuantity = imageFoodResult.record.selectedQuantity
-        val delta = unitList.find { it.lowercase() == imageFoodResult.record.selectedUnit.lowercase() }
+        val delta =
+            unitList.find { it.lowercase() == imageFoodResult.record.selectedUnit.lowercase() }
         if (delta == null) {
             unitList.add(imageFoodResult.record.selectedUnit)
         }
@@ -289,6 +291,17 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
     }
 
     fun updateMissingFromBarcode(barcodeScanResult: BarcodeScanResult) {
+
+        barcodeScanResult.record?.let {
+            imageFoodResult.record = it
+        }
+        imageFoodResult.isCustomFood = barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST
+        imageFoodResult.record.barcode = barcodeScanResult.barcode
+
+        editFoodRecord(imageFoodResult to getEditFoodRecordIndex())
+    }
+
+    fun updateMissingFromBarcodeOld(barcodeScanResult: BarcodeScanResult) {
 //        imageFoodResult.record.barcode = barcode
         val record = barcodeScanResult.record
 //        if (barcodeScanResult.barcode.isValid()) {

@@ -5,6 +5,7 @@ import ai.passio.nutrition.uimodule.databinding.FragmentScanBarcodeBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.BarcodeScanResult
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
@@ -41,7 +42,6 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
         viewModel.scanBarcodeStatusEvent.observe(viewLifecycleOwner, ::onRecognitionResult)
 
         setupToolbar()
-        initOnClickCallback()
 
         // Check for camera permission
         permissionUtil.checkAndRequestPermission(onGranted = {
@@ -51,17 +51,6 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
             viewModel.navigateBack()
         })
 
-    }
-
-    private fun initOnClickCallback() {
-        with(binding)
-        {
-            cancel.setOnClickListener {
-                viewModel.navigateBack()
-            }
-
-
-        }
     }
 
 //    private fun sendResult(result: Pair<Barcode, FoodRecord?>) {
@@ -79,7 +68,8 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
             viewResult.isVisible = true
             resultTitle.text = getString(R.string.barcode_in_system)
             resultInfo.text = getString(R.string.barcode_in_system_info)
-            createFood.text = getString(R.string.create_custom_food_anyway)
+            importExisting.text = getString(R.string.import_existing_data)
+            viewItem.text = getString(R.string.use_barcode_only)
         }
     }
 
@@ -88,7 +78,8 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
             viewResult.isVisible = true
             resultTitle.text = getString(R.string.custom_food_already_exists)
             resultInfo.text = getString(R.string.custom_food_already_exists_info)
-            createFood.text = getString(R.string.create_custom_food_without_barcode)
+            importExisting.text = getString(R.string.edit_existing_data)
+            viewItem.text = getString(R.string.create_new_item)
         }
     }
 
@@ -130,7 +121,7 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
         with(binding) {
             viewItem.setOnClickListener {
             }
-            createFood.setOnClickListener {
+            importExisting.setOnClickListener {
             }
             when (result) {
                 ScanBarcodeStatus.SCANNING -> {
@@ -151,12 +142,14 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     scanningMessage.visibility = View.GONE
                     showBarcodeInSystemView()
                     viewItem.setOnClickListener {
-                        barcodeScanResult?.record?.let {
-                            sharedViewModel.detailsFoodRecord(it)
-                            viewModel.navigateToFoodDetails()
+                        barcodeScanResult?.let {
+                            barcodeScanResult.record = null
+                            sendResult(barcodeScanResult)
+//                            sharedViewModel.detailsFoodRecord(it)
+//                            viewModel.navigateToFoodDetails()
                         }
                     }
-                    createFood.setOnClickListener {
+                    importExisting.setOnClickListener {
                         barcodeScanResult?.let {
                             sendResult(it)
 //                            viewModel.navigateBack()
@@ -169,17 +162,24 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     scanningMessage.visibility = View.GONE
                     showCustomFoodAlreadyExistView()
                     viewItem.setOnClickListener {
-                        barcodeScanResult?.record?.let {
-                            sharedViewModel.detailsFoodRecord(it)
-                            viewModel.navigateToFoodDetails()
+                        barcodeScanResult?.let {
+                            barcodeScanResult.barcode = ""
+                            barcodeScanResult.record?.let {
+                                barcodeScanResult.record?.barcode = ""
+                                barcodeScanResult.resultType = BarcodeResultType.NEW_BARCODE
+                                barcodeScanResult.record = barcodeScanResult.record?.copy()
+                            }
+                            sendResult(barcodeScanResult)
+//                            sharedViewModel.detailsFoodRecord(it)
+//                            viewModel.navigateToFoodDetails()
                         }
                     }
 
-                    createFood.setOnClickListener {
+                    importExisting.setOnClickListener {
                         barcodeScanResult?.let {
 //                            barcodeScanResult.barcode = ""
-//                            sendResult(it)
-                            viewModel.navigateBack()
+                            sendResult(it)
+//                            viewModel.navigateBack()
                         }
                     }
                 }
