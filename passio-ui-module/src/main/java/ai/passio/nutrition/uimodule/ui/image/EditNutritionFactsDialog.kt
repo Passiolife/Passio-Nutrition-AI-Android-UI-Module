@@ -7,7 +7,6 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_PROTEIN_ID
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.util.DesignUtils
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
@@ -37,6 +36,7 @@ interface OnEditNutritionFactsListener {
 internal class EditNutritionFactsDialog(
     private val imageFoodRecordResult: ImageFoodResult,
     private val editIndex: Int,
+    private val isFromBarcodeScan: Boolean = false,
     private val onEditNutritionFactsListener: OnEditNutritionFactsListener
 ) : BaseDialogFragment<EditNutritionFactsViewModel>() {
     private var _binding: DialogEditNutritionFactsBinding? = null
@@ -73,6 +73,7 @@ internal class EditNutritionFactsDialog(
         if (editIndex != viewModel.getEditFoodRecordIndex()) {
             viewModel.editFoodRecord(imageFoodRecordResult to editIndex)
         }
+        viewModel.setFromScanningBarcode(isFromBarcodeScan = isFromBarcodeScan)
         viewModel.updateNutrientsOnUI()
 
         sharedViewModel.barcodeScanFoodRecord.observe(viewLifecycleOwner) { barcodeScanResult ->
@@ -81,6 +82,7 @@ internal class EditNutritionFactsDialog(
 
         with(binding) {
 
+            description.isVisible = isFromBarcodeScan
             cancel.setOnClickListener {
                 dismiss()
                 onEditNutritionFactsListener.onCancelled(
@@ -163,8 +165,7 @@ internal class EditNutritionFactsDialog(
         {
             if (nutritionFactsValidator.isAllDataValid()) {
                 save.enable()
-            }
-            else{
+            } else {
                 save.disable()
             }
 
@@ -180,25 +181,21 @@ internal class EditNutritionFactsDialog(
         }
     }
 
-    private fun checkIsGramUnitForServing(servingUnit: String)
-    {
+    private fun checkIsGramUnitForServing(servingUnit: String) {
         with(binding) {
             weight.isVisible = !servingUnit.isGram()
         }
     }
 
-    private fun markViewAsValid(view: View, isValid: Boolean)
-    {
-        if (isValid)
-        {
+    private fun markViewAsValid(view: View, isValid: Boolean) {
+        if (isValid) {
             view.setBackgroundResource(R.drawable.rc_6_border_gray300)
-        }
-        else{
+        } else {
             view.setBackgroundResource(R.drawable.rc_6_border_red300)
         }
     }
 
-    private fun renderFoodRecord(model: FoodRecord) {
+    private fun renderFoodRecord(model: ImageFoodResult) {
         renderNutrients()
         setupImmutableProperties(model)
     }
@@ -219,20 +216,25 @@ internal class EditNutritionFactsDialog(
         }
     }
 
-    private fun setupImmutableProperties(foodRecord: FoodRecord) {
+    private fun setupImmutableProperties(imageFoodResult: ImageFoodResult) {
         if (_binding == null) return
 
 
 //        val foodRecord = imageFoodResult.record
         with(binding) {
-            if (imageFoodRecordResult.isCustomFood) {
+            if (imageFoodResult.isCustomFood && isFromBarcodeScan) {
+                save.text = getString(R.string.update_log)
+            } else if (isFromBarcodeScan) {
+                save.text = getString(R.string.save_log)
+            }
+            else if (imageFoodResult.isCustomFood) {
                 save.text = getString(R.string.update)
             } else {
                 save.text = getString(R.string.save)
             }
-            foodImage.loadFoodImage(foodRecord)
-            foodName.setText(foodRecord.name.capitalized())
-            barcode.text = foodRecord.barcode ?: ""
+            foodImage.loadFoodImage(imageFoodResult.record)
+            foodName.setText(imageFoodResult.record.name.capitalized())
+            barcode.text = imageFoodResult.record.barcode ?: ""
         }
     }
 

@@ -8,6 +8,8 @@
     <string name="edit_recipe">Edit Recipe</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
+    <string name="save_log">Save &amp; Log</string>
+    <string name="update_log">Update &amp; Log</string>
     <string name="log">Log</string>
     <string name="scan_info_title">Ways To Scan</string>
     <string name="scan_info_message">You can quickly switch between scanning modes to log your food a variety of ways</string>
@@ -100,6 +102,7 @@
     <string name="select_photos">Select Photos</string>
     <string name="food_scanner">Food Scanner</string>
     <string name="scan_barcode">Scan Barcode</string>
+    <string name="barcode_scan">Barcode Scan</string>
     <string name="scan_a_barcode_menu">Scan a Barcode</string>
     <string name="text_search">Text Search</string>
     <string name="photo_logging">Photo Logging</string>
@@ -207,6 +210,10 @@
     <string name="barcode_in_system_info">This barcode matches an existing item in our database. You can use the data from the database, or continue with creating a custom food.</string>
     <string name="view_existing_item">View Existing Item</string>
     <string name="create_custom_food_anyway">Create Custom Food Anyway</string>
+    <string name="import_existing_data">Import Existing Data</string>
+    <string name="edit_existing_data">Edit Existing Data</string>
+    <string name="use_barcode_only">Use Barcode Only</string>
+    <string name="create_new_item">Create New Item</string>
     <string name="custom_food_already_exists">Custom Food Already Exists</string>
     <string name="custom_food_already_exists_info">This barcode matches an existing item in your custom food list. You can use the existing item, or create a new food without the barcode.</string>
     <string name="create_custom_food_without_barcode">Create Custom Food Without Barcode</string>
@@ -242,6 +249,19 @@
     <string name="cal">- cal</string>
     <string name="g">- g</string>
     <string name="unit">Unit</string>
+    <string name="place_barcode">Place your barcode within the frame.</string>
+    <string name="no_barcode_take_a_picture_of_nutrition_facts">No barcode? Take a picture of Nutrition Facts</string>
+    <string name="barcode_missing_data">Barcode Missing Data</string>
+    <string name="try_taking_photos_of_the_nutrition_facts_label">Try taking photos of the nutrition facts label</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="analyzing_photo">Analyzing Photo…</string>
+    <string name="capture_nutrition_facts_label">Capture Nutrition Facts Label</string>
+    <string name="capture_a_photo_of_the_entire_nutrition_facts_label">Capture a photo of the entire Nutrition Facts Label</string>
+    <string name="no_nutrition_facts_label_found">No Nutrition Facts Label Found</string>
+    <string name="please_try_again_or_enter_manually">Please try again or enter manually</string>
+    <string name="enter_manually">Enter Manually</string>
+    <string name="edit_nutrition_facts_description">Logging this item will create a custom food. You can edit this item from your <b>My Foods</b> list.</string>
+    <string name="zero">0</string>
     <string-array name="activity_level_list">
         <item>Item 1</item>
         <item>Item 2</item>

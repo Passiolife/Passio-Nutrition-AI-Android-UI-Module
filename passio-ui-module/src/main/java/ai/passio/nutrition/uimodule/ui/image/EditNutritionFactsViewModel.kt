@@ -2,6 +2,8 @@ package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.camera.NutritionFactsPhotoResultFragmentDirections
+import ai.passio.nutrition.uimodule.ui.foodcreator.BarcodeResultType
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALORIES_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CARBS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_FAT_ID
@@ -29,14 +31,14 @@ import kotlinx.coroutines.launch
 
 internal class EditNutritionFactsViewModel : BaseViewModel() {
     private val customFoodUseCase = CustomFoodUseCase
-    private val _editFoodModelLD = MutableLiveData<FoodRecord>()
-    val editFoodModelLD: LiveData<FoodRecord> get() = _editFoodModelLD
+    private val _editFoodModelLD = MutableLiveData<ImageFoodResult>()
+    val editFoodModelLD: LiveData<ImageFoodResult> get() = _editFoodModelLD
 
     private val _saveFoodModelLD = SingleLiveEvent<ImageFoodResult>()
     val saveFoodModelLD: LiveData<ImageFoodResult> get() = _saveFoodModelLD
 
     private lateinit var imageFoodResult: ImageFoodResult
-    private lateinit var foodRecord: FoodRecord
+
     private var editIngredientIndex = -1
 
     private val _servingQuantityEvent = MutableLiveData<Double>()
@@ -55,6 +57,7 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
     val weightGramUnitEvent: LiveData<String> get() = _weightGramUnitEvent
     private var weightGramUnit: String = Grams.symbol
     var isNewToCreate = true
+    var isFromBarcodeScan = false
 
     private val _nutritionFactsValidatorEvent = MutableLiveData<NutritionFactsValidator>()
     val nutritionFactsValidatorEvent: LiveData<NutritionFactsValidator> get() = _nutritionFactsValidatorEvent
@@ -119,34 +122,46 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
         requiredNutritionFacts.add(refProtein)
     }
 
+    fun setFromScanningBarcode(isFromBarcodeScan: Boolean) {
+        this.isFromBarcodeScan = isFromBarcodeScan
+    }
+
     fun editFoodRecord(editFoodRecord: Pair<ImageFoodResult, Int>) {
-        this.imageFoodResult = editFoodRecord.first
+        val previous = editFoodRecord.first
+        this.imageFoodResult = ImageFoodResult(
+            record = previous.record.clone(),
+            isCustomFood = previous.isCustomFood,
+            isSelected = previous.isSelected,
+            resultType = previous.resultType
+        )
+
 //        this.imageFoodResult.record = this.imageFoodResult.record.clone()
-        this.foodRecord = this.imageFoodResult.record.clone()
+//        this.foodRecord = this.imageFoodResult.record
         this.editIngredientIndex = editFoodRecord.second
         isNewToCreate = !imageFoodResult.isCustomFood
 
 //        val foodRecord = imageFoodResult.record
         val ratio = 1.0
-        val nutritionFacts = foodRecord.nutrientsSelectedSize()
+        val nutritionFacts = imageFoodResult.record.nutrientsSelectedSize()
         setCalories(nutritionFacts.calories()?.value?.div(ratio))
         setCarbs(nutritionFacts.carbs()?.value?.div(ratio))
         setProtein(nutritionFacts.protein()?.value?.div(ratio))
         setFat(nutritionFacts.fat()?.value?.div(ratio))
 
-        servingQuantity = foodRecord.selectedQuantity
-        val delta = unitList.find { it.lowercase() == foodRecord.selectedUnit.lowercase() }
+        servingQuantity = imageFoodResult.record.selectedQuantity
+        val delta =
+            unitList.find { it.lowercase() == imageFoodResult.record.selectedUnit.lowercase() }
         if (delta == null) {
-            unitList.add(foodRecord.selectedUnit)
+            unitList.add(imageFoodResult.record.selectedUnit)
         }
-        servingUnit = foodRecord.selectedUnit
-        weightGram = foodRecord.nutrientsSelectedSize().weight.gramsValue()
+        servingUnit = imageFoodResult.record.selectedUnit
+        weightGram = imageFoodResult.record.nutrientsSelectedSize().weight.gramsValue()
         weightGramUnit = Grams.symbol
 
         updateNutrientsOnUI()
 
 
-        _editFoodModelLD.postValue(this.foodRecord)
+        _editFoodModelLD.postValue(this.imageFoodResult)
     }
 
     fun updateNutrientsOnUI() {
@@ -164,7 +179,7 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
         val proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID)
         val fat = requiredNutritionFacts.unitMassOf(REF_FAT_ID)
 
-        val isValidName = foodRecord.name.isValid()
+        val isValidName = imageFoodResult.record.name.isValid()
 
         val isValidCalories = calories != null
         val isValidCarbs = carbs != null
@@ -231,7 +246,7 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
 
     fun setFoodName(name: String) {
 //        imageFoodResult.record.name = name
-        foodRecord.name = name
+        imageFoodResult.record.name = name
         validateData()
     }
 
@@ -276,15 +291,26 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
     }
 
     fun updateMissingFromBarcode(barcodeScanResult: BarcodeScanResult) {
+
+        barcodeScanResult.record?.let {
+            imageFoodResult.record = it
+        }
+        imageFoodResult.isCustomFood = barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST
+        imageFoodResult.record.barcode = barcodeScanResult.barcode
+
+        editFoodRecord(imageFoodResult to getEditFoodRecordIndex())
+    }
+
+    fun updateMissingFromBarcodeOld(barcodeScanResult: BarcodeScanResult) {
 //        imageFoodResult.record.barcode = barcode
         val record = barcodeScanResult.record
 //        if (barcodeScanResult.barcode.isValid()) {
 //            foodRecord.barcode = barcodeScanResult.barcode
 //        }
-        foodRecord.barcode = barcodeScanResult.barcode
+        imageFoodResult.record.barcode = barcodeScanResult.barcode
         if (record != null) {
-            if (!foodRecord.name.isValid() && record.name.isValid()) {
-                foodRecord.name = record.name
+            if (!imageFoodResult.record.name.isValid() && record.name.isValid()) {
+                imageFoodResult.record.name = record.name
             }
 
             if (record.nutrientsSelectedSize()
@@ -318,7 +344,7 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
 //            }
 
             updateNutrientsOnUI()
-            _editFoodModelLD.postValue(foodRecord)
+            _editFoodModelLD.postValue(imageFoodResult)
         }
 
     }
@@ -333,7 +359,7 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
 
             val oldNutrients =
                 PassioNutrients(
-                    foodRecord.nutrientsReference(),
+                    imageFoodResult.record.nutrientsReference(),
                     UnitMass(Grams, weightGramFinal)
                 )
             val passioNutrients = PassioNutrients(
@@ -371,43 +397,54 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
             )
 
             val customFood = if (imageFoodResult.isCustomFood) {
-                foodRecord.editCustomFood(
-                    productName = foodRecord.name,
-                    brandName = foodRecord.details ?: "",
-                    barcode = foodRecord.barcode,
+                imageFoodResult.record.editCustomFood(
+                    productName = imageFoodResult.record.name,
+                    brandName = imageFoodResult.record.details ?: "",
+                    barcode = imageFoodResult.record.barcode,
                     servingWeight = servingQuantity,
                     servingUnit = servingUnit,
                     weightInGrams = weightGramFinal,
                     weightInGramsUnit = weightGramUnit,
                     passioNutrients = passioNutrients,
-                    passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType),
-                    iconId = foodRecord.iconId
+                    passioIDEntityType = PassioIDEntityType.fromString(imageFoodResult.record.entityType),
+                    iconId = imageFoodResult.record.iconId
                 )
             } else {
                 FoodRecord(
-                    productName = foodRecord.name,
-                    brandName = foodRecord.details ?: "",
-                    barcode = foodRecord.barcode,
+                    productName = imageFoodResult.record.name,
+                    brandName = imageFoodResult.record.details ?: "",
+                    barcode = imageFoodResult.record.barcode,
                     servingWeight = servingQuantity,
                     servingUnit = servingUnit,
                     weightInGrams = weightGramFinal,
                     weightInGramsUnit = weightGramUnit,
                     passioNutrients = passioNutrients,
-                    passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType),
-                    iconId = foodRecord.iconId
+                    passioIDEntityType = PassioIDEntityType.fromString(imageFoodResult.record.entityType),
+                    iconId = imageFoodResult.record.iconId
                 ).copyAsCustomFood()
             }
             customFoodUseCase.saveCustomFood(customFood)
             imageFoodResult.record = customFood
             imageFoodResult.isCustomFood = true
             imageFoodResult.isSelected = true
+
+            if (isFromBarcodeScan) {
+                customFoodUseCase.logCustomFood(customFood)
+            }
+
             _saveFoodModelLD.postValue(imageFoodResult)
         }
     }
 
     fun navigateToScanBarcode() {
         viewModelScope.launch(Dispatchers.Main) {
-            navigate(ImageFoodResultFragmentDirections.imageFoodResultToScanBarcode())
+            if (isFromBarcodeScan) {
+                navigate(NutritionFactsPhotoResultFragmentDirections.nutritionFactsToScanBarcode())
+            } else {
+                navigate(ImageFoodResultFragmentDirections.imageFoodResultToScanBarcode())
+            }
         }
     }
+
+
 }

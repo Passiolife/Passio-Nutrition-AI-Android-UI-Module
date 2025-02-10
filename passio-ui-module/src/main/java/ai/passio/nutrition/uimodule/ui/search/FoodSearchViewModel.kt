@@ -16,7 +16,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FoodSearchViewModel : BaseViewModel() {
+internal class FoodSearchViewModel : BaseViewModel() {
 
     private val useCase = SearchUseCase
     private val mealPlanUseCase = MealPlanUseCase
@@ -35,12 +35,22 @@ class FoodSearchViewModel : BaseViewModel() {
 
     private var isAddIngredient = false
 
+    private var searchPickerType = SearchActionType.NONE
+
     fun setIsAddIngredient(isAddIngredient: Boolean) {
         this.isAddIngredient = isAddIngredient
     }
 
     fun getIsAddIngredient(): Boolean {
         return isAddIngredient
+    }
+
+    fun setSearchPickerType(searchPickerType: SearchActionType) {
+        this.searchPickerType = searchPickerType
+    }
+
+    fun getSearchPickerType(): SearchActionType {
+        return searchPickerType
     }
 
     data class SearchResult(

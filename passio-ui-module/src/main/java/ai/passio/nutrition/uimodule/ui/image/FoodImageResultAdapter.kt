@@ -51,7 +51,15 @@ class FoodImageResultAdapter(
                     name.text = "Barcode Not Found"
                 }
 
-                if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                if (imageFoodResult.isFoodItemDataMissing())
+                {
+                    mainItem.setBackgroundResource(R.drawable.rc_8_rose)
+                    name.text = "Image Not Recognized"
+                    servingSize.text = "item will not be logged, search manually"
+                    llData.isVisible = false
+                    foodSelect.setImageResource(R.drawable.ic_search)
+                }
+                else if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
                     mainItem.setBackgroundResource(R.drawable.rc_8_rose)
                     servingSize.text = "item will not be logged, edit data manually"
                     foodSelect.setImageResource(R.drawable.ic_edit)
@@ -112,7 +120,7 @@ class FoodImageResultAdapter(
                     onItemSelectChange.onTapped(adapterPosition, imageFoodResult)
                 }
                 foodSelect.setOnClickListener {
-                    if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                    if (imageFoodResult.isFoodItemDataMissing() || imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
                         onItemSelectChange.onTapped(adapterPosition, imageFoodResult)
                     } else {
                         imageFoodResult.isSelected = !imageFoodResult.isSelected

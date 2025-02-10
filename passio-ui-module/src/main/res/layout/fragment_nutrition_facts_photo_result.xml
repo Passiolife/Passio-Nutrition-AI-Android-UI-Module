@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/passio_background"
+    android:orientation="vertical"
+    tools:context=".ui.progress.ProgressFragment">
+
+
+    <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/passio_white"
+        android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/previewImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintBottom_toTopOf="@id/viewLoading"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintWidth_percent="0.8"
+        tools:background="@color/passio_gray400" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewLoading"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/passio_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/_16sdp"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <ai.passio.nutrition.uimodule.ui.view.AnalyzingProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressBackgroundTint="@color/passio_indigo50"
+            android:progressDrawable="@drawable/rounded_progress_bar"
+            android:progressTint="@color/passio_primary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:progress="50" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lblProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semi_bold"
+            android:padding="@dimen/_8sdp"
+            android:text="@string/analyzing_photo"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cancelFetch"
+            style="@style/btn_positive_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:text="@string/cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lblProgress"
+            app:layout_constraintWidth_percent="0.4" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
