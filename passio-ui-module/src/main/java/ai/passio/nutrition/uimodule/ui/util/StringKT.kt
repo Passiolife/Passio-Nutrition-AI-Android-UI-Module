@@ -1,6 +1,5 @@
 package ai.passio.nutrition.uimodule.ui.util
 
-import ai.passio.nutrition.uimodule.ui.activity.PassioUiModuleActivity
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.Milliliters
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
@@ -11,8 +10,6 @@ import android.text.Spanned
 import android.text.style.StyleSpan
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.text.DecimalFormat
 
 
@@ -62,7 +59,7 @@ object StringKT {
             value.toInt().toString()
         } else {
 //            String.format("%.2f", value).trimEnd('0').trimEnd('.')
-            twoDecimalFormat.format(this).trimEnd('0').trimEnd('.')
+            twoDecimalFormat.format(this)//.trimEnd('0').trimEnd('.')
         }
 
 //        return oneDecimalFormat.format(this)
@@ -75,7 +72,7 @@ object StringKT {
         return if (value % 1 == 0.0f) {
             value.toInt().toString()
         } else {
-            twoDecimalFormat.format(this).trimEnd('0').trimEnd('.')
+            twoDecimalFormat.format(this)//.trimEnd('0').trimEnd('.')
         }
     }
 
@@ -103,7 +100,7 @@ object StringKT {
     }
 
     // Function to load JSON from assets
-    fun loadJsonFromAssets(fileName: String): String? {
+   /* fun loadJsonFromAssets(fileName: String): String? {
         return try {
             val inputStream = PassioUiModuleActivity.getContext().assets.open(fileName)
             val bufferedReader = BufferedReader(InputStreamReader(inputStream))
@@ -112,7 +109,7 @@ object StringKT {
             e.printStackTrace()
             null
         }
-    }
+    }*/
 
 
 }

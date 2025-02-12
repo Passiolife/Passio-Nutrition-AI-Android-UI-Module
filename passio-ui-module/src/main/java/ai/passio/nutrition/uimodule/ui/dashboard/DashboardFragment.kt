@@ -26,6 +26,7 @@ import org.joda.time.format.DateTimeFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.roundToInt
 
 internal class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
@@ -270,14 +271,14 @@ internal class DashboardFragment : BaseFragment<DashboardViewModel>() {
                 .fold(UnitMass()) { acc, unitMass -> acc + unitMass }.gramsValue()
 
             dailyNutrition.setup(
-                currentCalories.toInt(),
+                currentCalories.roundToInt(),
                 userProfile.caloriesTarget,
-                currentCarbs.toInt(),
-                userProfile.getCarbsGrams().toInt(),
-                currentProtein.toInt(),
-                userProfile.getProteinGrams().toInt(),
-                currentFat.toInt(),
-                userProfile.getFatGrams().toInt()
+                currentCarbs.roundToInt(),
+                userProfile.getCarbsGrams().roundToInt(),
+                currentProtein.roundToInt(),
+                userProfile.getProteinGrams().roundToInt(),
+                currentFat.roundToInt(),
+                userProfile.getFatGrams().roundToInt()
             )
         }
     }

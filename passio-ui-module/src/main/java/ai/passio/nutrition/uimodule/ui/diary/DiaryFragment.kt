@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import org.joda.time.DateTime
+import kotlin.math.roundToInt
 
 /**
  * A simple [Fragment] subclass.
@@ -169,14 +170,14 @@ internal class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.Cat
                 .fold(UnitMass()) { acc, unitMass -> acc + unitMass }.gramsValue()
 
             dailyNutrition.setup(
-                currentCalories.toInt(),
+                currentCalories.roundToInt(),
                 userProfile.caloriesTarget,
-                currentCarbs.toInt(),
-                userProfile.getCarbsGrams().toInt(),
-                currentProtein.toInt(),
-                userProfile.getProteinGrams().toInt(),
-                currentFat.toInt(),
-                userProfile.getFatGrams().toInt()
+                currentCarbs.roundToInt(),
+                userProfile.getCarbsGrams().roundToInt(),
+                currentProtein.roundToInt(),
+                userProfile.getProteinGrams().roundToInt(),
+                currentFat.roundToInt(),
+                userProfile.getFatGrams().roundToInt()
             )
         }
     }

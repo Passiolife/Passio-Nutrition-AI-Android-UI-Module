@@ -27,7 +27,7 @@ internal const val dimAmount = 0.4f
 @SuppressLint("SetTextI18n")
 internal class CustomFoodCreatedInfoDialog(
     context: Context,
-) : Dialog(context, android.R.style.ThemeOverlay) {
+) : Dialog(context, android.R.style.ThemeOverlay_Material_Dialog) {
 
     val binding: DialogCommonBinding = DialogCommonBinding.inflate(layoutInflater)
 
@@ -74,7 +74,7 @@ internal class CommonDialog(
     title: String?,
     description: String,
     listener: OnCommonDialogListener,
-) : Dialog(context, android.R.style.ThemeOverlay) {
+) : Dialog(context, android.R.style.ThemeOverlay_Material_Dialog) {
 
     val binding: DialogCommonBinding = DialogCommonBinding.inflate(layoutInflater)
 
@@ -148,7 +148,7 @@ internal class CommonDialog(
 @SuppressLint("SetTextI18n")
 internal class CaptureNutritionFactsLabelInfoDialog(
     context: Context,
-) : Dialog(context, android.R.style.ThemeOverlay) {
+) : Dialog(context, android.R.style.ThemeOverlay_Material_Dialog) {
 
     val binding: DialogCaptureNutritionFactsInfoBinding =
         DialogCaptureNutritionFactsInfoBinding.inflate(layoutInflater)
@@ -171,7 +171,7 @@ internal class CaptureNutritionFactsLabelInfoDialog(
 internal class NoNutritionFactsResultDialog(
     context: Context,
     listener: OnCommonDialogListener
-) : Dialog(context, android.R.style.ThemeOverlay) {
+) : Dialog(context, android.R.style.ThemeOverlay_Material_Dialog) {
 
     val binding: DialogNoNutritionFactsResultBinding =
         DialogNoNutritionFactsResultBinding.inflate(layoutInflater)

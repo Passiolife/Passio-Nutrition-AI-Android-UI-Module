@@ -32,6 +32,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.view.isVisible
 import org.joda.time.DateTime
+import kotlin.math.roundToInt
 
 internal class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>() {
 
@@ -366,14 +367,14 @@ internal class ImageFoodResultFragment : BaseFragment<ImageFoodResultViewModel>(
 
             val userProfile = UserCache.getProfile()
             dailyNutrition.setup(
-                currentCalories.toInt(),
+                currentCalories.roundToInt(),
                 userProfile.caloriesTarget,
-                currentCarbs.toInt(),
-                userProfile.getCarbsGrams().toInt(),
-                currentProtein.toInt(),
-                userProfile.getProteinGrams().toInt(),
-                currentFat.toInt(),
-                userProfile.getFatGrams().toInt()
+                currentCarbs.roundToInt(),
+                userProfile.getCarbsGrams().roundToInt(),
+                currentProtein.roundToInt(),
+                userProfile.getProteinGrams().roundToInt(),
+                currentFat.roundToInt(),
+                userProfile.getFatGrams().roundToInt()
             )
         }
     }
