@@ -61,6 +61,7 @@ internal class VoiceLoggingFragment : BaseFragment<VoiceLoggingViewModel>() {
         with(binding)
         {
             toolbar.setup(getString(R.string.voice_logging), baseToolbarListener)
+            toolbar.hideRightIcon()
 
 
             prepareRecognizer()

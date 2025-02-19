@@ -27,6 +27,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 internal class EditNutritionFactsViewModel : BaseViewModel() {
@@ -158,7 +159,11 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
         weightGram = imageFoodResult.record.nutrientsSelectedSize().weight.gramsValue()
         weightGramUnit = Grams.symbol
 
-        updateNutrientsOnUI()
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            delay(400)
+            updateNutrientsOnUI()
+        }
 
 
         _editFoodModelLD.postValue(this.imageFoodResult)
@@ -292,10 +297,19 @@ internal class EditNutritionFactsViewModel : BaseViewModel() {
 
     fun updateMissingFromBarcode(barcodeScanResult: BarcodeScanResult) {
 
+
+        if (barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST) {
+            imageFoodResult.isCustomFood =
+                barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST
+        }
+        else{
+            barcodeScanResult.record?.id = imageFoodResult.record.id
+            barcodeScanResult.record?.uuid = imageFoodResult.record.uuid
+            barcodeScanResult.record?.refCode = imageFoodResult.record.refCode
+        }
         barcodeScanResult.record?.let {
             imageFoodResult.record = it
         }
-        imageFoodResult.isCustomFood = barcodeScanResult.resultType == BarcodeResultType.CUSTOM_FOOD_ALREADY_EXIST
         imageFoodResult.record.barcode = barcodeScanResult.barcode
 
         editFoodRecord(imageFoodResult to getEditFoodRecordIndex())
