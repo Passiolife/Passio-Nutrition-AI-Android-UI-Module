@@ -5,7 +5,6 @@ import ai.passio.nutrition.uimodule.databinding.FragmentScanBarcodeBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.BarcodeScanResult
-import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.passiosdk.core.camera.PassioCameraViewProvider
@@ -142,6 +141,7 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     scanningMessage.visibility = View.GONE
                     showBarcodeInSystemView()
                     viewItem.setOnClickListener {
+                        //use barcode only
                         barcodeScanResult?.let {
                             barcodeScanResult.record = null
                             sendResult(barcodeScanResult)
@@ -150,6 +150,7 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                         }
                     }
                     importExisting.setOnClickListener {
+                        //import existing data
                         barcodeScanResult?.let {
                             sendResult(it)
 //                            viewModel.navigateBack()
@@ -162,20 +163,12 @@ internal class ScanBarcodeFragment : BaseFragment<ScanBarcodeViewModel>(),
                     scanningMessage.visibility = View.GONE
                     showCustomFoodAlreadyExistView()
                     viewItem.setOnClickListener {
-                        barcodeScanResult?.let {
-                            barcodeScanResult.barcode = ""
-                            barcodeScanResult.record?.let {
-                                barcodeScanResult.record?.barcode = ""
-                                barcodeScanResult.resultType = BarcodeResultType.NEW_BARCODE
-                                barcodeScanResult.record = barcodeScanResult.record?.copy()
-                            }
-                            sendResult(barcodeScanResult)
-//                            sharedViewModel.detailsFoodRecord(it)
-//                            viewModel.navigateToFoodDetails()
-                        }
+                        //Create new item, do not import this item or barcode
+                        viewModel.navigateBack()
                     }
 
                     importExisting.setOnClickListener {
+                        //edit existing
                         barcodeScanResult?.let {
 //                            barcodeScanResult.barcode = ""
                             sendResult(it)
