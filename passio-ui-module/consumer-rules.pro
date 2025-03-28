@@ -10,8 +10,8 @@
 #    *;
 #}
 
--keep class ai.passio.passiosdk.** { *; }
--keep class ai.passio.nutrition.uimodule.ui.** { *;}
+#-keep class ai.passio.passiosdk.** { *; }
+#-keep class ai.passio.nutrition.uimodule.ui.** { *;}
 -keep class ai.passio.nutrition.uimodule.data.db.entity.** { *;}
 -keep class ai.passio.nutrition.uimodule.data.db.mapper.** { *;}
 -keep class ai.passio.nutrition.uimodule.data.db.typeconverter.** { *;}

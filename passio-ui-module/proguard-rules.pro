@@ -26,13 +26,13 @@
 
 
 #-keep class ai.passio.passiosdk.** { *; }
--keep class ai.passio.nutrition.uimodule.data.db.entity.** { *;}
--keep class ai.passio.nutrition.uimodule.data.db.mapper.** { *;}
--keep class ai.passio.nutrition.uimodule.data.db.typeconverter.** { *;}
--keep class ai.passio.nutrition.uimodule.ui.model.** { *;}
--keep class ai.passio.nutrition.uimodule.NutritionUIConfiguration {*;}
--keep class ai.passio.nutrition.uimodule.NutritionUIModule {*;}
--keep class ai.passio.nutrition.uimodule.data.PassioConnector {*;}
+#-keep class ai.passio.nutrition.uimodule.data.db.entity.** { *;}
+#-keep class ai.passio.nutrition.uimodule.data.db.mapper.** { *;}
+#-keep class ai.passio.nutrition.uimodule.data.db.typeconverter.** { *;}
+#-keep class ai.passio.nutrition.uimodule.ui.model.** { *;}
+#-keep class ai.passio.nutrition.uimodule.NutritionUIConfiguration {*;}
+#-keep class ai.passio.nutrition.uimodule.NutritionUIModule {*;}
+#-keep class ai.passio.nutrition.uimodule.data.PassioConnector {*;}
 #-dontwarn ai.passio.nutrition.uimodule.NutritionUIConfiguration
 #-dontwarn ai.passio.nutrition.uimodule.NutritionUIModule
 #-dontwarn ai.passio.nutrition.uimodule.data.PassioConnector
