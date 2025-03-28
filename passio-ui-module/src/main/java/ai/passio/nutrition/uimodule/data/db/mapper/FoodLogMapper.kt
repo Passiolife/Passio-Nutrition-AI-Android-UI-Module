@@ -2,9 +2,12 @@ package ai.passio.nutrition.uimodule.data.db.mapper
 
 import ai.passio.nutrition.uimodule.data.db.entity.FoodLogEntity
 import ai.passio.nutrition.uimodule.data.db.entity.FoodLogIngredientEntity
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import android.util.Log
+
 /*
 internal fun List<FoodRecord>.toFoodLogEntities(): List<FoodLogEntity> {
     val foodRecords = this
@@ -18,6 +21,8 @@ internal fun List<FoodLogEntity>.toFoodRecords(): List<FoodRecord> {
 
 internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
     val foodRecord = this
+    Log.d("food log","food log track: 001")
+    Log.d("food log","food log track: 001__ $passioGson.")
     return FoodLogEntity(
         uuid = foodRecord.uuid,
         id = foodRecord.id,
@@ -46,8 +51,11 @@ internal fun FoodRecord.toFoodLogEntity(): FoodLogEntity {
 
 internal fun FoodRecordIngredient.toFoodLogIngredientEntity(): FoodLogIngredientEntity {
     val ingredient = this
+    Log.d("food log","food log track: 002")
+
     return FoodLogIngredientEntity(
 //        foodUUID = currentFoodUUID,
+
         id = ingredient.id,
         refCode = ingredient.refCode,
         name = ingredient.name,

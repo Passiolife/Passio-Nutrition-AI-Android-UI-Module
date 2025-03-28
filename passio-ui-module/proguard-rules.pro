@@ -19,6 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn java.lang.invoke.StringConcatFactory
 -keepclassmembers class ai.passio.nutrition.uimodule.NutritionUIConfiguration {
     public <fields>;
 }
+
+
+#-keep class ai.passio.passiosdk.** { *; }
+-keep class ai.passio.nutrition.uimodule.data.db.entity.** { *;}
+-keep class ai.passio.nutrition.uimodule.data.db.mapper.** { *;}
+-keep class ai.passio.nutrition.uimodule.data.db.typeconverter.** { *;}
+-keep class ai.passio.nutrition.uimodule.ui.model.** { *;}
+-keep class ai.passio.nutrition.uimodule.NutritionUIConfiguration {*;}
+-keep class ai.passio.nutrition.uimodule.NutritionUIModule {*;}
+-keep class ai.passio.nutrition.uimodule.data.PassioConnector {*;}
+#-dontwarn ai.passio.nutrition.uimodule.NutritionUIConfiguration
+#-dontwarn ai.passio.nutrition.uimodule.NutritionUIModule
+#-dontwarn ai.passio.nutrition.uimodule.data.PassioConnector

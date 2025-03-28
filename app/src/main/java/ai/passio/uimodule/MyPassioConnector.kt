@@ -2,8 +2,8 @@ package ai.passio.uimodule
 
 import ai.passio.nutrition.uimodule.PassioNutrientsExclusionStrategy
 import ai.passio.nutrition.uimodule.data.PassioConnector
-import ai.passio.nutrition.uimodule.data.UnitEnergySerializer
-import ai.passio.nutrition.uimodule.data.UnitMassSerializer
+import ai.passio.nutrition.uimodule.data.db.mapper.UnitEnergySerializer
+import ai.passio.nutrition.uimodule.data.db.mapper.UnitMassSerializer
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
