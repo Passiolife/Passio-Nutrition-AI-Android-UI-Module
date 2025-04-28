@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.image
 
+import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.FragmentTakePhotoBinding
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
@@ -21,6 +23,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,6 +67,16 @@ internal class TakePhotoFragment : BaseFragment<BaseViewModel>() {
                 isSinglePhoto = it
             }
 
+            if (isSinglePhoto)
+            {
+                toolbar.isVisible = false
+            }
+            else{
+                toolbar.isVisible = true
+                toolbar.setup(getString(R.string.photo_logging), baseToolbarListener)
+                toolbar.hideRightIcon()
+            }
+
             imageAdapter = ImageAdapter(imageList) {
                 imageList.removeAt(it)
                 imageAdapter.notifyItemRemoved(it)
@@ -92,8 +105,19 @@ internal class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
     }
 
+    private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
+        override fun onBack() {
+            viewModel.navigateBack()
+        }
+
+        override fun onRightIconClicked() {
+
+        }
+
+    }
+
     private fun validateImageCount() {
-        if (imageList.size > 0) {
+        if (imageList.isNotEmpty()) {
             binding.next.enable()
         } else {
             binding.next.disable()

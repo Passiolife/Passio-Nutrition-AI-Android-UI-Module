@@ -237,30 +237,37 @@ open class FoodRecord() {
     }*/
 
     fun addIngredient(record: FoodRecord, index: Int? = null) {
+        val isUpdateServing = ingredients.isEmpty()
         if (record.ingredients.size == 1) {
             ingredients.add(index ?: ingredients.size, FoodRecordIngredient(record))
 //            ingredients.add(index ?: ingredients.size, record.ingredients.first())
         } else {
             ingredients.addAll(index ?: ingredients.size, record.ingredients)
         }
-
-        setUnitToServing()
+        if (isUpdateServing) {
+            setUnitToServing()
+        }
     }
 
     fun addIngredient(record: FoodRecordIngredient, index: Int? = null) {
+        val isUpdateServing = ingredients.isEmpty()
         ingredients.add(index ?: ingredients.size, record)
 
-        setUnitToServing()
+        if (isUpdateServing) {
+            setUnitToServing()
+        }
     }
 
     fun addIngredients(records: List<FoodRecordIngredient>, index: Int? = null) {
         if (records.isEmpty()) return
-
+        val isUpdateServing = ingredients.isEmpty()
         ingredients.addAll(index ?: ingredients.size, records)
 //        if (!name.isValid()) {
 //            name = "Recipe with ${ingredients.firstOrNull()?.name ?: ""}"
 //        }
-        setUnitToServing()
+        if (isUpdateServing) {
+            setUnitToServing()
+        }
     }
 
     fun setUnitToServing() {
@@ -302,7 +309,10 @@ open class FoodRecord() {
             iconId = ingredients[0].iconId
             calculateQuantity()
         } else {
-            setUnitToServing()
+            val isUpdateServing = ingredients.isEmpty()
+            if (isUpdateServing) {
+                setUnitToServing()
+            }
         }
         return true
     }
