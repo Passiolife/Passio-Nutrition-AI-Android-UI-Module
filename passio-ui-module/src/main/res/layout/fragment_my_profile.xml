@@ -78,7 +78,7 @@
                         style="@style/EditTextProfile"
                         android:hint="@string/enter_age"
                         android:inputType="number"
-                        android:maxLength="2"
+                        android:maxLength="3"
                         app:layout_constraintBottom_toBottomOf="@id/lblAge"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/lblAge" />
@@ -126,7 +126,7 @@
                         style="@style/EditTextProfile"
                         android:hint="@string/enter_weight"
                         android:inputType="number"
-                        android:maxLength="4"
+                        android:maxLength="9"
                         app:layout_constraintBottom_toBottomOf="@id/lblWeight"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/lblWeight" />
@@ -175,7 +175,7 @@
                         style="@style/EditTextProfile"
                         android:hint="@string/enter_target_weight"
                         android:inputType="number"
-                        android:maxLength="4"
+                        android:maxLength="9"
                         app:layout_constraintBottom_toBottomOf="@id/lblTargetWeight"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/lblTargetWeight" />
@@ -246,7 +246,7 @@
                         style="@style/EditTextProfile"
                         android:hint="@string/enter_a_value"
                         android:inputType="number"
-                        android:maxLength="4"
+                        android:maxLength="9"
                         app:layout_constraintBottom_toBottomOf="@id/lblWaterTarget"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/lblWaterTarget" />
