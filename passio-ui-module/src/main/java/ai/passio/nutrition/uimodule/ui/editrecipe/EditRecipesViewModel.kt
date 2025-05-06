@@ -87,15 +87,19 @@ internal class EditRecipesViewModel : BaseViewModel() {
             isEditRecipe = useCase.getRecipe(foodRecord.refCode) != null
             val selectedUnit = foodRecord.selectedUnit
             val selectedQty = foodRecord.selectedQuantity
+
+            if (!isEditRecipe)
+            {
             foodRecord.setUnitToServing()
+                }
 
             if (selectedUnit.isGram()) {
                 foodRecord.setSelectedUnit(Grams.unitName)
                 foodRecord.setSelectedQuantity(selectedQty)
-                updateServingQuantity(
-                    foodRecord.getSelectedQuantity(),
-                    EditFoodFragment.UpdateOrigin.INGREDIENT
-                )
+//                updateServingQuantity(
+//                    foodRecord.getSelectedQuantity(),
+//                    EditFoodFragment.UpdateOrigin.INGREDIENT
+//                )
             } else if (selectedUnit.equals(SERVING_UNIT_NAME, true)) {
                 foodRecord.setSelectedUnit(SERVING_UNIT_NAME)
                 foodRecord.setSelectedQuantity(selectedQty)
