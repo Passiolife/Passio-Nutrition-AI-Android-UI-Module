@@ -1,4 +1,4 @@
-package ai.passio.nutrition.uimodule.data
+package ai.passio.nutrition.uimodule.data.db.mapper
 
 import ai.passio.passiosdk.passiofood.data.measurement.Centigrams
 import ai.passio.passiosdk.passiofood.data.measurement.Decigrams
