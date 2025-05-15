@@ -12,6 +12,7 @@ import ai.passio.nutrition.uimodule.ui.profile.kgToLbs
 import ai.passio.nutrition.uimodule.ui.profile.metersToFeetInches
 import ai.passio.nutrition.uimodule.ui.profile.metersToMetersCentimeters
 import ai.passio.nutrition.uimodule.ui.profile.mlToOz
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import kotlin.math.pow
 
 data class UserProfile(
@@ -73,9 +74,9 @@ data class UserProfile(
         if (weight <= 0)
             return ""
         val displayText: String = if (units == WeightUnit.metric) {
-            weight.toString()
+            weight.singleDecimal()
         } else {
-            kgToLbs(weight).toString()
+            kgToLbs(weight).singleDecimal()
         }
         return displayText
     }
@@ -94,7 +95,7 @@ data class UserProfile(
         return if (targetWeight <= 0) {
             ""
         } else {
-            getTargetWightInCurrentUnit().toString()
+            getTargetWightInCurrentUnit().singleDecimal()
         }
     }
 
@@ -113,7 +114,7 @@ data class UserProfile(
         return if (waterTarget <= 0) {
             ""
         } else {
-            getTargetWaterInCurrentUnit().toString()
+            getTargetWaterInCurrentUnit().singleDecimal()
         }
     }
 

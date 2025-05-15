@@ -185,7 +185,7 @@ class MyProfileViewModel : BaseViewModel() {
         return if (bmr == null) {
             userProfile!!.caloriesTarget
         } else {
-            (calculateCaloriesBasedOnActivityLevel(bmr) - userProfile!!.goalWeightTimeLine.calorieValue).roundToInt()//calorieDeficit.getValue(weightUnit)).toInt()
+            (calculateCaloriesBasedOnActivityLevel(bmr) + userProfile!!.goalWeightTimeLine.calorieValue).roundToInt()//calorieDeficit.getValue(weightUnit)).toInt()
         }
     }
 
