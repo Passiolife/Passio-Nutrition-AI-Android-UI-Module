@@ -2,7 +2,9 @@ package ai.passio.nutrition.uimodule.ui.customfoods
 
 import ai.passio.nutrition.uimodule.databinding.ItemCustomFoodBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import android.view.LayoutInflater
 import android.view.View
@@ -52,9 +54,10 @@ class CustomFoodsAdapter(
 
                 image.loadFoodImage(customFood)
 
-                if (customFood.additionalData.isNotEmpty()) {
+                val shortInfo = customFood.getShortInfo()
+                if (shortInfo.isValid()) {
                     servingSize.visibility = View.VISIBLE
-                    servingSize.text = customFood.additionalData
+                    servingSize.text = shortInfo
                 } else {
                     servingSize.visibility = View.GONE
                 }

@@ -2,7 +2,9 @@ package ai.passio.nutrition.uimodule.ui.search
 
 import ai.passio.nutrition.uimodule.databinding.SearchItemLayoutBinding
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
@@ -115,9 +117,10 @@ class FoodItemSearchAdapter(private val foodSearchListener: FoodSearchAdapterLis
 
                 image.loadFoodImage(searchResult)
 
-                if (searchResult.additionalData.isNotEmpty()) {
+                val shortInfo = searchResult.getShortInfo()
+                if (shortInfo.isValid()) {
                     servingSize.visibility = View.VISIBLE
-                    servingSize.text = searchResult.additionalData
+                    servingSize.text = shortInfo
                 } else {
                     servingSize.visibility = View.GONE
                 }

@@ -3,43 +3,44 @@ package ai.passio.nutrition.uimodule.ui.profile
 /**
 Represents different measurement systems for units.
  */
-enum class MeasurementSystem(val value: String) {
-    /**
-    The metric measurement system.
-    For weight, it uses kilograms (kg).
-    For height, it primarily uses meters (m) and centimeters (cm).
-    For water, it uses liters (L) or milliliters (mL).
-     */
+/*enum class MeasurementSystem(val value: String) {
+    */
+/**
+The metric measurement system.
+For weight, it uses kilograms (kg).
+For height, it primarily uses meters (m) and centimeters (cm).
+For water, it uses liters (L) or milliliters (mL).
+ *//*
     Metric("Metric"),
 
-    /**
-    The imperial measurement system.
+    *//**
+The imperial measurement system.
 
-    For weight, it uses pounds (lbs).
-    For height, it primarily uses feet (ft) and inches (in).
-    For water, it uses ounces (oz).
-     */
+For weight, it uses pounds (lbs).
+For height, it primarily uses feet (ft) and inches (in).
+For water, it uses ounces (oz).
+ *//*
     Imperial("Imperial"),
-}
+}*/
 
 enum class Gender(val value: String) {
-    Male("Male"),
-    Female("Female"),
+    male("Male"),
+    female("Female"),
 }
 
 enum class LengthUnit(val value: String) {
-    Imperial("Feet, Inches"),
-    Metric("Meter, Centimeter"),
+    imperial("Feet, Inches"),
+    metric("Meter, Centimeter"),
 }
 
 enum class WeightUnit(val value: String) {
-    Imperial("Lbs"),
-    Metric("Kg"),
+    imperial("Lbs"),
+    metric("Kg"),
 }
 
 enum class WaterUnit(val value: String) {
-    Imperial("oz"),
-    Metric("ml"),
+    imperial("oz"),
+    metric("ml"),
 }
 
 
@@ -96,27 +97,35 @@ fun ozToMl(oz: Double): Double {
 /// Represents different levels of activity.
 enum class ActivityLevel(val label: String, val valueDiff: Double) {
     /// Not active.
-    NotActive("Not Active", 1.2),
+    notActive("Not Active", 1.2),
 
     /// Lightly active.
-    LightlyActive("Lightly Active", 1.375),
+    lightlyActive("Lightly Active", 1.375),
 
     /// Moderately active.
-    ModeratelyActive("Moderately Active", 1.55),
+    moderatelyActive("Moderately Active", 1.55),
 
     /// Very active.
-    Active("Active", 1.725)
+    active("Active", 1.725),
+
+    /// Very active.
+    extraActive("Extra Active", 1.9)
+}
+
+fun String.getActivityLevel(): ActivityLevel {
+    return ActivityLevel.values().map { it }.find { it.label.equals(this, true) }
+        ?: ActivityLevel.notActive
 }
 
 enum class CalorieDeficit(val lblImperial: String, val lblMetric: String, val calorieValue: Int) {
     /// Lose 0.5 lbs per week.
-    Lose1("Lose 0.5", "Lose 0.25", -250),
-    Lose2("Lose 1.0", "Lose 0.5", -500),
-    Lose3("Lose 1.5", "Lose 0.75", -750),
-    Lose4("Lose 2.0", "Lose 1.0", -1000),
-    Gain1("Gain 0.5", "Gain 0.25", 250),
-    Gain2("Gain 1.0", "Gain 0.5", 500),
-    Gain3("Gain 1.5", "Gain 0.75", 750),
-    Gain4("Gain 2.0", "Gain 1.00", 1000),
-    Maintain("Maintain Weight", "Maintain Weight", 0)
+    lose1("Lose 0.5", "Lose 0.25", -250),
+    lose2("Lose 1.0", "Lose 0.5", -500),
+    lose3("Lose 1.5", "Lose 0.75", -750),
+    lose4("Lose 2.0", "Lose 1.0", -1000),
+    gain1("Gain 0.5", "Gain 0.25", 250),
+    gain2("Gain 1.0", "Gain 0.5", 500),
+    gain3("Gain 1.5", "Gain 0.75", 750),
+    gain4("Gain 2.0", "Gain 1.00", 1000),
+    maintain("Maintain Weight", "Maintain Weight", 0)
 }

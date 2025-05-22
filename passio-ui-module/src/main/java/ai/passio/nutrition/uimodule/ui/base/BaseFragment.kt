@@ -3,7 +3,6 @@ package ai.passio.nutrition.uimodule.ui.base
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.ui.activity.SharedViewModel
 import ai.passio.nutrition.uimodule.ui.navigation.NavigationCommand
-import ai.passio.nutrition.uimodule.ui.util.toast
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -12,12 +11,15 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false) : Fragment() {
+internal abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false) : Fragment() {
     private lateinit var navController: NavController
     protected val viewModel: VM by lazy {
         ViewModelProvider(if (isSharedContext) requireActivity() else this)[getVMClass()]
@@ -49,9 +51,18 @@ abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false
     }
 
     private fun handleNavigation(navCommand: NavigationCommand) {
-        when (navCommand) {
-            is NavigationCommand.ToDirection -> findNavController().navigate(navCommand.directions)
-            is NavigationCommand.Back -> findNavController().navigateUp()
+        lifecycleScope.launch(Dispatchers.Main) {
+
+            findNavController().currentBackStackEntry
+            when (navCommand) {
+                is NavigationCommand.ToDirection -> findNavController().navigate(navCommand.directions)
+                is NavigationCommand.Back -> {
+                    if (!navController.navigateUp()) {
+                        // No destinations in the back stack, finish the activity
+                        requireActivity().finish()
+                    }
+                }
+            }
         }
     }
 
@@ -73,11 +84,11 @@ abstract class BaseFragment<VM : BaseViewModel>(isSharedContext: Boolean = false
                     true
                 }
 
-                R.id.log_out -> {
+               /* R.id.log_out -> {
                     requireContext().toast("Logout successfully!")
                     requireActivity().finish()
                     true
-                }
+                }*/
 
                 else -> false
             }

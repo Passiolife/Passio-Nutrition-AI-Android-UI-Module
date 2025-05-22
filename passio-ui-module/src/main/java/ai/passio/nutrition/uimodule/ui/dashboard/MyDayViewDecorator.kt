@@ -165,10 +165,10 @@ class FutureDaysDecorator(private val context: Context) : DayViewDecorator {
 
 class DisableDateSelectionDecorator : DayViewDecorator {
     override fun shouldDecorate(day: CalendarDay): Boolean {
-        return true // Apply this decorator to all days
+        return false // Apply this decorator to all days
     }
 
     override fun decorate(view: DayViewFacade) {
-        view.setDaysDisabled(true) // Disable selection for this day
+//        view.setDaysDisabled(true) // Disable selection for this day
     }
 }

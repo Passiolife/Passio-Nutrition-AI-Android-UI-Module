@@ -17,9 +17,9 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.DialogFragment
-import com.warkiz.tickseekbar.OnSeekChangeListener
-import com.warkiz.tickseekbar.SeekParams
-import com.warkiz.tickseekbar.TickSeekBar
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
 
 class DailyNutritionTargetDialog(
     private val dailyNutritionTarget: DailyNutritionTarget,

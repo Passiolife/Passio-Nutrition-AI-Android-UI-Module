@@ -2,130 +2,131 @@ package ai.passio.nutrition.uimodule.ui.image
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.databinding.ItemImageFoodResultBinding
+import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
-import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
+import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
-import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
+import ai.passio.passiosdk.passiofood.data.model.PassioFoodResultType
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
-internal interface OnItemSelectChange {
+
+interface OnFoodImageSelectChange {
     fun onItemSelectChange(selectedCount: Int)
-    fun onIndexSelect(index: Int)
-    fun onIndexDeselect(index: Int)
+    fun onTapped(editIndex: Int, imageFoodResult: ImageFoodResult)
 }
 
-internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSelectChange) :
+class FoodImageResultAdapter(
+    private val onItemSelectChange: OnFoodImageSelectChange
+) :
     RecyclerView.Adapter<FoodImageResultAdapter.ImageViewHolder>() {
 
-    private var isLogged = false
-    private val list = mutableListOf<PassioAdvisorFoodInfo>()
-
-    //    private val selectedItems = mutableListOf<String>()
-    private val selectedItemPositions = mutableListOf<Int>()
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun resetAll() {
-        list.clear()
-        selectedItemPositions.clear()
-        notifyDataSetChanged()
-    }
+    private val list = mutableListOf<ImageFoodResult>()
 
     @SuppressLint("NotifyDataSetChanged")
     fun addData(
-        newData: List<PassioAdvisorFoodInfo>,
-        selectedItemPositions: List<Int>,
+        newData: List<ImageFoodResult>,
     ) {
         list.clear()
         list.addAll(newData)
-        this.selectedItemPositions.clear()
-        this.selectedItemPositions.addAll(selectedItemPositions)
-        onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
-        notifyDataSetChanged()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun addData(
-        newData: List<PassioAdvisorFoodInfo>,
-        selectedItemPositions: List<Int>,
-        isLogged: Boolean
-    ) {
-        this.isLogged = isLogged
-        list.clear()
-        list.addAll(newData)
-        this.selectedItemPositions.clear()
-        this.selectedItemPositions.addAll(selectedItemPositions)
-        onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
         notifyDataSetChanged()
     }
 
     inner class ImageViewHolder(val binding: ItemImageFoodResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(foodInfo: PassioAdvisorFoodInfo) {
-            val advisorInfo = foodInfo.foodDataInfo!!
-            val nutritionPreview = foodInfo.foodDataInfo!!.nutritionPreview
+        fun bind(imageFoodResult: ImageFoodResult) {
 
+            val foodRecord = imageFoodResult.record
             with(binding) {
-                image.loadPassioIcon(advisorInfo.iconID)
-                name.text = advisorInfo.foodName.capitalized()
+                image.loadFoodImage(foodRecord)
+                name.text = foodRecord.name.capitalized()
+                if (imageFoodResult.resultType == PassioFoodResultType.BARCODE && !foodRecord.name.isValid()) {
+                    name.text = "Barcode Not Found"
+                }
 
-                val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
-                val caloriesVal = ratio * foodInfo.weightGrams
+                if (imageFoodResult.isFoodItemDataMissing())
+                {
+                    mainItem.setBackgroundResource(R.drawable.rc_8_rose)
+                    name.text = "Image Not Recognized"
+                    servingSize.text = "item will not be logged, search manually"
+                    llData.isVisible = false
+                    foodSelect.setImageResource(R.drawable.ic_search)
+                }
+                else if (imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                    mainItem.setBackgroundResource(R.drawable.rc_8_rose)
+                    servingSize.text = "item will not be logged, edit data manually"
+                    foodSelect.setImageResource(R.drawable.ic_edit)
+                    llData.isVisible = false
+                } else {
+                    llData.isVisible = true
+                    mainItem.setBackgroundResource(R.drawable.rc_8_white)
 
-//                val cal = foodRecord.nutritionPreview.calories
-//                calories.text = "$cal Cal"
-                calories.text = "${caloriesVal.singleDecimal()} Cal"
-                servingSize.text =
-                    "${foodInfo.weightGrams.roundToInt()} ${Grams.unitName}"
-
-                /* val quantity = foodRecord.nutritionPreview.servingQuantity
-                 val selectedUnit = foodRecord.nutritionPreview.servingUnit
-                 val weight = foodRecord.nutritionPreview.weightQuantity
-                 val weightUnit = foodRecord.nutritionPreview.weightUnit
-                 servingSize.text =
-                     "$quantity ${selectedUnit.capitalized()} (${weight.roundToInt()} $weightUnit)"
- */
-                foodSelect.isEnabled = true
-                if (isLogged) {
-                    foodSelect.isEnabled = false
-                    if (selectedItemPositions.contains(adapterPosition)) {
-                        foodSelect.setImageResource(R.drawable.ic_mark_correct)
+                    if (foodRecord.nutrients().calories() != null) {
+                        val cal = foodRecord.nutrients().calories()?.value ?: 0.0
+                        calValue.text = "${cal.roundToInt()}"
+                        calUnit.text = "cal"
                     } else {
-                        foodSelect.setImageResource(R.drawable.ic_mark_incorrect)
+                        calValue.text = " - "
+                        calUnit.text = " - "
                     }
-                } else if (selectedItemPositions.contains(adapterPosition)) {
+
+                    if (foodRecord.nutrients().fat() != null) {
+                        fatValue.text =
+                            "${foodRecord.nutrients().fat()?.value?.singleDecimal() ?: 0.0}"
+                        fatUnit.text = foodRecord.nutrients().fat()?.unit?.symbol ?: "g"
+                    } else {
+                        fatValue.text = " - "
+                        fatUnit.text = " - "
+                    }
+
+                    if (foodRecord.nutrients().protein() != null) {
+                        proteinValue.text =
+                            "${foodRecord.nutrients().protein()?.value?.singleDecimal() ?: 0.0}"
+                        proteinUnit.text = foodRecord.nutrients().protein()?.unit?.symbol ?: "g"
+                    } else {
+                        proteinValue.text = " - "
+                        proteinUnit.text = " - "
+                    }
+
+                    if (foodRecord.nutrients().carbs() != null) {
+                        carbsValue.text =
+                            "${foodRecord.nutrients().carbs()?.value?.singleDecimal() ?: 0.0}"
+                        carbsUnit.text = foodRecord.nutrients().carbs()?.unit?.symbol ?: "g"
+                    } else {
+                        carbsValue.text = " - "
+                        carbsUnit.text = " - "
+                    }
+
+                    servingSize.text =
+                        "${foodRecord.selectedQuantity.singleDecimal()} ${foodRecord.selectedUnit} (${
+                            foodRecord.nutrients().weight.gramsValue().singleDecimal()
+                        } ${Grams.unitName})"
+                }
+
+                if (imageFoodResult.isSelected) {
                     foodSelect.setImageResource(R.drawable.radio_on)
                 } else {
                     foodSelect.setImageResource(R.drawable.radio_off)
                 }
 
-
-                /*if (selectedItems.contains(foodRecord.resultId)) {
-                    foodSelect.setImageResource(R.drawable.radio_on)
-                } else {
-                    foodSelect.setImageResource(R.drawable.radio_off)
-                }*/
-
-
                 root.setOnClickListener {
-                    if (isLogged) {
-                        return@setOnClickListener
-                    }
-                    val id = adapterPosition
-                    if (selectedItemPositions.contains(id)) {
-                        onItemSelectChange.onIndexDeselect(id)
-                        selectedItemPositions.remove(id)
+                    onItemSelectChange.onTapped(adapterPosition, imageFoodResult)
+                }
+                foodSelect.setOnClickListener {
+                    if (imageFoodResult.isFoodItemDataMissing() || imageFoodResult.isBarcodeDataMissing() || imageFoodResult.isNutritionFactsDataMissing()) {
+                        onItemSelectChange.onTapped(adapterPosition, imageFoodResult)
                     } else {
-                        onItemSelectChange.onIndexSelect(id)
-                        selectedItemPositions.add(id)
+                        imageFoodResult.isSelected = !imageFoodResult.isSelected
+                        onItemSelectChange.onItemSelectChange(list.count { it.isSelected })
+                        notifyItemChanged(adapterPosition)
                     }
-                    onItemSelectChange.onItemSelectChange(selectedItemPositions.size)
-                    notifyItemChanged(adapterPosition)
                 }
             }
         }
@@ -142,13 +143,5 @@ internal class FoodImageResultAdapter(private val onItemSelectChange: OnItemSele
     }
 
     override fun getItemCount() = list.size
-
-    /*fun getSelectedItems(): List<PassioAdvisorFoodInfo> {
-        return list.filter { selectedItems.contains(it.foodDataInfo?.resultId) }
-    }*/
-    fun getSelectedItems(): List<PassioAdvisorFoodInfo> {
-        return list.filterIndexed { index, _ -> index in selectedItemPositions }
-    }
-
 
 }

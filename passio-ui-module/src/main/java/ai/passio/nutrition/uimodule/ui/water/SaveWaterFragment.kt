@@ -18,7 +18,7 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import android.text.Editable
 import android.text.TextWatcher
 
-class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
+internal class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
 
     private var _binding: FragmentSaveWeightBinding? = null
     private val binding: FragmentSaveWeightBinding get() = _binding!!
@@ -114,7 +114,7 @@ class SaveWaterFragment : BaseFragment<WaterTrackingViewModel>() {
             } else {
                 weight.setText(currentValue.singleDecimal())
             }
-            weightUnit.text = UserCache.getProfile().measurementUnit.waterUnit.value
+            weightUnit.text = UserCache.getProfile().waterUnit.value
             dayValue.text = weightRecord.getDisplayDay()
             timeValue.text = weightRecord.getDisplayTime()
         }

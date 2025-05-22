@@ -31,20 +31,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            android:textSize="@dimen/_10ssp"
-            tools:text="February 5, 2024"
             android:clickable="true"
+            android:drawablePadding="8dp"
             android:focusable="true"
             android:foreground="@drawable/ripple_effect"
+            android:gravity="center_vertical"
+            android:padding="8dp"
             android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_10ssp"
             app:drawableStartCompat="@drawable/icon_calendar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:text="February 5, 2024" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/toolbarCalenarBack"
@@ -65,10 +65,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:rotationY="180"
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/ripple_effect"
+            android:rotationY="180"
             android:src="@drawable/icon_back_arrow"
             app:layout_constraintBottom_toBottomOf="@id/toolbarCalendar"
             app:layout_constraintStart_toEndOf="@id/toolbarCalendar"
@@ -77,25 +77,14 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ai.passio.nutrition.uimodule.ui.view.DailyNutrition
-        android:id="@+id/dailyNutrition"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topContainer" />
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dailyNutrition">
+        app:layout_constraintTop_toBottomOf="@id/topContainer">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,11 +95,18 @@
             android:paddingEnd="16dp"
             android:paddingBottom="8dp">
 
+            <ai.passio.nutrition.uimodule.ui.view.DailyNutrition
+                android:id="@+id/dailyNutrition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+
             <ai.passio.nutrition.uimodule.ui.diary.DiaryCategory
                 android:id="@+id/breakfastCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp" />
 
             <ai.passio.nutrition.uimodule.ui.diary.DiaryCategory
@@ -149,12 +145,12 @@
         android:id="@+id/quickSuggestions"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.6"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/viewLoader"
@@ -162,7 +158,7 @@
         android:layout_height="0dp"
         android:background="@color/passio_white40p"
         android:clickable="true"
-        android:translationZ="4dp"
+        android:translationZ="6dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

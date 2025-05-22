@@ -17,7 +17,7 @@ import ai.passio.nutrition.uimodule.ui.util.ViewEXT.setOnChangeListener
 import ai.passio.nutrition.uimodule.ui.util.toast
 import android.widget.AdapterView
 
-class SettingsFragment : BaseFragment<SettingsViewModel>() {
+internal class SettingsFragment : BaseFragment<SettingsViewModel>() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding: FragmentSettingsBinding get() = _binding!!
@@ -65,10 +65,9 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
 
     private fun setSettingInfo(userProfile: UserProfile) {
         with(binding) {
-            val measurementUnit = userProfile.measurementUnit
 
-            setupLengthView(measurementUnit.lengthUnit)
-            setupWeightView(measurementUnit.weightUnit)
+            setupLengthView(userProfile.heightUnits)
+            setupWeightView(userProfile.units)
 
             breakfast.isChecked = userProfile.userReminder.isBreakfastOn
             lunch.isChecked = userProfile.userReminder.isLunchOn
@@ -107,7 +106,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
     private fun setupLengthView(selectedLengthUnit: LengthUnit) {
         with(binding)
         {
-            val items = listOf(LengthUnit.Imperial, LengthUnit.Metric)
+            val items = listOf(LengthUnit.imperial, LengthUnit.metric)
             if (length.adapter == null || length.onItemSelectedListener == null) {
                 val adapter = GenericSpinnerAdapter(
                     context = requireContext(),
@@ -139,7 +138,7 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
     private fun setupWeightView(selectedWeightUnit: WeightUnit) {
         with(binding)
         {
-            val items = listOf(WeightUnit.Imperial, WeightUnit.Metric)
+            val items = listOf(WeightUnit.imperial, WeightUnit.metric)
             if (weight.adapter == null || weight.onItemSelectedListener == null) {
                 val adapter = GenericSpinnerAdapter(
                     context = requireContext(),

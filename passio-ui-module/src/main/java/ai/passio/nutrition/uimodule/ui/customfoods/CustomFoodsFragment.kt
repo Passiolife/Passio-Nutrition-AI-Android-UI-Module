@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
-class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
+internal class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
 
     private var _binding: FragmentCustomFoodsBinding? = null
     private val binding: FragmentCustomFoodsBinding get() = _binding!!
@@ -75,17 +75,13 @@ class CustomFoodsFragment : BaseFragment<CustomFoodsViewModel>() {
                 menuBridge.closeMenu()
                 when (menuBridge.position) {
                     0 -> {
-                        sharedViewModel.editCustomFood(
-                            customFoodsAdapter.getItem(
-                                adapterPosition
-                            )
-                        )
+                        sharedViewModel.editCustomFood(customFoodsAdapter.getItem(adapterPosition), true)
                         viewModel.navigateToFoodCreator()
                     }
 
                     1 -> {
                         //delete
-                        viewModel.deleteCustomFood(customFoodsAdapter.getItem(adapterPosition).uuid)
+                        viewModel.deleteCustomFood(customFoodsAdapter.getItem(adapterPosition))
                     }
                 }
             }

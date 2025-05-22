@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditIngredientViewModel : BaseViewModel() {
+internal class EditIngredientViewModel : BaseViewModel() {
 
     private val _editFoodModelLD = MutableLiveData<EditFoodModel>()
     val editFoodModelLD: LiveData<EditFoodModel> get() = _editFoodModelLD

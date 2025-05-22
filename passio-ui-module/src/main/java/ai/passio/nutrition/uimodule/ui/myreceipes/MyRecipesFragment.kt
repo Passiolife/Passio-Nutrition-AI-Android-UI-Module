@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 
-class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
+internal class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
 
     private var _binding: FragmentCustomFoodsBinding? = null
     private val binding: FragmentCustomFoodsBinding get() = _binding!!
@@ -87,7 +87,7 @@ class MyRecipesFragment : BaseFragment<MyRecipesViewModel>() {
 
                     1 -> {
                         //delete
-                        viewModel.deleteRecipe(customFoodsAdapter.getItem(adapterPosition).uuid)
+                        viewModel.deleteRecipe(customFoodsAdapter.getItem(adapterPosition))
                     }
                 }
             }

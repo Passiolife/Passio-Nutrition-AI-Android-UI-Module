@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.FragmentMealPlanBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
@@ -17,11 +18,10 @@ import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.view.HorizontalSpaceItemDecoration
 import ai.passio.passiosdk.passiofood.PassioMealTime
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
-import android.util.Log
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 
-class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
+internal class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
 
     private var _binding: FragmentMealPlanBinding? = null
     private val binding: FragmentMealPlanBinding get() = _binding!!
@@ -56,11 +56,35 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
             retry.setOnClickListener {
                 viewModel.getMealPlans()
             }
+
+            showInfo.setOnClickListener {
+                SharedPrefUtils.put("mealPlanInfoNoteShown", false)
+                showMealPlanNote()
+            }
+            showMealPlanNote()
         }
 
         initObserver()
 //        viewModel.getMealPlans()
 
+    }
+
+    private fun showMealPlanNote() {
+        if (SharedPrefUtils.get("mealPlanInfoNoteShown", Boolean::class.java)) {
+            binding.close.isVisible = false
+            binding.mealPlanNote.isVisible = false
+            binding.showInfo.isVisible = true
+        } else {
+            binding.close.isVisible = true
+            binding.mealPlanNote.isVisible = true
+            binding.showInfo.isVisible = false
+        }
+        binding.close.setOnClickListener {
+            SharedPrefUtils.put("mealPlanInfoNoteShown", true)
+            binding.close.isVisible = false
+            binding.mealPlanNote.isVisible = false
+            binding.showInfo.isVisible = true
+        }
     }
 
     private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
@@ -149,8 +173,6 @@ class MealPlanFragment : BaseFragment<MealPlanViewModel>() {
 
 
     private fun showMealPlans(mealPlanItems: List<PassioMealPlanItem>) {
-
-        Log.d("showMealPlans", "showMealPlans")
         val breakfast = mealPlanItems.filter { it.mealTime == PassioMealTime.BREAKFAST }
         val lunch = mealPlanItems.filter { it.mealTime == PassioMealTime.LUNCH }
         val dinner = mealPlanItems.filter { it.mealTime == PassioMealTime.DINNER }

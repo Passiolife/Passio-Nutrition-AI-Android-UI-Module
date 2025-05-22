@@ -7,6 +7,7 @@ import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import java.util.Date
@@ -32,7 +33,7 @@ class MicrosViewModel : BaseViewModel() {
     }
 
     fun fetchLogsForCurrentDay() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             val records = useCase.getLogsForDay(currentDate)
             val nutrients = MicroNutrient.nutrientsFromFoodRecords(records)

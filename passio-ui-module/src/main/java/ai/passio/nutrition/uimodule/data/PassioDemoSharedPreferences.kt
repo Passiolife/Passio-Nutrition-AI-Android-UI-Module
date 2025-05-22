@@ -11,8 +11,17 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
         private const val PREF_RECIPES = "recipes"
         private const val PREF_WEIGHT_RECORDS = "weightRecords"
         private const val PREF_WATER_RECORDS = "waterRecords"
-        private const val PREF_FOOD_FAVORITES = "foodFavorites"
         private const val PREF_PASSIO_USER = "userProfile"
+        private const val PREF_PASSIO_FAVOURITE = "favourites"
+    }
+
+    fun clear() {
+        sharedPreferences.edit().clear().apply()
+    }
+
+    fun isMigrationNeeded(): Boolean
+    {
+        return !sharedPreferences.all.isNullOrEmpty()
     }
 
     fun saveRecords(foodRecords: List<String>) {
@@ -50,12 +59,11 @@ class PassioDemoSharedPreferences(private val sharedPreferences: SharedPreferenc
         sharedPreferences.edit().putStringSet(PREF_WATER_RECORDS, weightRecords.toSet()).apply()
     }
 
-    fun saveFavorites(foodRecords: List<String>) {
-        sharedPreferences.edit().putStringSet(PREF_FOOD_FAVORITES, foodRecords.toSet()).apply()
-    }
-
     fun getFavorites(): Set<String> {
-        return sharedPreferences.getStringSet(PREF_FOOD_FAVORITES, hashSetOf())!!
+        return sharedPreferences.getStringSet(PREF_PASSIO_FAVOURITE, hashSetOf())!!
+    }
+    fun saveFavorites(favorites: List<String>) {
+        sharedPreferences.edit().putStringSet(PREF_PASSIO_FAVOURITE, favorites.toSet()).apply()
     }
 
     fun saveUserProfile(user: String) {

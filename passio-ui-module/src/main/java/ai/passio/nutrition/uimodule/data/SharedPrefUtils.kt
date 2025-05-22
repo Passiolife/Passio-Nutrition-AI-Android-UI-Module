@@ -3,8 +3,9 @@ package ai.passio.nutrition.uimodule.data
 import android.content.Context
 import android.content.SharedPreferences
 
-internal class SharedPrefUtils(private val application: Context) {
+internal class SharedPrefUtils(application: Context) {
 
+    //keep same name in demo app and ui module
     private val prefName = "PassioSharedPreferences"
     private var sharedPreferences: SharedPreferences =
         application.getSharedPreferences(prefName, Context.MODE_PRIVATE)

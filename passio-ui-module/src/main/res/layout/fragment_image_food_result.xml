@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,61 +8,154 @@
     android:orientation="vertical"
     tools:context=".ui.progress.ProgressFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvImages"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="8dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        tools:itemCount="40"
-        tools:listitem="@layout/item_food_image" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/bottom_sheet_background"
+        android:id="@+id/topView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/passio_white"
         android:elevation="4dp"
-        android:padding="16dp">
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:paddingTop="0dp"
+        android:paddingBottom="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <ai.passio.nutrition.uimodule.ui.base.BaseToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/your_result"
-            android:textColor="@color/passio_gray900"
-            android:textSize="@dimen/_15ssp"
-            android:fontFamily="@font/inter_bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/passio_white"
+            android:elevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_the_foods_you_would_like_to_log"
-            android:textColor="@color/passio_gray900"
-            android:textSize="@dimen/_10ssp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/lblMealTime"
+            style="@style/TextProfile"
+            android:layout_marginTop="0dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:text="@string/meal_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintWidth_percent="0.48" />
 
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/mealTimeSpinner"
+            style="@style/SpinnerTextProfile"
+            app:drawableEndCompat="@drawable/ic_arrow_down"
+            app:layout_constraintStart_toStartOf="@id/lblMealTime"
+            app:layout_constraintTop_toBottomOf="@id/lblMealTime"
+            app:layout_constraintWidth_percent="0.48" />
 
-        <ProgressBar
-            android:id="@+id/viewLoading"
-            style="?android:attr/progressBarStyleHorizontal"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lblDate"
+            style="@style/TextProfile"
+            android:layout_marginTop="0dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:text="@string/date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintWidth_percent="0.48" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dateValue"
+            style="@style/TextMyFoodEditClone"
+            android:hint="@string/date"
+            android:textColor="@color/passio_gray500"
+            app:layout_constraintStart_toStartOf="@id/lblDate"
+            app:layout_constraintTop_toBottomOf="@id/lblDate"
+            app:layout_constraintWidth_percent="0.48" />
+
+        <ai.passio.nutrition.uimodule.ui.view.DailyNutrition
+            android:id="@+id/dailyNutrition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/passio_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description" />
+            app:layout_constraintTop_toBottomOf="@id/dateValue" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewLoading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/passio_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topView"
+        tools:visibility="visible">
+
+
+        <ai.passio.nutrition.uimodule.ui.view.AnalyzingProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressBackgroundTint="@color/passio_indigo50"
+            android:progressDrawable="@drawable/rounded_progress_bar"
+            android:progressTint="@color/passio_primary"
+            app:layout_constraintBottom_toTopOf="@id/lblProgress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:progress="50" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lblProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semi_bold"
+            android:padding="@dimen/_8sdp"
+            android:text="@string/generating_results"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toTopOf="@id/cancelFetch"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cancelFetch"
+            style="@style/btn_positive_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:paddingVertical="12dp"
+            android:text="@string/cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.4" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/resultView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/passio_background"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topView"
+        tools:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvResult"
@@ -75,62 +168,51 @@
             app:layout_constraintBottom_toTopOf="@id/actionContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description"
+            app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="40"
             tools:listitem="@layout/item_image_food_result" />
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/noResult"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_matched_result_found"
-            android:textColor="@color/passio_gray900"
-            android:textSize="@dimen/_11ssp"
-            app:layout_constraintBottom_toTopOf="@id/actionContainer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/actionContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
             android:paddingVertical="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/reselect"
+
+           <!-- <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/createRecipe"
+                style="@style/btn_negative_action"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/btn_negative_action"
                 android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/reselect" />
+                android:text="@string/create_recipe" />-->
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/cancel"
+                android:id="@+id/tryAgain"
+                style="@style/btn_negative_action"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/btn_negative_action"
                 android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/cancel" />
+                android:text="@string/try_again" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/log"
+                style="@style/btn_positive_action"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                style="@style/btn_positive_action"
                 android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -146,6 +228,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="gone"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,5 +244,182 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/noResultFound"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/passio_background"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_16sdp"
+        android:paddingTop="@dimen/_16sdp"
+        android:paddingBottom="@dimen/_20sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topView"
+        tools:visibility="gone">
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/inter_bold"
+            android:text="@string/no_results_found"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_14ssp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:gravity="center"
+            android:text="@string/sorry_we_could_not_find_any_matches_please_try_again_or_try_searching_manually"
+            android:textColor="@color/passio_gray900"
+            android:textSize="@dimen/_10ssp" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:paddingVertical="8sp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/reselect"
+                style="@style/btn_negative_action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/reselect" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/rc_8_purple"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/search_manually"
+                android:textColor="@color/passio_white"
+                android:textSize="14sp" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <FrameLayout
+        android:id="@+id/viewAddedToDiary"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/passio_white40p"
+        android:clickable="true"
+        android:translationZ="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/rc_40_white"
+            android:padding="16dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvLoggedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_mark_correct"
+                android:drawablePadding="16dp"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:text="@string/item_added_to_diary"
+                android:textColor="@color/passio_gray900"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCustomFoodCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:text="@string/custom_food_created"
+                android:textColor="@color/passio_gray900"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvLoggedCount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/view_or_continue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="@string/view_your_diary_or_add_more"
+                android:textColor="@color/passio_gray900"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCustomFoodCount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/viewDiary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/rc_4_passio_primary"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/view_diary"
+                android:textColor="@color/passio_primary"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/addMore"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_or_continue" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/addMore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rc_8_purple"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/add_more"
+                android:textColor="@color/passio_white"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/viewDiary"
+                app:layout_constraintTop_toBottomOf="@id/view_or_continue" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

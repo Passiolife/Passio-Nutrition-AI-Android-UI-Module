@@ -4,7 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import com.warkiz.tickseekbar.TickSeekBar;
+
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar;
 
 public class VerticalSeekBar extends TickSeekBar {
 

@@ -1,17 +1,15 @@
 package ai.passio.nutrition.uimodule.ui.voice
 
 import ai.passio.nutrition.uimodule.R
-import ai.passio.nutrition.uimodule.databinding.ItemImageFoodResultBinding
+import ai.passio.nutrition.uimodule.databinding.ItemImageAdvisorResultBinding
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
-import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.model.PassioSpeechRecognitionModel
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.math.roundToInt
 
 internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selectedCount: Int) -> Unit) :
     RecyclerView.Adapter<SpeechRecognitionAdapter.ImageViewHolder>() {
@@ -37,7 +35,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
         notifyDataSetChanged()
     }
 
-    inner class ImageViewHolder(val binding: ItemImageFoodResultBinding) :
+    inner class ImageViewHolder(val binding: ItemImageAdvisorResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(foodInfo: PassioSpeechRecognitionModel) {
@@ -48,15 +46,9 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 
                 image.loadPassioIcon(foodRecord.iconID)
                 name.text = foodRecord.foodName.capitalized()
-
-                val ratio = nutritionPreview.calories / nutritionPreview.weightQuantity
-                val caloriesVal = ratio * foodInfo.advisorInfo.weightGrams
-
-//                val cal = foodRecord.nutritionPreview.calories
-//                calories.text = "$cal Cal"
-                calories.text = "${caloriesVal.singleDecimal()} Cal"
+                calories.text = "${nutritionPreview.calories} Cal"
                 servingSize.text =
-                    "${foodInfo.advisorInfo.weightGrams.roundToInt()} ${Grams.unitName}"
+                    "${nutritionPreview.servingQuantity.singleDecimal()} ${nutritionPreview.servingUnit}"
 
                 /*val quantity = foodRecord.nutritionPreview.servingQuantity
                 val selectedUnit = foodRecord.nutritionPreview.servingUnit
@@ -87,7 +79,7 @@ internal class SpeechRecognitionAdapter(private val onItemSelectChange: (selecte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val binding =
-            ItemImageFoodResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemImageAdvisorResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ImageViewHolder(binding)
     }
 

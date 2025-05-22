@@ -6,9 +6,11 @@ import ai.passio.nutrition.uimodule.databinding.FragmentEditFoodBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.CommonDialog
 import ai.passio.nutrition.uimodule.ui.util.DAY_FORMAT_FULL
 import ai.passio.nutrition.uimodule.ui.util.OnCommonDialogListener
@@ -19,6 +21,7 @@ import ai.passio.nutrition.uimodule.ui.util.dateToFormat
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.showDatePickerDialog
 import ai.passio.nutrition.uimodule.ui.util.toast
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
@@ -36,14 +39,14 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.warkiz.tickseekbar.OnSeekChangeListener
-import com.warkiz.tickseekbar.SeekParams
-import com.warkiz.tickseekbar.TickSeekBar
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
+import coil.load
 import org.joda.time.DateTime
 import java.util.Date
 import kotlin.math.roundToInt
 
-class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
+internal class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
     private var _binding: FragmentEditFoodBinding? = null
     private val binding: FragmentEditFoodBinding get() = _binding!!
@@ -121,6 +124,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             log.setOnClickListener {
                 viewModel.logCurrentRecord()
             }
+            ivFavorite.setOnClickListener {
+                viewModel.toggleFavorite()
+            }
 
             setupRecipeAddEditMode()
 
@@ -133,6 +139,9 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                 sharedViewModel.passToNutritionInfo(foodRecord)
 
             }
+            saveFav.setOnClickListener {
+                viewModel.saveFavorite()
+            }
         }
 
         initObserver()
@@ -141,22 +150,23 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun initObserver() {
-        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { foodRecord ->
-            viewModel.setFoodRecord(foodRecord)
+        sharedViewModel.detailsFoodRecordLD.observe(viewLifecycleOwner) { editFoodDataModel ->
+            viewModel.setFoodRecord(editFoodDataModel)
         }
 
         sharedViewModel.editSearchResultLD.observe(viewLifecycleOwner) { searchResult ->
             viewModel.getFoodRecord(searchResult)
         }
 
+        sharedViewModel.editIngredientToRecipeLD.observe(
+            viewLifecycleOwner,
+            ::editDeleteFoodIngredients
+        )
+
         viewModel.editFoodModelLD.observe(viewLifecycleOwner) { editFoodModel ->
-            if (editFoodModel.foodRecord == null) {
-                renderError()
-            } else {
-                binding.openFoodFacts.isVisible =
-                    !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
-                renderFoodRecord(editFoodModel)
-            }
+            binding.openFoodFacts.isVisible =
+                !editFoodModel.foodRecord.openFoodLicense.isNullOrEmpty()
+            renderFoodRecord(editFoodModel)
         }
 
         viewModel.internalUpdate.observe(viewLifecycleOwner) { pair ->
@@ -229,7 +239,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             val isUpdateLog = result.second
 
             if (recipe != null) {
-                sharedViewModel.editCustomFood(recipe)
+                sharedViewModel.editCustomFood(recipe, true)
                 if (isUpdateLog) {
                     sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
                 }
@@ -247,7 +257,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
                         override fun onPositiveAction() {
                             sharedViewModel.editCustomFood(
-                                viewModel.getFoodRecord().copyAsCustomFood()
+                                viewModel.getFoodRecord().copyAsCustomFood(), false
                             )
                             if (isUpdateLog) {
                                 sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
@@ -263,6 +273,27 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.viewLoader.isVisible = isLoading
         }
+        viewModel.isFavEvent.observe(viewLifecycleOwner) { isFav ->
+            if (isFav) {
+                binding.ivFavorite.load(R.drawable.ic_favorites)
+            } else {
+                binding.ivFavorite.load(R.drawable.icon_favorite)
+            }
+        }
+        viewModel.isEditFavEvent.observe(viewLifecycleOwner) { isEditFav ->
+            with(binding)
+            {
+                mealTimeLayout.isVisible = !isEditFav
+                dateLayout.isVisible = !isEditFav
+                saveFav.isVisible = isEditFav
+//                delete.isVisible = !isEditFav && !viewModel.isEditLogMode()
+                log.isVisible = !isEditFav
+            }
+        }
+    }
+
+    private fun editDeleteFoodIngredients(ingredient: Pair<FoodRecordIngredient?, Int>) {
+        viewModel.editIngredient(ingredient)
     }
 
     private fun setupToolbar() {
@@ -278,12 +309,12 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             addEditRecipe.setOnClickListener {
 
                 val foodRecord = viewModel.getFoodRecord()
-                val createUserFoodType = if (foodRecord.isUserRecipe()) {
+                val createUserFoodType = if (viewModel.isUserRecipe()) {
                     CreateUserFoodType.USER_RECIPE
                 } else {
                     CreateUserFoodType.PASSIO_RECIPE
                 }
-                if (foodRecord.isUserRecipe() && !viewModel.isEditLogMode()) {
+                if (viewModel.isUserRecipe() && !viewModel.isEditLogMode()) {
                     sharedViewModel.editRecipe(foodRecord)
                     viewModel.navigateToEditRecipe()
                 } else {
@@ -318,13 +349,13 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
 
         override fun onRightIconClicked() {
             val foodRecord = viewModel.getFoodRecord()
-            val createUserFoodType = if (foodRecord.isCustomFood()) {
+            val createUserFoodType = if (viewModel.isCustomFood()) {
                 CreateUserFoodType.USER_FOOD
             } else {
                 CreateUserFoodType.PASSIO_FOOD
             }
-            if (foodRecord.isCustomFood() && !viewModel.isEditLogMode()) {
-                sharedViewModel.editCustomFood(foodRecord)
+            if (viewModel.isCustomFood() && !viewModel.isEditLogMode()) {
+                sharedViewModel.editCustomFood(foodRecord, true)
                 viewModel.navigateToFoodCreator()
             } else {
 
@@ -337,7 +368,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
                         }
 
                         override fun onCreate(isUpdateLog: Boolean) {
-                            sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood())
+                            sharedViewModel.editCustomFood(foodRecord.copyAsCustomFood(), false)
                             if (isUpdateLog) {
                                 sharedViewModel.editFoodUpdateLog(viewModel.getFoodRecord())
                             }
@@ -417,9 +448,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         with(binding) {
             foodImage.loadFoodImage(foodRecord)
             foodName.text = foodRecord.name.capitalized()
-            if (!foodRecord.name.equals(foodRecord.additionalData, true)) {
-                infoName.text = foodRecord.additionalData.capitalized()
-            }
+            infoName.text = foodRecord.getShortInfo()
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener
@@ -427,17 +456,20 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         }
     }
 
-    private fun renderFoodRecord(model: EditFoodModel) {
+    private fun renderFoodRecord(model: EditFoodDataModel) {
         setupEditOption(model.foodRecord)
-        setupImmutableProperties(model.foodRecord!!)
+        setupImmutableProperties(model.foodRecord)
         renderNutrients(model.foodRecord)
         renderServingSize(model.foodRecord)
-        if (model.showIngredients) {
+
+        renderMealTimeAndDate(model.foodRecord)
+        renderIngredients(model.foodRecord)
+        /*if (model.showIngredients) {
             renderMealTimeAndDate(model.foodRecord)
             renderIngredients(model.foodRecord)
         } else {
             hideSecondaryViews()
-        }
+        }*/
     }
 
     private fun setupEditOption(foodRecord: FoodRecord?) {
@@ -475,6 +507,7 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
         renderIngredients(foodRecord)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderNutrients(foodRecord: FoodRecord) {
         if (_binding == null) return
 
@@ -668,7 +701,10 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
             dateToFormat(localDate.toLocalDate(), DAY_FORMAT_FULL) //localDate.format(dateFormatter)
         viewModel.updateCreatedAt(localDate.millis)
         binding.date.setOnClickListener {
-            showDatePickerDialog(requireContext(), DateTime(viewModel.getFoodRecord().createdAtTime() ?: DateTime.now().millis)) { selectedDate ->
+            showDatePickerDialog(
+                requireContext(),
+                DateTime(viewModel.getFoodRecord().createdAtTime() ?: DateTime.now().millis)
+            ) { selectedDate ->
                 binding.date.text = dateToFormat(
                     selectedDate.toLocalDate(),
                     DAY_FORMAT_FULL
@@ -688,7 +724,8 @@ class EditFoodFragment : BaseFragment<EditFoodViewModel>() {
     }
 
     private fun onIngredientSelected(index: Int) {
-//        val ingredient = viewModel.getIngredient(index)
-//        sharedViewModel.editIngredient(ingredient, index)
+        val ingredient = viewModel.getIngredient(index)
+        sharedViewModel.editIngredient(ingredient, index)
+        viewModel.navigateToEditIngredient()
     }
 }

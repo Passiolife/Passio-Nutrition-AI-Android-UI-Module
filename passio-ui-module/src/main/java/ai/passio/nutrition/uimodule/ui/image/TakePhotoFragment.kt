@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.ui.image
 
+import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.SharedPrefUtils
 import ai.passio.nutrition.uimodule.databinding.FragmentTakePhotoBinding
 import android.os.Bundle
@@ -7,33 +8,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
+import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.util.PermissionUtil
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.disable
 import ai.passio.nutrition.uimodule.ui.util.ViewEXT.enable
+import ai.passio.nutrition.uimodule.ui.util.toast
 import ai.passio.nutrition.uimodule.ui.view.BitmapAnalyzer
 import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-
-class TakePhotoFragment : BaseFragment<BaseViewModel>() {
+internal class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
     companion object {
         private const val TAG = "CameraXApp"
-        private const val REQUEST_CODE_PERMISSIONS = 10
         const val MAX_IMAGES = 7
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 
     private var isPicker = false
@@ -44,6 +44,8 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
 
     private var _binding: FragmentTakePhotoBinding? = null
     private val binding get() = _binding!!
+
+    private val permissionUtil = PermissionUtil(this@TakePhotoFragment, Manifest.permission.CAMERA)
 
 
     override fun onCreateView(
@@ -65,6 +67,16 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
                 isSinglePhoto = it
             }
 
+            if (isSinglePhoto)
+            {
+                toolbar.isVisible = false
+            }
+            else{
+                toolbar.isVisible = true
+                toolbar.setup(getString(R.string.photo_logging), baseToolbarListener)
+                toolbar.hideRightIcon()
+            }
+
             imageAdapter = ImageAdapter(imageList) {
                 imageList.removeAt(it)
                 imageAdapter.notifyItemRemoved(it)
@@ -83,18 +95,29 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
         }
 
         validateImageCount()
-        if (allPermissionsGranted()) {
+
+        permissionUtil.checkAndRequestPermission(onGranted = {
             startCamera()
-        } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
-            )
+        }, onDenied = {
+            requireContext().toast("To access this feature you need to grant camera permission.")
+            viewModel.navigateBack()
+        })
+
+    }
+
+    private val baseToolbarListener = object : BaseToolbar.ToolbarListener {
+        override fun onBack() {
+            viewModel.navigateBack()
+        }
+
+        override fun onRightIconClicked() {
+
         }
 
     }
 
     private fun validateImageCount() {
-        if (imageList.size > 0) {
+        if (imageList.isNotEmpty()) {
             binding.next.enable()
         } else {
             binding.next.disable()
@@ -157,24 +180,24 @@ class TakePhotoFragment : BaseFragment<BaseViewModel>() {
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            requireContext(), it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
+//    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+//        ContextCompat.checkSelfPermission(
+//            requireContext(), it
+//        ) == PackageManager.PERMISSION_GRANTED
+//    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                startCamera()
-            } else {
-                viewModel.navigateBack()
-            }
-        }
-    }
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+//            if (allPermissionsGranted()) {
+//                startCamera()
+//            } else {
+//                viewModel.navigateBack()
+//            }
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

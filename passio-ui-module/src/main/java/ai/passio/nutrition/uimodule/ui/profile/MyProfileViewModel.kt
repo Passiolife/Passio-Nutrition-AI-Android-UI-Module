@@ -3,16 +3,18 @@ package ai.passio.nutrition.uimodule.ui.profile
 import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.user.UserProfileUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
+import ai.passio.nutrition.uimodule.ui.model.UserMealPlan
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.toUserMealPlan
 import ai.passio.nutrition.uimodule.ui.profile.DailyNutritionTargetDialog.DailyNutritionTarget
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioSDK
-import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class MyProfileViewModel : BaseViewModel() {
 
@@ -33,8 +35,8 @@ class MyProfileViewModel : BaseViewModel() {
     val activityLevels: List<ActivityLevel> get() = _activityLevels
     private val _calorieDeficits = CalorieDeficit.values().map { it }
     val calorieDeficits: List<CalorieDeficit> get() = _calorieDeficits
-    private val _passioMealPlans = arrayListOf<PassioMealPlan>()
-    val passioMealPlans: List<PassioMealPlan> get() = _passioMealPlans
+    private val _passioMealPlans = arrayListOf<UserMealPlan>()
+    val passioMealPlans: List<UserMealPlan> get() = _passioMealPlans
     private val _showLoading = SingleLiveEvent<Boolean>()
     val showLoading: LiveData<Boolean> get() = _showLoading
 
@@ -46,11 +48,11 @@ class MyProfileViewModel : BaseViewModel() {
         _showLoading.postValue(true)
         PassioSDK.instance.fetchMealPlans {
             _passioMealPlans.clear()
-            _passioMealPlans.addAll(it)
+            _passioMealPlans.addAll(it.map { mealPlan -> mealPlan.toUserMealPlan() })
             viewModelScope.launch(Dispatchers.IO) {
                 userProfile = useCase.getUserProfile()
-                if (userProfile?.passioMealPlan == null) {
-                    userProfile?.passioMealPlan =
+                if (userProfile?.mealPlan == null) {
+                    userProfile?.mealPlan =
                         _passioMealPlans.find { mealPlan -> mealPlan.mealPlanLabel == "balanced" }
                             ?: _passioMealPlans.firstOrNull()
                 }
@@ -61,7 +63,7 @@ class MyProfileViewModel : BaseViewModel() {
     }
 
     fun updateUser() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             if (userProfile != null && useCase.updateUserProfile(userProfile!!)) {
                 _updateProfileEvent.postValue(ResultWrapper.Success(userProfile!!))
@@ -75,12 +77,12 @@ class MyProfileViewModel : BaseViewModel() {
 
     fun changeDailyNutritionTarget(dailyNutritionTarget: DailyNutritionTarget) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userProfile?.apply {
                 caloriesTarget = dailyNutritionTarget.caloriesGoal
-                carbsPer = dailyNutritionTarget.carbsPer
-                fatPer = dailyNutritionTarget.fatPer
-                proteinPer = dailyNutritionTarget.proteinPer
+                carbsPercent = dailyNutritionTarget.carbsPer
+                fatPercent = dailyNutritionTarget.fatPer
+                proteinPercent = dailyNutritionTarget.proteinPer
             }
             updateNutritionTarget()
         }
@@ -92,16 +94,16 @@ class MyProfileViewModel : BaseViewModel() {
             dailyNutritionTargetCustomize.postValue(
                 DailyNutritionTarget(
                     it.caloriesTarget,
-                    it.carbsPer,
-                    it.proteinPer,
-                    it.fatPer
+                    it.carbsPercent,
+                    it.proteinPercent,
+                    it.fatPercent
                 )
             )
         }
     }
 
     fun updateUserName(userName: String) {
-        userProfile?.userName = userName
+        userProfile?.firstName = userName
     }
 
     fun updateAge(age: String) {
@@ -110,7 +112,7 @@ class MyProfileViewModel : BaseViewModel() {
     }
 
     fun updateWeight(weight: String) {
-        if (userProfile?.measurementUnit?.weightUnit == WeightUnit.Imperial) {
+        if (userProfile?.units == WeightUnit.imperial) {
             userProfile?.weight = lbsToKg(weight.toDoubleOrNull() ?: 0.0)
         } else {
             userProfile?.weight = weight.toDoubleOrNull() ?: 0.0
@@ -120,7 +122,7 @@ class MyProfileViewModel : BaseViewModel() {
     }
 
     fun updateTargetWeight(targetWeight: String) {
-        if (userProfile?.measurementUnit?.weightUnit == WeightUnit.Imperial) {
+        if (userProfile?.units == WeightUnit.imperial) {
             userProfile?.targetWeight = lbsToKg(targetWeight.toDoubleOrNull() ?: 0.0)
         } else {
             userProfile?.targetWeight = targetWeight.toDoubleOrNull() ?: 0.0
@@ -129,7 +131,7 @@ class MyProfileViewModel : BaseViewModel() {
     }
 
     fun updateWaterTarget(waterTarget: String) {
-        if (userProfile?.measurementUnit?.waterUnit == WaterUnit.Imperial) {
+        if (userProfile?.waterUnit == WaterUnit.imperial) {
             userProfile?.waterTarget = ozToMl(waterTarget.toDoubleOrNull() ?: 0.0)
         } else {
             userProfile?.waterTarget = waterTarget.toDoubleOrNull() ?: 0.0
@@ -139,21 +141,21 @@ class MyProfileViewModel : BaseViewModel() {
 
     fun updateCalorieDeficit(calorieDeficit: CalorieDeficit) {
         Log.d("==update==== updateCalorieDeficit", calorieDeficit.toString())
-        userProfile?.calorieDeficit = calorieDeficit
+        userProfile?.goalWeightTimeLine = calorieDeficit
         updateNutritionTarget()
     }
 
-    fun updateMealPlan(passioMealPlan: PassioMealPlan) {
+    fun updateMealPlan(passioMealPlan: UserMealPlan) {
         Log.d("==update==== updateMealPlan", passioMealPlan.toString())
-        userProfile?.passioMealPlan = passioMealPlan
-        userProfile?.fatPer = passioMealPlan.fatTarget
-        userProfile?.proteinPer = passioMealPlan.proteinTarget
-        userProfile?.carbsPer = passioMealPlan.carbTarget
+        userProfile?.mealPlan = passioMealPlan
+        userProfile?.fatPercent = passioMealPlan.macroTargets.fat
+        userProfile?.proteinPercent = passioMealPlan.macroTargets.protein
+        userProfile?.carbsPercent = passioMealPlan.macroTargets.carbs
         updateNutritionTarget()
     }
 
-    fun updateActivityLevel(activityLevel: ActivityLevel) {
-        Log.d("==update==== updateActivityLevel", activityLevel.toString())
+    fun updateActivityLevel(activityLevel: String) {
+        Log.d("==update==== updateActivityLevel", activityLevel)
         userProfile?.activityLevel = activityLevel
         updateNutritionTarget()
     }
@@ -170,6 +172,8 @@ class MyProfileViewModel : BaseViewModel() {
 
     private fun updateNutritionTarget() {
         if (userProfile != null) {
+
+
             userProfile?.caloriesTarget = calculateRecommendedCalorie()
             _dailyNutritionTarget.postValue(userProfile!!)
         }
@@ -181,17 +185,17 @@ class MyProfileViewModel : BaseViewModel() {
         return if (bmr == null) {
             userProfile!!.caloriesTarget
         } else {
-            (calculateCaloriesBasedOnActivityLevel(bmr) - userProfile!!.calorieDeficit.calorieValue).toInt()//calorieDeficit.getValue(weightUnit)).toInt()
+            (calculateCaloriesBasedOnActivityLevel(bmr) + userProfile!!.goalWeightTimeLine.calorieValue).roundToInt()//calorieDeficit.getValue(weightUnit)).toInt()
         }
     }
 
     private fun calculateCaloriesBasedOnActivityLevel(bmr: Double): Double {
-        return (bmr * userProfile!!.activityLevel.valueDiff)
+        return (bmr * userProfile!!.activityLevel.getActivityLevel().valueDiff)
     }
 
     private fun calculateBMR(): Pair<Double?, ActivityLevel> {
 
-        val activityLevel = userProfile!!.activityLevel
+        val activityLevel = userProfile!!.activityLevel.getActivityLevel()
         val age = userProfile!!.age
         val height = userProfile!!.height
         val weight = userProfile!!.weight
@@ -199,11 +203,11 @@ class MyProfileViewModel : BaseViewModel() {
             return Pair(null, activityLevel)
         }
         val weightInKg = 10 * weight
-        val heightInMeter = height //* Conversion.CENTIMETER_TO_METER.value
-        val bmr = if (userProfile!!.gender == Gender.Male) {
-            weightInKg + (6.25 * heightInMeter) - (5 * age) + 5
+        val heightInCM = height * 100 //* Conversion.CENTIMETER_TO_METER.value
+        val bmr = if (userProfile!!.gender == Gender.male) {
+            weightInKg + (6.25 * heightInCM) - (5 * age) + 5
         } else {
-            weightInKg + (6.25 * heightInMeter) - (5 * age) - 161
+            weightInKg + (6.25 * heightInCM) - (5 * age) - 161
         }
         return Pair(bmr, activityLevel)
     }

@@ -10,7 +10,7 @@ import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
 import com.google.android.material.tabs.TabLayoutMediator
 
-class ProgressFragment : BaseFragment<ProgressViewModel>() {
+internal class ProgressFragment : BaseFragment<ProgressViewModel>() {
 
     private var _binding: FragmentProgressBinding? = null
     private val binding: FragmentProgressBinding get() = _binding!!

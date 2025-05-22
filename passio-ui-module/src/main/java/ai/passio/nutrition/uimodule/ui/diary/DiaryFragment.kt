@@ -2,6 +2,7 @@ package ai.passio.nutrition.uimodule.ui.diary
 
 import ai.passio.nutrition.uimodule.R
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.data.passioGson
 import ai.passio.nutrition.uimodule.databinding.FragmentDiaryBinding
 import ai.passio.nutrition.uimodule.ui.base.BaseFragment
 import ai.passio.nutrition.uimodule.ui.base.BaseToolbar
@@ -21,15 +22,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
+import kotlin.math.roundToInt
 
 /**
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
-    BaseToolbar.ToolbarListener{
+internal class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryListener,
+    BaseToolbar.ToolbarListener {
 
     private var _binding: FragmentDiaryBinding? = null
     private val binding: FragmentDiaryBinding get() = _binding!!
@@ -73,7 +74,10 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
                 viewModel.setNextDay()
             }
             toolbarCalendar.setOnClickListener {
-                showDatePickerDialog(requireContext(), DateTime(viewModel.getCurrentDate().time)) { selectedDate ->
+                showDatePickerDialog(
+                    requireContext(),
+                    DateTime(viewModel.getCurrentDate().time)
+                ) { selectedDate ->
                     viewModel.setDate(selectedDate.toDate())
                 }
             }
@@ -166,14 +170,14 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
                 .fold(UnitMass()) { acc, unitMass -> acc + unitMass }.gramsValue()
 
             dailyNutrition.setup(
-                currentCalories.toInt(),
+                currentCalories.roundToInt(),
                 userProfile.caloriesTarget,
-                currentCarbs.toInt(),
-                userProfile.getCarbsGrams().toInt(),
-                currentProtein.toInt(),
-                userProfile.getProteinGrams().toInt(),
-                currentFat.toInt(),
-                userProfile.getFatGrams().toInt()
+                currentCarbs.roundToInt(),
+                userProfile.getCarbsGrams().roundToInt(),
+                currentProtein.roundToInt(),
+                userProfile.getProteinGrams().roundToInt(),
+                currentFat.roundToInt(),
+                userProfile.getFatGrams().roundToInt()
             )
         }
     }
@@ -184,8 +188,7 @@ class DiaryFragment : BaseFragment<DiaryViewModel>(), DiaryCategory.CategoryList
     }
 
     override fun onLogEdit(foodRecord: FoodRecord) {
-        val gson = GsonBuilder().create()
-
+        val gson = passioGson
         val foodRecordCopy = gson.fromJson(gson.toJson(foodRecord), FoodRecord::class.java)
         sharedViewModel.detailsFoodRecord(foodRecordCopy)
         viewModel.navigateToEdit()

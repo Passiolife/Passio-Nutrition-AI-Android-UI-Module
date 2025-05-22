@@ -51,7 +51,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
+internal class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
 
     private var _binding: FragmentWaterTrackingBinding? = null
     private val binding: FragmentWaterTrackingBinding get() = _binding!!
@@ -104,14 +104,14 @@ class WaterTrackingFragment : BaseFragment<WaterTrackingViewModel>() {
     }
 
     private fun setupQuickAdd() {
-        val waterUnit = UserCache.getProfile().measurementUnit.waterUnit
+        val waterUnit = UserCache.getProfile().waterUnit
         with(binding)
         {
             val glass: Double
             val bottleSmall: Double
             val bottleLarge: Double
 
-            if (waterUnit == WaterUnit.Imperial) {
+            if (waterUnit == WaterUnit.imperial) {
                 glass = WaterRecord.QUICK_ADD_GLASS
                 bottleSmall = WaterRecord.QUICK_ADD_BOTTLE_SMALL
                 bottleLarge = WaterRecord.QUICK_ADD_BOTTLE_LARGE

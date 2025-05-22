@@ -1,8 +1,7 @@
 package ai.passio.uimodule
 
+import ai.passio.nutrition.uimodule.NutritionUIConfiguration
 import ai.passio.nutrition.uimodule.NutritionUIModule
-import ai.passio.nutrition.uimodule.data.PassioConnector
-import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.passiosdk.core.config.PassioConfiguration
 import ai.passio.passiosdk.core.config.PassioMode
 import ai.passio.passiosdk.passiofood.PassioSDK
@@ -10,7 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import java.util.Date
 
 class MainActivity : ComponentActivity() {
 
@@ -38,6 +36,7 @@ class MainActivity : ComponentActivity() {
                 PassioMode.IS_READY_FOR_DETECTION -> onSDKReady()
                 PassioMode.IS_BEING_CONFIGURED -> {
                 }
+
                 PassioMode.IS_DOWNLOADING_MODELS -> {}
             }
         }
@@ -48,7 +47,14 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onSDKReady() {
-        NutritionUIModule.launch(this)
+//        NutritionUIModule.launch(context = this, connector = MyPassioConnector(this))
+        NutritionUIModule.launch(
+            context = this,
+            nutritionUIConfiguration = NutritionUIConfiguration(
+                languageCode = "en",
+                shouldUseLegacySearch = false
+            )
+        )
         finish()
     }
 }

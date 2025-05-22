@@ -49,6 +49,11 @@
         <action
             android:id="@+id/dashboard_to_settings"
             app:destination="@id/settings" />
+        <action
+            android:id="@+id/dashboard_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
 
     </fragment>
 
@@ -152,6 +157,10 @@
             app:destination="@id/edit_recipe" />
 
         <action
+            android:id="@+id/edit_to_edit_ingredient"
+            app:destination="@id/edit_ingredient" />
+
+        <action
             android:id="@+id/edit_to_search"
             app:destination="@id/search"
             app:launchSingleTop="true"
@@ -250,14 +259,26 @@
 
         <action
             android:id="@+id/camera_to_edit_ingredient"
-            app:destination="@id/edit_ingredient">
-        </action>
+            app:destination="@id/edit_ingredient" />
 
         <action
             android:id="@+id/back_to_edit_recipe"
             app:launchSingleTop="true"
             app:popUpTo="@id/edit_recipe"
             app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/camera_to_take_photo"
+            app:destination="@id/take_photo_nutrition_facts">
+            <argument
+                android:name="isPicker"
+                android:defaultValue="true"
+                app:argType="boolean" />
+            <argument
+                android:name="isSinglePhoto"
+                android:defaultValue="true"
+                app:argType="boolean" />
+        </action>
 
     </fragment>
 
@@ -324,6 +345,7 @@
             app:destination="@id/diary"
             app:launchSingleTop="true"
             app:popUpTo="@id/dashboard" />
+
     </fragment>
 
 
@@ -373,12 +395,7 @@
             android:id="@+id/edit_recipe_to_my_foods"
             app:destination="@id/my_foods"
             app:launchSingleTop="true"
-            app:popUpTo="@id/dashboard" >
-            <argument
-                android:name="isRecipeShow"
-                app:argType="boolean"
-                android:defaultValue="true"/>
-        </action>
+            app:popUpTo="@id/dashboard" />
 
     </fragment>
 
@@ -485,6 +502,15 @@
     </fragment>
 
     <fragment
+        android:id="@+id/favorite"
+        android:name="ai.passio.nutrition.uimodule.ui.favorite.FavoriteFragment"
+        android:label="FavoriteFragment"
+        tools:layout="@layout/fragment_favorite">
+
+
+    </fragment>
+
+    <fragment
         android:id="@+id/voice_logging"
         android:name="ai.passio.nutrition.uimodule.ui.voice.VoiceLoggingFragment"
         android:label="VoiceLoggingFragment"
@@ -523,6 +549,19 @@
     </fragment>
 
     <fragment
+        android:id="@+id/take_photo_nutrition_facts"
+        android:name="ai.passio.nutrition.uimodule.ui.camera.TakePhotoNutritionFactsFragment"
+        android:label="Take Photo"
+        tools:layout="@layout/fragment_take_photo_nutrition_facts">
+
+        <action
+            android:id="@+id/take_photo_to_barcode_image_food_result"
+            app:destination="@id/barcode_image_food_result" />
+
+
+    </fragment>
+
+    <fragment
         android:id="@+id/take_photo"
         android:name="ai.passio.nutrition.uimodule.ui.image.TakePhotoFragment"
         android:label="Take Photo"
@@ -532,6 +571,37 @@
             android:id="@+id/take_photo_to_image_food_result"
             app:destination="@id/image_food_result" />
 
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/barcode_image_food_result"
+        android:name="ai.passio.nutrition.uimodule.ui.camera.NutritionFactsPhotoResultFragment"
+        android:label="Food Result"
+        tools:layout="@layout/fragment_nutrition_facts_photo_result">
+
+        <action
+            android:id="@+id/nutrition_facts_to_diary"
+            app:destination="@id/diary"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+
+
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/back_to_camera"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/camera"
+            app:popUpToInclusive="false" />
+
+
+        <action
+            android:id="@+id/nutrition_facts_to_scan_barcode"
+            app:destination="@id/scan_barcode" />
 
     </fragment>
 
@@ -546,6 +616,33 @@
             app:destination="@id/diary"
             app:launchSingleTop="true"
             app:popUpTo="@id/dashboard" />
+
+        <action
+            android:id="@+id/image_food_result_to_search"
+            app:destination="@id/search" />
+
+
+        <action
+            android:id="@+id/back_to_edit_recipe"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/edit_recipe"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/image_food_to_edit_recipe"
+            app:destination="@id/edit_recipe"
+            app:launchSingleTop="true" />
+
+        <action
+            android:id="@+id/image_food_result_to_take_select_photo"
+            app:destination="@id/take_select_photo"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/dashboard" />
+
+
+        <action
+            android:id="@+id/image_food_result_to_scan_barcode"
+            app:destination="@id/scan_barcode" />
 
     </fragment>
 

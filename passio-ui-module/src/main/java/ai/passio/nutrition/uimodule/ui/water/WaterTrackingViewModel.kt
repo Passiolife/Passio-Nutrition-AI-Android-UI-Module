@@ -4,7 +4,7 @@ import ai.passio.nutrition.uimodule.data.ResultWrapper
 import ai.passio.nutrition.uimodule.domain.water.WaterUseCase
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
-import ai.passio.nutrition.uimodule.ui.model.MeasurementUnit
+import ai.passio.nutrition.uimodule.ui.model.UserProfile
 import ai.passio.nutrition.uimodule.ui.model.WaterRecord
 import ai.passio.nutrition.uimodule.ui.profile.WaterUnit
 import ai.passio.nutrition.uimodule.ui.profile.ozToMl
@@ -23,7 +23,7 @@ class WaterTrackingViewModel : BaseViewModel() {
 
     private val _weightRecordCurrentEvent = SingleLiveEvent<WaterRecord>()
     val weightRecordCurrentEvent: LiveData<WaterRecord> = _weightRecordCurrentEvent
-    private val measurementUnit: MeasurementUnit get() = UserCache.getProfile().measurementUnit
+    private val userProfile: UserProfile get() = UserCache.getProfile()
 
     private val _saveRecord = SingleLiveEvent<ResultWrapper<Boolean>>()
     val saveRecord: LiveData<ResultWrapper<Boolean>> = _saveRecord
@@ -39,7 +39,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     private var currentDate = Date()
 
     fun initRecord(weightRecordEdit: WaterRecord?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordCurrent = weightRecordEdit ?: WaterRecord.create()
             _weightRecordCurrentEvent.postValue(weightRecordCurrent!!)
         }
@@ -68,7 +68,7 @@ class WaterTrackingViewModel : BaseViewModel() {
 
     fun updateWeight(weight: String) {
         weightRecordCurrent?.apply {
-            if (measurementUnit.waterUnit == WaterUnit.Imperial) {
+            if (userProfile.waterUnit == WaterUnit.imperial) {
                 weightRecordCurrent?.weight = ozToMl(weight.toDoubleOrNull() ?: 0.0)
             } else {
                 weightRecordCurrent?.weight = weight.toDoubleOrNull() ?: 0.0
@@ -77,7 +77,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun updateWeightRecord() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordCurrent?.let {
                 _weightRecordCurrentEvent.postValue(it)
                 if (it.dateTime <= 0) {
@@ -92,10 +92,10 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun quickAdd(quickWeight: Double) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val quickRecord = WaterRecord.create()
             quickRecord.apply {
-                if (measurementUnit.waterUnit == WaterUnit.Imperial) {
+                if (userProfile.waterUnit == WaterUnit.imperial) {
                     quickRecord.weight = ozToMl(quickWeight)
                 } else {
                     quickRecord.weight = quickWeight
@@ -107,7 +107,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun removeWeightRecord(weightRecordRemove: WaterRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             weightRecordRemove.let {
                 _removeRecord.postValue(ResultWrapper.Success(useCase.removeRecord(it)))
             }
@@ -121,7 +121,7 @@ class WaterTrackingViewModel : BaseViewModel() {
     }
 
     fun fetchRecords() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _timePeriod.postValue(currentTimePeriod)
             val records = useCase.getRecords(currentDate, currentTimePeriod)
             _weightRecords.postValue(Pair(records, currentTimePeriod))

@@ -5,6 +5,8 @@ import ai.passio.nutrition.uimodule.domain.mealplan.MealPlanUseCase
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.copy
+import ai.passio.nutrition.uimodule.ui.model.toPassioMealPlan
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlan
@@ -66,9 +68,9 @@ class MealPlanViewModel : BaseViewModel() {
     }
 
     private fun getMealPlanItems() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (selectedMealPlan == null) {
-                selectedMealPlan = (UserCache.getProfile().passioMealPlan
+                selectedMealPlan = (UserCache.getProfile().mealPlan?.toPassioMealPlan()
                     ?: _passioMealPlans.find { mealPlan -> mealPlan.mealPlanLabel == "balanced" }
                     ?: _passioMealPlans.firstOrNull()
                         )
@@ -93,7 +95,7 @@ class MealPlanViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             showLoading.postValue(true)
             mealPlanUseCase.getFoodRecord(passioMealPlanItem)?.let {
-                _logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecord(it)))
+                _logFoodEvent.postValue(ResultWrapper.Success(mealPlanUseCase.logFoodRecord(it.copy())))
             }
                 ?: _logFoodEvent.postValue(ResultWrapper.Error("Could not fetch food item for: ${passioMealPlanItem.meal.foodName}"))
 

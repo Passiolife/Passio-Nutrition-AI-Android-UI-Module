@@ -1,5 +1,6 @@
 package ai.passio.nutrition.uimodule.data
 
+import ai.passio.nutrition.uimodule.NutritionUIModule
 import ai.passio.nutrition.uimodule.ui.activity.UserCache
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
@@ -19,20 +20,25 @@ import ai.passio.passiosdk.passiofood.NutritionFactsRecognitionListener
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioSDK
 import ai.passio.passiosdk.passiofood.data.model.PassioFoodItem
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.joda.time.DateTime
 import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import kotlin.coroutines.suspendCoroutine
 
 class Repository private constructor() {
 
     companion object {
+        private lateinit var sharedPrefsPassioConnector: SharedPrefsPassioConnector
 
         @Volatile
         private var instance: Repository? = null
@@ -43,6 +49,7 @@ class Repository private constructor() {
             }
 
         fun create(context: Context, connector: PassioConnector) {
+            sharedPrefsPassioConnector = SharedPrefsPassioConnector(context)
             SharedPrefUtils.init(context)
             getInstance().connector = connector
             connector.initialize()
@@ -51,11 +58,94 @@ class Repository private constructor() {
 
     private lateinit var connector: PassioConnector
 
+
+    suspend fun migrateDataFromOldSharedPrefsPassioConnector(): Boolean {
+
+        fun migrateIngredients(foodRecord: FoodRecord): FoodRecord {
+            val it = foodRecord
+            if (!it.refCode.isValid()) {
+                it.refCode = it.uuid
+            }
+            if (!it.refCode.isValid()) {
+                it.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+            }
+
+            it.ingredients.forEach { ingredient ->
+
+                if (!ingredient.refCode.isValid() && ingredient.id.isValid()) {
+                    ingredient.refCode = ingredient.id
+                }
+                if (!ingredient.refCode.isValid() && it.uuid.isValid()) {
+                    ingredient.refCode = it.uuid
+                }
+                if (!ingredient.refCode.isValid()) {
+                    ingredient.refCode = UUID.randomUUID().toString().uppercase(Locale.ROOT)
+                }
+
+                ingredient.entityType = PassioIDEntityType.item.value
+
+            }
+
+            return it
+        }
+
+        if (sharedPrefsPassioConnector.isMigrationNeeded()) {
+            sharedPrefsPassioConnector.initialize()
+            //migrate user profile
+//            updateUser(sharedPrefsPassioConnector.fetchUserProfile())
+//            Log.d("DATA MIGRATION", "Done migrating user profile")
+
+            //migrate records
+//            logFoodRecords(sharedPrefsPassioConnector.getRecords())
+            sharedPrefsPassioConnector.getRecords().forEach {
+                val tempRecord = migrateIngredients(it)
+                logFoodRecord(tempRecord)
+            }
+            Log.d("DATA MIGRATION", "Done migrating food logs records")
+
+            //migrate custom foods
+            sharedPrefsPassioConnector.fetchAllUserFoods().forEach {
+                val tempRecord = migrateIngredients(it)
+                saveCustomFood(tempRecord)
+            }
+            Log.d("DATA MIGRATION", "Done migrating custom foods")
+
+            //migrate recipes
+            sharedPrefsPassioConnector.fetchRecipes().forEach {
+                val tempRecord = migrateIngredients(it)
+                saveRecipe(tempRecord)
+            }
+            Log.d("DATA MIGRATION", "Done migrating recipes")
+
+            //migrate water records
+            sharedPrefsPassioConnector.fetchAllWaterRecords().forEach {
+                updateWater(it)
+            }
+            Log.d("DATA MIGRATION", "Done migrating water records")
+
+            //migrate weight records
+            sharedPrefsPassioConnector.fetchAllWeightRecords().forEach {
+                updateWeight(it)
+            }
+            Log.d("DATA MIGRATION", "Done migrating weight records")
+
+            sharedPrefsPassioConnector.markDoneMigration()
+            Log.d("DATA MIGRATION", "Done migrating all data")
+        }
+        return true
+
+    }
+
     suspend fun fetchPassioFoodItem(
-        searchResult: PassioFoodDataInfo,
-        weighGrams: Double? = null
+        dataInfo: PassioFoodDataInfo,
+        servingQuantity: Double? = null,
+        servingUnit: String? = null,
     ): PassioFoodItem? = suspendCoroutine { cont ->
-        PassioSDK.instance.fetchFoodItemForDataInfo(searchResult, weighGrams) { foodItem ->
+        PassioSDK.instance.fetchFoodItemForDataInfo(
+            dataInfo = dataInfo,
+            servingQuantity = servingQuantity,
+            servingUnit = servingUnit
+        ) { foodItem ->
             cont.resumeWith(Result.success(foodItem))
         }
     }
@@ -63,8 +153,15 @@ class Repository private constructor() {
     suspend fun fetchSearchResults(
         query: String
     ): Pair<List<PassioFoodDataInfo>, List<String>> = suspendCoroutine { cont ->
-        PassioSDK.instance.searchForFood(query) { result, searchOptions ->
-            cont.resumeWith(Result.success(result to searchOptions))
+
+        if (NutritionUIModule.getConfiguration().shouldUseLegacySearch) {
+            PassioSDK.instance.searchForFood(query) { result, searchOptions ->
+                cont.resumeWith(Result.success(result to searchOptions))
+            }
+        } else {
+            PassioSDK.instance.searchForFoodSemantic(query) { result, searchOptions ->
+                cont.resumeWith(Result.success(result to searchOptions))
+            }
         }
     }
 
@@ -122,11 +219,19 @@ class Repository private constructor() {
     }
 
     suspend fun logFoodRecords(records: List<FoodRecord>): Boolean {
-        return connector.updateRecords(records)
+//        return connector.updateRecords(records)
+        var isDone = true
+        records.forEach { record ->
+            val result = connector.updateRecord(record)
+            if (!result) {
+                isDone = false
+            }
+        }
+        return isDone
     }
 
-    suspend fun deleteFoodRecord(uuid: String): Boolean {
-        return connector.deleteRecord(uuid)
+    suspend fun deleteFoodRecord(foodRecord: FoodRecord): Boolean {
+        return connector.deleteRecord(foodRecord)
     }
 
     suspend fun getLogsForDay(day: Date): List<FoodRecord> {
@@ -137,7 +242,7 @@ class Repository private constructor() {
         val today = DateTime(day.time)
         val startOfWeek = getStartOfWeek(today)//.millis
         val endOfWeek = getEndOfWeek(today)//.millis
-        return connector.fetchLogsRecords(startOfWeek.toDate(), endOfWeek.toDate())
+        return connector.fetchDayLogFor(startOfWeek.toDate(), endOfWeek.toDate())
     }
 
     suspend fun getLogsForMonth(day: Date): List<FoodRecord> {
@@ -146,20 +251,24 @@ class Repository private constructor() {
         val startOfMonth = getStartOfMonth(today)//.millis
         val endOfMonth = getEndOfMonth(today)//.millis
 
-        return connector.fetchLogsRecords(startOfMonth.toDate(), endOfMonth.toDate())
+        Log.d(
+            "getLogsForMonth==",
+            "day: $day , startOfMonth: $startOfMonth , endOfMonth: $endOfMonth, today: $today"
+        )
+        return connector.fetchDayLogFor(startOfMonth.toDate(), endOfMonth.toDate())
     }
 
 
     suspend fun getLogsForLast30Days(): List<FoodRecord> {
         val today = DateTime()
         val before30Days = getBefore30Days(today)
-        return connector.fetchLogsRecords(before30Days.toDate(), today.toDate())
+        return connector.fetchDayLogFor(before30Days.toDate(), today.toDate())
     }
 
-    suspend fun fetchAdherence(): List<Long> {
-        return connector.fetchAdherence()
-    }
-
+    /*  suspend fun fetchAdherence(): List<Long> {
+          return connector.fetchAdherence()
+      }
+  */
     suspend fun updateUser(userProfile: UserProfile): Boolean {
         UserCache.setProfile(userProfile)
         return connector.updateUserProfile(userProfile)
@@ -177,18 +286,11 @@ class Repository private constructor() {
     }
 
     suspend fun removeWeightRecord(weightRecord: WeightRecord): Boolean {
-        return connector.removeWeightRecord(weightRecord)
+        return connector.deleteWeightRecord(weightRecord)
     }
 
     suspend fun fetchLatestWeightRecord(): WeightRecord? {
         return connector.fetchLatestWeightRecord()
-    }
-
-    suspend fun fetchWeightRecords(currentDate: Date): List<WeightRecord> {
-        val forDate = DateTime(currentDate.time)
-        val startDate: DateTime = forDate.withTimeAtStartOfDay()
-        val endDate: DateTime = forDate.withTime(23, 59, 59, 999)
-        return connector.fetchWeightRecords(startDate.toDate(), endDate.toDate())
     }
 
     suspend fun fetchWeightRecords(currentDate: Date, timePeriod: TimePeriod): List<WeightRecord> {
@@ -210,7 +312,7 @@ class Repository private constructor() {
     }
 
     suspend fun removeWaterRecord(waterRecord: WaterRecord): Boolean {
-        return connector.removeWaterRecord(waterRecord)
+        return connector.deleteWaterRecord(waterRecord)
     }
 
     suspend fun fetchWaterRecords(currentDate: Date): List<WaterRecord> {
@@ -235,36 +337,36 @@ class Repository private constructor() {
     }
 
     suspend fun saveCustomFood(record: FoodRecord): Boolean {
-        return connector.saveCustomFood(record)
+        return connector.updateUserFood(record)
     }
 
     suspend fun fetchCustomFoods(): List<FoodRecord> {
-        return connector.fetchCustomFoods()
+        return connector.fetchAllUserFoods()
     }
 
     suspend fun fetchCustomFoods(searchQuery: String): List<FoodRecord> {
         return if (!searchQuery.isValid()) {
             emptyList()
         } else {
-            connector.fetchCustomFoods(searchQuery)
+            connector.fetchAllUserFoodsMatching(searchQuery)
         }
     }
 
-    suspend fun fetchCustomFood(uuid: String): FoodRecord? {
-        return connector.fetchCustomFood(uuid)
+    suspend fun fetchCustomFood(refCode: String): FoodRecord? {
+        return connector.fetchUserFood(refCode)
     }
 
-    suspend fun deleteCustomFood(uuid: String): Boolean {
-        return connector.deleteCustomFood(uuid)
+    suspend fun deleteCustomFood(foodRecord: FoodRecord): Boolean {
+        return connector.deleteUserFood(foodRecord)
     }
 
     suspend fun getCustomFoodUsingBarcode(barcode: String): FoodRecord? {
-        return connector.getCustomFoodUsingBarcode(barcode)
+        return connector.fetchUserFoodsForBarcode(barcode)
     }
 
 
     suspend fun saveRecipe(record: FoodRecord): Boolean {
-        return connector.saveRecipe(record)
+        return connector.updateRecipe(record)
     }
 
     suspend fun fetchRecipes(): List<FoodRecord> {
@@ -279,12 +381,46 @@ class Repository private constructor() {
         }
     }
 
-    suspend fun fetchRecipe(id: String): FoodRecord? {
-        return connector.fetchRecipe(id)
+    suspend fun fetchRecipe(refCode: String): FoodRecord? {
+        return connector.fetchRecipe(refCode)
     }
 
-    suspend fun deleteRecipe(uuid: String): Boolean {
-        return connector.deleteRecipe(uuid)
+    suspend fun deleteRecipe(foodRecord: FoodRecord): Boolean {
+        return connector.deleteRecipe(foodRecord)
+    }
+
+    suspend fun markFavorite(foodRecord: FoodRecord): Boolean {
+        return connector.updateFavorite(foodRecord)
+    }
+
+    suspend fun markUnfavorite(foodRecord: FoodRecord): Boolean {
+        return connector.deleteFavorite(foodRecord)
+    }
+
+    suspend fun getFavorites(): List<FoodRecord> {
+        return connector.fetchFavorites()
+    }
+
+    suspend fun isFavorite(foodRecord: FoodRecord): Boolean {
+        return connector.isFavorite(foodRecord)
+    }
+
+    suspend fun updateUserFoodImage(id: String, bitmap: Bitmap): Boolean {
+        return connector.updateUserFoodImage(id, bitmap)
+    }
+
+    suspend fun fetchUserFoodImage(id: String): Bitmap? {
+        return connector.fetchUserFoodImage(id)
+    }
+    /*fun fetchUserFoodImage(
+        id: String,
+        onBitmapFetched: (bitmap: Bitmap?) -> Unit
+    ) {
+        connector.fetchUserFoodImage(id, onBitmapFetched)
+    }*/
+
+    suspend fun deleteUserFoodImage(id: String): Boolean {
+        return connector.deleteUserFoodImage(id)
     }
 
 }

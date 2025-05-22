@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.foodcreator
 
 import ai.passio.nutrition.uimodule.domain.customfood.CustomFoodUseCase
+import ai.passio.nutrition.uimodule.domain.foodimage.FoodImageUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_CALCIUM_ID
@@ -18,14 +19,15 @@ import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_SUGARS_ADDED_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_SUGARS_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_TRANS_FAT_ID
+import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_VITAMIN_A_RAE_ID
 import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.REF_VITAMIN_D_ID
-import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.setValue
-import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitEnergyOf
-import ai.passio.nutrition.uimodule.ui.foodcreator.NutritionFactsItem.Companion.unitMassOf
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsCustomFood
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.nutrition.uimodule.ui.util.generateImageID
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.KiloCalories
 import ai.passio.passiosdk.passiofood.data.measurement.Micrograms
@@ -36,11 +38,10 @@ import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 import ai.passio.passiosdk.passiofood.nutritionfacts.PassioNutritionFacts
-import android.util.Log
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -48,6 +49,7 @@ class FoodCreatorViewModel : BaseViewModel() {
 
     private val useCase = CustomFoodUseCase
     private val editFoodUseCase = EditFoodUseCase
+    private val foodImageUseCase = FoodImageUseCase
     val unitList = mutableListOf(
         "serving",
         "piece",
@@ -87,15 +89,19 @@ class FoodCreatorViewModel : BaseViewModel() {
     val otherNutritionFactsNotAdded get() = otherNutritionFacts.filter { !it.isAdded }
 
     private var customFoodRecord: FoodRecord? = null
-    private val _isEditCustomFood = SingleLiveEvent<Boolean>()
-    val isEditCustomFood: LiveData<Boolean> = _isEditCustomFood
+    private var isEditCustomFood: Boolean = false
+    private val _isEditCustomFoodEvent = SingleLiveEvent<Boolean>()
+    val isEditCustomFoodEvent: LiveData<Boolean> = _isEditCustomFoodEvent
     private val _prefillFoodData = SingleLiveEvent<FoodRecord>()
     val prefillFoodData: LiveData<FoodRecord> = _prefillFoodData
 
 
-    private var photoPath: String? = null
-    private val _photoPathEvent = MutableLiveData<String>()
-    val photoPathEvent: LiveData<String> = _photoPathEvent
+    //    private var photoPath: String? = null
+//    private val _photoPathEvent = MutableLiveData<String>()
+//    val photoPathEvent: LiveData<String> = _photoPathEvent
+    private var iconId: String? = null
+    private val _iconIdEvent = MutableLiveData<String>()
+    val iconIdEvent: LiveData<String> = _iconIdEvent
 
     private var loggedRecord: FoodRecord? = null
 
@@ -233,21 +239,49 @@ class FoodCreatorViewModel : BaseViewModel() {
             isAdded = false
         )
         otherNutritionFacts.add(refPotassium)
+
+        val refVitaminARAE = NutritionFactsItem(
+            id = REF_VITAMIN_A_RAE_ID,
+            nutrientName = "vitamin A RAE",
+            unitSymbol = Milligrams.symbol,
+            value = 0.0,
+            isAdded = false
+        )
+        otherNutritionFacts.add(refVitaminARAE)
     }
 
 
-    fun setPhotoPath(path: String) {
+    fun setPhotoBitmap(bitmap: Bitmap) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val imgId = generateImageID()
+            val result = foodImageUseCase.updateUserFoodImage(imgId, bitmap)
+            if (result) {
+                setIconId(imgId)
+            }
+        }
+    }
+
+    private fun setIconId(iconId: String) {
+        this.iconId = iconId
+//        customFoodRecord?.iconId = iconId
+        _iconIdEvent.postValue(iconId)
+    }
+
+    /*fun setPhotoPath(path: String) {
         this.photoPath = path
         _photoPathEvent.postValue(path)
-    }
+    }*/
 
     fun setToUpdateLog(loggedRecord: FoodRecord) {
         this.loggedRecord = loggedRecord
     }
 
-    fun setDataToEdit(foodRecord: FoodRecord) {
+    fun setDataToEdit(foodRecord: FoodRecord, isEditUserFood: Boolean) {
+
+        isEditCustomFood = isEditUserFood //true: edit user food, false: create new food
+
 //        val nutritionFacts = nutritionFactsPair.first
-        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.passioIDEntityType)
+        this.passioIDEntityType = PassioIDEntityType.fromString(foodRecord.entityType)
 
 //        Log.d("nutritionFacts====", Gson().toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
@@ -268,50 +302,91 @@ class FoodCreatorViewModel : BaseViewModel() {
 //        nutritionFacts.servingSize
 //        nutritionFacts.sugarAlcohol
 
-        foodRecord.foodImagePath?.let {
+        /*foodRecord.foodImagePath?.let {
             setPhotoPath(it)
-        }
+        }*/
 
-        val nutritionFacts = foodRecord.nutrientsReference()
-        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs()?.value ?: 0.0)
-        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories()?.value ?: 0.0)
-        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein()?.value ?: 0.0)
-        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat()?.value ?: 0.0)
+        setIconId(foodRecord.iconId)
 
-        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.satFat()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars()?.value ?: 0.0)
+//        foodRecord.servingWeight()
+        val ratio = 1 //100 / foodRecord.servingWeight().gramsValue()
+        val nutritionFacts = foodRecord.nutrientsSelectedSize()
+        requiredNutritionFacts.setValue(
+            REF_CARBS_ID,
+            nutritionFacts.carbs()?.value?.div(ratio) ?: 0.0
+        )
+        requiredNutritionFacts.setValue(
+            REF_CALORIES_ID,
+            nutritionFacts.calories()?.value?.div(ratio) ?: 0.0
+        )
+        requiredNutritionFacts.setValue(
+            REF_PROTEIN_ID,
+            nutritionFacts.protein()?.value?.div(ratio) ?: 0.0
+        )
+        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat()?.value?.div(ratio) ?: 0.0)
+
+        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.satFat()?.value?.div(ratio))
+        otherNutritionFacts.setValue(
+            REF_CHOLESTEROL_ID,
+            nutritionFacts.cholesterol()?.value?.div(ratio)
+        )
+        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium()?.value?.div(ratio))
+        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers()?.value?.div(ratio))
+        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat()?.value?.div(ratio))
+        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars()?.value?.div(ratio))
         otherNutritionFacts.setValue(
             REF_SUGARS_ADDED_ID,
-            nutritionFacts.sugarsAdded()?.value ?: 0.0
+            nutritionFacts.sugarsAdded()?.value?.div(ratio)
         )
 
-        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium()?.value ?: 0.0)
-        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium()?.value ?: 0.0)
+        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron()?.value?.div(ratio))
+        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD()?.value?.div(ratio))
+        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium()?.value?.div(ratio))
+        otherNutritionFacts.setValue(
+            REF_POTASSIUM_ID,
+            nutritionFacts.potassium()?.value?.div(ratio)
+        )
+        otherNutritionFacts.setValue(
+            REF_MAGNESIUM_ID,
+            nutritionFacts.magnesium()?.value?.div(ratio)
+        )
+        otherNutritionFacts.setValue(
+            REF_VITAMIN_A_RAE_ID,
+            nutritionFacts.vitaminARAE()?.value?.div(ratio)
+        )
 
-        customFoodRecord = foodRecord
-        _isEditCustomFood.postValue(true)
-        _prefillFoodData.postValue(foodRecord)
+        customFoodRecord = foodRecord.clone()
+
+        if (customFoodRecord?.name == customFoodRecord?.details)
+        {
+            customFoodRecord?.details = ""
+        }
+
+        if (!isEditCustomFood) {
+            customFoodRecord?.id = ""
+            customFoodRecord?.uuid = ""
+            customFoodRecord?.refCode = ""
+        }
+
+        _isEditCustomFoodEvent.postValue(isEditCustomFood)
+        _prefillFoodData.postValue(customFoodRecord!!)
     }
 
     fun setDataFromNutritionFacts(nutritionFactsPair: Pair<PassioNutritionFacts, String>) {
         val nutritionFacts = nutritionFactsPair.first
         this.passioIDEntityType = PassioIDEntityType.nutritionFacts
 
-        Log.d("nutritionFacts====", Gson().toJson(nutritionFacts))
+//        Log.d("nutritionFacts====", passioGson.toJson(nutritionFacts))
 //        productName = nutritionFactsPair.second
-        nutritionFacts.servingSize?.let { servingSize ->
-            val pair = splitServingSize(servingSize)
-            setServingSize(pair.first)
-            setServingUnit(pair.second)
+        nutritionFacts.servingQuantity?.let {
+            setServingSize(it)
         }
-        nutritionFacts.servingSizeQuantity?.let {
+        nutritionFacts.servingUnit?.let {
+            setServingUnit(it)
+        }
+        var ratio = 1.0
+        nutritionFacts.weightQuantity?.let {
+            ratio = 100 / it
             setWeightGram(it)
         }
 
@@ -320,26 +395,31 @@ class FoodCreatorViewModel : BaseViewModel() {
 //        nutritionFacts.servingSize
 //        nutritionFacts.sugarAlcohol
 
-        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs ?: 0.0)
-        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories ?: 0.0)
-        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein ?: 0.0)
-        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CARBS_ID, nutritionFacts.carbs?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_CALORIES_ID, nutritionFacts.calories?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_PROTEIN_ID, nutritionFacts.protein?.div(ratio) ?: 0.0)
+        requiredNutritionFacts.setValue(REF_FAT_ID, nutritionFacts.fat?.div(ratio) ?: 0.0)
 
-        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.saturatedFat ?: 0.0)
-        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol ?: 0.0)
-//        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium ?: 0.0)
-//        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers ?: 0.0)
-        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat ?: 0.0)
-        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars ?: 0.0)
-//        otherNutritionFacts.setValue(REF_SUGARS_ADDED_ID, nutritionFacts.sugarsAdded ?: 0.0)
+        otherNutritionFacts.setValue(REF_SAT_FAT_ID, nutritionFacts.saturatedFat?.div(ratio))
+        otherNutritionFacts.setValue(REF_CHOLESTEROL_ID, nutritionFacts.cholesterol?.div(ratio))
+//        otherNutritionFacts.setValue(REF_SODIUM_ID, nutritionFacts.sodium)
+//        otherNutritionFacts.setValue(REF_FIBERS_ID, nutritionFacts.fibers)
+        otherNutritionFacts.setValue(REF_TRANS_FAT_ID, nutritionFacts.transFat?.div(ratio))
+        otherNutritionFacts.setValue(REF_SUGARS_ID, nutritionFacts.sugars?.div(ratio))
+//        otherNutritionFacts.setValue(REF_SUGARS_ADDED_ID, nutritionFacts.sugarsAdded)
 
-//        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron ?: 0.0)
-//        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD ?: 0.0)
-//        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium ?: 0.0)
-//        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium ?: 0.0)
-//        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium ?: 0.0)
+//        otherNutritionFacts.setValue(REF_IRON_ID, nutritionFacts.iron)
+//        otherNutritionFacts.setValue(REF_VITAMIN_D_ID, nutritionFacts.vitaminD)
+//        otherNutritionFacts.setValue(REF_CALCIUM_ID, nutritionFacts.calcium)
+//        otherNutritionFacts.setValue(REF_POTASSIUM_ID, nutritionFacts.potassium)
+//        otherNutritionFacts.setValue(REF_MAGNESIUM_ID, nutritionFacts.magnesium)
+//        otherNutritionFacts.setValue(REF_VITAMIN_A_RAE_ID, nutritionFacts.a)
 
-        val passioNutrientsTemp = PassioNutrients(
+        val passioNutrients = PassioNutrients(
+            weight = UnitMass(
+                if (weightGramUnit == Grams.symbol) Grams else Milliliters,
+                weightGram
+            ),
             carbs = requiredNutritionFacts.unitMassOf(REF_CARBS_ID),
             calories = requiredNutritionFacts.unitEnergyOf(REF_CALORIES_ID),
             proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID),
@@ -368,14 +448,16 @@ class FoodCreatorViewModel : BaseViewModel() {
             magnesium = null,
             phosphorus = null,
             sugarAlcohol = null,
-            vitaminA = null
+            vitaminA = null,
+            vitaminARAE = otherNutritionFacts.unitMassOf(REF_VITAMIN_A_RAE_ID)
         )
-        val passioNutrients = PassioNutrients(
-            passioNutrientsTemp,
-            UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
-        )
+//        val passioNutrients = PassioNutrients(
+//            passioNutrientsTemp,
+//            UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
+//        )
 
         val customFood = FoodRecord(
+
             productName = productName,
             brandName = brandName,
             barcode = barcode,
@@ -385,10 +467,11 @@ class FoodCreatorViewModel : BaseViewModel() {
             weightInGramsUnit = weightGramUnit,
             passioNutrients = passioNutrients,
             passioIDEntityType = passioIDEntityType,
-            foodImagePath = photoPath
+//            foodImagePath = ""photoPath,
+            iconId = iconId ?: ""
         )
         customFoodRecord = customFood
-        _isEditCustomFood.postValue(false)
+        _isEditCustomFoodEvent.postValue(false)
         _prefillFoodData.postValue(customFood)
     }
 
@@ -461,10 +544,10 @@ class FoodCreatorViewModel : BaseViewModel() {
     }
 
     fun deleteCustomFood() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (customFoodRecord != null) {
                 _showLoading.postValue(true)
-                if (useCase.deleteCustomFood(customFoodRecord!!.uuid)) {
+                if (useCase.deleteCustomFood(customFoodRecord!!)) {
                     _showMessageEvent.postValue("Food deleted successfully.")
                     navigateToMyFoods()
 
@@ -477,7 +560,7 @@ class FoodCreatorViewModel : BaseViewModel() {
     }
 
     fun saveCustomFood() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             if (servingUnit.equals(Grams.symbol, true) || servingUnit.equals(
                     Milliliters.symbol,
@@ -504,10 +587,11 @@ class FoodCreatorViewModel : BaseViewModel() {
                 _showMessageEvent.postValue("Please add valid information of required nutrients.")
             }/* else if (!isAddedOtherNutritionFacts()) {
                 _showMessageEvent.postValue("Please add valid information of other nutrients.")
-            } */else {
+            } */ else {
                 _showLoading.postValue(true)
 
-                val passioNutrientsTemp = PassioNutrients(
+                val passioNutrients = PassioNutrients(
+                    weight = UnitMass(Grams, weightGram),
                     carbs = requiredNutritionFacts.unitMassOf(REF_CARBS_ID),
                     calories = requiredNutritionFacts.unitEnergyOf(REF_CALORIES_ID),
                     proteins = requiredNutritionFacts.unitMassOf(REF_PROTEIN_ID),
@@ -536,12 +620,13 @@ class FoodCreatorViewModel : BaseViewModel() {
                     magnesium = null,
                     phosphorus = null,
                     sugarAlcohol = null,
-                    vitaminA = null
+                    vitaminA = null,
+                    vitaminARAE = otherNutritionFactsAdded.unitMassOf(REF_VITAMIN_A_RAE_ID)
                 )
-                val passioNutrients = PassioNutrients(
+                /*val passioNutrients = PassioNutrients(
                     passioNutrientsTemp,
-                    UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, weightGram)
-                )
+                    UnitMass(if (weightGramUnit == Grams.symbol) Grams else Milliliters, 100.0)
+                )*/
 
                 val customFood =
                     if (customFoodRecord != null) {
@@ -555,7 +640,8 @@ class FoodCreatorViewModel : BaseViewModel() {
                             weightInGramsUnit = weightGramUnit,
                             passioNutrients = passioNutrients,
                             passioIDEntityType = passioIDEntityType,
-                            foodImagePath = photoPath
+//                            foodImagePath = ""photoPath,
+                            iconId = iconId ?: ""
                         )
                     } else {
                         FoodRecord(
@@ -568,24 +654,32 @@ class FoodCreatorViewModel : BaseViewModel() {
                             weightInGramsUnit = weightGramUnit,
                             passioNutrients = passioNutrients,
                             passioIDEntityType = passioIDEntityType,
-                            foodImagePath = photoPath
+//                            foodImagePath = ""photoPath,
+                            iconId = iconId ?: ""
                         )
                     }
 
-                val customFoodNew: FoodRecord = if (!customFood.isCustomFood()) {
+                val customFoodNew: FoodRecord = if (!isEditCustomFood) {
                     customFood.copyAsCustomFood()
                 } else {
                     customFood
                 }
                 if (useCase.saveCustomFood(customFoodNew)) {
                     if (loggedRecord != null) {
-                        loggedRecord?.apply {
+                        val loggedRecordNew = customFoodNew.copy()
+                        loggedRecordNew.apply {
+                            this.create(loggedRecord?.createdAtTime())
+                            this.mealLabel = loggedRecord?.mealLabel
+                            editFoodUseCase.deleteRecord(loggedRecord!!)
+                            editFoodUseCase.logFoodRecord(loggedRecordNew, true)
+                        }
+                        /*loggedRecord?.apply {
                             this.name = customFoodNew.name
                             this.ingredients = customFoodNew.ingredients
-                            this.foodImagePath = customFoodNew.foodImagePath
+//                            this.foodImagePath = customFoodNew.foodImagePath
                             this.iconId = customFoodNew.iconId
                             this.id = customFoodNew.uuid
-                            this.passioIDEntityType = customFoodNew.passioIDEntityType
+                            this.entityType = customFoodNew.entityType
                             this.servingSizes.clear()
                             this.servingSizes.addAll(customFoodNew.servingSizes)
                             this.servingUnits.clear()
@@ -593,7 +687,7 @@ class FoodCreatorViewModel : BaseViewModel() {
                             this.setSelectedQuantity(customFoodNew.getSelectedQuantity())
                             this.setSelectedUnit(customFoodNew.getSelectedUnit())
                             editFoodUseCase.logFoodRecord(this, true)
-                        }
+                        }*/
                     }
                     _showMessageEvent.postValue("Food saved successfully.")
 
@@ -609,7 +703,7 @@ class FoodCreatorViewModel : BaseViewModel() {
     private fun isAddedRequiredNutritionFacts(): Boolean {
 //        if (requiredNutritionFacts.any { it.value == 0.0 }) {
         //        } else if (otherNutritionFactsAdded.any { it.value == 0.0 }) {
-        return !requiredNutritionFacts.any { it.value <= 0.0 }
+        return !requiredNutritionFacts.any { it.value < 0.0 }
     }
 
     private fun isAddedOtherNutritionFacts(): Boolean {

@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.model
 
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import ai.passio.passiosdk.passiofood.data.model.PassioIngredient
@@ -9,10 +10,11 @@ import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
 class FoodRecordIngredient {
 
     var id: String = ""
+    var refCode: String = ""
     var name: String = ""
-    var additionalData: String = ""
+    var details: String? = ""
     var iconId: String = ""
-
+    var entityType: String = PassioIDEntityType.item.value
     var selectedUnit: String = ""
     var selectedQuantity: Double = 0.0
     var servingSizes: List<PassioServingSize>
@@ -21,12 +23,41 @@ class FoodRecordIngredient {
 
     var openFoodLicense: String? = null
 
+    constructor(
+        id: String,
+        refCode: String,
+        name: String,
+        additionalData: String?,
+        entityType: String = PassioIDEntityType.item.value,
+        iconId: String,
+        selectedUnit: String,
+        selectedQuantity: Double,
+        servingSizes: List<PassioServingSize>,
+        servingUnits: List<PassioServingUnit>,
+        referenceNutrients: PassioNutrients
+    ) {
+        this.id = id
+        this.refCode = refCode
+        this.name = name
+        this.details = additionalData
+        this.entityType = entityType
+        this.iconId = iconId
+        this.selectedUnit = selectedUnit
+        this.selectedQuantity = selectedQuantity
+        this.servingSizes = servingSizes
+        this.servingUnits = servingUnits
+        this.referenceNutrients = referenceNutrients
+
+    }
+
     //custom food
     constructor(foodRecord: FoodRecord, passioNutrients: PassioNutrients) {
         id = foodRecord.id
+        refCode = foodRecord.refCode
         name = foodRecord.name
-        additionalData = foodRecord.additionalData
+        details = foodRecord.details
         iconId = foodRecord.iconId
+        entityType = foodRecord.entityType
 
         selectedUnit = foodRecord.getSelectedUnit()
         selectedQuantity = foodRecord.getSelectedQuantity()
@@ -36,11 +67,14 @@ class FoodRecordIngredient {
         referenceNutrients = passioNutrients
         openFoodLicense = foodRecord.openFoodLicense
     }
+
     constructor(foodRecord: FoodRecord) {
         id = foodRecord.id
+        refCode = foodRecord.refCode
         name = foodRecord.name
-        additionalData = foodRecord.additionalData
+        details = foodRecord.details
         iconId = foodRecord.iconId
+        entityType = foodRecord.entityType
 
         selectedUnit = foodRecord.getSelectedUnit()
         selectedQuantity = foodRecord.getSelectedQuantity()
@@ -53,6 +87,7 @@ class FoodRecordIngredient {
 
     constructor(ingredient: PassioIngredient) {
         id = ingredient.id
+        refCode = ingredient.refCode
         name = ingredient.name
         iconId = ingredient.iconId
         servingSizes = ingredient.amount.servingSizes
@@ -64,6 +99,7 @@ class FoodRecordIngredient {
             ingredient.metadata.foodOrigins?.firstOrNull { it.source == "openfood" }?.licenseCopy
     }
 
+
     fun servingWeight(): UnitMass {
         val unitWeight = servingUnits.first { it.unitName == selectedUnit }.weight
         return unitWeight * selectedQuantity
@@ -73,5 +109,5 @@ class FoodRecordIngredient {
         return PassioNutrients(referenceNutrients, servingWeight())
     }
 
-    fun nutrientsReference(): PassioNutrients = referenceNutrients
+//    fun nutrientsReference(): PassioNutrients = referenceNutrients
 }

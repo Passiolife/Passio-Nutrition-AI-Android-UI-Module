@@ -2,13 +2,13 @@ package ai.passio.nutrition.uimodule.ui.mealplan
 
 import ai.passio.nutrition.uimodule.databinding.ItemMealplanFoodBinding
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
+import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadPassioIcon
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.math.roundToInt
 
 class MealPlanAdapter(
     private val onLogAdd: (foodRecord: PassioMealPlanItem) -> Unit,
@@ -55,7 +55,7 @@ class MealPlanAdapter(
                 val weight = foodRecord.nutritionPreview.weightQuantity
                 val weightUnit = foodRecord.nutritionPreview.weightUnit
                 servingSize.text =
-                    "$quantity ${selectedUnit.capitalized()} (${weight.roundToInt()} $weightUnit)"
+                    "$quantity ${selectedUnit.capitalized()} (${weight.singleDecimal()} $weightUnit)"
 
 
                 addFood.setOnClickListener {

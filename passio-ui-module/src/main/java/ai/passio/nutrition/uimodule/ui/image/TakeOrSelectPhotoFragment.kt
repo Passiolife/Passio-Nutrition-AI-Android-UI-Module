@@ -22,7 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
+internal class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
 
     private val adapter = AddFoodAdapter(
         listOf(
@@ -90,7 +90,7 @@ class TakeOrSelectPhotoFragment : BaseFragment<BaseViewModel>() {
         {
             val bitmaps = mutableListOf<Bitmap>()
             imageUris.forEach { uri ->
-                val bitmap = uriToBitmap(requireContext(), uri)
+                val bitmap = uriToBitmap(uri)
                 if (bitmap != null) {
                     bitmaps.add(bitmap)
                 }

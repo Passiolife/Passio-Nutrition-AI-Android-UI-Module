@@ -33,7 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AdvisorFragment : BaseFragment<AdvisorViewModel>(isSharedContext = true) {
+internal class AdvisorFragment : BaseFragment<AdvisorViewModel>(isSharedContext = true) {
 
     private var _binding: FragmentAdvisorBinding? = null
     private val binding: FragmentAdvisorBinding get() = _binding!!
@@ -107,7 +107,7 @@ class AdvisorFragment : BaseFragment<AdvisorViewModel>(isSharedContext = true) {
         {
             val bitmaps = mutableListOf<Bitmap>()
             imageUris.forEach { uri ->
-                val bitmap = uriToBitmap(requireContext(), uri)
+                val bitmap = uriToBitmap(uri)
                 if (bitmap != null) {
                     bitmaps.add(bitmap)
                 }

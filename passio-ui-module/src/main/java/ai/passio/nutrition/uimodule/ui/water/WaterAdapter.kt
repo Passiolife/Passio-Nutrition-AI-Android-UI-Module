@@ -22,7 +22,7 @@ class WaterAdapter(
         fun bind(weightRecord: WaterRecord) {
             with(binding) {
                 weight.text = weightRecord.getWaterInCurrentUnit().singleDecimal()
-                weightUnit.text = UserCache.getProfile().measurementUnit.waterUnit.value
+                weightUnit.text = UserCache.getProfile().waterUnit.value
                 dateTime.text = "${weightRecord.getDisplayDay()}\n${weightRecord.getDisplayTime()}"
                 root.setOnClickListener {
                     onTapped.invoke(weightRecord)

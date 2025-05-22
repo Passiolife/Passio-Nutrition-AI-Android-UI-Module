@@ -23,8 +23,8 @@ object RecipeUseCase {
         return repository.fetchRecipes(searchQuery)
     }
 
-    suspend fun deleteRecipe(uuid: String): Boolean {
-        return repository.deleteRecipe(uuid)
+    suspend fun deleteRecipe(foodRecord: FoodRecord): Boolean {
+        return repository.deleteRecipe(foodRecord)
     }
 
     suspend fun logRecipe(fooRecord: FoodRecord): Boolean {
@@ -35,8 +35,8 @@ object RecipeUseCase {
         return repository.logFoodRecord(record)
     }
 
-    suspend fun getRecipe(uuid: String): FoodRecord? {
-        return repository.fetchRecipe(uuid)
+    suspend fun getRecipe(refCode: String): FoodRecord? {
+        return repository.fetchRecipe(refCode)
     }
 
     /*

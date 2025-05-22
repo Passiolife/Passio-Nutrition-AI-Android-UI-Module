@@ -26,7 +26,7 @@ class CustomFoodsViewModel : BaseViewModel() {
     val logFoodEvent: LiveData<ResultWrapper<Boolean>> = _logFoodEvent
 
     fun getCustomFoods() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             val customFoods = useCase.fetchCustomFoods()
             _customFoodListEvent.postValue(customFoods)
@@ -35,17 +35,17 @@ class CustomFoodsViewModel : BaseViewModel() {
         }
     }
 
-    fun deleteCustomFood(uuid: String) {
-        viewModelScope.launch {
+    fun deleteCustomFood(foodRecord: FoodRecord) {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
-            useCase.deleteCustomFood(uuid)
+            useCase.deleteCustomFood(foodRecord)
             getCustomFoods()
             _showLoading.postValue(false)
         }
     }
 
     fun logCustomFood(foodRecord: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             _logFoodEvent.postValue(ResultWrapper.Success(useCase.logCustomFood(foodRecord)))
             _showLoading.postValue(false)

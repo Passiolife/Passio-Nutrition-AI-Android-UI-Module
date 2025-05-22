@@ -51,13 +51,29 @@ object StringKT {
     }
 
 
-    private val oneDecimalFormat = DecimalFormat("0.#")
+    //    private val oneDecimalFormat = DecimalFormat("0.#")
+    private val twoDecimalFormat = DecimalFormat("0.##")
     fun Double.singleDecimal(): String {
-        return oneDecimalFormat.format(this)
+        val value = this
+        return if (value % 1 == 0.0) {
+            value.toInt().toString()
+        } else {
+//            String.format("%.2f", value).trimEnd('0').trimEnd('.')
+            twoDecimalFormat.format(this)//.trimEnd('0').trimEnd('.')
+        }
+
+//        return oneDecimalFormat.format(this)
     }
 
     fun Float.singleDecimal(): String {
-        return oneDecimalFormat.format(this)
+//        return oneDecimalFormat.format(this)
+
+        val value = this
+        return if (value % 1 == 0.0f) {
+            value.toInt().toString()
+        } else {
+            twoDecimalFormat.format(this)//.trimEnd('0').trimEnd('.')
+        }
     }
 
     fun AppCompatTextView.setDrawableEnd(drawableResId: Int) {
@@ -82,6 +98,18 @@ object StringKT {
 
         return spannableString
     }
+
+    // Function to load JSON from assets
+   /* fun loadJsonFromAssets(fileName: String): String? {
+        return try {
+            val inputStream = PassioUiModuleActivity.getContext().assets.open(fileName)
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            bufferedReader.use { it.readText() }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }*/
 
 
 }

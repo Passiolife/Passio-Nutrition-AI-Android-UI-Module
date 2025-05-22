@@ -38,13 +38,13 @@ object CustomFoodUseCase {
         return repository.fetchCustomFoods(searchQuery)
 
     }
-    suspend fun fetchCustomFood(uuid: String): FoodRecord? {
-        return repository.fetchCustomFood(uuid)
+    suspend fun fetchCustomFood(refCode: String): FoodRecord? {
+        return repository.fetchCustomFood(refCode)
 
     }
 
-    suspend fun deleteCustomFood(uuid: String): Boolean {
-        return repository.deleteCustomFood(uuid)
+    suspend fun deleteCustomFood(foodRecord: FoodRecord): Boolean {
+        return repository.deleteCustomFood(foodRecord)
 
     }
 

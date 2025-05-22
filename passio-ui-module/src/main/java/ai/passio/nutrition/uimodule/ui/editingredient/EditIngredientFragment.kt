@@ -8,11 +8,15 @@ import ai.passio.nutrition.uimodule.ui.edit.EditFoodModel
 import ai.passio.nutrition.uimodule.ui.edit.OpenFoodFactsDialog
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.getShortInfo
 import ai.passio.nutrition.uimodule.ui.util.RoundedSlicesPieChartRenderer
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.StringKT.singleDecimal
 import ai.passio.nutrition.uimodule.ui.util.loadFoodImage
 import ai.passio.nutrition.uimodule.ui.util.toast
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.OnSeekChangeListener
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.SeekParams
+import ai.passio.nutrition.uimodule.ui.view.tickseekbar.TickSeekBar
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
@@ -30,12 +34,9 @@ import androidx.core.view.isVisible
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.warkiz.tickseekbar.OnSeekChangeListener
-import com.warkiz.tickseekbar.SeekParams
-import com.warkiz.tickseekbar.TickSeekBar
 import kotlin.math.roundToInt
 
-class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
+internal class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
 
     private var _binding: FragmentEditIngredientBinding? = null
     private val binding: FragmentEditIngredientBinding get() = _binding!!
@@ -211,9 +212,7 @@ class EditIngredientFragment : BaseFragment<EditIngredientViewModel>() {
         with(binding) {
             foodImage.loadFoodImage(foodRecord)
             foodName.text = foodRecord.name.capitalized()
-            if (!foodRecord.name.equals(foodRecord.additionalData, true)) {
-                infoName.text = foodRecord.additionalData.capitalized()
-            }
+            infoName.text = foodRecord.getShortInfo()
 
             servingUnit.adapter = servingUnitAdapter
             servingUnit.onItemSelectedListener = servingUnitListener

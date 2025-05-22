@@ -1,15 +1,27 @@
 package ai.passio.nutrition.uimodule.domain.mealplan
 
 import ai.passio.nutrition.uimodule.data.Repository
+import ai.passio.nutrition.uimodule.ui.model.DEFAULT_NUTRITION_FACTS_LABEL
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
+import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
+import ai.passio.nutrition.uimodule.ui.model.ImageFoodResult
 import ai.passio.nutrition.uimodule.ui.model.MealLabel
+import ai.passio.nutrition.uimodule.ui.model.toMealLabel
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
 import ai.passio.nutrition.uimodule.ui.util.dateToTimestamp
+import ai.passio.nutrition.uimodule.ui.util.generateImageID
 import ai.passio.passiosdk.passiofood.PassioFoodDataInfo
 import ai.passio.passiosdk.passiofood.PassioMealTime
-import ai.passio.passiosdk.passiofood.data.measurement.Grams
+import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
 import ai.passio.passiosdk.passiofood.data.model.PassioAdvisorFoodInfo
+import ai.passio.passiosdk.passiofood.data.model.PassioFoodResultType
+import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioMealPlanItem
+import ai.passio.passiosdk.passiofood.data.model.PassioNutrients
+import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
+import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
 import ai.passio.passiosdk.passiofood.data.model.PassioSpeechRecognitionModel
+import android.graphics.Bitmap
 import java.util.Date
 
 object MealPlanUseCase {
@@ -19,23 +31,59 @@ object MealPlanUseCase {
     suspend fun getFoodRecord(
         passioFoodDataInfo: PassioFoodDataInfo,
         passioMealTime: PassioMealTime,
-        weighGrams: Double? = null
+        weighGrams: Double? = null,
+        resultType: PassioFoodResultType? = null
     ): FoodRecord? {
-        val foodItem = repository.fetchPassioFoodItem(passioFoodDataInfo, weighGrams) ?: return null
+
+//        val foodItem = repository.fetchPassioFoodItem(passioFoodDataInfo, weighGrams) ?: return null
+        val foodItem = repository.fetchPassioFoodItem(
+            dataInfo = passioFoodDataInfo,
+//            servingUnit = Grams.unitName,
+//            servingQuantity = weighGrams
+            servingUnit = passioFoodDataInfo.nutritionPreview.servingUnit,
+            servingQuantity = passioFoodDataInfo.nutritionPreview.servingQuantity
+        ) ?: return null
 
         val nutritionPreview = passioFoodDataInfo.nutritionPreview
         val foodRecord = FoodRecord(foodItem)
-        foodRecord.mealLabel = MealLabel.stringToMealLabel(passioMealTime.mealName)
-        if (weighGrams == null || weighGrams == 0.0) {
-            if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
-                val quantity = nutritionPreview.servingQuantity
-                foodRecord.setSelectedQuantity(quantity)
-            } else {
-                val weight = nutritionPreview.weightQuantity
-                if (foodRecord.setSelectedUnit(Grams.unitName)) {
-                    foodRecord.setSelectedQuantity(weight)
-                }
+        foodRecord.mealLabel = passioMealTime.toMealLabel()
+        /*Log.d(
+            "nutritionPreview===", "" +
+                    "weightQuantity: ${nutritionPreview.weightQuantity}\n" +
+                    "weightUnit: ${nutritionPreview.weightUnit}\n" +
+                    "servingUnit: ${nutritionPreview.servingUnit}\n" +
+                    "servingQuantity: ${nutritionPreview.servingQuantity}\n" +
+                    "weighGrams: ${weighGrams}\n" +
+                    ""
+        )*/
+//        if (weighGrams == null || weighGrams == 0.0) {
+        if (foodRecord.setSelectedUnit(nutritionPreview.servingUnit)) {
+            val quantity = nutritionPreview.servingQuantity
+            foodRecord.setSelectedQuantity(quantity)
+        } else {
+            val weight = nutritionPreview.weightQuantity
+//                if (foodRecord.setSelectedUnit(Grams.unitName)) {
+            if (foodRecord.setSelectedUnit(nutritionPreview.weightUnit)) {
+                foodRecord.setSelectedQuantity(weight)
             }
+        }
+//        }
+        foodRecord.apply {
+
+            if (resultType == PassioFoodResultType.NUTRITION_FACTS && !name.isValid()) {
+                name = DEFAULT_NUTRITION_FACTS_LABEL
+            }
+
+            val entity = if (resultType == PassioFoodResultType.FOOD_ITEM) {
+                PassioIDEntityType.item
+            } else if (resultType == PassioFoodResultType.NUTRITION_FACTS) {
+                PassioIDEntityType.nutritionFacts
+            } else if (resultType == PassioFoodResultType.BARCODE) {
+                PassioIDEntityType.barcode
+            } else {
+                PassioIDEntityType.item
+            }
+            entityType = entity.value
         }
         return foodRecord
     }
@@ -50,16 +98,118 @@ object MealPlanUseCase {
         }
     }
 
+
     suspend fun getFoodRecords(
         passioMealPlanItems: List<PassioAdvisorFoodInfo>,
         passioMealTime: PassioMealTime
     ): List<FoodRecord> {
         return passioMealPlanItems.mapNotNull { passioMealPlanItem ->
-            getFoodRecord(
-                passioMealPlanItem.foodDataInfo!!,
-                passioMealTime,
-                passioMealPlanItem.weightGrams
-            )
+            if (passioMealPlanItem.packagedFoodItem != null) {
+                FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
+                    if (!name.isValid()) {
+                        name = DEFAULT_NUTRITION_FACTS_LABEL
+                    }
+                    entityType = PassioIDEntityType.packagedFoodCode.value
+                }
+            } else if (passioMealPlanItem.foodDataInfo != null) {
+                getFoodRecord(
+                    passioMealPlanItem.foodDataInfo!!,
+                    passioMealTime,
+                    passioMealPlanItem.weightGrams,
+                    resultType = passioMealPlanItem.resultType
+                )
+            } else {
+                null
+            }
+        }
+    }
+
+    suspend fun getFoodRecordsForImages(
+        imageResultsData: List<Pair<Bitmap, PassioAdvisorFoodInfo?>>,
+        passioMealTime: PassioMealTime
+    ): List<ImageFoodResult> {
+
+        return imageResultsData.mapNotNull { imageResultData ->
+            val imageFoodResult: ImageFoodResult?
+            val passioAdvisorFoodInfo = imageResultData.second
+            val bitmapImage = imageResultData.first
+            if (passioAdvisorFoodInfo != null) {
+                val passioMealPlanItem = passioAdvisorFoodInfo
+                val foodRecord = if (passioMealPlanItem.packagedFoodItem != null) {
+                    FoodRecord(passioMealPlanItem.packagedFoodItem!!).apply {
+                        if (!name.isValid() && passioMealPlanItem.resultType == PassioFoodResultType.NUTRITION_FACTS) {
+                            name = DEFAULT_NUTRITION_FACTS_LABEL
+                            entityType = PassioIDEntityType.packagedFoodCode.value
+                        } else if (passioMealPlanItem.resultType == PassioFoodResultType.BARCODE) {
+                            entityType = PassioIDEntityType.barcode.value
+                        }
+
+                    }
+                } else if (passioMealPlanItem.foodDataInfo != null) {
+                    getFoodRecord(
+                        passioMealPlanItem.foodDataInfo!!,
+                        passioMealTime,
+                        passioMealPlanItem.weightGrams,
+                        resultType = passioMealPlanItem.resultType
+                    )
+                } else if (passioMealPlanItem.productCode.isValid() && passioMealPlanItem.resultType == PassioFoodResultType.BARCODE) {
+                    val fr = FoodRecord().apply {
+                        entityType = PassioIDEntityType.barcode.value
+                        barcode = passioMealPlanItem.productCode!!
+                    }
+                    val passioNutrients = PassioNutrients(UnitMass())
+                    fr.servingSizes.add(PassioServingSize())
+                    fr.servingUnits.add(PassioServingUnit())
+                    fr.selectedUnit = PassioServingUnit().unitName
+                    val fi = FoodRecordIngredient(fr, passioNutrients)
+                    fr.ingredients = mutableListOf(fi)
+                    fr
+                } else {
+                    null
+                }
+                if (foodRecord != null) {
+                    var customFood: FoodRecord? = null
+                    if (foodRecord.barcode.isValid()) {
+                        customFood = repository.getCustomFoodUsingBarcode(foodRecord.barcode!!)
+                    }
+                    imageFoodResult = if (customFood != null) {
+                        ImageFoodResult(
+                            record = customFood,
+                            isCustomFood = true,
+                            resultType = passioMealPlanItem.resultType
+                        )
+                    } else {
+                        ImageFoodResult(
+                            record = foodRecord,
+                            resultType = passioMealPlanItem.resultType
+                        )
+                    }
+                } else {
+                    imageFoodResult = null
+                }
+            } else {
+                val dummyFoodRecord = FoodRecord().apply {
+                    entityType = PassioIDEntityType.barcode.value
+//                    barcode = passioMealPlanItem.productCode!!
+                }
+                val passioNutrients = PassioNutrients(UnitMass())
+                dummyFoodRecord.servingSizes.add(PassioServingSize())
+                dummyFoodRecord.servingUnits.add(PassioServingUnit())
+                dummyFoodRecord.selectedUnit = PassioServingUnit().unitName
+                val fi = FoodRecordIngredient(dummyFoodRecord, passioNutrients)
+                dummyFoodRecord.ingredients = mutableListOf(fi)
+
+                imageFoodResult = ImageFoodResult(
+                    record = dummyFoodRecord,
+                    resultType = PassioFoodResultType.FOOD_ITEM
+                )
+            }
+            if (imageFoodResult != null && !imageFoodResult.record.iconId.isValid()) {
+                val imgId = generateImageID()
+                repository.updateUserFoodImage(imgId, bitmapImage)
+                imageFoodResult.record.iconId = imgId
+            }
+            imageFoodResult
         }
     }
 

@@ -8,7 +8,10 @@ import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.SuggestedFoods
 import ai.passio.nutrition.uimodule.ui.model.UserProfile
+import ai.passio.nutrition.uimodule.ui.model.clone
 import ai.passio.nutrition.uimodule.ui.model.copy
+import ai.passio.nutrition.uimodule.ui.model.meals
+import ai.passio.nutrition.uimodule.ui.model.toMealLabel
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
 import ai.passio.nutrition.uimodule.ui.util.StringKT.capitalized
 import ai.passio.nutrition.uimodule.ui.util.isToday
@@ -43,13 +46,13 @@ class DiaryViewModel : BaseViewModel() {
     val showLoading = SingleLiveEvent<Boolean>()
 
     fun fetchLogsForCurrentDay() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             showLoading.postValue(true)
             val userProfile = useCaseUserProfile.getUserProfile()
             val records = useCase.getLogsForDay(currentDate)
             _logsLD.postValue(Pair(userProfile, records))
             showLoading.postValue(false)
-//            getQuickSuggestions()
+            getQuickSuggestions()
         }
     }
 
@@ -77,7 +80,7 @@ class DiaryViewModel : BaseViewModel() {
     }
 
     fun deleteLog(foodRecord: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             showLoading.postValue(true)
             useCase.deleteRecord(foodRecord)
             fetchLogsForCurrentDay()
@@ -99,7 +102,7 @@ class DiaryViewModel : BaseViewModel() {
                 logFoodEvent.postValue(
                     ResultWrapper.Success(
                         mealPlanUseCase.logFoodRecord(
-                            foodRecord
+                            foodRecord.copy()
                         )
                     )
                 )
@@ -130,13 +133,13 @@ class DiaryViewModel : BaseViewModel() {
     }
 
     private fun getQuickSuggestions() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (currentMealTime == passioMealTimeNow() && quickSuggestionsPassio.isNotEmpty()) {
                 improveQuickSuggestions()
             } else {
                 currentMealTime = passioMealTimeNow()
                 PassioSDK.instance.fetchSuggestions(currentMealTime) { foodDataInfo ->
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         quickSuggestionsPassio.clear()
                         quickSuggestionsPassio.addAll(foodDataInfo)
                         improveQuickSuggestions()
@@ -146,24 +149,24 @@ class DiaryViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun improveQuickSuggestions() {
-        viewModelScope.launch {
+    private fun improveQuickSuggestions() {
+        viewModelScope.launch(Dispatchers.IO) {
             getQuickAdds {
                 _quickSuggestions.postValue(it)
             }
         }
     }
 
-    private suspend fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
+    private fun getQuickAdds(completion: (List<SuggestedFoods>) -> Unit) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             fun fetchSDKSuggestions(
                 todayRecords: List<String>,
                 userSuggestedFoods: List<SuggestedFoods>,
                 completion: (List<SuggestedFoods>) -> Unit
             ) {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     val sdkSuggestedFoods = quickSuggestionsPassio.map { SuggestedFoods(it) }
                     val finalSdkSuggestedFoods = (userSuggestedFoods + sdkSuggestedFoods)
                         .distinctBy { it.name.lowercase() }
@@ -177,16 +180,20 @@ class DiaryViewModel : BaseViewModel() {
             val maxSuggestedCount = 30
 
             useCase.getLogsForLast30Days().let { dayLogs ->
-                val filterFoodRecords = dayLogs
-                    .filter { it.mealLabel!!.value.equals(currentMealTime.mealName, true) }
+                //get current meal records
+                val filterFoodRecords = dayLogs.meals(currentMealTime.toMealLabel())
+
+                //today's records
                 val todayRecords = filterFoodRecords.filter { isToday(it.createdAtTime() ?: 0) }
                     .map { it.name.lowercase() }
+
+                //excluded today's records from current meals
                 val finalFoodRecords =
                     filterFoodRecords.filter { !todayRecords.contains(it.name.lowercase()) }
 
                 if (finalFoodRecords.isNotEmpty()) {
                     val lowerCasedFoodRecords = finalFoodRecords.map {
-                        it.copy().apply {
+                        it.clone().apply {
                             name = name.lowercase()
                             createdAt = null
                         }
@@ -194,6 +201,8 @@ class DiaryViewModel : BaseViewModel() {
 
                     val foodNamesCount =
                         lowerCasedFoodRecords.groupingBy { it.name }.eachCount()
+
+                    //merged same records to single, and sorted by name
                     val sortedFoodRecords = lowerCasedFoodRecords.distinctBy { it.name }
                         .sortedByDescending { foodNamesCount[it.name] ?: 0 }
 

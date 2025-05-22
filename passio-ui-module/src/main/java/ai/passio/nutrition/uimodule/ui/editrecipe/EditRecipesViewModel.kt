@@ -1,6 +1,7 @@
 package ai.passio.nutrition.uimodule.ui.editrecipe
 
 import ai.passio.nutrition.uimodule.data.ResultWrapper
+import ai.passio.nutrition.uimodule.domain.foodimage.FoodImageUseCase
 import ai.passio.nutrition.uimodule.domain.recipe.RecipeUseCase
 import ai.passio.nutrition.uimodule.domain.search.EditFoodUseCase
 import ai.passio.nutrition.uimodule.ui.base.BaseViewModel
@@ -8,27 +9,31 @@ import ai.passio.nutrition.uimodule.ui.edit.EditFoodFragment
 import ai.passio.nutrition.uimodule.ui.model.FoodRecord
 import ai.passio.nutrition.uimodule.ui.model.FoodRecordIngredient
 import ai.passio.nutrition.uimodule.ui.model.clone
+import ai.passio.nutrition.uimodule.ui.model.copy
 import ai.passio.nutrition.uimodule.ui.model.copyAsRecipe
+import ai.passio.nutrition.uimodule.ui.myfood.MyFoodType
 import ai.passio.nutrition.uimodule.ui.util.SingleLiveEvent
+import ai.passio.nutrition.uimodule.ui.util.StringKT.isGram
 import ai.passio.nutrition.uimodule.ui.util.StringKT.isValid
+import ai.passio.nutrition.uimodule.ui.util.generateImageID
 import ai.passio.passiosdk.passiofood.data.measurement.Grams
 import ai.passio.passiosdk.passiofood.data.measurement.UnitMass
+import ai.passio.passiosdk.passiofood.data.model.PassioFoodAmount.Companion.SERVING_UNIT_NAME
 import ai.passio.passiosdk.passiofood.data.model.PassioIDEntityType
 import ai.passio.passiosdk.passiofood.data.model.PassioServingSize
 import ai.passio.passiosdk.passiofood.data.model.PassioServingUnit
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditRecipesViewModel : BaseViewModel() {
+internal class EditRecipesViewModel : BaseViewModel() {
 
     private val useCase = RecipeUseCase
     private val editFoodUseCase = EditFoodUseCase
-
-    private var photoPath: String? = null
-    private val _photoPathEvent = MutableLiveData<String>()
-    val photoPathEvent: LiveData<String> = _photoPathEvent
+    private val foodImageUseCase = FoodImageUseCase
 
     private val _internalUpdate = SingleLiveEvent<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>>()
     val internalUpdate: LiveData<Pair<FoodRecord, EditFoodFragment.UpdateOrigin>> get() = _internalUpdate
@@ -41,17 +46,23 @@ class EditRecipesViewModel : BaseViewModel() {
 
     private val _showMessageEvent = SingleLiveEvent<String>()
     val showMessageEvent: LiveData<String> = _showMessageEvent
+    private val _deleteRecipeEvent = SingleLiveEvent<Boolean>()
+    val deleteRecipeEvent: LiveData<Boolean> = _deleteRecipeEvent
 
     private var foodRecord = FoodRecord()
     private var loggedRecord: FoodRecord? = null
     private var isEditRecipe = false
+
+    private var iconId: String? = null
+    private val _iconIdEvent = MutableLiveData<String>()
+    val iconIdEvent: LiveData<String> = _iconIdEvent
 
 
     private val defaultSizeGram = PassioServingSize(1.0, Grams.unitName) //g or ml
     private val defaultUnitGram = PassioServingUnit(Grams.unitName, UnitMass(Grams, 1.0))
 
     init {
-        foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
+        foodRecord.entityType = PassioIDEntityType.recipe.value
         foodRecord.servingSizes.add(defaultSizeGram)
         foodRecord.servingUnits.add(defaultUnitGram)
         foodRecord.setSelectedUnit(Grams.unitName)
@@ -63,22 +74,38 @@ class EditRecipesViewModel : BaseViewModel() {
         this.loggedRecord = loggedRecord
     }
 
-    fun showPrefilledData()
-    {
+    fun showPrefilledData() {
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
 
     fun setRecipeToEditOrCreateNew(editRecipe: FoodRecord) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
             foodRecord = editRecipe.clone()
-            foodRecord.passioIDEntityType = PassioIDEntityType.recipe.value
-            if (foodRecord.isUserRecipe() && useCase.getRecipe(foodRecord.uuid) != null) {
-                isEditRecipe = true
-            }
+            foodRecord.details = ""
+            foodRecord.entityType = PassioIDEntityType.recipe.value
+            isEditRecipe = useCase.getRecipe(foodRecord.refCode) != null
+            val selectedUnit = foodRecord.selectedUnit
+            val selectedQty = foodRecord.selectedQuantity
 
+            if (!isEditRecipe)
+            {
             foodRecord.setUnitToServing()
+                }
+
+            if (selectedUnit.isGram()) {
+                foodRecord.setSelectedUnit(Grams.unitName)
+                foodRecord.setSelectedQuantity(selectedQty)
+//                updateServingQuantity(
+//                    foodRecord.getSelectedQuantity(),
+//                    EditFoodFragment.UpdateOrigin.INGREDIENT
+//                )
+            } else if (selectedUnit.equals(SERVING_UNIT_NAME, true)) {
+                foodRecord.setSelectedUnit(SERVING_UNIT_NAME)
+                foodRecord.setSelectedQuantity(selectedQty)
+            }
             _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
+            setIconId(foodRecord.iconId)
             _showLoading.postValue(false)
         }
     }
@@ -87,10 +114,20 @@ class EditRecipesViewModel : BaseViewModel() {
         return isEditRecipe
     }
 
-    fun setPhotoPath(path: String) {
-        this.photoPath = path
-        foodRecord.foodImagePath = path
-        _photoPathEvent.postValue(path)
+    fun setPhotoBitmap(bitmap: Bitmap) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val imgId = generateImageID()
+            val result = foodImageUseCase.updateUserFoodImage(imgId, bitmap)
+            if (result) {
+                setIconId(imgId)
+            }
+        }
+    }
+
+    private fun setIconId(iconId: String) {
+        this.iconId = iconId
+        foodRecord.iconId = iconId
+        _iconIdEvent.postValue(iconId)
     }
 
     fun setRecipeName(recipeName: String) {
@@ -119,6 +156,7 @@ class EditRecipesViewModel : BaseViewModel() {
         foodRecord.addIngredient(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
     }
+
     fun addIngredients(foodRecordIngredient: List<FoodRecordIngredient>) {
         foodRecord.addIngredients(foodRecordIngredient)
         _internalUpdate.postValue(foodRecord to EditFoodFragment.UpdateOrigin.INGREDIENT)
@@ -144,7 +182,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun getIngredient(index: Int) = foodRecord.ingredients[index]
 
     fun saveRecipe() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             if (!foodRecord.name.isValid()) {
                 _saveRecipeEvent.postValue(ResultWrapper.Error("Please enter a recipe name."))
             } else if (foodRecord.ingredients.size <= 1) {
@@ -152,18 +190,26 @@ class EditRecipesViewModel : BaseViewModel() {
 
             } else {
                 _showLoading.postValue(true)
-                if (!foodRecord.isUserRecipe()) {
-                    foodRecord = foodRecord.copyAsRecipe()
+                if (!isEditRecipe) {
+                    foodRecord = foodRecord.copyAsRecipe() //create new recipe, else edit recipe
+                    foodRecord.details = ""
                 }
                 if (useCase.saveRecipe(foodRecord)) {
                     if (loggedRecord != null) {
-                        loggedRecord?.apply {
+                        val loggedRecordNew = foodRecord.copy()
+                        loggedRecordNew.apply {
+                            this.create(loggedRecord?.createdAtTime())
+                            this.mealLabel = loggedRecord?.mealLabel
+                            editFoodUseCase.deleteRecord(loggedRecord!!)
+                            editFoodUseCase.logFoodRecord(loggedRecordNew, true)
+                        }
+                        /*loggedRecord?.apply {
                             this.name = foodRecord.name
                             this.ingredients = foodRecord.ingredients
-                            this.foodImagePath = foodRecord.foodImagePath
+//                            this.foodImagePath = foodRecord.foodImagePath
                             this.iconId = foodRecord.iconId
                             this.id = foodRecord.uuid
-                            this.passioIDEntityType = foodRecord.passioIDEntityType
+                            this.entityType = foodRecord.entityType
                             this.servingSizes.clear()
                             this.servingSizes.addAll(foodRecord.servingSizes)
                             this.servingUnits.clear()
@@ -171,7 +217,7 @@ class EditRecipesViewModel : BaseViewModel() {
                             this.setSelectedQuantity(foodRecord.getSelectedQuantity())
                             this.setSelectedUnit(foodRecord.getSelectedUnit())
                             editFoodUseCase.logFoodRecord(this, true)
-                        }
+                        }*/
                     }
                     _saveRecipeEvent.postValue(ResultWrapper.Success(true))
                 } else {
@@ -183,16 +229,16 @@ class EditRecipesViewModel : BaseViewModel() {
     }
 
     fun deleteRecipe() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _showLoading.postValue(true)
-            if (useCase.deleteRecipe(foodRecord.uuid)) {
-                _showMessageEvent.postValue("Recipe deleted!")
-            } else {
-                _showMessageEvent.postValue("Could not delete recipe, Please try again.")
-            }
-            navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+            _deleteRecipeEvent.postValue(useCase.deleteRecipe(foodRecord))
             _showLoading.postValue(false)
         }
+    }
+
+    fun navigateToMyRecipes() {
+        navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+
     }
 
     fun navigateToTakePhoto() {
@@ -203,6 +249,7 @@ class EditRecipesViewModel : BaseViewModel() {
     fun navigateToCameraScanning() {
         navigate(EditRecipeFragmentDirections.editRecipeToCamera())
     }
+
     fun navigateToSearch() {
         navigate(EditRecipeFragmentDirections.editRecipeToSearch())
     }
@@ -211,7 +258,7 @@ class EditRecipesViewModel : BaseViewModel() {
         navigate(EditRecipeFragmentDirections.editRecipeToVoiceLogging())
     }
 
-    fun navigateOnSave() {
+    fun navigateOnSave(): MyFoodType? {
         if (loggedRecord != null) //update log upon create or save
         {
             navigate(EditRecipeFragmentDirections.editRecipeToDiary())
@@ -225,8 +272,10 @@ class EditRecipesViewModel : BaseViewModel() {
             navigateBack()
         }*/
         else {
-            navigate(EditRecipeFragmentDirections.editRecipeToMyFoods())
+            navigateToMyRecipes()
+            return MyFoodType.UserRecipes
         }
+        return null
     }
 
     fun navigateToEditIngredient() {
